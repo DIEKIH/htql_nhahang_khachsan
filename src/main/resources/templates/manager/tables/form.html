@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${tableId != null ? 'Chỉnh sửa bàn' : 'Thêm bàn mới'}">Quản lý bàn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            border: 1px solid #dee2e6;
+        }
+        .position-preview {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            position: relative;
+            background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%),
+            linear-gradient(-45deg, #f8f9fa 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #f8f9fa 75%),
+            linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .table-marker {
+            width: 30px;
+            height: 30px;
+            background: #007bff;
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+        .table-marker:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+        .form-floating label {
+            color: #6c757d;
+        }
+        .btn-back {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border: none;
+            color: white;
+        }
+        .btn-back:hover {
+            background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container-fluid py-4">
+    <div class="form-container">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="mb-0">
+                    <i class="bi bi-table text-primary"></i>
+                    <span th:text="${tableId != null ? 'Chỉnh sửa bàn' : 'Thêm bàn mới'}">Thêm bàn mới</span>
+                </h2>
+                <p class="text-muted">Điền thông tin chi tiết về bàn ăn</p>
+            </div>
+            <div class="col-auto">
+                <a href="/manager/tables" class="btn btn-back">
+                    <i class="bi bi-arrow-left"></i> Quay lại
+                </a>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form th:action="${tableId != null ? '/manager/tables/' + tableId + '/edit' : '/manager/tables/add'}"
+              method="post" th:object="${tableRequest}">
+
+            <div class="row g-4">
+                <!-- Basic Information -->
+                <div class="col-lg-8">
+                    <div class="card form-section">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">
+                                <i class="bi bi-info-circle text-primary"></i>
+                                Thông tin cơ bản
+                            </h5>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="tableNumber"
+                                               th:field="*{tableNumber}" placeholder="Nhập số bàn"
+                                               th:classappend="${#fields.hasErrors('tableNumber') ? 'is-invalid' : ''}">
+                                        <label for="tableNumber">
+                                            <i class="bi bi-hash"></i> Số bàn *
+                                        </label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('tableNumber')}"
+                                             th:errors="*{tableNumber}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" class="form-control" id="capacity"
+                                               th:field="*{capacity}" placeholder="Nhập sức chứa" min="1" max="50"
+                                               th:classappend="${#fields.hasErrors('capacity') ? 'is-invalid' : ''}">
+                                        <label for="capacity">
+                                            <i class="bi bi-people"></i> Sức chứa *
+                                        </label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('capacity')}"
+                                             th:errors="*{capacity}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="status" th:field="*{status}"
+                                                th:classappend="${#fields.hasErrors('status') ? 'is-invalid' : ''}">
+                                            <option value="">Chọn trạng thái</option>
+                                            <option th:each="status : ${statuses}"
+                                                    th:value="${status}"
+                                                    th:text="${status.displayName}"></option>
+                                        </select>
+                                        <label for="status">
+                                            <i class="bi bi-toggle-on"></i> Trạng thái *
+                                        </label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}"
+                                             th:errors="*{status}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                            <textarea class="form-control" id="notes" th:field="*{notes}"
+                                                      placeholder="Ghi chú thêm..." style="height: 100px;"></textarea>
+                                        <label for="notes">
+                                            <i class="bi bi-chat-square-text"></i> Ghi chú
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Position Settings -->
+                <div class="col-lg-4">
+                    <div class="card form-section">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">
+                                <i class="bi bi-geo-alt text-primary"></i>
+                                Vị trí bàn
+                            </h5>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <div class="form-floating">
+                                        <input type="number" class="form-control" id="positionX"
+                                               th:field="*{positionX}" placeholder="X" min="0" max="1000"
+                                               onchange="updatePreview()"
+                                               th:classappend="${#fields.hasErrors('positionX') ? 'is-invalid' : ''}">
+                                        <label for="positionX">Tọa độ X</label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('positionX')}"
+                                             th:errors="*{positionX}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-floating">
+                                        <input type="number" class="form-control" id="positionY"
+                                               th:field="*{positionY}" placeholder="Y" min="0" max="1000"
+                                               onchange="updatePreview()"
+                                               th:classappend="${#fields.hasErrors('positionY') ? 'is-invalid' : ''}">
+                                        <label for="positionY">Tọa độ Y</label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('positionY')}"
+                                             th:errors="*{positionY}"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Position Preview -->
+                            <div class="text-center">
+                                <div class="position-preview mx-auto" id="positionPreview">
+                                    <div class="table-marker" id="tableMarker">
+                                        <i class="bi bi-table"></i>
+                                    </div>
+                                </div>
+                                <small class="text-muted mt-2 d-block">Xem trước vị trí bàn</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-end gap-3">
+                                <a href="/manager/tables" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Hủy bỏ
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle"></i>
+                                    <span th:text="${tableId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function updatePreview() {
+        const positionX = document.getElementById('positionX').value || 0;
+        const positionY = document.getElementById('positionY').value || 0;
+        const marker = document.getElementById('tableMarker');
+
+        // Convert coordinates to percentage for preview (assuming max 1000)
+        const xPercent = Math.min(Math.max((positionX / 1000) * 100, 5), 95);
+        const yPercent = Math.min(Math.max((positionY / 1000) * 100, 5), 95);
+
+        marker.style.left = xPercent + '%';
+        marker.style.top = yPercent + '%';
+    }
+
+    // Initialize preview on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updatePreview();
+    });
+
+    // Add interactive positioning
+    document.getElementById('positionPreview').addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const xPercent = (x / rect.width) * 100;
+        const yPercent = (y / rect.height) * 100;
+
+        const positionX = Math.round((xPercent / 100) * 1000);
+        const positionY = Math.round((yPercent / 100) * 1000);
+
+        document.getElementById('positionX').value = positionX;
+        document.getElementById('positionY').value = positionY;
+
+        updatePreview();
+    });
+
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const tableNumber = document.getElementById('tableNumber').value.trim();
+        const capacity = document.getElementById('capacity').value;
+        const status = document.getElementById('status').value;
+
+        if (!tableNumber || !capacity || !status) {
+            e.preventDefault();
+            alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+            return false;
+        }
+    });
+</script>
+</body>
+</html>

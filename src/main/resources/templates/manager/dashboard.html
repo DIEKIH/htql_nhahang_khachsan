@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard - Quản lý Chi nhánh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        .stats-card.success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .stats-card.warning {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .stats-card.info {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .feature-card {
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            border-left-color: #f093fb;
+            border-left-width: 6px;
+        }
+        .welcome-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 sidebar px-3 py-4">
+            <div class="text-center mb-4">
+                <i class="bi bi-building text-white" style="font-size: 2.5rem;"></i>
+                <h5 class="text-white mt-2">Manager Panel</h5>
+                <small class="text-white-50">Quản lý Chi nhánh</small>
+            </div>
+
+            <ul class="nav flex-column">
+                <li class="nav-item mb-1">
+                    <a class="nav-link active" href="#dashboard" data-section="dashboard">
+                        <i class="bi bi-speedometer2 me-2"></i>Tổng quan
+                    </a>
+                </li>
+
+                <!-- Khách sạn -->
+                <li class="nav-item">
+                    <h6 class="text-white-50 mt-3 mb-2 px-2">KHÁCH SẠN</h6>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#room-types" data-section="room-types">
+                        <i class="bi bi-house me-2"></i>Quản lý loại phòng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#rooms" data-section="rooms">
+                        <i class="bi bi-door-open me-2"></i>Quản lý phòng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#room-status" data-section="room-status">
+                        <i class="bi bi-check-square me-2"></i>Cập nhật trạng thái phòng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#room-map" data-section="room-map">
+                        <i class="bi bi-map me-2"></i>Sơ đồ phòng Real-time
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#hotel-bookings" data-section="hotel-bookings">
+                        <i class="bi bi-calendar-check me-2"></i>Booking phòng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#hotel-stats" data-section="hotel-stats">
+                        <i class="bi bi-bar-chart me-2"></i>Thống kê khách sạn
+                    </a>
+                </li>
+
+                <!-- Nhà hàng -->
+                <li class="nav-item">
+                    <h6 class="text-white-50 mt-3 mb-2 px-2">NHÀ HÀNG</h6>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#tables" data-section="tables">
+                        <i class="bi bi-table me-2"></i>Quản lý bàn ăn
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#table-map" data-section="table-map">
+                        <i class="bi bi-diagram-3 me-2"></i>Sơ đồ bàn Real-time
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#menu" data-section="menu">
+                        <i class="bi bi-menu-button-wide me-2"></i>Quản lý menu
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#restaurant-bookings" data-section="restaurant-bookings">
+                        <i class="bi bi-calendar2-check me-2"></i>Booking bàn
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#restaurant-stats" data-section="restaurant-stats">
+                        <i class="bi bi-graph-up me-2"></i>Thống kê nhà hàng
+                    </a>
+                </li>
+
+                <!-- Quản lý chung -->
+                <li class="nav-item">
+                    <h6 class="text-white-50 mt-3 mb-2 px-2">QUẢN LÝ CHUNG</h6>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#staff" data-section="staff">
+                        <i class="bi bi-people me-2"></i>Quản lý nhân viên
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#schedule" data-section="schedule">
+                        <i class="bi bi-calendar-week me-2"></i>Phân ca làm việc
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#feedback" data-section="feedback">
+                        <i class="bi bi-chat-square-dots me-2"></i>Phản hồi khách hàng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#reports" data-section="reports">
+                        <i class="bi bi-file-earmark-text me-2"></i>Báo cáo chi nhánh
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#promotions" data-section="promotions">
+                        <i class="bi bi-percent me-2"></i>Quản lý khuyến mãi
+                    </a>
+                </li>
+            </ul>
+
+            <div class="mt-4 pt-3 border-top border-white-50">
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm w-100">
+                        <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 p-4">
+            <!-- Welcome Header -->
+            <div class="welcome-header p-4 mb-4">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3>Chào mừng trở lại!</h3>
+                        <p class="mb-0">Xin chào <strong th:text="${user.fullName}"></strong> - Manager Chi nhánh</p>
+                        <small>Hôm nay: <span id="currentDate"></span></small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="text-center">
+                            <i class="bi bi-person-circle" style="font-size: 3rem;"></i>
+                            <div class="mt-2">
+                                <small>Chi nhánh: <span th:text="${user.branchName ?: 'Tất cả'}"></span></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Overview -->
+            <div id="dashboard-content">
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card stats-card">
+                            <div class="card-body text-center">
+                                <i class="bi bi-house-door" style="font-size: 2rem;"></i>
+                                <h4 class="mt-2">85%</h4>
+                                <p class="mb-0">Tỷ lệ lấp đầy phòng</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stats-card success">
+                            <div class="card-body text-center">
+                                <i class="bi bi-currency-dollar" style="font-size: 2rem;"></i>
+                                <h4 class="mt-2">125M</h4>
+                                <p class="mb-0">Doanh thu tháng</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stats-card warning">
+                            <div class="card-body text-center">
+                                <i class="bi bi-people" style="font-size: 2rem;"></i>
+                                <h4 class="mt-2">156</h4>
+                                <p class="mb-0">Khách hàng hôm nay</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stats-card info">
+                            <div class="card-body text-center">
+                                <i class="bi bi-star" style="font-size: 2rem;"></i>
+                                <h4 class="mt-2">4.8</h4>
+                                <p class="mb-0">Đánh giá trung bình</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <h5>Tính năng chính</h5>
+                    </div>
+
+                    <!-- Khách sạn -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card feature-card">
+                            <div class="card-header bg-primary text-white">
+                                <i class="bi bi-building me-2"></i>Quản lý Khách sạn
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-primary btn-sm w-100" data-section="room-types">
+                                            <i class="bi bi-house me-1"></i>Loại phòng
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-primary btn-sm w-100" data-section="rooms">
+                                            <i class="bi bi-door-open me-1"></i>Phòng
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-primary btn-sm w-100" data-section="room-map">
+                                            <i class="bi bi-map me-1"></i>Sơ đồ phòng
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-primary btn-sm w-100" data-section="hotel-bookings">
+                                            <i class="bi bi-calendar-check me-1"></i>Booking
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nhà hàng -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card feature-card">
+                            <div class="card-header bg-success text-white">
+                                <i class="bi bi-cup-straw me-2"></i>Quản lý Nhà hàng
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-success btn-sm w-100" data-section="tables">
+                                            <i class="bi bi-table me-1"></i>Bàn ăn
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-success btn-sm w-100" data-section="menu">
+                                            <i class="bi bi-menu-button-wide me-1"></i>Menu
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-success btn-sm w-100" data-section="table-map">
+                                            <i class="bi bi-diagram-3 me-1"></i>Sơ đồ bàn
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-success btn-sm w-100" data-section="restaurant-bookings">
+                                            <i class="bi bi-calendar2-check me-1"></i>Đặt bàn
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quản lý nhân viên -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card feature-card">
+                            <div class="card-header bg-info text-white">
+                                <i class="bi bi-people me-2"></i>Quản lý Nhân viên
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-info btn-sm w-100" data-section="staff">
+                                            <i class="bi bi-person-plus me-1"></i>Nhân viên
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-info btn-sm w-100" data-section="schedule">
+                                            <i class="bi bi-calendar-week me-1"></i>Phân ca
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Báo cáo & Thống kê -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card feature-card">
+                            <div class="card-header bg-warning text-dark">
+                                <i class="bi bi-graph-up me-2"></i>Báo cáo & Thống kê
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-warning btn-sm w-100" data-section="hotel-stats">
+                                            <i class="bi bi-bar-chart me-1"></i>TK Khách sạn
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-warning btn-sm w-100" data-section="restaurant-stats">
+                                            <i class="bi bi-graph-up me-1"></i>TK Nhà hàng
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-warning btn-sm w-100" data-section="reports">
+                                            <i class="bi bi-file-earmark-text me-1"></i>Báo cáo
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-warning btn-sm w-100" data-section="promotions">
+                                            <i class="bi bi-percent me-1"></i>Khuyến mãi
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Hoạt động gần đây</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Đặt phòng mới</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Phòng 101 - Nguyễn Văn A</span>
+                                                <small class="text-muted">5 phút trước</small>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Phòng 205 - Trần Thị B</span>
+                                                <small class="text-muted">12 phút trước</small>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Phòng 312 - Lê Văn C</span>
+                                                <small class="text-muted">25 phút trước</small>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Đặt bàn mới</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Bàn 5 - Gia đình Hoàng</span>
+                                                <small class="text-muted">3 phút trước</small>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Bàn 12 - Công ty ABC</span>
+                                                <small class="text-muted">8 phút trước</small>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Bàn 3 - Phạm Văn D</span>
+                                                <small class="text-muted">15 phút trước</small>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Placeholder for other sections -->
+            <div id="section-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0" id="section-title">Tính năng</h5>
+                    </div>
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-tools text-muted" style="font-size: 4rem;"></i>
+                        <h4 class="mt-3 text-muted">Đang phát triển</h4>
+                        <p class="text-muted">Tính năng này đang được xây dựng và sẽ sớm có sẵn.</p>
+                        <button class="btn btn-primary" onclick="showDashboard()">
+                            <i class="bi bi-arrow-left me-2"></i>Quay lại tổng quan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Set current date
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('vi-VN');
+
+    // Navigation handling
+    document.querySelectorAll('[data-section]').forEach(element => {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            const section = this.getAttribute('data-section');
+
+            if (section === 'dashboard') {
+                showDashboard();
+            } else {
+                showSection(section);
+            }
+
+            // Update active nav
+            document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+            if (this.classList.contains('nav-link')) {
+                this.classList.add('active');
+            }
+        });
+    });
+
+    function showDashboard() {
+        document.getElementById('dashboard-content').style.display = 'block';
+        document.getElementById('section-content').style.display = 'none';
+
+        // Update active nav
+        document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+        document.querySelector('[data-section="dashboard"]').classList.add('active');
+    }
+
+    function showSection(section) {
+        document.getElementById('dashboard-content').style.display = 'none';
+        document.getElementById('section-content').style.display = 'block';
+
+        const titles = {
+            'room-types': 'Quản lý Loại phòng',
+            'rooms': 'Quản lý Phòng',
+            'room-status': 'Cập nhật Trạng thái Phòng',
+            'room-map': 'Sơ đồ Phòng Real-time',
+            'hotel-bookings': 'Danh sách Booking Phòng',
+            'hotel-stats': 'Thống kê Khách sạn',
+            'tables': 'Quản lý Bàn ăn',
+            'table-map': 'Sơ đồ Bàn Real-time',
+            'menu': 'Quản lý Menu',
+            'restaurant-bookings': 'Danh sách Booking Bàn',
+            'restaurant-stats': 'Thống kê Nhà hàng',
+            'staff': 'Quản lý Nhân viên',
+            'schedule': 'Phân ca Làm việc',
+            'feedback': 'Phản hồi Khách hàng',
+            'reports': 'Báo cáo Chi nhánh',
+            'promotions': 'Quản lý Khuyến mãi'
+        };
+
+        document.getElementById('section-title').textContent = titles[section] || 'Tính năng';
+    }
+
+    // Auto refresh stats every 30 seconds
+    setInterval(() => {
+        // Here you would typically fetch updated stats from server
+        console.log('Refreshing stats...');
+    }, 30000);
+</script>
+</body>
+</html>

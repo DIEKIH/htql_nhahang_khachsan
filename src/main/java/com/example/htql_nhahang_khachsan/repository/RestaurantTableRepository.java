@@ -1,0 +1,36 @@
+package com.example.htql_nhahang_khachsan.repository;
+
+
+
+
+import com.example.htql_nhahang_khachsan.entity.RestaurantTableEntity;
+import com.example.htql_nhahang_khachsan.enums.TableStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface RestaurantTableRepository extends JpaRepository<RestaurantTableEntity, Long> {
+
+    List<RestaurantTableEntity> findByBranchIdOrderByTableNumberAsc(Long branchId);
+
+    Optional<RestaurantTableEntity> findByIdAndBranchId(Long id, Long branchId);
+
+    boolean existsByTableNumberAndBranchId(String tableNumber, Long branchId);
+
+    boolean existsByTableNumberAndBranchIdAndIdNot(String tableNumber, Long branchId, Long id);
+
+    @Query("SELECT t FROM RestaurantTableEntity t WHERE t.branch.id = :branchId " +
+            "AND (:tableNumber IS NULL OR LOWER(t.tableNumber) LIKE LOWER(CONCAT('%', :tableNumber, '%'))) " +
+            "AND (:status IS NULL OR t.status = :status) " +
+            "AND (:capacity IS NULL OR t.capacity = :capacity) " +
+            "ORDER BY t.tableNumber ASC")
+    List<RestaurantTableEntity> searchTables(@Param("branchId") Long branchId,
+                                             @Param("tableNumber") String tableNumber,
+                                             @Param("status") TableStatus status,
+                                             @Param("capacity") Integer capacity);
+}

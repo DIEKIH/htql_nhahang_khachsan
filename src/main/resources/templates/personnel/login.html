@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Đăng nhập ' + ${userType}">Đăng nhập</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container-fluid vh-100">
+    <div class="row h-100">
+        <!-- Left side - Login Form -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div class="card shadow-lg border-0" style="width: 100%; max-width: 400px;">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-hotel fs-1 text-primary mb-3"></i>
+                        <h3 class="fw-bold text-dark" th:text="'Đăng nhập ' + ${userType}">Đăng nhập Manager</h3>
+                        <p class="text-muted">Vui lòng đăng nhập để tiếp tục</p>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <span th:text="${error}">Lỗi đăng nhập</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form th:action="@{${requestURI}}" method="post" th:object="${loginRequest}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-semibold">Tên đăng nhập</label>
+                            <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-user text-muted"></i>
+                                    </span>
+                                <input type="text" class="form-control border-start-0"
+                                       id="username" th:field="*{username}"
+                                       placeholder="Nhập tên đăng nhập" required>
+                            </div>
+                            <div th:if="${#fields.hasErrors('username')}" class="text-danger small mt-1">
+                                <span th:errors="*{username}"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold">Mật khẩu</label>
+                            <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-lock text-muted"></i>
+                                    </span>
+                                <input type="password" class="form-control border-start-0"
+                                       id="password" th:field="*{password}"
+                                       placeholder="Nhập mật khẩu" required>
+                                <button class="btn btn-outline-secondary border-start-0" type="button" onclick="togglePassword()">
+                                    <i class="fas fa-eye" id="toggleIcon"></i>
+                                </button>
+                            </div>
+                            <div th:if="${#fields.hasErrors('password')}" class="text-danger small mt-1">
+                                <span th:errors="*{password}"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                                <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                            </button>
+                        </div>
+
+                        <div class="text-center">
+                            <a href="#" class="text-decoration-none text-muted">
+                                <i class="fas fa-key me-1"></i>Quên mật khẩu?
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right side - Welcome Image -->
+        <div class="col-md-6 d-none d-md-block position-relative">
+            <div class="h-100 bg-gradient position-relative overflow-hidden"
+                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                    <i class="fas fa-building fs-1 mb-4 opacity-75"></i>
+                    <h2 class="fw-bold mb-3">Chào mừng đến với</h2>
+                    <h1 class="fw-bold display-4 mb-3">Hotel & Restaurant</h1>
+                    <p class="fs-5 opacity-75">Hệ thống quản lý hiện đại và chuyên nghiệp</p>
+
+                    <!-- Features -->
+                    <div class="row mt-5 g-3">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <i class="fas fa-bed me-3 fs-4"></i>
+                                <span class="fs-6">Quản lý khách sạn toàn diện</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <i class="fas fa-utensils me-3 fs-4"></i>
+                                <span class="fs-6">Hệ thống nhà hàng hiện đại</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="fas fa-chart-line me-3 fs-4"></i>
+                                <span class="fs-6">Thống kê và báo cáo chi tiết</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decorative Elements -->
+                <div class="position-absolute top-0 end-0 p-4 opacity-25">
+                    <i class="fas fa-hotel display-1"></i>
+                </div>
+                <div class="position-absolute bottom-0 start-0 p-4 opacity-25">
+                    <i class="fas fa-concierge-bell display-1"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function togglePassword() {
+        const passwordField = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
+
+    // Auto dismiss alerts after 5 seconds
+    setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+</script>
+</body>
+</html>

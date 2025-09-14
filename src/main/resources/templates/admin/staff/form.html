@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${userId != null ? 'Chỉnh sửa Nhân viên' : 'Thêm Nhân viên'}">Thêm Nhân viên</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #ff3838;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .page-title {
+            color: #333;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .back-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #5a6fd8;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e6ed;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .form-control {
+            padding: 1rem;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-note {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e6ed;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .role-info {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .role-info h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .role-info ul {
+            margin: 0;
+            padding-left: 1.5rem;
+            color: #666;
+        }
+
+        .role-info ul li {
+            margin-bottom: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .navbar-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="navbar-content">
+        <div class="logo">
+            <i class="fas fa-crown"></i> Admin Panel
+        </div>
+        <div class="nav-links">
+            <a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="/admin/branches"><i class="fas fa-building"></i> Chi nhánh</a>
+            <a href="/admin/staff" class="active"><i class="fas fa-users"></i> Nhân viên</a>
+            <form action="/admin/logout" method="post" style="display: inline;">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title" th:text="${userId != null ? 'Chỉnh sửa Nhân viên' : 'Thêm Nhân viên mới'}">
+            <i class="fas fa-user-plus"></i> Thêm Nhân viên mới
+        </h1>
+        <a href="/admin/staff" class="back-link">
+            <i class="fas fa-arrow-left"></i> Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="form-container">
+        <form th:action="${userId != null ? '/admin/staff/' + userId + '/edit' : '/admin/staff/add'}"
+              method="post" th:object="${userRequest}">
+
+            <!-- Thông tin đăng nhập -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-key"></i> Thông tin đăng nhập
+                </h2>
+
+                <div class="form-grid">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">Tên đăng nhập <span class="required">*</span></label>
+                            <input type="text" id="username" th:field="*{username}" class="form-control"
+                                   placeholder="Nhập tên đăng nhập...">
+                            <div th:if="${#fields.hasErrors('username')}" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{username}"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input type="email" id="email" th:field="*{email}" class="form-control"
+                                   placeholder="Nhập email...">
+                            <div th:if="${#fields.hasErrors('email')}" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{email}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">
+                            <span th:text="${userId != null ? 'Mật khẩu mới (để trống nếu không đổi)' : 'Mật khẩu'}">Mật khẩu</span>
+                            <span th:if="${userId == null}" class="required">*</span>
+                        </label>
+                        <input type="password" id="password" th:field="*{password}" class="form-control"
+                               placeholder="Nhập mật khẩu...">
+                        <div th:if="${userId != null}" class="password-note">
+                            Để trống nếu không muốn thay đổi mật khẩu hiện tại
+                        </div>
+                        <div th:if="${#fields.hasErrors('password')}" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{password}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin cá nhân -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-user"></i> Thông tin cá nhân
+                </h2>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fullName">Họ và tên <span class="required">*</span></label>
+                        <input type="text" id="fullName" th:field="*{fullName}" class="form-control"
+                               placeholder="Nhập họ và tên...">
+                        <div th:if="${#fields.hasErrors('fullName')}" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{fullName}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phoneNumber">Số điện thoại</label>
+                            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"
+                                   placeholder="Nhập số điện thoại...">
+                            <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{phoneNumber}"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="avatarUrl">Avatar URL</label>
+                            <input type="url" id="avatarUrl" th:field="*{avatarUrl}" class="form-control"
+                                   placeholder="Nhập URL avatar...">
+                            <div th:if="${#fields.hasErrors('avatarUrl')}" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{avatarUrl}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Địa chỉ</label>
+                        <input type="text" id="address" th:field="*{address}" class="form-control"
+                               placeholder="Nhập địa chỉ...">
+                        <div th:if="${#fields.hasErrors('address')}" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{address}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phân quyền và phân công -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-users-cog"></i> Phân quyền & Phân công
+                </h2>
+
+                <div class="form-grid">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="role">Vai trò <span class="required">*</span></label>
+                            <select id="role" th:field="*{role}" class="form-control" onchange="showRoleInfo(this.value)">
+<!--                                <option value="">Chọn vai trò</option>-->
+<!--                                <option th:each="role : ${staffRoles}"-->
+<!--                                        th:value="${role}"-->
+<!--                                        th:text="${roleLabels[role.name()]}">-->
+<!--                                </option>-->
+                                <option value="">Chọn vai trò</option>
+                                <option th:each="r : ${staffRoles}"
+                                        th:value="${r}"
+                                        th:text="${roleLabels[r.name()]}">
+                                </option>
+
+                            </select>
+
+                            <div th:if="${#fields.hasErrors('role')}" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{role}"></span>
+                            </div>
+
+                            <!-- Role Info -->
+                            <div id="manager-info" class="role-info" style="display: none;">
+                                <h4><i class="fas fa-user-tie"></i> Quyền hạn Quản lý:</h4>
+                                <ul>
+                                    <li>Quản lý nhân viên trong chi nhánh</li>
+                                    <li>Xem báo cáo doanh thu chi nhánh</li>
+                                    <li>Quản lý đặt phòng/bàn</li>
+                                    <li>Xử lý khiếu nại khách hàng</li>
+                                </ul>
+                            </div>
+
+                            <div id="staff-info" class="role-info" style="display: none;">
+                                <h4><i class="fas fa-user"></i> Quyền hạn Nhân viên:</h4>
+                                <ul>
+                                    <li>Xử lý đặt phòng/bàn</li>
+                                    <li>Cập nhật trạng thái phòng/bàn</li>
+                                    <li>Hỗ trợ khách hàng</li>
+                                    <li>Báo cáo cho quản lý</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="branchId">Chi nhánh</label>
+                            <select id="branchId" th:field="*{branchId}" class="form-control">
+                                <option value="">Chưa phân công</option>
+                                <option th:each="branch : ${branches}"
+                                        th:value="${branch.id}"
+                                        th:text="${branch.name + ' (' + branch.type.displayName + ')'}">
+                                </option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('branchId')}" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{branchId}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i th:class="${userId != null ? 'fas fa-save' : 'fas fa-user-plus'}"></i>
+                    <span th:text="${userId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>
+                </button>
+                <a href="/admin/staff" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Hủy bỏ
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showRoleInfo(role) {
+        // Hide all role info
+        document.getElementById('manager-info').style.display = 'none';
+        document.getElementById('staff-info').style.display = 'none';
+
+        // Show selected role info
+        if (role === 'MANAGER') {
+            document.getElementById('manager-info').style.display = 'block';
+        } else if (role === 'STAFF') {
+            document.getElementById('staff-info').style.display = 'block';
+        }
+    }
+
+    // Show role info on page load if role is selected
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleSelect = document.getElementById('role');
+        if (roleSelect.value) {
+            showRoleInfo(roleSelect.value);
+        }
+    });
+</script>
+</body>
+</html>

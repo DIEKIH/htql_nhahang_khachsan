@@ -53,7 +53,7 @@
             <option th:each="statusOption : ${statuses}"
                     th:value="${statusOption}"
                     th:selected="${statusOption == searchStatus}"
-                    th:text="${statusOption == T(com.example.enums.Status).ACTIVE ? 'Hoạt động' : 'Không hoạt động'}">
+                    th:text="${statusOption == T(com.example.htql_nhahang_khachsan.enums.Status).ACTIVE ? 'Hoạt động' : 'Không hoạt động'}">
             </option>
           </select>
         </div>
@@ -111,8 +111,8 @@
             </div>
             <div class="col-md-2">
                                 <span class="badge rounded-pill"
-                                      th:classappend="${category.status == T(com.example.enums.Status).ACTIVE ? 'bg-success' : 'bg-secondary'}"
-                                      th:text="${category.status == T(com.example.enums.Status).ACTIVE ? 'Hoạt động' : 'Không hoạt động'}">
+                                      th:classappend="${category.status == T(com.example.htql_nhahang_khachsan.enums.Status).ACTIVE ? 'bg-success' : 'bg-secondary'}"
+                                      th:text="${category.status == T(com.example.htql_nhahang_khachsan.enums.Status).ACTIVE ? 'Hoạt động' : 'Không hoạt động'}">
                                 </span>
             </div>
             <div class="col-md-2">

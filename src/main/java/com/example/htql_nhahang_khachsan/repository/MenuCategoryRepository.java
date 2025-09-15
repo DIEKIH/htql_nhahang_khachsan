@@ -42,6 +42,9 @@ public interface MenuCategoryRepository extends JpaRepository<MenuCategoryEntity
     @Query("SELECT MAX(m.displayOrder) FROM MenuCategoryEntity m WHERE m.branch.id = :branchId")
     Integer findMaxDisplayOrderByBranchId(@Param("branchId") Long branchId);
 
+    // Lấy danh sách category theo branchId và status, sắp xếp theo displayOrder tăng dần
+    List<MenuCategoryEntity> findByBranchIdAndStatusOrderByDisplayOrder(Long branchId, Status status);
+
     // Đếm số lượng category theo branch
     long countByBranchId(Long branchId);
 

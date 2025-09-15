@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý món ăn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+<!--        <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">-->
+<!--            <div class="position-sticky pt-3">-->
+<!--                <ul class="nav flex-column">-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link text-light" th:href="@{/manager/dashboard}">-->
+<!--                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link text-light" th:href="@{/manager/room-types}">-->
+<!--                            <i class="fas fa-bed me-2"></i> Loại phòng-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link text-light" th:href="@{/manager/menu-categories}">-->
+<!--                            <i class="fas fa-list me-2"></i> Danh mục menu-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link text-light active bg-primary" th:href="@{/manager/menu-items}">-->
+<!--                            <i class="fas fa-utensils me-2"></i> Món ăn-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </nav>-->
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Quản lý món ăn</h1>
+                <a th:href="@{/manager/menu-items/add}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Thêm món ăn
+                </a>
+            </div>
+
+            <!-- Alert messages -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Search form -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-search me-2"></i>Tìm kiếm
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/manager/menu-items}" method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="name" class="form-label">Tên món ăn</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                   th:value="${searchName}" placeholder="Nhập tên món ăn">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="categoryId" class="form-label">Danh mục</label>
+                            <select class="form-select" id="categoryId" name="categoryId">
+                                <option value="">-- Tất cả danh mục --</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}"
+                                        th:selected="${category.id == searchCategoryId}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="status" class="form-label">Trạng thái</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="">-- Tất cả trạng thái --</option>
+                                <option th:each="statusOption : ${statuses}"
+                                        th:value="${statusOption}"
+                                        th:selected="${statusOption == searchStatus}"
+                                        th:text="${statusOption == T(com.example.htql_nhahang_khachsan.enums.Status).ACTIVE ? 'Hoạt động' : 'Không hoạt động'}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-2"></i>Tìm kiếm
+                            </button>
+                            <a th:href="@{/manager/menu-items}" class="btn btn-secondary ms-2">
+                                <i class="fas fa-refresh me-2"></i>Làm mới
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Menu items table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-list me-2"></i>Danh sách món ăn
+                        <span class="badge bg-secondary ms-2" th:text="${#lists.size(menuItems)}"></span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-dark">
+                            <tr>
+                                <th>Hình ảnh</th>
+                                <th>Tên món ăn</th>
+                                <th>Danh mục</th>
+                                <th>Giá</th>
+                                <th>Thời gian chuẩn bị</th>
+                                <th>Có sẵn</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${#lists.isEmpty(menuItems)}">
+                                <td colspan="8" class="text-center py-4">
+                                    <i class="fas fa-inbox text-muted fs-1"></i>
+                                    <p class="text-muted mt-2">Không có món ăn nào</p>
+                                </td>
+                            </tr>
+                            <tr th:each="item : ${menuItems}" th:unless="${#lists.isEmpty(menuItems)}">
+                                <td>
+                                    <img th:if="${item.imageUrl}"
+                                         th:src="${item.imageUrl}"
+                                         alt="Menu item image"
+                                         class="img-thumbnail"
+                                         style="width: 60px; height: 60px; object-fit: cover;">
+                                    <div th:unless="${item.imageUrl}"
+                                         class="bg-light d-flex align-items-center justify-content-center rounded"
+                                         style="width: 60px; height: 60px;">
+                                        <i class="fas fa-image text-muted"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong th:text="${item.name}"></strong>
+                                    <div th:if="${item.description}" class="text-muted small"
+                                         th:text="${#strings.length(item.description) > 50 ? #strings.substring(item.description, 0, 50) + '...' : item.description}">
+                                    </div>
+                                </td>
+                                <td th:text="${item.categoryName}"></td>
+                                <td>
+                                    <strong class="text-success" th:text="${item.formattedPrice}"></strong>
+                                </td>
+                                <td>
+                                    <span th:if="${item.preparationTime}" th:text="${item.preparationTime + ' phút'}"></span>
+                                    <span th:unless="${item.preparationTime}" class="text-muted">-</span>
+                                </td>
+                                <td>
+                                    <span th:if="${item.isAvailable}" class="badge bg-success">Có sẵn</span>
+                                    <span th:unless="${item.isAvailable}" class="badge bg-warning">Hết hàng</span>
+                                </td>
+                                <td>
+                                            <span th:if="${item.status == T(com.example.htql_nhahang_khachsan.enums.Status).ACTIVE}"
+                                                  class="badge bg-success">Hoạt động</span>
+                                    <span th:if="${item.status == T(com.example.htql_nhahang_khachsan.enums.Status).INACTIVE}"
+                                          class="badge bg-secondary">Không hoạt động</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:href="@{/manager/menu-items/{id}/edit(id=${item.id})}"
+                                           class="btn btn-outline-primary" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                th:data-bs-target="'#deleteModal' + ${item.id}"
+                                                title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" th:id="'deleteModal' + ${item.id}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Xác nhận xóa</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Bạn có chắc chắn muốn ẩn món ăn <strong th:text="${item.name}"></strong>?</p>
+                                                    <p class="text-muted small">Món ăn sẽ được chuyển sang trạng thái không hoạt động.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                    <form th:action="@{/manager/menu-items/{id}/delete(id=${item.id})}"
+                                                          method="post" class="d-inline">
+                                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -24,6 +24,14 @@ public class BranchService {
                 .collect(Collectors.toList());
     }
 
+
+
+
+    public String getBranchNameById(Long id) {
+        return branchRepository.findById(id)
+                .map(BranchEntity::getName)
+                .orElse("Không tìm thấy chi nhánh");
+    }
     public BranchResponse getBranchById(Long id) {
         BranchEntity branch = branchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy chi nhánh"));

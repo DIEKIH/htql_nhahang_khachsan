@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -63,9 +65,18 @@ public class PromotionEntity {
     @Enumerated(EnumType.STRING)
     private PromotionScope scope; // SYSTEM_WIDE, BRANCH_SPECIFIC
 
-    @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private BranchEntity branch; // null nếu system-wide
+//    @ManyToOne
+//    @JoinColumn(name = "branch_id")
+//    private BranchEntity branch; // null nếu system-wide
+
+    @ManyToMany
+    @JoinTable(
+            name = "promotion_branches",
+            joinColumns = @JoinColumn(name = "promotion_id"),
+            inverseJoinColumns = @JoinColumn(name = "branch_id")
+    )
+    private Set<BranchEntity> branches = new HashSet<>();
+
 
     @Enumerated(EnumType.STRING)
     private PromotionApplicability applicability; // ROOM, RESTAURANT, BOTH

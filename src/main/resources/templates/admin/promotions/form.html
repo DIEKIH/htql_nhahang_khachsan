@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${promotionId != null ? 'Sửa khuyến mãi' : 'Thêm khuyến mãi'}"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            border-radius: 8px;
+            margin: 2px 0;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+            background-color: rgba(255,255,255,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        .required {
+            color: #dc3545;
+        }
+        .branch-selection {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+        .branch-checkbox {
+            margin-bottom: 8px;
+        }
+        .datetime-local-container {
+            position: relative;
+        }
+        .form-text {
+            color: #6c757d;
+            font-size: 0.875em;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 sidebar p-3">
+            <div class="d-flex align-items-center mb-4">
+                <i class="fas fa-hotel text-white me-2 fs-4"></i>
+                <span class="text-white fw-bold fs-5">Admin Panel</span>
+            </div>
+
+            <nav class="nav flex-column">
+                <a class="nav-link" href="/admin/dashboard">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a class="nav-link" href="/admin/branches">
+                    <i class="fas fa-building me-2"></i>Chi nhánh
+                </a>
+                <a class="nav-link" href="/admin/users">
+                    <i class="fas fa-users me-2"></i>Người dùng
+                </a>
+                <a class="nav-link active" href="/admin/promotions">
+                    <i class="fas fa-percent me-2"></i>Khuyến mãi
+                </a>
+                <a class="nav-link" href="/admin/rooms">
+                    <i class="fas fa-bed me-2"></i>Phòng
+                </a>
+                <a class="nav-link" href="/admin/bookings">
+                    <i class="fas fa-calendar-check me-2"></i>Đặt phòng
+                </a>
+                <a class="nav-link" href="/admin/logout">
+                    <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">
+                    <i class="fas fa-percent text-primary me-2"></i>
+                    <span th:text="${promotionId != null ? 'Sửa khuyến mãi' : 'Thêm khuyến mãi'}"></span>
+                </h2>
+                <div class="text-end">
+                    <span class="badge bg-primary" th:text="${isAdmin ? 'Admin' : 'Manager'}"></span>
+                </div>
+            </div>
+
+            <!-- Alert Messages -->
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Form -->
+            <div class="card">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-edit text-primary me-2"></i>
+                        Thông tin khuyến mãi
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="${promotionId != null ? '/admin/promotions/' + promotionId + '/edit' : '/admin/promotions/add'}"
+                          method="post" th:object="${promotionRequest}">
+
+                        <div class="row">
+                            <!-- Tên khuyến mãi -->
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">
+                                    Tên khuyến mãi <span class="required">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}"
+                                       placeholder="Nhập tên khuyến mãi" required>
+                                <div th:if="${#fields.hasErrors('name')}" class="text-danger small mt-1">
+                                    <span th:errors="*{name}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Loại khuyến mãi -->
+                            <div class="col-md-6 mb-3">
+                                <label for="type" class="form-label">
+                                    Loại khuyến mãi <span class="required">*</span>
+                                </label>
+                                <select class="form-select" id="type" th:field="*{type}" required>
+                                    <option value="">Chọn loại khuyến mãi</option>
+                                    <option th:each="type : ${promotionTypes}"
+                                            th:value="${type}"
+                                            th:text="${typeLabels[type.name()]}"
+                                            th:selected="${type == promotionRequest.type}">
+                                    </option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('type')}" class="text-danger small mt-1">
+                                    <span th:errors="*{type}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Giá trị giảm -->
+                            <div class="col-md-4 mb-3">
+                                <label for="discountValue" class="form-label">
+                                    Giá trị giảm <span class="required">*</span>
+                                </label>
+                                <input type="number" class="form-control" id="discountValue"
+                                       th:field="*{discountValue}" step="0.01" min="0"
+                                       placeholder="0.00" required>
+                                <div class="form-text">
+                                    Phần trăm (%) hoặc số tiền cố định (VNĐ)
+                                </div>
+                                <div th:if="${#fields.hasErrors('discountValue')}" class="text-danger small mt-1">
+                                    <span th:errors="*{discountValue}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Số tiền tối thiểu -->
+                            <div class="col-md-4 mb-3">
+                                <label for="minAmount" class="form-label">Số tiền tối thiểu (VNĐ)</label>
+                                <input type="number" class="form-control" id="minAmount"
+                                       th:field="*{minAmount}" min="0"
+                                       placeholder="0">
+                                <div class="form-text">
+                                    Đơn hàng tối thiểu để áp dụng khuyến mãi
+                                </div>
+                                <div th:if="${#fields.hasErrors('minAmount')}" class="text-danger small mt-1">
+                                    <span th:errors="*{minAmount}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Giảm tối đa -->
+                            <div class="col-md-4 mb-3">
+                                <label for="maxDiscount" class="form-label">Giảm tối đa (VNĐ)</label>
+                                <input type="number" class="form-control" id="maxDiscount"
+                                       th:field="*{maxDiscount}" min="0"
+                                       placeholder="0">
+                                <div class="form-text">
+                                    Số tiền giảm tối đa cho khuyến mãi %
+                                </div>
+                                <div th:if="${#fields.hasErrors('maxDiscount')}" class="text-danger small mt-1">
+                                    <span th:errors="*{maxDiscount}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mô tả -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Mô tả</label>
+                            <textarea class="form-control" id="description" th:field="*{description}"
+                                      rows="3" placeholder="Mô tả chi tiết về khuyến mãi"></textarea>
+                            <div th:if="${#fields.hasErrors('description')}" class="text-danger small mt-1">
+                                <span th:errors="*{description}"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Ngày bắt đầu -->
+                            <div class="col-md-6 mb-3">
+                                <label for="startDate" class="form-label">
+                                    Ngày bắt đầu <span class="required">*</span>
+                                </label>
+                                <input type="datetime-local" class="form-control" id="startDate"
+                                       th:field="*{startDate}" required>
+                                <div th:if="${#fields.hasErrors('startDate')}" class="text-danger small mt-1">
+                                    <span th:errors="*{startDate}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Ngày kết thúc -->
+                            <div class="col-md-6 mb-3">
+                                <label for="endDate" class="form-label">
+                                    Ngày kết thúc <span class="required">*</span>
+                                </label>
+                                <input type="datetime-local" class="form-control" id="endDate"
+                                       th:field="*{endDate}" required>
+                                <div th:if="${#fields.hasErrors('endDate')}" class="text-danger small mt-1">
+                                    <span th:errors="*{endDate}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Giới hạn sử dụng -->
+                            <div class="col-md-4 mb-3">
+                                <label for="usageLimit" class="form-label">Giới hạn sử dụng</label>
+                                <input type="number" class="form-control" id="usageLimit"
+                                       th:field="*{usageLimit}" min="1"
+                                       placeholder="Không giới hạn">
+                                <div class="form-text">
+                                    Để trống nếu không giới hạn
+                                </div>
+                                <div th:if="${#fields.hasErrors('usageLimit')}" class="text-danger small mt-1">
+                                    <span th:errors="*{usageLimit}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Phạm vi áp dụng -->
+                            <div class="col-md-4 mb-3">
+                                <label for="scope" class="form-label">
+                                    Phạm vi áp dụng <span class="required">*</span>
+                                </label>
+                                <!-- Admin: hiện dropdown -->
+                                <div th:if="${isAdmin}">
+                                    <select class="form-select" id="scope" th:field="*{scope}" required>
+                                        <option value="">Chọn phạm vi</option>
+                                        <option th:each="scope : ${promotionScopes}"
+                                                th:value="${scope}"
+                                                th:text="${scopeLabels[scope.name()]}"
+                                                th:selected="${scope == promotionRequest.scope}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <!-- Manager: hiện text và hidden field -->
+                                <!-- Manager: hiện text và hidden field -->
+                                <div th:unless="${isAdmin}">
+                                    <input type="text" class="form-control" value="Chi nhánh cụ thể" readonly>
+                                    <input type="hidden" th:field="*{scope}" value="BRANCH_SPECIFIC">
+                                    <input type="hidden" th:field="*{branchIds}" th:value="${managerBranchId}" />
+                                    <p class="form-control-plaintext text-primary fw-bold">
+                                        Áp dụng cho chi nhánh: <span th:text="${managerBranchName}">[Chưa có tên]</span>
+                                    </p>
+                                </div>
+
+                                <div th:if="${#fields.hasErrors('scope')}" class="text-danger small mt-1">
+                                    <span th:errors="*{scope}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Áp dụng cho -->
+                            <div class="col-md-4 mb-3">
+                                <label for="applicability" class="form-label">
+                                    Áp dụng cho <span class="required">*</span>
+                                </label>
+                                <select class="form-select" id="applicability" th:field="*{applicability}" required>
+                                    <option value="">Chọn dịch vụ</option>
+                                    <option th:each="applicability : ${promotionApplicabilities}"
+                                            th:value="${applicability}"
+                                            th:text="${applicabilityLabels[applicability.name()]}"
+                                            th:selected="${applicability == promotionRequest.applicability}">
+                                    </option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('applicability')}" class="text-danger small mt-1">
+                                    <span th:errors="*{applicability}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chi nhánh áp dụng (Chỉ hiện với Admin và khi scope = BRANCH_SPECIFIC) -->
+                        <div th:if="${isAdmin}" class="mb-3" id="branchSelection" style="display: none;">
+                            <label class="form-label">
+                                Chi nhánh áp dụng <span class="required">*</span>
+                            </label>
+                            <div class="branch-selection">
+                                <div class="row">
+                                    <div th:each="branch : ${branches}" class="col-md-6 branch-checkbox">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                   th:value="${branch.id}"
+                                                   th:field="*{branchIds}"
+                                                   th:id="'branch_' + ${branch.id}"
+                                                   name="branchIds">
+                                            <label class="form-check-label" th:for="'branch_' + ${branch.id}">
+                                                <span th:text="${branch.name}"></span>
+                                                <small class="text-muted d-block" th:text="${branch.address}"></small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-text">
+                                    Chọn ít nhất một chi nhánh áp dụng khuyến mãi này
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="mb-4">
+                            <label for="status" class="form-label">
+                                Trạng thái <span class="required">*</span>
+                            </label>
+                            <select class="form-select" id="status" th:field="*{status}" required>
+                                <option th:each="status : ${promotionStatuses}"
+                                        th:value="${status}"
+                                        th:text="${statusLabels[status.name()]}"
+                                        th:selected="${status == promotionRequest.status}">
+                                </option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('status')}" class="text-danger small mt-1">
+                                <span th:errors="*{status}"></span>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a href="/admin/promotions" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>
+                                <span th:text="${promotionId != null ? 'Cập nhật' : 'Thêm mới'}"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Toggle branch selection based on scope
+    // document.getElementById('scope').addEventListener('change', function() {
+    //     const branchSelection = document.getElementById('branchSelection');
+    //     if (branchSelection) {
+    //         if (this.value === 'BRANCH_SPECIFIC') {
+    //             branchSelection.style.display = 'block';
+    //             // Make branch selection required
+    //             const checkboxes = branchSelection.querySelectorAll('input[type="checkbox"]');
+    //             // Chỉ cần validate ít nhất 1 checkbox
+    //             checkboxes.forEach(cb => cb.required = false);
+    //
+    //             branchSelection.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    //                 cb.addEventListener('change', function() {
+    //                     const anyChecked = Array.from(checkboxes).some(x => x.checked);
+    //                     checkboxes.forEach(x => x.required = !anyChecked);
+    //                 });
+    //             });
+    //
+    //         } else {
+    //             branchSelection.style.display = 'none';
+    //             // Remove required attribute and uncheck all
+    //             const checkboxes = branchSelection.querySelectorAll('input[type="checkbox"]');
+    //             checkboxes.forEach(cb => {
+    //                 cb.required = false;
+    //                 cb.checked = false;
+    //             });
+    //         }
+    //     }
+    // });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const scopeSelect = document.getElementById("scope");
+        const branchSelection = document.getElementById("branchSelection");
+
+        if (!scopeSelect || !branchSelection) return;
+
+        const checkboxes = branchSelection.querySelectorAll('input[type="checkbox"]');
+
+        function validateCheckboxes() {
+            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            // Nếu không có cái nào được chọn => bắt buộc chọn ít nhất 1
+            checkboxes.forEach(cb => cb.required = !anyChecked);
+        }
+
+        function toggleBranchSelection() {
+            if (scopeSelect.value === "BRANCH_SPECIFIC") {
+                branchSelection.style.display = "block";
+                validateCheckboxes();
+            } else {
+                branchSelection.style.display = "none";
+                checkboxes.forEach(cb => {
+                    cb.checked = false;
+                    cb.required = false;
+                });
+            }
+        }
+
+        // Gắn sự kiện cho từng checkbox
+        checkboxes.forEach(cb => cb.addEventListener("change", validateCheckboxes));
+
+        // Gắn sự kiện khi đổi scope
+        scopeSelect.addEventListener("change", toggleBranchSelection);
+
+        // Gọi 1 lần khi load trang
+        toggleBranchSelection();
+    });
+
+
+    // Initialize branch selection visibility
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const scopeSelect = document.getElementById('scope');
+    //     const branchSelection = document.getElementById('branchSelection');
+    //
+    //     if (scopeSelect && branchSelection) {
+    //         if (scopeSelect.value === 'BRANCH_SPECIFIC') {
+    //             branchSelection.style.display = 'block';
+    //         }
+    //     }
+    // });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const scopeSelect = document.getElementById("scope");
+        const branchSelection = document.getElementById("branchSelection");
+
+        if (scopeSelect) {
+            function toggleBranchSelection() {
+                if (scopeSelect.value === "BRANCH_SPECIFIC") {
+                    branchSelection.style.display = "block";
+                } else {
+                    branchSelection.style.display = "none";
+                }
+            }
+
+            scopeSelect.addEventListener("change", toggleBranchSelection);
+            toggleBranchSelection(); // gọi 1 lần khi load page
+        }
+    });
+
+    // Set minimum date for start and end date
+    document.addEventListener('DOMContentLoaded', function() {
+        const now = new Date();
+        const formattedNow = now.toISOString().slice(0, 16);
+
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
+
+        if (startDate && !startDate.value) {
+            startDate.min = formattedNow;
+        }
+
+        if (endDate && !endDate.value) {
+            endDate.min = formattedNow;
+        }
+
+        // Update end date min when start date changes
+        startDate?.addEventListener('change', function() {
+            if (endDate) {
+                endDate.min = this.value;
+                if (endDate.value && endDate.value < this.value) {
+                    endDate.value = this.value;
+                }
+            }
+        });
+    });
+
+    // Dynamic help text for discount value
+    document.getElementById('type').addEventListener('change', function() {
+        const discountInput = document.getElementById('discountValue');
+        const helpText = discountInput.nextElementSibling;
+
+        if (this.value === 'PERCENTAGE') {
+            discountInput.max = '100';
+            discountInput.placeholder = '0-100';
+            helpText.textContent = 'Nhập phần trăm giảm (0-100%)';
+        } else if (this.value === 'FIXED_AMOUNT') {
+            discountInput.removeAttribute('max');
+            discountInput.placeholder = '0.00';
+            helpText.textContent = 'Nhập số tiền giảm cố định (VNĐ)';
+        } else if (this.value === 'BOGO') {
+            discountInput.value = '1';
+            discountInput.readOnly = true;
+            helpText.textContent = 'Khuyến mãi mua 1 tặng 1';
+        } else {
+            discountInput.removeAttribute('max');
+            discountInput.readOnly = false;
+            discountInput.placeholder = '0.00';
+            helpText.textContent = 'Phần trăm (%) hoặc số tiền cố định (VNĐ)';
+        }
+    });
+</script>
+</body>
+</html>

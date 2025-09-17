@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Chain - Chuỗi Nhà Hàng & Khách Sạn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #c9a96e;
+            --secondary-color: #2c3e50;
+            --accent-color: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --bg-overlay: rgba(44, 62, 80, 0.8);
+            --gradient-primary: linear-gradient(135deg, #c9a96e 0%, #d4b079 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            margin: 0 10px;
+            color: var(--text-dark) !important;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+            url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-luxury {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-luxury::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-luxury:hover::before {
+            left: 100%;
+        }
+
+        .btn-luxury:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(201, 169, 110, 0.4);
+        }
+
+        /* Location Finder */
+        .location-finder {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            margin-top: -100px;
+            position: relative;
+            z-index: 3;
+        }
+
+        /* Branches Section */
+        .branches-section {
+            padding: 120px 0;
+            background: linear-gradient(45deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .branch-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            border: none;
+            height: 100%;
+            position: relative;
+        }
+
+        .branch-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .branch-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .branch-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .branch-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .branch-status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(40, 167, 69, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .branch-rating {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            padding: 8px 12px;
+            border-radius: 25px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 100px 0;
+        }
+
+        .service-card {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            border: none;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: all 0.5s ease;
+            z-index: 1;
+        }
+
+        .service-card:hover::before {
+            opacity: 0.1;
+            transform: scale(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1);
+            color: var(--secondary-color);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 80px 0;
+            background: var(--gradient-primary);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
+            opacity: 0.2;
+        }
+
+        .stat-item {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Filter Buttons */
+        .filter-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 25px;
+            border-radius: 25px;
+            margin: 0 5px 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(201, 169, 110, 0.3);
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            padding: 100px 0;
+            background: #f8f9fa;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border: none;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            font-size: 8rem;
+            color: var(--primary-color);
+            opacity: 0.1;
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .rating {
+            color: #ffc107;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--secondary-color);
+            color: white;
+            padding: 80px 0 30px;
+            position: relative;
+        }
+
+        .footer h5 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .location-finder {
+                margin-top: -60px;
+                padding: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* Map container */
+        .map-container {
+            height: 400px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .map-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#"><i class="fas fa-crown me-2"></i>Luxury Chain</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#home">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link" href="#branches">Chi nhánh</a></li>
+                <li class="nav-item"><a class="nav-link" href="#services">Dịch vụ</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">Về chúng tôi</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>
+                <li class="nav-item"><a class="nav-link btn btn-luxury ms-2 text-white" href="#booking">Đặt bàn/phòng</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="heading-font">Chuỗi Luxury Chain</h1>
+            <p class="lead">Mạng lưới nhà hàng & khách sạn hàng đầu tại Việt Nam</p>
+            <p>Hiện diện tại 6 tỉnh thành với hơn 12 cơ sở</p>
+            <button class="btn btn-luxury me-3">Tìm chi nhánh</button>
+            <button class="btn btn-outline-light">Khám phá dịch vụ</button>
+        </div>
+    </div>
+</section>
+
+<!-- Location Finder -->
+<section class="container">
+    <div class="location-finder animate-on-scroll">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="heading-font mb-3">Tìm chi nhánh gần bạn</h3>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <select class="form-select form-select-lg" id="provinceSelect">
+                            <option value="">Chọn tỉnh/thành</option>
+                            <option value="ho-chi-minh">TP. Hồ Chí Minh</option>
+                            <option value="ha-noi">Hà Nội</option>
+                            <option value="da-nang">Đà Nẵng</option>
+                            <option value="can-tho">Cần Thơ</option>
+                            <option value="hai-phong">Hải Phòng</option>
+                            <option value="phu-quoc">Phú Quốc</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select form-select-lg" id="serviceSelect">
+                            <option value="">Loại dịch vụ</option>
+                            <option value="restaurant">Nhà hàng</option>
+                            <option value="hotel">Khách sạn</option>
+                            <option value="both">Cả hai</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-luxury btn-lg w-100" onclick="searchBranches()">
+                            <i class="fas fa-search me-2"></i>Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="d-flex justify-content-center gap-3">
+                    <div class="text-center">
+                        <div class="stat-number text-primary" style="font-size: 2rem;">12+</div>
+                        <small>Chi nhánh</small>
+                    </div>
+                    <div class="text-center">
+                        <div class="stat-number text-primary" style="font-size: 2rem;">6</div>
+                        <small>Tỉnh thành</small>
+                    </div>
+                    <div class="text-center">
+                        <div class="stat-number text-primary" style="font-size: 2rem;">5*</div>
+                        <small>Đánh giá</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filter Buttons -->
+<section class="branches-section" id="branches">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto animate-on-scroll">
+                <h2 class="heading-font display-4 mb-3">Hệ thống chi nhánh</h2>
+                <p class="lead text-muted">Mạng lưới phủ sóng toàn quốc với chất lượng dịch vụ đồng nhất</p>
+            </div>
+        </div>
+
+        <div class="text-center mb-5">
+            <button class="filter-btn active" data-filter="all">Tất cả</button>
+            <button class="filter-btn" data-filter="ho-chi-minh">TP.HCM</button>
+            <button class="filter-btn" data-filter="ha-noi">Hà Nội</button>
+            <button class="filter-btn" data-filter="da-nang">Đà Nẵng</button>
+            <button class="filter-btn" data-filter="can-tho">Cần Thơ</button>
+            <button class="filter-btn" data-filter="hai-phong">Hải Phòng</button>
+            <button class="filter-btn" data-filter="phu-quoc">Phú Quốc</button>
+        </div>
+
+        <div class="row g-4" id="branchesContainer">
+            <!-- TP.HCM Branches -->
+            <div class="col-lg-4 col-md-6 branch-item" data-province="ho-chi-minh">
+                <div class="branch-card animate-on-scroll">
+                    <div class="branch-image" style="background-image: url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                        <div class="branch-status">Đang mở cửa</div>
+                        <div class="branch-rating"><i class="fas fa-star"></i> 4.8</div>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="card-title heading-font">Luxury Saigon Central</h5>
+                        <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-2"></i>Quận 1, TP. Hồ Chí Minh</p>
+                        <p class="card-text">Khách sạn & nhà hàng cao cấp tại trung tâm thành phố với view sông Sài Gòn tuyệt đẹp</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="services">
+                                <span class="badge bg-primary me-1"><i class="fas fa-bed"></i> Resort</span>
+                                <span class="badge bg-success"><i class="fas fa-utensils"></i> Restaurant</span>
+                                <span class="badge bg-info"><i class="fas fa-swimming-pool"></i> Pool</span>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-luxury btn-sm w-100">Đặt ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cần Thơ Branch -->
+            <div class="col-lg-4 col-md-6 branch-item" data-province="can-tho">
+                <div class="branch-card animate-on-scroll">
+                    <div class="branch-image" style="background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                        <div class="branch-status">Đang mở cửa</div>
+                        <div class="branch-rating"><i class="fas fa-star"></i> 4.7</div>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="card-title heading-font">Luxury Mekong Delta</h5>
+                        <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-2"></i>Ninh Kiều, Cần Thơ</p>
+                        <p class="card-text">Trải nghiệm văn hóa miền Tây với ẩm thực đồng bằng sông Cửu Long đặc sắc</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="services">
+                                <span class="badge bg-primary me-1"><i class="fas fa-bed"></i> Hotel</span>
+                                <span class="badge bg-success"><i class="fas fa-utensils"></i> Restaurant</span>
+                                <span class="badge bg-warning"><i class="fas fa-ship"></i> River Tour</span>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-luxury btn-sm w-100">Đặt ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hải Phòng Branch -->
+            <div class="col-lg-4 col-md-6 branch-item" data-province="hai-phong">
+                <div class="branch-card animate-on-scroll">
+                    <div class="branch-image" style="background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                        <div class="branch-status">Đang mở cửa</div>
+                        <div class="branch-rating"><i class="fas fa-star"></i> 4.5</div>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="card-title heading-font">Luxury Harbor View</h5>
+                        <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-2"></i>Hồng Bàng, Hải Phòng</p>
+                        <p class="card-text">Khách sạn business với view cảng biển, phục vụ doanh nhân và du khách</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="services">
+                                <span class="badge bg-primary me-1"><i class="fas fa-bed"></i> Hotel</span>
+                                <span class="badge bg-success"><i class="fas fa-utensils"></i> Restaurant</span>
+                                <span class="badge bg-secondary"><i class="fas fa-briefcase"></i> Business</span>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-luxury btn-sm w-100">Đặt ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phú Quốc Branches -->
+            <div class="col-lg-4 col-md-6 branch-item" data-province="phu-quoc">
+                <div class="branch-card animate-on-scroll">
+                    <div class="branch-image" style="background-image: url('https://images.unsplash.com/photo-1540541338287-41700207dee6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                        <div class="branch-status">Đang mở cửa</div>
+                        <div class="branch-rating"><i class="fas fa-star"></i> 4.9</div>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="card-title heading-font">Luxury Phu Quoc Paradise</h5>
+                        <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-2"></i>Dương Đông, Phú Quốc</p>
+                        <p class="card-text">Resort 5 sao trên đảo ngọc với villa riêng, spa và ẩm thực quốc tế</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="services">
+                                <span class="badge bg-primary me-1"><i class="fas fa-bed"></i> Resort</span>
+                                <span class="badge bg-success"><i class="fas fa-utensils"></i> Restaurant</span>
+                                <span class="badge bg-info"><i class="fas fa-spa"></i> Spa</span>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-luxury btn-sm w-100">Đặt ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 branch-item" data-province="phu-quoc">
+                <div class="branch-card animate-on-scroll">
+                    <div class="branch-image" style="background-image: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                        <div class="branch-status">Đang mở cửa</div>
+                        <div class="branch-rating"><i class="fas fa-star"></i> 4.8</div>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="card-title heading-font">Luxury Sunset Beach</h5>
+                        <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-2"></i>Ông Lang, Phú Quốc</p>
+                        <p class="card-text">Beach resort với view hoàng hôn tuyệt đẹp và dịch vụ all-inclusive</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="services">
+                                <span class="badge bg-primary me-1"><i class="fas fa-bed"></i> Resort</span>
+                                <span class="badge bg-success"><i class="fas fa-utensils"></i> All-inclusive</span>
+                                <span class="badge bg-warning"><i class="fas fa-cocktail"></i> Beach Bar</span>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-luxury btn-sm w-100">Đặt ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- More branches to reach 12+ -->
+            <div class="col-lg-4 col-md-6 branch-item" data-province="ho-chi-minh">
+                <div class="branch-card animate-on-scroll">
+                    <div class="branch-image" style="background-image: url('https://images.unsplash.com/photo-1445019980597-93fa8acb246c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                        <div class="branch-status">Đang mở cửa</div>
+                        <div class="branch-rating"><i class="fas fa-star"></i> 4.6</div>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="card-title heading-font">Luxury Rooftop Dining</h5>
+                        <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-2"></i>Quận 3, TP. Hồ Chí Minh</p>
+                        <p class="card-text">Nhà hàng rooftop cao cấp với không gian 360° view thành phố về đêm</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="services">
+                                <span class="badge bg-success me-1"><i class="fas fa-utensils"></i> Fine Dining</span>
+                                <span class="badge bg-warning"><i class="fas fa-cocktail"></i> Sky Bar</span>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-luxury btn-sm w-100">Đặt bàn</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 branch-item" data-province="ha-noi">
+                <div class="branch-card animate-on-scroll">
+                    <div class="branch-image" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                        <div class="branch-status">Đang mở cửa</div>
+                        <div class="branch-rating"><i class="fas fa-star"></i> 4.7</div>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="card-title heading-font">Luxury Hanoi Cuisine</h5>
+                        <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-2"></i>Ba Đình, Hà Nội</p>
+                        <p class="card-text">Nhà hàng chuyên về ẩm thực Bắc Bộ truyền thống trong không gian hiện đại</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="services">
+                                <span class="badge bg-success me-1"><i class="fas fa-utensils"></i> Vietnamese</span>
+                                <span class="badge bg-info"><i class="fas fa-music"></i> Live Music</span>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-luxury btn-sm w-100">Đặt bàn</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 branch-item" data-province="da-nang">
+                <div class="branch-card animate-on-scroll">
+                    <div class="branch-image" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                        <div class="branch-status">Đang mở cửa</div>
+                        <div class="branch-rating"><i class="fas fa-star"></i> 4.5</div>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="card-title heading-font">Luxury Riverside</h5>
+                        <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-2"></i>Sơn Trà, Đà Nẵng</p>
+                        <p class="card-text">Nhà hàng ven sông Hàn với chuyên môn hải sản tươi sống và BBQ ngoài trời</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="services">
+                                <span class="badge bg-success me-1"><i class="fas fa-utensils"></i> Seafood</span>
+                                <span class="badge bg-danger"><i class="fas fa-fire"></i> BBQ</span>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-luxury btn-sm w-100">Đặt bàn</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="row mt-5">
+            <div class="col-12 animate-on-scroll">
+                <h3 class="heading-font text-center mb-4">Bản đồ hệ thống</h3>
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <div class="text-center">
+                            <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: var(--primary-color);"></i>
+                            <p class="mt-3 mb-0">Bản đồ tương tác hiển thị tất cả chi nhánh</p>
+                            <small class="text-muted">Sẽ tích hợp Google Maps trong phiên bản thực tế</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-target="12">0</div>
+                    <p class="mb-0">Chi nhánh</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-target="6">0</div>
+                    <p class="mb-0">Tỉnh thành</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-target="50000">0</div>
+                    <p class="mb-0">Khách hàng</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-target="15">0</div>
+                    <p class="mb-0">Năm kinh nghiệm</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="services-section">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto animate-on-scroll">
+                <h2 class="heading-font display-4 mb-3">Dịch vụ đa dạng</h2>
+                <p class="lead text-muted">Đáp ứng mọi nhu cầu từ nghỉ dưỡng đến ẩm thực và sự kiện</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <h4 class="heading-font mb-3">Khách sạn cao cấp</h4>
+                    <p class="text-muted">Phòng nghỉ sang trọng với tiện nghi đầy đủ, dịch vụ 24/7 và view tuyệt đẹp</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h4 class="heading-font mb-3">Nhà hàng fine dining</h4>
+                    <p class="text-muted">Ẩm thực đẳng cấp quốc tế với đầu bếp chuyên nghiệp và nguyên liệu cao cấp</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon">
+                        <i class="fas fa-glass-cheers"></i>
+                    </div>
+                    <h4 class="heading-font mb-3">Tổ chức sự kiện</h4>
+                    <p class="text-muted">Hội nghị, tiệc cưới, sinh nhật với không gian sang trọng và dịch vụ chuyên nghiệp</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h4 class="heading-font mb-3">Spa & Wellness</h4>
+                    <p class="text-muted">Thư giãn và chăm sóc sức khỏe với các liệu pháp massage và beauty treatment</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto animate-on-scroll">
+                <h2 class="heading-font display-4 mb-3">Khách hàng nói gì</h2>
+                <p class="lead text-muted">Những phản hồi tích cực từ khách hàng trên toàn quốc</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card animate-on-scroll">
+                    <div class="rating mb-3">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="mb-4">"Đã ở nhiều chi nhánh của Luxury Chain, dịch vụ luôn nhất quán và chất lượng. Chi nhánh Saigon Central có view tuyệt vời!"</p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
+                             class="rounded-circle me-3" width="50" height="50" alt="Customer">
+                        <div class="text-start">
+                            <h6 class="mb-0">Nguyễn Văn A</h6>
+                            <small class="text-muted">Doanh nhân - TP.HCM</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card animate-on-scroll">
+                    <div class="rating mb-3">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="mb-4">"Resort Phú Quốc Paradise thật sự là thiên đường! Gia đình tôi đã có kỳ nghỉ tuyệt vời với dịch vụ all-inclusive."</p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616c27d6e44?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
+                             class="rounded-circle me-3" width="50" height="50" alt="Customer">
+                        <div class="text-start">
+                            <h6 class="mb-0">Trần Thị B</h6>
+                            <small class="text-muted">Kiến trúc sư - Hà Nội</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card animate-on-scroll">
+                    <div class="rating mb-3">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="mb-4">"Đã tổ chức hội nghị công ty tại Luxury Harbor View Hải Phòng. Trang thiết bị hiện đại, đội ngũ hỗ trợ chuyên nghiệp."</p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
+                             class="rounded-circle me-3" width="50" height="50" alt="Customer">
+                        <div class="text-start">
+                            <h6 class="mb-0">Lê Minh C</h6>
+                            <small class="text-muted">Giám đốc kinh doanh</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5" style="background: var(--gradient-primary);">
+    <div class="container">
+        <div class="row text-center text-white">
+            <div class="col-lg-8 mx-auto animate-on-scroll">
+                <h2 class="heading-font display-5 mb-3">Trải nghiệm Luxury Chain ngay hôm nay</h2>
+                <p class="lead mb-4">Tìm chi nhánh gần nhất và đặt chỗ ngay để nhận ưu đãi đặc biệt!</p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <button class="btn btn-light btn-lg px-4" onclick="searchBranches()">
+                        <i class="fas fa-search me-2"></i>Tìm chi nhánh
+                    </button>
+                    <button class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-phone me-2"></i>Hotline: 1900 1234
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer id="contact" class="footer">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h3 class="heading-font text-white mb-4">
+                    <i class="fas fa-crown me-2" style="color: var(--primary-color);"></i>
+                    Luxury Chain
+                </h3>
+                <p class="text-light mb-4">Chuỗi nhà hàng và khách sạn cao cấp hàng đầu Việt Nam với 12+ chi nhánh trên 6 tỉnh thành.</p>
+                <div class="d-flex gap-3">
+                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h5>Chi nhánh chính</h5>
+                <div class="footer-links">
+                    <div><a href="#" class="text-decoration-none text-light">TP. Hồ Chí Minh</a></div>
+                    <div><a href="#" class="text-decoration-none text-light">Hà Nội</a></div>
+                    <div><a href="#" class="text-decoration-none text-light">Đà Nẵng</a></div>
+                    <div><a href="#" class="text-decoration-none text-light">Cần Thơ</a></div>
+                    <div><a href="#" class="text-decoration-none text-light">Hải Phòng</a></div>
+                    <div><a href="#" class="text-decoration-none text-light">Phú Quốc</a></div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h5>Dịch vụ</h5>
+                <div class="footer-links">
+                    <div><a href="#" class="text-decoration-none text-light">Đặt phòng khách sạn</a></div>
+                    <div><a href="#" class="text-decoration-none text-light">Đặt bàn nhà hàng</a></div>
+                    <div><a href="#" class="text-decoration-none text-light">Tổ chức sự kiện</a></div>
+                    <div><a href="#" class="text-decoration-none text-light">Spa & Massage</a></div>
+                    <div><a href="#" class="text-decoration-none text-light">Tour du lịch</a></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <h5>Liên hệ</h5>
+                <div class="contact-info">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-phone me-3" style="color: var(--primary-color); width: 20px;"></i>
+                        <span>Hotline: 1900 1234 (miễn phí)</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-envelope me-3" style="color: var(--primary-color); width: 20px;"></i>
+                        <span>info@luxurychain.vn</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-clock me-3" style="color: var(--primary-color); width: 20px;"></i>
+                        <span>Hỗ trợ 24/7 tất cả chi nhánh</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-map-marker-alt me-3" style="color: var(--primary-color); width: 20px;"></i>
+                        <span>Trụ sở chính: TP. Hồ Chí Minh</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4" style="border-color: #555;">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="mb-0 text-light">&copy; 2024 Luxury Chain. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="mb-0 text-light">
+                    Thiết kế bởi <i class="fas fa-heart text-danger mx-1"></i> Development Team
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to Top Button -->
+<button id="backToTop" class="btn btn-luxury position-fixed bottom-0 end-0 m-4 rounded-circle shadow-lg" style="width: 50px; height: 50px; display: none; z-index: 1000;">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Navbar background change on scroll
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        const backToTop = document.getElementById('backToTop');
+
+        if (window.scrollY > 100) {
+            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            navbar.style.boxShadow = '0 5px 30px rgba(0, 0, 0, 0.15)';
+            backToTop.style.display = 'block';
+        } else {
+            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            navbar.style.boxShadow = '0 2px 30px rgba(0, 0, 0, 0.1)';
+            backToTop.style.display = 'none';
+        }
+    });
+
+    // Back to top functionality
+    document.getElementById('backToTop').addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Animate elements on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Counter animation for stats
+    function animateCounter(element, target, duration = 2000) {
+        let start = 0;
+        const increment = target / (duration / 16);
+
+        function updateCounter() {
+            start += increment;
+            if (start < target) {
+                element.textContent = Math.floor(start).toLocaleString();
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = target.toLocaleString();
+            }
+        }
+        updateCounter();
+    }
+
+    // Trigger counter animation when stats section is visible
+    const statsObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counters = entry.target.querySelectorAll('.stat-number');
+                counters.forEach(counter => {
+                    const target = parseInt(counter.getAttribute('data-target'));
+                    animateCounter(counter, target);
+                });
+                statsObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) {
+        statsObserver.observe(statsSection);
+    }
+
+    // Branch filtering functionality
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const branchItems = document.querySelectorAll('.branch-item');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+
+            const filterValue = this.getAttribute('data-filter');
+
+            branchItems.forEach(item => {
+                if (filterValue === 'all' || item.getAttribute('data-province') === filterValue) {
+                    item.style.display = 'block';
+                    item.style.animation = 'fadeInUp 0.5s ease-out';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Search branches functionality
+    function searchBranches() {
+        const provinceSelect = document.getElementById('provinceSelect');
+        const serviceSelect = document.getElementById('serviceSelect');
+
+        if (!provinceSelect.value && !serviceSelect.value) {
+            alert('Vui lòng chọn tỉnh/thành hoặc loại dịch vụ để tìm kiếm!');
+            return;
+        }
+
+        // Show loading state
+        const searchBtn = document.querySelector('.location-finder .btn-luxury');
+        const originalText = searchBtn.innerHTML;
+        searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang tìm...';
+        searchBtn.disabled = true;
+
+        // Simulate search delay
+        setTimeout(() => {
+            // Reset button
+            searchBtn.innerHTML = originalText;
+            searchBtn.disabled = false;
+
+            // Filter branches based on selection
+            if (provinceSelect.value) {
+                // Trigger filter button click
+                const filterBtn = document.querySelector(`[data-filter="${provinceSelect.value}"]`);
+                if (filterBtn) {
+                    filterBtn.click();
+                }
+            }
+
+            // Scroll to branches section
+            document.getElementById('branches').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+
+            // Show results notification
+            const resultCount = document.querySelectorAll(`.branch-item[data-province="${provinceSelect.value}"]`).length;
+            if (provinceSelect.value && resultCount > 0) {
+                setTimeout(() => {
+                    alert(`Tìm thấy ${resultCount} chi nhánh tại ${provinceSelect.options[provinceSelect.selectedIndex].text}`);
+                }, 800);
+            }
+        }, 1500);
+    }
+
+    // Booking functionality
+    document.querySelectorAll('.btn-luxury').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            if (this.innerText.includes('Đặt ngay') || this.innerText.includes('Đặt bàn')) {
+                e.preventDefault();
+                const branchName = this.closest('.branch-card').querySelector('.card-title').innerText;
+
+                // Show booking modal or redirect
+                const bookingConfirm = confirm(`Bạn muốn đặt chỗ tại ${branchName}?\n\nChức năng đặt chỗ online sẽ sớm được triển khai.\nHiện tại vui lòng gọi Hotline: 1900 1234`);
+
+                if (bookingConfirm) {
+                    // In real implementation, this would open booking form or redirect
+                    window.open('tel:19001234', '_blank');
+                }
+            }
+        });
+    });
+
+    // Add hover effects to branch cards
+    document.querySelectorAll('.branch-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-15px) scale(1.02)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Parallax effect for hero section
+    window.addEventListener('scroll', function() {
+        const hero = document.querySelector('.hero');
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.3;
+
+        if (hero && scrolled < hero.offsetHeight) {
+            hero.style.backgroundPositionY = rate + 'px';
+        }
+    });
+
+    // Dynamic greeting based on time
+    function updateGreeting() {
+        const now = new Date();
+        const hour = now.getHours();
+        let greeting = 'Chào mừng đến với';
+
+        if (hour < 12) {
+            greeting = 'Chào buổi sáng! Khám phá';
+        } else if (hour < 18) {
+            greeting = 'Chào buổi chiều! Trải nghiệm';
+        } else {
+            greeting = 'Chào buổi tối! Thưởng thức';
+        }
+
+        // Update hero subtitle if exists
+        const heroSubtitle = document.querySelector('.hero p');
+        if (heroSubtitle && !heroSubtitle.textContent.includes('Mạng lưới')) {
+            heroSubtitle.textContent = `${greeting} Mạng lưới nhà hàng & khách sạn hàng đầu tại Việt Nam`;
+        }
+    }
+
+    // Initialize dynamic content
+    window.addEventListener('load', function() {
+        updateGreeting();
+
+        // Add loading animation to branch images
+        document.querySelectorAll('.branch-image').forEach(img => {
+            img.style.backgroundSize = 'cover';
+            img.style.backgroundPosition = 'center';
+            img.style.transition = 'all 0.3s ease';
+        });
+    });
+
+    // Mobile menu enhancements
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+
+    if (navbarToggler) {
+        navbarToggler.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            this.innerHTML = isExpanded ?
+                '<span class="navbar-toggler-icon"></span>' :
+                '<i class="fas fa-times"></i>';
+        });
+    }
+
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth < 992) {
+                const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                    hide: true
+                });
+            }
+        });
+    });
+
+    // Add loading states to all buttons
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            if (this.innerText.includes('Xem chi tiết')) {
+                e.preventDefault();
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang tải...';
+                this.disabled = true;
+
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                    // In real app, would show detailed modal or navigate to detail page
+                    alert('Chức năng xem chi tiết sẽ sớm được triển khai!');
+                }, 1000);
+            }
+        });
+    });
+
+    // Intersection Observer for fade-in animations
+    const fadeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    // Apply fade observer to all animated elements
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        fadeObserver.observe(el);
+    });
+</script>
+
+<style>
+    /* Additional enhancements */
+    .branch-card {
+        cursor: pointer;
+    }
+
+    .branch-card:hover .branch-image {
+        transform: scale(1.05);
+    }
+
+    .branch-image {
+        transition: transform 0.3s ease;
+    }
+
+    .service-card {
+        cursor: pointer;
+    }
+
+    .testimonial-card {
+        position: relative;
+    }
+
+    .testimonial-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: var(--primary-color);
+        border-radius: 2px;
+    }
+
+    /* Enhanced button animations */
+    .btn-luxury {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-luxury::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transition: width 0.3s, height 0.3s;
+    }
+
+    .btn-luxury:hover::after {
+        width: 300px;
+        height: 300px;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+        }
+
+        .location-finder {
+            margin-top: -60px;
+            padding: 1.5rem;
+        }
+
+        .branch-card {
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            font-size: 0.85rem;
+            padding: 8px 16px;
+        }
+    }
+
+    /* Loading animations */
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .btn:disabled {
+        animation: pulse 1s infinite;
+    }
+
+    /* Scroll animations */
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Custom selection */
+    ::selection {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    ::-moz-selection {
+        background-color: var(--primary-color);
+        color: white;
+    }
+</style>
+
+</body>
+</html>

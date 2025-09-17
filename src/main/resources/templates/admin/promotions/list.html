@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý khuyến mãi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .sidebar {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .nav-link {
+      color: rgba(255,255,255,0.8) !important;
+      border-radius: 8px;
+      margin: 2px 0;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: white !important;
+      background-color: rgba(255,255,255,0.1);
+    }
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 8px;
+    }
+    .btn-outline-primary {
+      border-color: #667eea;
+      color: #667eea;
+    }
+    .btn-outline-primary:hover {
+      background: #667eea;
+      border-color: #667eea;
+    }
+    .table th {
+      border-top: none;
+      font-weight: 600;
+      color: #495057;
+    }
+    .badge {
+      border-radius: 20px;
+      padding: 8px 12px;
+    }
+    .search-form {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .promotion-card {
+      transition: transform 0.2s ease;
+    }
+    .promotion-card:hover {
+      transform: translateY(-2px);
+    }
+    .text-muted {
+      font-size: 0.9em;
+    }
+    .status-active {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .status-inactive {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .type-percentage {
+      background-color: #cce5ff;
+      color: #0056b3;
+    }
+    .type-fixed {
+      background-color: #fff2cc;
+      color: #856404;
+    }
+    .type-bogo {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+  </style>
+</head>
+<body class="bg-light">
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-2 sidebar p-3">
+      <div class="text-white text-center mb-4">
+        <h5><i class="fas fa-crown me-2"></i>Admin Panel</h5>
+      </div>
+      <nav class="nav flex-column">
+        <a class="nav-link" href="/admin/branches">
+          <i class="fas fa-store me-2"></i>Quản lý chi nhánh
+        </a>
+        <a class="nav-link" href="/admin/staff">
+          <i class="fas fa-users me-2"></i>Quản lý nhân viên
+        </a>
+        <a class="nav-link active" href="/admin/promotions">
+          <i class="fas fa-tags me-2"></i>Quản lý khuyến mãi
+        </a>
+      </nav>
+      <div class="mt-auto">
+        <form method="post" action="/admin/logout">
+          <button type="submit" class="btn btn-outline-light btn-sm w-100">
+            <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="col-md-10 p-4">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="mb-1">
+            <i class="fas fa-tags me-2 text-primary"></i>Quản lý khuyến mãi
+          </h2>
+          <p class="text-muted mb-0">
+            <span th:if="${isAdmin}">Quản lý tất cả khuyến mãi trong hệ thống</span>
+            <span th:unless="${isAdmin}">Quản lý khuyến mãi của chi nhánh</span>
+          </p>
+        </div>
+        <a href="/admin/promotions/add" class="btn btn-primary">
+          <i class="fas fa-plus me-2"></i>Thêm khuyến mãi
+        </a>
+      </div>
+
+      <!-- Alert messages -->
+      <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+
+      <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+
+      <!-- Search form -->
+      <div class="search-form">
+        <form method="get" action="/admin/promotions">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">Tên khuyến mãi</label>
+              <input type="text" class="form-control" name="name" th:value="${searchName}"
+                     placeholder="Nhập tên khuyến mãi">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Phạm vi</label>
+              <select class="form-select" name="scope">
+                <option value="">Tất cả</option>
+                <option th:each="scope : ${promotionScopes}"
+                        th:value="${scope}"
+                        th:text="${scopeLabels.get(scope.name())}"
+                        th:selected="${scope == searchScope}"></option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Đối tượng</label>
+              <select class="form-select" name="applicability">
+                <option value="">Tất cả</option>
+                <option th:each="applicability : ${promotionApplicabilities}"
+                        th:value="${applicability}"
+                        th:text="${applicabilityLabels.get(applicability.name())}"
+                        th:selected="${applicability == searchApplicability}"></option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Trạng thái</label>
+              <select class="form-select" name="status">
+                <option value="">Tất cả</option>
+                <option th:each="status : ${promotionStatuses}"
+                        th:value="${status}"
+                        th:text="${statusLabels.get(status.name())}"
+                        th:selected="${status == searchStatus}"></option>
+              </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+              <button type="submit" class="btn btn-outline-primary me-2">
+                <i class="fas fa-search me-1"></i>Tìm kiếm
+              </button>
+              <a href="/admin/promotions" class="btn btn-outline-secondary">
+                <i class="fas fa-undo me-1"></i>Reset
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Promotions list -->
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive" th:if="${!promotions.isEmpty()}">
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th>Tên khuyến mãi</th>
+                <th>Loại</th>
+                <th>Giá trị</th>
+                <th>Thời gian</th>
+                <th>Phạm vi</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="promotion : ${promotions}" class="promotion-card">
+                <td>
+                  <div>
+                    <strong th:text="${promotion.name}"></strong>
+                    <div class="text-muted small" th:text="${promotion.description}"></div>
+                  </div>
+                </td>
+                <td>
+                                            <span class="badge type-percentage"
+                                                  th:if="${promotion.type.name() == 'PERCENTAGE'}"
+                                                  th:text="${promotion.typeLabel}"></span>
+                  <span class="badge type-fixed"
+                        th:if="${promotion.type.name() == 'FIXED_AMOUNT'}"
+                        th:text="${promotion.typeLabel}"></span>
+                  <span class="badge type-bogo"
+                        th:if="${promotion.type.name() == 'BOGO'}"
+                        th:text="${promotion.typeLabel}"></span>
+                </td>
+                <td>
+                  <div th:if="${promotion.type.name() == 'PERCENTAGE'}">
+                    <span th:text="${promotion.discountValue}"></span>%
+                  </div>
+                  <div th:if="${promotion.type.name() == 'FIXED_AMOUNT'}">
+                    <span th:text="${#numbers.formatCurrency(promotion.discountValue)}"></span>
+                  </div>
+                  <div th:if="${promotion.type.name() == 'BOGO'}">
+                    Mua 1 tặng 1
+                  </div>
+                  <div class="text-muted small" th:if="${promotion.minAmount != null}">
+                    Tối thiểu: <span th:text="${#numbers.formatCurrency(promotion.minAmount)}"></span>
+                  </div>
+                </td>
+                <td>
+                  <div class="text-muted small">
+                    <div th:text="${#temporals.format(promotion.startDate, 'dd/MM/yyyy HH:mm')}"></div>
+                    đến
+                    <div th:text="${#temporals.format(promotion.endDate, 'dd/MM/yyyy HH:mm')}"></div>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <span th:text="${promotion.scopeLabel}"></span>
+                  </div>
+                  <div class="text-muted small" th:if="${promotion.branchNames != null}">
+                                                <span th:each="branchName, iterStat : ${promotion.branchNames}">
+                                                    <span th:text="${branchName}"></span>
+                                                    <span th:if="${!iterStat.last}">, </span>
+                                                </span>
+                  </div>
+                  <div class="text-muted small">
+                    <span th:text="${promotion.applicabilityLabel}"></span>
+                  </div>
+                </td>
+                <td>
+                                            <span class="badge status-active"
+                                                  th:if="${promotion.status.name() == 'ACTIVE'}"
+                                                  th:text="${promotion.statusLabel}"></span>
+                  <span class="badge status-inactive"
+                        th:if="${promotion.status.name() == 'INACTIVE'}"
+                        th:text="${promotion.statusLabel}"></span>
+                </td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <a th:href="@{/admin/promotions/{id}/edit(id=${promotion.id})}"
+                       class="btn btn-sm btn-outline-primary" title="Sửa">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <form method="post" th:action="@{/admin/promotions/{id}/delete(id=${promotion.id})}"
+                          class="d-inline" onsubmit="return confirm('Bạn có chắc muốn ẩn khuyến mãi này?')">
+                      <button type="submit" class="btn btn-sm btn-outline-danger" title="Ẩn">
+                        <i class="fas fa-eye-slash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty state -->
+          <div th:if="${promotions.isEmpty()}" class="text-center py-5">
+            <i class="fas fa-tags fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Chưa có khuyến mãi nào</h5>
+            <p class="text-muted">Hãy tạo khuyến mãi đầu tiên cho hệ thống</p>
+            <a href="/admin/promotions/add" class="btn btn-primary">
+              <i class="fas fa-plus me-2"></i>Thêm khuyến mãi
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

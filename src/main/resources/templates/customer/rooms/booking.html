@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Phòng - Luxury Resort</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #c9a96e;
+            --secondary-color: #2c3e50;
+            --accent-color: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --bg-overlay: rgba(44, 62, 80, 0.7);
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            padding-top: 80px;
+            background: #f8f9fa;
+        }
+
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            margin: 0 10px;
+            color: var(--text-dark) !important;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .btn-luxury {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+        }
+
+        .btn-luxury:hover {
+            background: #b8956b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(201, 169, 110, 0.4);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+            url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
+            padding: 120px 0 80px;
+            color: white;
+            text-align: center;
+        }
+
+        /* Booking Steps */
+        .booking-steps {
+            background: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step.active .step-number {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .step-title {
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .step-line {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .step.completed .step-line {
+            background: var(--success-color);
+        }
+
+        .step:last-child .step-line {
+            display: none;
+        }
+
+        /* Form Sections */
+        .booking-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            color: var(--text-dark);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(201, 169, 110, 0.25);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        /* Room Selection */
+        .room-option {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .room-option:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(201, 169, 110, 0.2);
+        }
+
+        .room-option.selected {
+            border-color: var(--primary-color);
+            background: rgba(201, 169, 110, 0.05);
+        }
+
+        .room-image {
+            width: 100px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .room-info h6 {
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .room-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .room-features {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .room-feature {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Summary Section */
+        .booking-summary {
+            background: var(--accent-color);
+            border-radius: 15px;
+            padding: 25px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .summary-row.total {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 15px;
+        }
+
+        /* Guest Info Form */
+        .guest-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        /* Payment Methods */
+        .payment-method {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary-color);
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary-color);
+            background: rgba(201, 169, 110, 0.05);
+        }
+
+        .payment-method input[type="radio"] {
+            display: none;
+        }
+
+        .payment-method label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 15px;
+        }
+
+        /* Confirmation Section */
+        .confirmation-card {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .confirmation-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .booking-details {
+            background: white;
+            color: var(--text-dark);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .booking-section {
+                padding: 25px 20px;
+            }
+
+            .step-indicator {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .step-line {
+                display: none;
+            }
+
+            .booking-summary {
+                position: static;
+                margin-top: 30px;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .btn-next {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-next:hover {
+            background: #b8956b;
+            transform: translateY(-2px);
+        }
+
+        .btn-prev {
+            background: var(--text-light);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-prev:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="index.html"><i class="fas fa-crown me-2"></i>Luxury Resort</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link" href="rooms.html">Phòng</a></li>
+                <li class="nav-item"><a class="nav-link" href="restaurant.html">Nhà hàng</a></li>
+                <li class="nav-item"><a class="nav-link" href="facilities.html">Tiện ích</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact.html">Liên hệ</a></li>
+                <li class="nav-item"><a class="nav-link btn btn-luxury ms-2 text-white active" href="booking.html">Đặt phòng</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <h1 class="heading-font display-3 mb-3">Đặt phòng</h1>
+        <p class="lead">Hoàn tất đặt phòng trong vài bước đơn giản</p>
+    </div>
+</section>
+
+<!-- Booking Steps -->
+<section class="booking-steps">
+    <div class="container">
+        <div class="step-indicator">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-title">Chọn phòng & Ngày</div>
+                <div class="step-line"></div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-title">Thông tin khách</div>
+                <div class="step-line"></div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-title">Thanh toán</div>
+                <div class="step-line"></div>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-number">4</div>
+                <div class="step-title">Xác nhận</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="container mb-5">
+    <form id="bookingForm">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Step 1: Room Selection -->
+                <div class="booking-section fade-in" id="section1">
+                    <h3 class="section-title"><i class="fas fa-bed me-2"></i>Chọn phòng & Thời gian</h3>
+
+                    <!-- Date Selection -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Ngày nhận phòng</label>
+                            <input type="date" class="form-control" id="checkInDate" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ngày trả phòng</label>
+                            <input type="date" class="form-control" id="checkOutDate" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label">Người lớn</label>
+                            <select class="form-select" id="adults">
+                                <option value="1">1 người</option>
+                                <option value="2" selected>2 người</option>
+                                <option value="3">3 người</option>
+                                <option value="4">4 người</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Trẻ em</label>
+                            <select class="form-select" id="children">
+                                <option value="0" selected>0 trẻ em</option>
+                                <option value="1">1 trẻ em</option>
+                                <option value="2">2 trẻ em</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Số phòng</label>
+                            <select class="form-select" id="rooms">
+                                <option value="1" selected>1 phòng</option>
+                                <option value="2">2 phòng</option>
+                                <option value="3">3 phòng</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Room Options -->
+                    <h5 class="mb-3">Chọn loại phòng</h5>
+                    <div class="room-option" data-room="superior" data-price="1800000">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Superior" class="room-image">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="room-info">
+                                    <h6>Superior Ocean View</h6>
+                                    <p class="text-muted mb-2">Phòng Superior với view biển tuyệt đẹp, nội thất hiện đại</p>
+                                    <div class="room-features">
+                                        <span class="room-feature"><i class="fas fa-bed"></i> King Bed</span>
+                                        <span class="room-feature"><i class="fas fa-users"></i> 2 khách</span>
+                                        <span class="room-feature"><i class="fas fa-ruler-combined"></i> 35m²</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <div class="room-price">1.800.000 VNĐ</div>
+                                <div class="text-muted">/ đêm</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="room-option" data-room="deluxe" data-price="2500000">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Deluxe" class="room-image">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="room-info">
+                                    <h6>Deluxe Suite</h6>
+                                    <p class="text-muted mb-2">Suite cao cấp với phòng khách riêng và ban công rộng</p>
+                                    <div class="room-features">
+                                        <span class="room-feature"><i class="fas fa-bed"></i> King Bed</span>
+                                        <span class="room-feature"><i class="fas fa-users"></i> 4 khách</span>
+                                        <span class="room-feature"><i class="fas fa-ruler-combined"></i> 50m²</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <div class="room-price">2.500.000 VNĐ</div>
+                                <div class="text-muted">/ đêm</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="room-option" data-room="presidential" data-price="5000000">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Presidential" class="room-image">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="room-info">
+                                    <h6>Presidential Suite</h6>
+                                    <p class="text-muted mb-2">Suite tổng thống với 2 phòng ngủ, phòng ăn và butler riêng</p>
+                                    <div class="room-features">
+                                        <span class="room-feature"><i class="fas fa-bed"></i> 2 King Beds</span>
+                                        <span class="room-feature"><i class="fas fa-users"></i> 6 khách</span>
+                                        <span class="room-feature"><i class="fas fa-ruler-combined"></i> 120m²</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <div class="room-price">5.000.000 VNĐ</div>
+                                <div class="text-muted">/ đêm</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="button" class="btn btn-next" onclick="nextStep(1)">Tiếp theo</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Guest Information -->
+                <div class="booking-section fade-in hidden" id="section2">
+                    <h3 class="section-title"><i class="fas fa-user me-2"></i>Thông tin khách hàng</h3>
+
+                    <div class="guest-card">
+                        <h6><i class="fas fa-user-tie me-2"></i>Khách chính</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Họ và tên</label>
+                                <input type="text" class="form-control" id="guestName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="guestEmail" required>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Số điện thoại</label>
+                                <input type="tel" class="form-control" id="guestPhone" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">CMND/CCCD</label>
+                                <input type="text" class="form-control" id="guestId" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6><i class="fas fa-clipboard-list me-2"></i>Yêu cầu đặc biệt</h6>
+                    <div class="row">
+                        <div class="col-12">
+                            <textarea class="form-control" id="specialRequests" rows="3" placeholder="Ví dụ: Phòng tầng cao, gần thang máy, bánh sinh nhật..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-4">
+                        <button type="button" class="btn btn-prev me-2" onclick="prevStep(2)">Quay lại</button>
+                        <button type="button" class="btn btn-next" onclick="nextStep(2)">Tiếp theo</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Payment -->
+                <div class="booking-section fade-in hidden" id="section3">
+                    <h3 class="section-title"><i class="fas fa-credit-card me-2"></i>Thanh toán</h3>
+
+                    <h6 class="mb-3">Chọn phương thức thanh toán</h6>
+
+                    <div class="payment-method" onclick="selectPayment('credit')">
+                        <input type="radio" name="payment" id="credit" value="credit">
+                        <label for="credit">
+                            <div class="payment-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div>
+                                <strong>Thẻ tín dụng / Ghi nợ</strong>
+                                <div class="text-muted">Visa, Mastercard, JCB</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="payment-method" onclick="selectPayment('bank')">
+                        <input type="radio" name="payment" id="bank" value="bank">
+                        <label for="bank">
+                            <div class="payment-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <div>
+                                <strong>Chuyển khoản ngân hàng</strong>
+                                <div class="text-muted">Chuyển khoản trực tiếp</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="payment-method" onclick="selectPayment('paypal')">
+                        <input type="radio" name="payment" id="paypal" value="paypal">
+                        <label for="paypal">
+                            <div class="payment-icon">
+                                <i class="fab fa-paypal"></i>
+                            </div>
+                            <div>
+                                <strong>PayPal</strong>
+                                <div class="text-muted">Thanh toán qua PayPal</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Credit Card Form -->
+                    <div id="creditCardForm" class="mt-4 hidden">
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="form-label">Số thẻ</label>
+                                <input type="text" class="form-control" placeholder="1234 5678 9012 3456">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Tên chủ thẻ</label>
+                                <input type="text" class="form-control" placeholder="NGUYEN VAN A">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Tháng/Năm</label>
+                                <input type="text" class="form-control" placeholder="MM/YY">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">CVV</label>
+                                <input type="text" class="form-control" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-4">
+                        <button type="button" class="btn btn-prev me-2" onclick="prevStep(3)">Quay lại</button>
+                        <button type="button" class="btn btn-next" onclick="processPayment()">Thanh toán</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmation -->
+                <div class="booking-section fade-in hidden" id="section4">
+                    <div class="confirmation-card">
+                        <i class="fas fa-check-circle fa-3x mb-3"></i>
+                        <h3>Đặt phòng thành công!</h3>
+                        <p>Cảm ơn bạn đã chọn Luxury Resort</p>
+                        <div class="confirmation-number">LR2024001234</div>
+                        <p class="mb-0">Mã đặt phòng của bạn</p>
+
+                        <div class="booking-details">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Chi tiết đặt phòng</h6>
+                                    <p><strong>Phòng:</strong> <span id="confirmedRoom">Superior Ocean View</span></p>
+                                    <p><strong>Ngày:</strong> <span id="confirmedDates">15/12/2024 - 18/12/2024</span></p>
+                                    <p><strong>Khách:</strong> <span id="confirmedGuests">2 người lớn</span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Thông tin khách</h6>
+                                    <p><strong>Tên:</strong> <span id="confirmedName">Nguyễn Văn A</span></p>
+                                    <p><strong>Email:</strong> <span id="confirmedEmail">example@email.com</span></p>
+                                    <p><strong>SĐT:</strong> <span id="confirmedPhone">0123456789</span></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Tổng chi phí</h6>
+                                    <p class="mb-0"><strong style="color: var(--primary-color); font-size: 1.2rem;" id="confirmedTotal">5.400.000 VNĐ</strong></p>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <button class="btn btn-luxury" onclick="downloadConfirmation()">
+                                        <i class="fas fa-download me-2"></i>Tải xác nhận
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <p class="mb-2"><strong>Thông tin quan trọng:</strong></p>
+                            <ul class="list-unstyled text-start">
+                                <li>• Email xác nhận đã được gửi đến hộp thư của bạn</li>
+                                <li>• Vui lòng đến quầy lễ tân trước 15:00 để nhận phòng</li>
+                                <li>• Mang theo CMND/CCCD và mã đặt phòng</li>
+                                <li>• Liên hệ hotline 1900-1234 nếu cần hỗ trợ</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-luxury" onclick="window.location.href='index.html'">
+                            <i class="fas fa-home me-2"></i>Về trang chủ
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Summary Sidebar -->
+            <div class="col-lg-4">
+                <div class="booking-summary">
+                    <h5><i class="fas fa-receipt me-2"></i>Tóm tắt đặt phòng</h5>
+
+                    <div id="summaryContent">
+                        <div class="summary-row">
+                            <span>Loại phòng:</span>
+                            <span id="summaryRoom">Chưa chọn</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Ngày nhận:</span>
+                            <span id="summaryCheckIn">--/--/----</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Ngày trả:</span>
+                            <span id="summaryCheckOut">--/--/----</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Số đêm:</span>
+                            <span id="summaryNights">0 đêm</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Số phòng:</span>
+                            <span id="summaryRoomCount">1 phòng</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Khách:</span>
+                            <span id="summaryGuests">2 người lớn</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Giá phòng/đêm:</span>
+                            <span id="summaryPrice">0 VNĐ</span>
+                        </div>
+
+                        <div class="summary-row total">
+                            <span>Tổng cộng:</span>
+                            <span id="summaryTotal">0 VNĐ</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Chính sách hủy phòng:</strong><br>
+                            Miễn phí hủy trước 24h. Sau đó tính phí 50% tổng hóa đơn.
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <h6>Dịch vụ bổ sung</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="breakfast" onchange="updateServices()">
+                            <label class="form-check-label" for="breakfast">
+                                Buffet sáng (+200.000 VNĐ/người/ngày)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="spa" onchange="updateServices()">
+                            <label class="form-check-label" for="spa">
+                                Spa package (+500.000 VNĐ/người)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="airport" onchange="updateServices()">
+                            <label class="form-check-label" for="airport">
+                                Đưa đón sân bay (+300.000 VNĐ)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <h5 class="heading-font text-white mb-3">Luxury Resort</h5>
+                <p>Trải nghiệm kỳ nghỉ đẳng cấp với dịch vụ hoàn hảo và tiện nghi hiện đại nhất.</p>
+                <div class="social-links">
+                    <a href="#" class="text-light me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 mb-4">
+                <h6 class="text-white mb-3">Liên kết</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-light text-decoration-none">Trang chủ</a></li>
+                    <li><a href="#" class="text-light text-decoration-none">Phòng</a></li>
+                    <li><a href="#" class="text-light text-decoration-none">Nhà hàng</a></li>
+                    <li><a href="#" class="text-light text-decoration-none">Tiện ích</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 mb-4">
+                <h6 class="text-white mb-3">Dịch vụ</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-light text-decoration-none">Spa & Wellness</a></li>
+                    <li><a href="#" class="text-light text-decoration-none">Hội nghị</a></li>
+                    <li><a href="#" class="text-light text-decoration-none">Tiệc cưới</a></li>
+                    <li><a href="#" class="text-light text-decoration-none">Tour du lịch</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 mb-4">
+                <h6 class="text-white mb-3">Liên hệ</h6>
+                <p><i class="fas fa-map-marker-alt me-2"></i>123 Đường Biển, Phú Quốc</p>
+                <p><i class="fas fa-phone me-2"></i>+84 297 123 4567</p>
+                <p><i class="fas fa-envelope me-2"></i>info@luxuryresort.vn</p>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="mb-0">&copy; 2024 Luxury Resort. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let currentStep = 1;
+    let selectedRoom = null;
+    let selectedPrice = 0;
+    let bookingData = {};
+
+    // Initialize form
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('checkInDate').min = today;
+        document.getElementById('checkOutDate').min = today;
+
+        // Add event listeners
+        document.getElementById('checkInDate').addEventListener('change', updateDates);
+        document.getElementById('checkOutDate').addEventListener('change', updateDates);
+        document.getElementById('adults').addEventListener('change', updateGuests);
+        document.getElementById('children').addEventListener('change', updateGuests);
+        document.getElementById('rooms').addEventListener('change', updateGuests);
+
+        // Add room selection listeners
+        document.querySelectorAll('.room-option').forEach(room => {
+            room.addEventListener('click', () => selectRoom(room));
+        });
+    });
+
+    function updateDates() {
+        const checkIn = document.getElementById('checkInDate').value;
+        const checkOut = document.getElementById('checkOutDate').value;
+
+        if (checkIn) {
+            document.getElementById('summaryCheckIn').textContent = formatDate(checkIn);
+            document.getElementById('checkOutDate').min = checkIn;
+        }
+
+        if (checkOut) {
+            document.getElementById('summaryCheckOut').textContent = formatDate(checkOut);
+        }
+
+        if (checkIn && checkOut) {
+            const nights = calculateNights(checkIn, checkOut);
+            document.getElementById('summaryNights').textContent = nights + ' đêm';
+            updateTotal();
+        }
+    }
+
+    function updateGuests() {
+        const adults = document.getElementById('adults').value;
+        const children = document.getElementById('children').value;
+        const rooms = document.getElementById('rooms').value;
+
+        let guestText = adults + ' người lớn';
+        if (children > 0) {
+            guestText += ', ' + children + ' trẻ em';
+        }
+
+        document.getElementById('summaryGuests').textContent = guestText;
+        document.getElementById('summaryRoomCount').textContent = rooms + ' phòng';
+        updateTotal();
+    }
+
+    function selectRoom(roomElement) {
+        // Remove previous selection
+        document.querySelectorAll('.room-option').forEach(r => r.classList.remove('selected'));
+
+        // Select current room
+        roomElement.classList.add('selected');
+        selectedRoom = roomElement.dataset.room;
+        selectedPrice = parseInt(roomElement.dataset.price);
+
+        // Update summary
+        const roomName = roomElement.querySelector('h6').textContent;
+        document.getElementById('summaryRoom').textContent = roomName;
+        document.getElementById('summaryPrice').textContent = formatPrice(selectedPrice);
+
+        updateTotal();
+    }
+
+    function selectPayment(method) {
+        // Remove previous selection
+        document.querySelectorAll('.payment-method').forEach(p => p.classList.remove('selected'));
+
+        // Select current payment method
+        const selectedMethod = document.querySelector(`[onclick="selectPayment('${method}')"]`);
+        selectedMethod.classList.add('selected');
+
+        // Show/hide credit card form
+        const creditCardForm = document.getElementById('creditCardForm');
+        if (method === 'credit') {
+            creditCardForm.classList.remove('hidden');
+        } else {
+            creditCardForm.classList.add('hidden');
+        }
+    }
+
+    function updateServices() {
+        updateTotal();
+    }
+
+    function updateTotal() {
+        const checkIn = document.getElementById('checkInDate').value;
+        const checkOut = document.getElementById('checkOutDate').value;
+        const rooms = parseInt(document.getElementById('rooms').value);
+        const adults = parseInt(document.getElementById('adults').value);
+
+        if (!checkIn || !checkOut || !selectedPrice) return;
+
+        const nights = calculateNights(checkIn, checkOut);
+        let total = selectedPrice * nights * rooms;
+
+        // Add services
+        if (document.getElementById('breakfast')?.checked) {
+            total += 200000 * adults * nights;
+        }
+        if (document.getElementById('spa')?.checked) {
+            total += 500000 * adults;
+        }
+        if (document.getElementById('airport')?.checked) {
+            total += 300000;
+        }
+
+        document.getElementById('summaryTotal').textContent = formatPrice(total);
+    }
+
+    function nextStep(step) {
+        if (!validateStep(step)) return;
+
+        // Hide current step
+        document.getElementById(`section${step}`).classList.add('hidden');
+
+        // Show next step
+        const nextStep = step + 1;
+        document.getElementById(`section${nextStep}`).classList.remove('hidden');
+
+        // Update step indicator
+        document.getElementById(`step${step}`).classList.remove('active');
+        document.getElementById(`step${step}`).classList.add('completed');
+        document.getElementById(`step${nextStep}`).classList.add('active');
+
+        currentStep = nextStep;
+    }
+
+    function prevStep(step) {
+        // Hide current step
+        document.getElementById(`section${step}`).classList.add('hidden');
+
+        // Show previous step
+        const prevStep = step - 1;
+        document.getElementById(`section${prevStep}`).classList.remove('hidden');
+
+        // Update step indicator
+        document.getElementById(`step${step}`).classList.remove('active');
+        document.getElementById(`step${prevStep}`).classList.remove('completed');
+        document.getElementById(`step${prevStep}`).classList.add('active');
+
+        currentStep = prevStep;
+    }
+
+    function validateStep(step) {
+        switch(step) {
+            case 1:
+                if (!document.getElementById('checkInDate').value) {
+                    alert('Vui lòng chọn ngày nhận phòng');
+                    return false;
+                }
+                if (!document.getElementById('checkOutDate').value) {
+                    alert('Vui lòng chọn ngày trả phòng');
+                    return false;
+                }
+                if (!selectedRoom) {
+                    alert('Vui lòng chọn loại phòng');
+                    return false;
+                }
+                break;
+            case 2:
+                const requiredFields = ['guestName', 'guestEmail', 'guestPhone', 'guestId'];
+                for (let field of requiredFields) {
+                    if (!document.getElementById(field).value.trim()) {
+                        alert('Vui lòng điền đầy đủ thông tin khách hàng');
+                        return false;
+                    }
+                }
+                break;
+            case 3:
+                if (!document.querySelector('input[name="payment"]:checked')) {
+                    alert('Vui lòng chọn phương thức thanh toán');
+                    return false;
+                }
+                break;
+        }
+        return true;
+    }
+
+    function processPayment() {
+        if (!validateStep(3)) return;
+
+        // Simulate payment processing
+        const loadingBtn = event.target;
+        loadingBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+        loadingBtn.disabled = true;
+
+        setTimeout(() => {
+            // Store booking data
+            storeBookingData();
+
+            // Move to confirmation step
+            nextStep(3);
+
+            loadingBtn.innerHTML = 'Thanh toán';
+            loadingBtn.disabled = false;
+        }, 2000);
+    }
+
+    function storeBookingData() {
+        // Update confirmation details
+        document.getElementById('confirmedRoom').textContent = document.getElementById('summaryRoom').textContent;
+        document.getElementById('confirmedDates').textContent =
+            document.getElementById('summaryCheckIn').textContent + ' - ' +
+            document.getElementById('summaryCheckOut').textContent;
+        document.getElementById('confirmedGuests').textContent = document.getElementById('summaryGuests').textContent;
+        document.getElementById('confirmedName').textContent = document.getElementById('guestName').value;
+        document.getElementById('confirmedEmail').textContent = document.getElementById('guestEmail').value;
+        document.getElementById('confirmedPhone').textContent = document.getElementById('guestPhone').value;
+        document.getElementById('confirmedTotal').textContent = document.getElementById('summaryTotal').textContent;
+    }
+
+    function downloadConfirmation() {
+        alert('Tính năng tải xuống sẽ được phát triển trong phiên bản tiếp theo.');
+    }
+
+    // Utility functions
+    function calculateNights(checkIn, checkOut) {
+        const start = new Date(checkIn);
+        const end = new Date(checkOut);
+        const diffTime = Math.abs(end - start);
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('vi-VN');
+    }
+
+    function formatPrice(price) {
+        return price.toLocaleString('vi-VN') + ' VNĐ';
+    }
+
+    // Add smooth scrolling
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Auto-scroll to top when changing steps
+    function nextStep(step) {
+        if (!validateStep(step)) return;
+
+        document.getElementById(`section${step}`).classList.add('hidden');
+        const nextStep = step + 1;
+        document.getElementById(`section${nextStep}`).classList.remove('hidden');
+
+        document.getElementById(`step${step}`).classList.remove('active');
+        document.getElementById(`step${step}`).classList.add('completed');
+        document.getElementById(`step${nextStep}`).classList.add('active');
+
+        currentStep = nextStep;
+        scrollToTop();
+    }
+</script>
+</body>
+</html>

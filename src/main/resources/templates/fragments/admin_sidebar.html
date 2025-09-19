@@ -1,0 +1,80 @@
+<nav th:fragment="admin_sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse p-0">
+    <div class="logo-container">
+        <i class="fas fa-crown logo-icon"></i>
+        <h5 class="text-white mb-1">Admin Panel</h5>
+        <small class="text-muted">Hệ thống quản lý</small>
+    </div>
+
+    <ul class="nav flex-column px-2">
+        <li class="nav-item">
+            <a class="nav-link active" href="#dashboard">
+                <i class="fas fa-tachometer-alt me-2"></i>
+                Dashboard
+            </a>
+        </li>
+
+        <!-- Quản lý tài khoản -->
+        <li class="nav-item nav-category">
+            <span>Quản lý tài khoản</span>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#branch-management">
+                <i class="fas fa-building me-2"></i>
+                Quản lý chi nhánh
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#manager-management">
+                <i class="fas fa-user-tie me-2"></i>
+                Quản lý tài khoản nhân viên
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#customer-management">
+                <i class="fas fa-user-friends me-2"></i>
+                Quản lý khách hàng
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#user-roles">
+                <i class="fas fa-user-shield me-2"></i>
+                Phân quyền người dùng
+            </a>
+        </li>
+
+        <!-- Thống kê -->
+        <li class="nav-item nav-category">
+            <span>Thống kê báo cáo</span>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#revenue-stats">
+                <i class="fas fa-chart-line me-2"></i>
+                Thống kê doanh thu tổng
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#branch-stats">
+                <i class="fas fa-chart-bar me-2"></i>
+                Thống kê theo chi nhánh
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#booking-stats">
+                <i class="fas fa-calendar-alt me-2"></i>
+                Thống kê đặt phòng/bàn
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#rating-stats">
+                <i class="fas fa-star me-2"></i>
+                Thống kê đánh giá
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#export-excel">
+                <i class="fas fa-file-excel me-2"></i>
+                Xuất báo cáo Excel
+            </a>
+        </li>
+    </ul>
+</nav>

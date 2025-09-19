@@ -49,8 +49,19 @@ public class RoomBookingEntity {
     @Column(name = "actual_check_out")
     private LocalDateTime actualCheckOut;
 
+    // Tổng số khách
     @Column(name = "guest_count")
     private Integer guestCount;
+
+    // Chi tiết theo nhóm tuổi
+    @Column(name = "adult_count")
+    private Integer adultCount;
+
+    @Column(name = "child_count")
+    private Integer childCount;
+
+    @Column(name = "infant_count")
+    private Integer infantCount;
 
     @Column(name = "total_amount", nullable = false)
     private BigDecimal totalAmount;
@@ -62,10 +73,10 @@ public class RoomBookingEntity {
     private BigDecimal finalAmount;
 
     @Enumerated(EnumType.STRING)
-    private BookingStatus status; // PENDING, CONFIRMED, CHECKED_IN, CHECKED_OUT, CANCELLED
+    private BookingStatus status;
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus; // PENDING, PAID, PARTIALLY_PAID, REFUNDED
+    private PaymentStatus paymentStatus;
 
     @Column(name = "payment_method")
     private String paymentMethod;

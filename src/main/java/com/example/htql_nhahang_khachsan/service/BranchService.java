@@ -8,6 +8,7 @@ import com.example.htql_nhahang_khachsan.enums.BranchType;
 import com.example.htql_nhahang_khachsan.repository.BranchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +18,8 @@ import java.util.stream.Collectors;
 public class BranchService {
 
     private final BranchRepository branchRepository;
+
+    private final FileService fileService;
 
     public List<BranchResponse> getAllBranches() {
         return branchRepository.findAllByOrderByCreatedAtDesc().stream()
@@ -38,21 +41,38 @@ public class BranchService {
         return BranchResponse.from(branch);
     }
 
-    public BranchResponse createBranch(BranchRequest request) {
+    public BranchResponse createBranch(BranchRequest request, MultipartFile imageFile) {
         // Kiểm tra tên chi nhánh đã tồn tại
         if (branchRepository.existsByName(request.getName())) {
             throw new RuntimeException("Tên chi nhánh đã tồn tại");
         }
 
+        // Lưu ảnh (nếu có upload)
+        String imageUrl = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            imageUrl = fileService.saveImage(imageFile);
+        } else {
+            imageUrl = request.getImageUrl(); // fallback nếu muốn cho nhập URL trực tiếp
+        }
+
         BranchEntity branch = BranchEntity.builder()
                 .name(request.getName())
                 .description(request.getDescription())
-                .address(request.getAddress())
+//                .address(request.getAddress())
+                .address(
+                        request.getStreetAddress() + ", " +
+                        request.getDistrict() + ", " +
+                        request.getProvince()
+                )
+                .streetAddress(request.getStreetAddress())
+                .district(request.getDistrict())
+                .province(request.getProvince())
                 .phoneNumber(request.getPhoneNumber())
                 .email(request.getEmail())
                 .type(request.getType())
                 .status(request.getStatus())
-                .imageUrl(request.getImageUrl())
+//                .imageUrl(request.getImageUrl())
+                .imageUrl(imageUrl)
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
                 .build();
@@ -61,7 +81,7 @@ public class BranchService {
         return BranchResponse.from(savedBranch);
     }
 
-    public BranchResponse updateBranch(Long id, BranchRequest request) {
+    public BranchResponse updateBranch(Long id, BranchRequest request,MultipartFile imageFile) {
         BranchEntity branch = branchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy chi nhánh"));
 
@@ -70,9 +90,27 @@ public class BranchService {
             throw new RuntimeException("Tên chi nhánh đã tồn tại");
         }
 
+        // Nếu có upload file mới thì thay, nếu không thì giữ nguyên
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // Xóa ảnh cũ (nếu có)
+            fileService.deleteImage(branch.getImageUrl());
+            String newImageUrl = fileService.saveImage(imageFile);
+            branch.setImageUrl(newImageUrl);
+        } else if (request.getImageUrl() != null) {
+            branch.setImageUrl(request.getImageUrl());
+        }
+
         branch.setName(request.getName());
         branch.setDescription(request.getDescription());
-        branch.setAddress(request.getAddress());
+//        branch.setAddress(request.getAddress());
+        branch.setAddress(
+                request.getStreetAddress() + ", " +
+                        request.getDistrict() + ", " +
+                        request.getProvince()
+        );
+        branch.setStreetAddress(request.getStreetAddress());
+        branch.setDistrict(request.getDistrict());
+        branch.setProvince(request.getProvince());
         branch.setPhoneNumber(request.getPhoneNumber());
         branch.setEmail(request.getEmail());
         branch.setType(request.getType());
@@ -102,6 +140,46 @@ public class BranchService {
 
     public List<BranchResponse> getActiveBranches() {
         return branchRepository.findByStatus(BranchStatus.ACTIVE).stream()
+                .map(BranchResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    // Thêm các method này vào BranchService.java hiện tại
+
+    public List<String> getAllProvinces() {
+        return branchRepository.findAllByOrderByCreatedAtDesc().stream()
+                .map(BranchEntity::getProvince)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public List<BranchResponse> getBranchesByProvince(String province) {
+        return branchRepository.findByStatus(BranchStatus.ACTIVE).stream()
+                .filter(branch -> branch.getProvince().toLowerCase().contains(province.toLowerCase()))
+                .map(BranchResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<BranchResponse> getBranchesByType(BranchType type) {
+        return branchRepository.findByTypeAndStatus(type, BranchStatus.ACTIVE).stream()
+                .map(BranchResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<BranchResponse> searchActiveBranches(String keyword) {
+        return branchRepository.findActiveByKeyword(keyword).stream()
+                .map(BranchResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public long getTotalActiveBranches() {
+        return branchRepository.countByStatus(BranchStatus.ACTIVE);
+    }
+
+    public List<BranchResponse> getFeaturedBranches(int limit) {
+        return branchRepository.findByStatus(BranchStatus.ACTIVE).stream()
+                .limit(limit)
                 .map(BranchResponse::from)
                 .collect(Collectors.toList());
     }

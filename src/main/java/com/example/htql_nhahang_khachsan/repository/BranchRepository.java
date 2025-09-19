@@ -31,4 +31,33 @@ public interface BranchRepository extends JpaRepository<BranchEntity, Long> {
     List<BranchEntity> findByFilters(@Param("name") String name,
                                      @Param("type") BranchType type,
                                      @Param("status") BranchStatus status);
+
+
+    // Thêm các method này vào BranchRepository.java hiện tại
+
+    List<BranchEntity> findByTypeAndStatus(BranchType type, BranchStatus status);
+
+    long countByStatus(BranchStatus status);
+
+    @Query("SELECT DISTINCT b.province FROM BranchEntity b WHERE b.status = :status ORDER BY b.province")
+    List<String> findDistinctProvincesByStatus(@Param("status") BranchStatus status);
+
+//    @Query("SELECT b FROM BranchEntity b WHERE b.status = :status AND " +
+//            "(LOWER(b.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+//            "LOWER(b.description) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+//            "LOWER(b.address) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+//    List<BranchEntity> findActiveByKeyword(@Param("keyword") String keyword, @Param("status") BranchStatus status = BranchStatus.ACTIVE);
+
+    @Query("SELECT b FROM BranchEntity b WHERE b.status = 'ACTIVE' AND " +
+            "(LOWER(b.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(b.description) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(b.address) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    List<BranchEntity> findActiveByKeyword(@Param("keyword") String keyword);
+
+    @Query("SELECT b FROM BranchEntity b WHERE b.status = 'ACTIVE' AND b.province = :province")
+    List<BranchEntity> findActiveByProvince(@Param("province") String province);
+
+    @Query("SELECT b FROM BranchEntity b WHERE b.status = 'ACTIVE' ORDER BY b.createdAt DESC")
+    List<BranchEntity> findActiveOrderByCreatedAtDesc();
+
 }

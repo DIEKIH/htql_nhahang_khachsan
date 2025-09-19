@@ -92,6 +92,14 @@ public class PromotionController {
                 "INACTIVE", "Không hoạt động"
         );
 
+        boolean admin = authService.isAdmin(session);
+        boolean manager = authService.isManager(session);
+
+        model.addAttribute("isAdmin", admin);
+        model.addAttribute("isManager", manager);
+        model.addAttribute("currentUserRole", userRole);
+
+
         model.addAttribute("promotions", promotions);
         model.addAttribute("promotionTypes", PromotionType.values());
         model.addAttribute("promotionScopes", PromotionScope.values());
@@ -105,7 +113,8 @@ public class PromotionController {
         model.addAttribute("searchScope", scope);
         model.addAttribute("searchApplicability", applicability);
         model.addAttribute("searchStatus", status);
-        model.addAttribute("isAdmin", authService.isAdmin(session));
+//        model.addAttribute("isAdmin", authService.isAdmin(session));
+//        model.addAttribute("isManager", authService.isManager(session));
         model.addAttribute("currentUserRole", userRole);
 
         return "admin/promotions/list";

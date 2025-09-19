@@ -68,56 +68,6 @@ public class PromotionService {
         return PromotionResponse.from(promotion);
     }
 
-//    @Transactional
-//    public PromotionResponse createPromotion(PromotionRequest request, Long createdBy) {
-//        // Validate
-//        validatePromotionRequest(request);
-//
-//        // Kiểm tra tên đã tồn tại
-//        if (promotionRepository.existsByName(request.getName())) {
-//            throw new RuntimeException("Tên khuyến mãi đã tồn tại");
-//        }
-//
-//        PromotionEntity promotion = buildPromotionEntity(request, createdBy);
-//
-////        // Set branches nếu là BRANCH_SPECIFIC
-////        if (request.getScope() == PromotionScope.BRANCH_SPECIFIC &&
-////                request.getBranchIds() != null && !request.getBranchIds().isEmpty()) {
-////            Set<BranchEntity> branches = new HashSet<>(
-////                    branchRepository.findAllById(request.getBranchIds())
-////            );
-////            if (branches.size() != request.getBranchIds().size()) {
-////                throw new RuntimeException("Một số chi nhánh không tồn tại");
-////            }
-////            promotion.setBranches(branches);
-////        }
-//
-//        // Set branches nếu là BRANCH_SPECIFIC
-//        if (request.getScope() == PromotionScope.BRANCH_SPECIFIC &&
-//                request.getBranchIds() != null && !request.getBranchIds().isEmpty()) {
-//
-//            List<BranchEntity> foundBranches = branchRepository.findAllById(request.getBranchIds());
-//
-//            // SỬA: Chỉ cần check có tồn tại các branch được chọn, không cần bằng nhau
-//            if (foundBranches.isEmpty()) {
-//                throw new RuntimeException("Không tìm thấy chi nhánh nào được chọn");
-//            }
-//
-//            // Check nếu có branch không tồn tại
-//            Set<Long> foundIds = foundBranches.stream().map(BranchEntity::getId).collect(Collectors.toSet());
-//            boolean hasInvalidBranch = request.getBranchIds().stream()
-//                    .anyMatch(id -> !foundIds.contains(id));
-//
-//            if (hasInvalidBranch) {
-//                throw new RuntimeException("Một số chi nhánh được chọn không tồn tại");
-//            }
-//
-//            promotion.setBranches(new HashSet<>(foundBranches));
-//        }
-//
-//        PromotionEntity savedPromotion = promotionRepository.save(promotion);
-//        return PromotionResponse.from(savedPromotion);
-//    }
 
     @Transactional
     public PromotionResponse createPromotion(PromotionRequest request, Long createdBy) {
@@ -202,16 +152,6 @@ public class PromotionService {
         // Validate
         validatePromotionRequest(request);
 
-//        // Kiểm tra tên đã tồn tại (trừ chính nó)
-//        PromotionEntity existingPromotion = promotionRepository.findAll().stream()
-//                .filter(p -> p.getName().equals(request.getName()) && !p.getId().equals(id))
-//                .findFirst()
-//                .orElse(null);
-//
-//        if (existingPromotion != null) {
-//            throw new RuntimeException("Tên khuyến mãi đã tồn tại");
-//        }
-
         // CHỈ CHO ADMIN: nếu là BRANCH_SPECIFIC thì phải chọn ít nhất 1 chi nhánh
         if (request.getScope() == PromotionScope.BRANCH_SPECIFIC) {
             if (request.getBranchIds() == null || request.getBranchIds().isEmpty()) {
@@ -221,19 +161,6 @@ public class PromotionService {
 
         updatePromotionEntity(promotion, request);
 
-        // Update branches
-//        if (request.getScope() == PromotionScope.BRANCH_SPECIFIC &&
-//                request.getBranchIds() != null && !request.getBranchIds().isEmpty()) {
-//            Set<BranchEntity> branches = new HashSet<>(
-//                    branchRepository.findAllById(request.getBranchIds())
-//            );
-//            if (branches.size() != request.getBranchIds().size()) {
-//                throw new RuntimeException("Một số chi nhánh không tồn tại");
-//            }
-//            promotion.setBranches(branches);
-//        } else if (request.getScope() == PromotionScope.SYSTEM_WIDE) {
-//            promotion.getBranches().clear();
-//        }
 
         // Update branches
         if (request.getScope() == PromotionScope.BRANCH_SPECIFIC &&
@@ -336,23 +263,6 @@ public class PromotionService {
         promotion.setStatus(Status.INACTIVE);
         promotionRepository.save(promotion);
     }
-
-//    private void validatePromotionRequest(PromotionRequest request) {
-//        if (request.getStartDate().isAfter(request.getEndDate())) {
-//            throw new RuntimeException("Ngày bắt đầu phải trước ngày kết thúc");
-//        }
-//
-//        if (request.getEndDate().isBefore(LocalDateTime.now())) {
-//            throw new RuntimeException("Ngày kết thúc phải sau thời điểm hiện tại");
-//        }
-//
-//        // Validate discount value based on type
-//        if (request.getType() == com.example.htql_nhahang_khachsan.enums.PromotionType.PERCENTAGE) {
-//            if (request.getDiscountValue().compareTo(java.math.BigDecimal.valueOf(100)) > 0) {
-//                throw new RuntimeException("Phần trăm giảm giá không được vượt quá 100%");
-//            }
-//        }
-//    }
 
     private void validatePromotionRequest(PromotionRequest request) {
         // Validation hiện tại...

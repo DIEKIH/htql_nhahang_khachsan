@@ -1,0 +1,50 @@
+.sidebar {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+}
+.sidebar .nav-link {
+    color: rgba(255,255,255,0.8);
+    border-radius: 8px;
+    margin: 2px 0;
+    transition: all 0.3s ease;
+}
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    transform: translateX(5px);
+}
+.card {
+    border: none;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+.stats-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+.stats-card.success {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+.stats-card.warning {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+.stats-card.info {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+.feature-card {
+    border-left: 4px solid #667eea;
+    transition: all 0.3s ease;
+}
+.feature-card:hover {
+    border-left-color: #f093fb;
+    border-left-width: 6px;
+}
+.welcome-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+}

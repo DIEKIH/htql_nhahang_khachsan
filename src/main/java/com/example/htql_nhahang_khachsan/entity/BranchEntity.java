@@ -35,6 +35,15 @@ public class BranchEntity {
     @Column(nullable = false)
     private String address;
 
+    // Địa chỉ chi tiết (số nhà + đường)
+    private String streetAddress;
+
+    // Quận/Huyện
+    private String district;
+
+    // Tỉnh/Thành phố
+    private String province;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 
@@ -67,5 +76,10 @@ public class BranchEntity {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    // Hàm tiện ích để ghép full address khi cần hiển thị
+    public String getFullAddress() {
+        return streetAddress + ", " + district + ", " + province;
     }
 }

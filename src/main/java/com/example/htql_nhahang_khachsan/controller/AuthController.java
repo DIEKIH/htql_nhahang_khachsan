@@ -22,27 +22,27 @@ public class AuthController {
     private final AuthService authService;
 
     // Trang chủ - redirect theo role
-    @GetMapping("/")
-    public String home(HttpSession session) {
-        if (authService.isLoggedIn(session)) {
-            UserRole role = (UserRole) session.getAttribute("userRole");
-            switch (role) {
-                case ADMIN:
-                    return "redirect:/admin/dashboard";
-                case MANAGER:
-                    return "redirect:/manager/dashboard";
-                case STAFF:
-                    return "redirect:/staff/dashboard";
-                case CASHIER_RESTAURANT:
-                    return "redirect:/cashier-restaurant/dashboard";
-                case CASHIER_HOTEL:
-                    return "redirect:/cashier-hotel/dashboard";
-                case CUSTOMER:
-                    return "redirect:/customer/dashboard";
-            }
-        }
-        return "index";
-    }
+//    @GetMapping("/index")
+//    public String home(HttpSession session) {
+//        if (authService.isLoggedIn(session)) {
+//            UserRole role = (UserRole) session.getAttribute("userRole");
+//            switch (role) {
+//                case ADMIN:
+//                    return "redirect:/admin/dashboard";
+//                case MANAGER:
+//                    return "redirect:/manager/dashboard";
+//                case STAFF:
+//                    return "redirect:/staff/dashboard";
+//                case CASHIER_RESTAURANT:
+//                    return "redirect:/cashier-restaurant/dashboard";
+//                case CASHIER_HOTEL:
+//                    return "redirect:/cashier-hotel/dashboard";
+//                case CUSTOMER:
+//                    return "redirect:/customer/dashboard";
+//            }
+//        }
+//        return "index";
+//    }
 
     // === ADMIN LOGIN/REGISTER ===
     @GetMapping("/admin/login")

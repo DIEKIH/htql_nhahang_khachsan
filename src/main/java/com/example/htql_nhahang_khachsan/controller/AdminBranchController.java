@@ -4,6 +4,7 @@ import com.example.htql_nhahang_khachsan.dto.BranchRequest;
 import com.example.htql_nhahang_khachsan.dto.BranchResponse;
 import com.example.htql_nhahang_khachsan.dto.UserRequest;
 import com.example.htql_nhahang_khachsan.dto.UserResponse;
+import com.example.htql_nhahang_khachsan.entity.UserEntity;
 import com.example.htql_nhahang_khachsan.enums.BranchStatus;
 import com.example.htql_nhahang_khachsan.enums.BranchType;
 import com.example.htql_nhahang_khachsan.enums.UserRole;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -51,6 +53,10 @@ public class AdminBranchController {
             branches = branchService.getAllBranches();
         }
 
+        UserEntity admin = (UserEntity) session.getAttribute("loggedInUser");
+        model.addAttribute("admin", admin);
+
+
         model.addAttribute("branches", branches);
         model.addAttribute("branchTypes", BranchType.values());
         model.addAttribute("branchStatuses", BranchStatus.values());
@@ -77,6 +83,7 @@ public class AdminBranchController {
     @PostMapping("/branches/add")
     public String addBranch(@Valid @ModelAttribute BranchRequest request,
                             BindingResult result,
+                            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
                             Model model,
                             RedirectAttributes redirectAttributes,
                             HttpSession session) {
@@ -91,7 +98,7 @@ public class AdminBranchController {
         }
 
         try {
-            branchService.createBranch(request);
+            branchService.createBranch(request, imageFile);
             redirectAttributes.addFlashAttribute("success", "Thêm chi nhánh thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -112,7 +119,10 @@ public class AdminBranchController {
             BranchRequest branchRequest = new BranchRequest();
             branchRequest.setName(branch.getName());
             branchRequest.setDescription(branch.getDescription());
-            branchRequest.setAddress(branch.getAddress());
+//            branchRequest.setAddress(branch.getAddress());
+            branchRequest.setStreetAddress(branch.getStreetAddress());
+            branchRequest.setDistrict(branch.getDistrict());
+            branchRequest.setProvince(branch.getProvince());
             branchRequest.setPhoneNumber(branch.getPhoneNumber());
             branchRequest.setEmail(branch.getEmail());
             branchRequest.setType(branch.getType());
@@ -136,6 +146,7 @@ public class AdminBranchController {
     public String updateBranch(@PathVariable Long id,
                                @Valid @ModelAttribute BranchRequest request,
                                BindingResult result,
+                                 @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
                                Model model,
                                RedirectAttributes redirectAttributes,
                                HttpSession session) {
@@ -151,7 +162,7 @@ public class AdminBranchController {
         }
 
         try {
-            branchService.updateBranch(id, request);
+            branchService.updateBranch(id, request, imageFile);
             redirectAttributes.addFlashAttribute("success", "Cập nhật chi nhánh thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());

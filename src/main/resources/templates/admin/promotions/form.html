@@ -6,20 +6,21 @@
     <title th:text="${promotionId != null ? 'Sửa khuyến mãi' : 'Thêm khuyến mãi'}"></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/admin_sidebar.css}">
     <style>
-        .sidebar {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            border-radius: 8px;
-            margin: 2px 0;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: white !important;
-            background-color: rgba(255,255,255,0.1);
-        }
+        /*.sidebar {*/
+        /*    min-height: 100vh;*/
+        /*    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+        /*}*/
+        /*.nav-link {*/
+        /*    color: rgba(255,255,255,0.8) !important;*/
+        /*    border-radius: 8px;*/
+        /*    margin: 2px 0;*/
+        /*}*/
+        /*.nav-link:hover, .nav-link.active {*/
+        /*    color: white !important;*/
+        /*    background-color: rgba(255,255,255,0.1);*/
+        /*}*/
         .card {
             border: none;
             border-radius: 15px;
@@ -72,36 +73,45 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 sidebar p-3">
-            <div class="d-flex align-items-center mb-4">
-                <i class="fas fa-hotel text-white me-2 fs-4"></i>
-                <span class="text-white fw-bold fs-5">Admin Panel</span>
-            </div>
+<!--        <div class="col-md-3 col-lg-2 sidebar p-3">-->
+<!--            <div class="d-flex align-items-center mb-4">-->
+<!--                <i class="fas fa-hotel text-white me-2 fs-4"></i>-->
+<!--                <span class="text-white fw-bold fs-5">Admin Panel</span>-->
+<!--            </div>-->
 
-            <nav class="nav flex-column">
-                <a class="nav-link" href="/admin/dashboard">
-                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                </a>
-                <a class="nav-link" href="/admin/branches">
-                    <i class="fas fa-building me-2"></i>Chi nhánh
-                </a>
-                <a class="nav-link" href="/admin/users">
-                    <i class="fas fa-users me-2"></i>Người dùng
-                </a>
-                <a class="nav-link active" href="/admin/promotions">
-                    <i class="fas fa-percent me-2"></i>Khuyến mãi
-                </a>
-                <a class="nav-link" href="/admin/rooms">
-                    <i class="fas fa-bed me-2"></i>Phòng
-                </a>
-                <a class="nav-link" href="/admin/bookings">
-                    <i class="fas fa-calendar-check me-2"></i>Đặt phòng
-                </a>
-                <a class="nav-link" href="/admin/logout">
-                    <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
-                </a>
-            </nav>
-        </div>
+<!--            <nav class="nav flex-column">-->
+<!--                <a class="nav-link" href="/admin/dashboard">-->
+<!--                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard-->
+<!--                </a>-->
+<!--                <a class="nav-link" href="/admin/branches">-->
+<!--                    <i class="fas fa-building me-2"></i>Chi nhánh-->
+<!--                </a>-->
+<!--                <a class="nav-link" href="/admin/users">-->
+<!--                    <i class="fas fa-users me-2"></i>Người dùng-->
+<!--                </a>-->
+<!--                <a class="nav-link active" href="/admin/promotions">-->
+<!--                    <i class="fas fa-percent me-2"></i>Khuyến mãi-->
+<!--                </a>-->
+<!--                <a class="nav-link" href="/admin/rooms">-->
+<!--                    <i class="fas fa-bed me-2"></i>Phòng-->
+<!--                </a>-->
+<!--                <a class="nav-link" href="/admin/bookings">-->
+<!--                    <i class="fas fa-calendar-check me-2"></i>Đặt phòng-->
+<!--                </a>-->
+<!--                <a class="nav-link" href="/admin/logout">-->
+<!--                    <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất-->
+<!--                </a>-->
+<!--            </nav>-->
+<!--        </div>-->
+<!--        <div th:replace="fragments/admin_sidebar :: admin_sidebar"></div>-->
+        <th:block th:if="${isAdmin}">
+            <div th:replace="fragments/admin_sidebar :: admin_sidebar"></div>
+        </th:block>
+        <th:block th:if="${isManager}">
+            <div th:replace="fragments/manager_sidebar :: manager_sidebar"></div>
+        </th:block>
+
+
 
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 p-4">

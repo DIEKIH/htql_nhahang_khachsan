@@ -21,6 +21,15 @@ public class BranchRequest {
     @Size(max = 255, message = "Địa chỉ không được vượt quá 255 ký tự")
     private String address;
 
+    @NotBlank(message = "Vui lòng nhập số nhà, đường")
+    private String streetAddress;
+
+    @NotBlank(message = "Vui lòng nhập quận/huyện")
+    private String district;
+
+    @NotBlank(message = "Vui lòng nhập tỉnh/thành phố")
+    private String province;
+
     @Pattern(regexp = "^[0-9+\\-\\s()]*$", message = "Số điện thoại không hợp lệ")
     private String phoneNumber;
 

@@ -1,429 +1,880 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title th:text="${branchId != null ? 'Chỉnh sửa Chi nhánh' : 'Thêm Chi nhánh'}">Thêm Chi nhánh</title>-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+<!--    <style>-->
+<!--        * {-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--            box-sizing: border-box;-->
+<!--        }-->
+
+<!--        body {-->
+<!--            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;-->
+<!--            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
+<!--            min-height: 100vh;-->
+<!--        }-->
+
+<!--        .navbar {-->
+<!--            background: rgba(255, 255, 255, 0.95);-->
+<!--            backdrop-filter: blur(10px);-->
+<!--            padding: 1rem 2rem;-->
+<!--            box-shadow: 0 2px 20px rgba(0,0,0,0.1);-->
+<!--            position: sticky;-->
+<!--            top: 0;-->
+<!--            z-index: 100;-->
+<!--        }-->
+
+<!--        .navbar-content {-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            align-items: center;-->
+<!--            max-width: 1200px;-->
+<!--            margin: 0 auto;-->
+<!--        }-->
+
+<!--        .logo {-->
+<!--            font-size: 1.5rem;-->
+<!--            font-weight: bold;-->
+<!--            color: #667eea;-->
+<!--        }-->
+
+<!--        .nav-links {-->
+<!--            display: flex;-->
+<!--            gap: 2rem;-->
+<!--            align-items: center;-->
+<!--        }-->
+
+<!--        .nav-links a {-->
+<!--            text-decoration: none;-->
+<!--            color: #333;-->
+<!--            font-weight: 500;-->
+<!--            padding: 0.5rem 1rem;-->
+<!--            border-radius: 8px;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+
+<!--        .nav-links a:hover, .nav-links a.active {-->
+<!--            background: #667eea;-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .logout-btn {-->
+<!--            background: #ff4757;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            padding: 0.5rem 1rem;-->
+<!--            border-radius: 8px;-->
+<!--            cursor: pointer;-->
+<!--            font-weight: 500;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+
+<!--        .logout-btn:hover {-->
+<!--            background: #ff3838;-->
+<!--        }-->
+
+<!--        .container {-->
+<!--            max-width: 800px;-->
+<!--            margin: 2rem auto;-->
+<!--            padding: 0 2rem;-->
+<!--        }-->
+
+<!--        .page-header {-->
+<!--            background: rgba(255, 255, 255, 0.95);-->
+<!--            backdrop-filter: blur(10px);-->
+<!--            padding: 2rem;-->
+<!--            border-radius: 16px;-->
+<!--            margin-bottom: 2rem;-->
+<!--            box-shadow: 0 8px 32px rgba(0,0,0,0.1);-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        .page-title {-->
+<!--            color: #333;-->
+<!--            font-size: 2rem;-->
+<!--            font-weight: bold;-->
+<!--            margin-bottom: 0.5rem;-->
+<!--        }-->
+
+<!--        .back-link {-->
+<!--            color: #667eea;-->
+<!--            text-decoration: none;-->
+<!--            font-weight: 500;-->
+<!--            display: inline-flex;-->
+<!--            align-items: center;-->
+<!--            gap: 0.5rem;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+
+<!--        .back-link:hover {-->
+<!--            color: #5a6fd8;-->
+<!--        }-->
+
+<!--        .form-container {-->
+<!--            background: rgba(255, 255, 255, 0.95);-->
+<!--            backdrop-filter: blur(10px);-->
+<!--            padding: 2rem;-->
+<!--            border-radius: 16px;-->
+<!--            box-shadow: 0 8px 32px rgba(0,0,0,0.1);-->
+<!--        }-->
+
+<!--        .form-grid {-->
+<!--            display: grid;-->
+<!--            grid-template-columns: 1fr;-->
+<!--            gap: 1.5rem;-->
+<!--        }-->
+
+<!--        .form-row {-->
+<!--            display: grid;-->
+<!--            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));-->
+<!--            gap: 1.5rem;-->
+<!--        }-->
+
+<!--        .form-group {-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--        }-->
+
+<!--        .form-group label {-->
+<!--            margin-bottom: 0.5rem;-->
+<!--            font-weight: 600;-->
+<!--            color: #333;-->
+<!--        }-->
+
+<!--        .required {-->
+<!--            color: #e74c3c;-->
+<!--        }-->
+
+<!--        .form-control {-->
+<!--            padding: 1rem;-->
+<!--            border: 2px solid #e0e6ed;-->
+<!--            border-radius: 10px;-->
+<!--            font-size: 1rem;-->
+<!--            transition: all 0.3s ease;-->
+<!--            background: white;-->
+<!--        }-->
+
+<!--        .form-control:focus {-->
+<!--            outline: none;-->
+<!--            border-color: #667eea;-->
+<!--            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);-->
+<!--        }-->
+
+<!--        textarea.form-control {-->
+<!--            resize: vertical;-->
+<!--            min-height: 100px;-->
+<!--        }-->
+
+<!--        .error-message {-->
+<!--            color: #e74c3c;-->
+<!--            font-size: 0.875rem;-->
+<!--            margin-top: 0.5rem;-->
+<!--        }-->
+
+<!--        .form-actions {-->
+<!--            display: flex;-->
+<!--            gap: 1rem;-->
+<!--            justify-content: center;-->
+<!--            margin-top: 2rem;-->
+<!--            padding-top: 2rem;-->
+<!--            border-top: 1px solid #e0e6ed;-->
+<!--        }-->
+
+<!--        .btn {-->
+<!--            padding: 1rem 2rem;-->
+<!--            border: none;-->
+<!--            border-radius: 10px;-->
+<!--            cursor: pointer;-->
+<!--            font-size: 1rem;-->
+<!--            font-weight: 600;-->
+<!--            text-decoration: none;-->
+<!--            display: inline-flex;-->
+<!--            align-items: center;-->
+<!--            gap: 0.5rem;-->
+<!--            transition: all 0.3s ease;-->
+<!--            min-width: 150px;-->
+<!--            justify-content: center;-->
+<!--        }-->
+
+<!--        .btn-primary {-->
+<!--            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .btn-primary:hover {-->
+<!--            transform: translateY(-2px);-->
+<!--            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);-->
+<!--        }-->
+
+<!--        .btn-secondary {-->
+<!--            background: #6c757d;-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .btn-secondary:hover {-->
+<!--            background: #5a6268;-->
+<!--            transform: translateY(-2px);-->
+<!--        }-->
+
+<!--        .alert {-->
+<!--            padding: 1rem 1.5rem;-->
+<!--            border-radius: 10px;-->
+<!--            margin-bottom: 1.5rem;-->
+<!--            font-weight: 500;-->
+<!--        }-->
+
+<!--        .alert-error {-->
+<!--            background: #f8d7da;-->
+<!--            color: #721c24;-->
+<!--            border: 1px solid #f5c6cb;-->
+<!--        }-->
+
+<!--        @media (max-width: 768px) {-->
+<!--            .navbar {-->
+<!--                padding: 1rem;-->
+<!--            }-->
+
+<!--            .navbar-content {-->
+<!--                flex-direction: column;-->
+<!--                gap: 1rem;-->
+<!--            }-->
+
+<!--            .nav-links {-->
+<!--                gap: 1rem;-->
+<!--            }-->
+
+<!--            .container {-->
+<!--                padding: 0 1rem;-->
+<!--            }-->
+
+<!--            .form-row {-->
+<!--                grid-template-columns: 1fr;-->
+<!--            }-->
+
+<!--            .form-actions {-->
+<!--                flex-direction: column;-->
+<!--            }-->
+
+<!--            .btn {-->
+<!--                width: 100%;-->
+<!--            }-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<nav class="navbar">-->
+<!--    <div class="navbar-content">-->
+<!--        <div class="logo">-->
+<!--            <i class="fas fa-crown"></i> Admin Panel-->
+<!--        </div>-->
+<!--        <div class="nav-links">-->
+<!--            <a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>-->
+<!--            <a href="/admin/branches" class="active"><i class="fas fa-building"></i> Chi nhánh</a>-->
+<!--            <a href="/admin/staff"><i class="fas fa-users"></i> Nhân viên</a>-->
+<!--            <form action="/admin/logout" method="post" style="display: inline;">-->
+<!--                <button type="submit" class="logout-btn">-->
+<!--                    <i class="fas fa-sign-out-alt"></i> Đăng xuất-->
+<!--                </button>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
+
+<!--<div class="container">-->
+<!--    <div class="page-header">-->
+<!--        <h1 class="page-title" th:text="${branchId != null ? 'Chỉnh sửa Chi nhánh' : 'Thêm Chi nhánh mới'}">-->
+<!--            <i class="fas fa-building"></i> Thêm Chi nhánh mới-->
+<!--        </h1>-->
+<!--        <a href="/admin/branches" class="back-link">-->
+<!--            <i class="fas fa-arrow-left"></i> Quay lại danh sách-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    <div class="form-container">-->
+<!--        <form th:action="${branchId != null ? '/admin/branches/' + branchId + '/edit' : '/admin/branches/add'}"-->
+<!--              method="post" th:object="${branchRequest}">-->
+
+<!--            <div class="form-grid">-->
+<!--                &lt;!&ndash; Tên chi nhánh &ndash;&gt;-->
+<!--                <div class="form-group">-->
+<!--                    <label for="name">Tên chi nhánh <span class="required">*</span></label>-->
+<!--                    <input type="text" id="name" th:field="*{name}" class="form-control"-->
+<!--                           placeholder="Nhập tên chi nhánh...">-->
+<!--                    <div th:if="${#fields.hasErrors('name')}" class="error-message">-->
+<!--                        <i class="fas fa-exclamation-circle"></i> <span th:errors="*{name}"></span>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Mô tả &ndash;&gt;-->
+<!--                <div class="form-group">-->
+<!--                    <label for="description">Mô tả</label>-->
+<!--                    <textarea id="description" th:field="*{description}" class="form-control"-->
+<!--                              placeholder="Nhập mô tả chi nhánh..."></textarea>-->
+<!--                    <div th:if="${#fields.hasErrors('description')}" class="error-message">-->
+<!--                        <i class="fas fa-exclamation-circle"></i> <span th:errors="*{description}"></span>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Địa chỉ &ndash;&gt;-->
+<!--                <div class="form-group">-->
+<!--                    <label for="address">Địa chỉ <span class="required">*</span></label>-->
+<!--                    <textarea id="address" th:field="*{address}" class="form-control"-->
+<!--                              placeholder="Nhập địa chỉ chi nhánh..."></textarea>-->
+<!--                    <div th:if="${#fields.hasErrors('address')}" class="error-message">-->
+<!--                        <i class="fas fa-exclamation-circle"></i> <span th:errors="*{address}"></span>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Thông tin liên hệ &ndash;&gt;-->
+<!--                <div class="form-row">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="phoneNumber">Số điện thoại</label>-->
+<!--                        <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"-->
+<!--                               placeholder="Nhập số điện thoại...">-->
+<!--                        <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message">-->
+<!--                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{phoneNumber}"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="form-group">-->
+<!--                        <label for="email">Email</label>-->
+<!--                        <input type="email" id="email" th:field="*{email}" class="form-control"-->
+<!--                               placeholder="Nhập email...">-->
+<!--                        <div th:if="${#fields.hasErrors('email')}" class="error-message">-->
+<!--                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{email}"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Loại hình và Trạng thái &ndash;&gt;-->
+<!--                <div class="form-row">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="type">Loại hình <span class="required">*</span></label>-->
+<!--                        <select id="type" th:field="*{type}" class="form-control">-->
+<!--                            <option value="">Chọn loại hình</option>-->
+<!--                            <option th:each="type : ${branchTypes}"-->
+<!--                                    th:value="${type}"-->
+<!--                                    th:text="${type.displayName}">-->
+<!--                            </option>-->
+<!--                        </select>-->
+<!--                        <div th:if="${#fields.hasErrors('type')}" class="error-message">-->
+<!--                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{type}"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="form-group">-->
+<!--                        <label for="status">Trạng thái <span class="required">*</span></label>-->
+<!--                        <select id="status" th:field="*{status}" class="form-control">-->
+<!--                            <option value="">Chọn trạng thái</option>-->
+<!--                            <option th:each="status : ${branchStatuses}"-->
+<!--                                    th:value="${status}"-->
+<!--                                    th:text="${status.displayName}">-->
+<!--                            </option>-->
+<!--                        </select>-->
+<!--                        <div th:if="${#fields.hasErrors('status')}" class="error-message">-->
+<!--                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{status}"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Hình ảnh &ndash;&gt;-->
+<!--                <div class="form-group">-->
+<!--                    <label for="imageUrl">URL Hình ảnh</label>-->
+<!--                    <input type="url" id="imageUrl" th:field="*{imageUrl}" class="form-control"-->
+<!--                           placeholder="Nhập URL hình ảnh...">-->
+<!--                    <div th:if="${#fields.hasErrors('imageUrl')}" class="error-message">-->
+<!--                        <i class="fas fa-exclamation-circle"></i> <span th:errors="*{imageUrl}"></span>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Tọa độ &ndash;&gt;-->
+<!--                <div class="form-row">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="latitude">Vĩ độ (Latitude)</label>-->
+<!--                        <input type="number" step="any" id="latitude" th:field="*{latitude}" class="form-control"-->
+<!--                               placeholder="VD: 10.762622">-->
+<!--                        <div th:if="${#fields.hasErrors('latitude')}" class="error-message">-->
+<!--                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{latitude}"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="form-group">-->
+<!--                        <label for="longitude">Kinh độ (Longitude)</label>-->
+<!--                        <input type="number" step="any" id="longitude" th:field="*{longitude}" class="form-control"-->
+<!--                               placeholder="VD: 106.660172">-->
+<!--                        <div th:if="${#fields.hasErrors('longitude')}" class="error-message">-->
+<!--                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{longitude}"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-actions">-->
+<!--                <button type="submit" class="btn btn-primary">-->
+<!--                    <i th:class="${branchId != null ? 'fas fa-save' : 'fas fa-plus'}"></i>-->
+<!--                    <span th:text="${branchId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>-->
+<!--                </button>-->
+<!--                <a href="/admin/branches" class="btn btn-secondary">-->
+<!--                    <i class="fas fa-times"></i> Hủy bỏ-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${branchId != null ? 'Chỉnh sửa Chi nhánh' : 'Thêm Chi nhánh'}">Thêm Chi nhánh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .sidebar {
             min-height: 100vh;
+            background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         }
-
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-            position: sticky;
+        .sidebar .nav-link {
+            color: #adb5bd;
+            border-radius: 0.375rem;
+            margin: 0.125rem 0.5rem;
+            padding: 0.7rem 1rem;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .sidebar .nav-link:before {
+            content: '';
+            position: absolute;
+            left: 0;
             top: 0;
-            z-index: 100;
+            height: 100%;
+            width: 4px;
+            background-color: #0d6efd;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-
-        .navbar-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
+        .sidebar .nav-link:hover {
+            background-color: #2c3034;
+            color: #fff;
+            transform: translateX(5px);
         }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #667eea;
+        .sidebar .nav-link:hover:before {
+            opacity: 1;
         }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
+        .sidebar .nav-link.active {
+            background-color: #0d6efd;
+            color: #fff;
             font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
         }
-
-        .nav-links a:hover, .nav-links a.active {
-            background: #667eea;
-            color: white;
+        .sidebar .nav-link.active:before {
+            opacity: 1;
         }
-
-        .logout-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #343a40;
+            margin-bottom: 1rem;
         }
-
-        .logout-btn:hover {
-            background: #ff3838;
+        .nav-item {
+            margin-bottom: 0.4rem;
         }
-
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+        .nav-category {
+            padding: 0.8rem 1rem 0.3rem;
+            margin-top: 1.2rem;
+            font-size: 0.75rem;
+            color: #6c757d !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-top: 1px solid #343a40;
         }
-
-        .page-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        .nav-category:first-child {
+            border-top: none;
+            margin-top: 0;
+        }
+        .logo-container {
+            padding: 1.5rem 0;
             text-align: center;
         }
-
-        .page-title {
-            color: #333;
+        .logo-icon {
             font-size: 2rem;
-            font-weight: bold;
+            color: #0d6efd;
             margin-bottom: 0.5rem;
         }
 
-        .back-link {
-            color: #667eea;
-            text-decoration: none;
+        /* Custom styles for branch form */
+        .page-header {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .form-container {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .form-label {
             font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        .required {
+            color: #dc3545;
+        }
+        .back-link {
+            color: #6c757d;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .back-link:hover {
-            color: #5a6fd8;
-        }
-
-        .form-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .required {
-            color: #e74c3c;
-        }
-
-        .form-control {
-            padding: 1rem;
-            border: 2px solid #e0e6ed;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .error-message {
-            color: #e74c3c;
-            font-size: 0.875rem;
             margin-top: 0.5rem;
         }
-
+        .back-link:hover {
+            color: #0d6efd;
+        }
         .form-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #e0e6ed;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            min-width: 150px;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        .alert {
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem;
-            }
-
-            .navbar-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            .container {
-                padding: 0 1rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
+            border-top: 1px solid #dee2e6;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
         }
     </style>
 </head>
 <body>
-<nav class="navbar">
-    <div class="navbar-content">
-        <div class="logo">
-            <i class="fas fa-crown"></i> Admin Panel
-        </div>
-        <div class="nav-links">
-            <a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="/admin/branches" class="active"><i class="fas fa-building"></i> Chi nhánh</a>
-            <a href="/admin/staff"><i class="fas fa-users"></i> Nhân viên</a>
-            <form action="/admin/logout" method="post" style="display: inline;">
-                <button type="submit" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
-                </button>
-            </form>
-        </div>
-    </div>
-</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/admin_sidebar :: admin_sidebar"></div>
 
-<div class="container">
-    <div class="page-header">
-        <h1 class="page-title" th:text="${branchId != null ? 'Chỉnh sửa Chi nhánh' : 'Thêm Chi nhánh mới'}">
-            <i class="fas fa-building"></i> Thêm Chi nhánh mới
-        </h1>
-        <a href="/admin/branches" class="back-link">
-            <i class="fas fa-arrow-left"></i> Quay lại danh sách
-        </a>
-    </div>
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
+            <!-- Top navbar -->
+<!--            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">-->
+<!--                <div class="container-fluid">-->
+<!--                    <h4 class="navbar-brand mb-0">-->
+<!--                        <i class="fas fa-building me-2"></i>-->
+<!--                        <span th:text="${branchId != null ? 'Chỉnh sửa Chi nhánh' : 'Thêm Chi nhánh'}">Thêm Chi nhánh</span>-->
+<!--                    </h4>-->
 
-    <div class="form-container">
-        <form th:action="${branchId != null ? '/admin/branches/' + branchId + '/edit' : '/admin/branches/add'}"
-              method="post" th:object="${branchRequest}">
+<!--                    <div class="navbar-nav ms-auto">-->
+<!--                        <div class="nav-item dropdown">-->
+<!--                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">-->
+<!--                                <i class="fas fa-user me-2"></i>-->
+<!--                                <span th:text="${user.fullName}">Admin User</span>-->
+<!--                            </a>-->
+<!--                            <ul class="dropdown-menu dropdown-menu-end">-->
+<!--                                <li><h6 class="dropdown-header" th:text="${user.username}">Username</h6></li>-->
+<!--                                <li><hr class="dropdown-divider"></li>-->
+<!--                                <li><a class="dropdown-item" href="#profile"><i class="fas fa-user me-2"></i>Thông tin cá nhân</a></li>-->
+<!--                                <li><a class="dropdown-item" href="#settings"><i class="fas fa-cog me-2"></i>Cài đặt</a></li>-->
+<!--                                <li><hr class="dropdown-divider"></li>-->
+<!--                                <li>-->
+<!--                                    <form th:action="@{/logout}" method="post" class="d-inline">-->
+<!--                                        <button type="submit" class="dropdown-item text-danger">-->
+<!--                                            <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất-->
+<!--                                        </button>-->
+<!--                                    </form>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </nav>-->
 
-            <div class="form-grid">
-                <!-- Tên chi nhánh -->
-                <div class="form-group">
-                    <label for="name">Tên chi nhánh <span class="required">*</span></label>
-                    <input type="text" id="name" th:field="*{name}" class="form-control"
-                           placeholder="Nhập tên chi nhánh...">
-                    <div th:if="${#fields.hasErrors('name')}" class="error-message">
-                        <i class="fas fa-exclamation-circle"></i> <span th:errors="*{name}"></span>
+            <!-- Page content -->
+            <div class="py-4">
+                <!-- Page header -->
+                <div class="page-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1" th:text="${branchId != null ? 'Chỉnh sửa Chi nhánh' : 'Thêm Chi nhánh mới'}">Thêm Chi nhánh mới</h5>
+                            <p class="text-muted mb-0" th:text="${branchId != null ? 'Cập nhật thông tin chi nhánh' : 'Thêm chi nhánh mới vào hệ thống'}">Thêm chi nhánh mới vào hệ thống</p>
+                        </div>
+                        <a href="/admin/branches" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại
+                        </a>
                     </div>
                 </div>
 
-                <!-- Mô tả -->
-                <div class="form-group">
-                    <label for="description">Mô tả</label>
-                    <textarea id="description" th:field="*{description}" class="form-control"
-                              placeholder="Nhập mô tả chi nhánh..."></textarea>
-                    <div th:if="${#fields.hasErrors('description')}" class="error-message">
-                        <i class="fas fa-exclamation-circle"></i> <span th:errors="*{description}"></span>
-                    </div>
-                </div>
+                <!-- Form container -->
+                <div class="form-container">
+                    <form th:action="${branchId != null ? '/admin/branches/' + branchId + '/edit' : '/admin/branches/add'}"
+                          method="post"  enctype="multipart/form-data" th:object="${branchRequest}">
 
-                <!-- Địa chỉ -->
-                <div class="form-group">
-                    <label for="address">Địa chỉ <span class="required">*</span></label>
-                    <textarea id="address" th:field="*{address}" class="form-control"
-                              placeholder="Nhập địa chỉ chi nhánh..."></textarea>
-                    <div th:if="${#fields.hasErrors('address')}" class="error-message">
-                        <i class="fas fa-exclamation-circle"></i> <span th:errors="*{address}"></span>
-                    </div>
-                </div>
-
-                <!-- Thông tin liên hệ -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="phoneNumber">Số điện thoại</label>
-                        <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"
-                               placeholder="Nhập số điện thoại...">
-                        <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message">
-                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{phoneNumber}"></span>
+                        <!-- Alert messages -->
+                        <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Vui lòng kiểm tra lại thông tin đã nhập.
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" th:field="*{email}" class="form-control"
-                               placeholder="Nhập email...">
-                        <div th:if="${#fields.hasErrors('email')}" class="error-message">
-                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{email}"></span>
+                        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span th:text="${success}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Loại hình và Trạng thái -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="type">Loại hình <span class="required">*</span></label>
-                        <select id="type" th:field="*{type}" class="form-control">
-                            <option value="">Chọn loại hình</option>
-                            <option th:each="type : ${branchTypes}"
-                                    th:value="${type}"
-                                    th:text="${type.displayName}">
-                            </option>
-                        </select>
-                        <div th:if="${#fields.hasErrors('type')}" class="error-message">
-                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{type}"></span>
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h6 class="border-bottom pb-2 mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>Thông tin cơ bản
+                                </h6>
+                            </div>
+
+                            <!-- Tên chi nhánh -->
+                            <div class="col-md-12 mb-3">
+                                <label for="name" class="form-label">Tên chi nhánh <span class="required">*</span></label>
+                                <input type="text" id="name" th:field="*{name}" class="form-control"
+                                       placeholder="Nhập tên chi nhánh..."
+                                       :class="${#fields.hasErrors('name')} ? 'is-invalid' : ''">
+                                <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{name}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Mô tả -->
+                            <div class="col-md-12 mb-3">
+                                <label for="description" class="form-label">Mô tả</label>
+                                <textarea id="description" th:field="*{description}" class="form-control"
+                                          placeholder="Nhập mô tả chi nhánh..." rows="3"></textarea>
+                                <div th:if="${#fields.hasErrors('description')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{description}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Địa chỉ -->
+                            <div class="col-md-12 mb-3">
+                                <label for="address" class="form-label">Địa chỉ <span class="required">*</span></label>
+                                <textarea id="address" th:field="*{address}" class="form-control"
+                                          placeholder="Nhập địa chỉ chi nhánh..." rows="2"
+                                          :class="${#fields.hasErrors('address')} ? 'is-invalid' : ''"></textarea>
+                                <div th:if="${#fields.hasErrors('address')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{address}"></span>
+                                </div>
+                            </div>
+                            <!-- Số nhà, đường -->
+                            <div class="col-md-12 mb-3">
+                                <label for="streetAddress" class="form-label">Số nhà, đường <span class="required">*</span></label>
+                                <input type="text" id="streetAddress" th:field="*{streetAddress}" class="form-control"
+                                       placeholder="Nhập số nhà, đường..."
+                                       th:classappend="${#fields.hasErrors('streetAddress')} ? ' is-invalid'">
+                                <div th:if="${#fields.hasErrors('streetAddress')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{streetAddress}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Quận/Huyện -->
+                            <div class="col-md-6 mb-3">
+                                <label for="district" class="form-label">Quận/Huyện <span class="required">*</span></label>
+                                <input type="text" id="district" th:field="*{district}" class="form-control"
+                                       placeholder="Nhập quận/huyện..."
+                                       th:classappend="${#fields.hasErrors('district')} ? ' is-invalid'">
+                                <div th:if="${#fields.hasErrors('district')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{district}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Tỉnh/Thành phố -->
+                            <div class="col-md-6 mb-3">
+                                <label for="province" class="form-label">Tỉnh/Thành phố <span class="required">*</span></label>
+                                <input type="text" id="province" th:field="*{province}" class="form-control"
+                                       placeholder="Nhập tỉnh/thành phố..."
+                                       th:classappend="${#fields.hasErrors('province')} ? ' is-invalid'">
+                                <div th:if="${#fields.hasErrors('province')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{province}"></span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="status">Trạng thái <span class="required">*</span></label>
-                        <select id="status" th:field="*{status}" class="form-control">
-                            <option value="">Chọn trạng thái</option>
-                            <option th:each="status : ${branchStatuses}"
-                                    th:value="${status}"
-                                    th:text="${status.displayName}">
-                            </option>
-                        </select>
-                        <div th:if="${#fields.hasErrors('status')}" class="error-message">
-                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{status}"></span>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h6 class="border-bottom pb-2 mb-3">
+                                    <i class="fas fa-address-card me-2"></i>Thông tin liên hệ
+                                </h6>
+                            </div>
+
+                            <!-- Số điện thoại -->
+                            <div class="col-md-6 mb-3">
+                                <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                                <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"
+                                       placeholder="Nhập số điện thoại...">
+                                <div th:if="${#fields.hasErrors('phoneNumber')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{phoneNumber}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" th:field="*{email}" class="form-control"
+                                       placeholder="Nhập email...">
+                                <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{email}"></span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Hình ảnh -->
-                <div class="form-group">
-                    <label for="imageUrl">URL Hình ảnh</label>
-                    <input type="url" id="imageUrl" th:field="*{imageUrl}" class="form-control"
-                           placeholder="Nhập URL hình ảnh...">
-                    <div th:if="${#fields.hasErrors('imageUrl')}" class="error-message">
-                        <i class="fas fa-exclamation-circle"></i> <span th:errors="*{imageUrl}"></span>
-                    </div>
-                </div>
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h6 class="border-bottom pb-2 mb-3">
+                                    <i class="fas fa-cog me-2"></i>Cấu hình
+                                </h6>
+                            </div>
 
-                <!-- Tọa độ -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="latitude">Vĩ độ (Latitude)</label>
-                        <input type="number" step="any" id="latitude" th:field="*{latitude}" class="form-control"
-                               placeholder="VD: 10.762622">
-                        <div th:if="${#fields.hasErrors('latitude')}" class="error-message">
-                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{latitude}"></span>
+                            <!-- Loại hình -->
+                            <div class="col-md-6 mb-3">
+                                <label for="type" class="form-label">Loại hình <span class="required">*</span></label>
+                                <select id="type" th:field="*{type}" class="form-select"
+                                        :class="${#fields.hasErrors('type')} ? 'is-invalid' : ''">
+                                    <option value="">Chọn loại hình</option>
+                                    <option th:each="type : ${branchTypes}"
+                                            th:value="${type}"
+                                            th:text="${type.displayName}">
+                                    </option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('type')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{type}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Trạng thái -->
+                            <div class="col-md-6 mb-3">
+                                <label for="status" class="form-label">Trạng thái <span class="required">*</span></label>
+                                <select id="status" th:field="*{status}" class="form-select"
+                                        :class="${#fields.hasErrors('status')} ? 'is-invalid' : ''">
+                                    <option value="">Chọn trạng thái</option>
+                                    <option th:each="status : ${branchStatuses}"
+                                            th:value="${status}"
+                                            th:text="${status.displayName}">
+                                    </option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('status')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{status}"></span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="longitude">Kinh độ (Longitude)</label>
-                        <input type="number" step="any" id="longitude" th:field="*{longitude}" class="form-control"
-                               placeholder="VD: 106.660172">
-                        <div th:if="${#fields.hasErrors('longitude')}" class="error-message">
-                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{longitude}"></span>
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h6 class="border-bottom pb-2 mb-3">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Thông tin bổ sung
+                                </h6>
+                            </div>
+
+                            <!-- URL Hình ảnh -->
+<!--                            <div class="col-md-12 mb-3">-->
+<!--                                <label for="imageUrl" class="form-label">URL Hình ảnh</label>-->
+<!--                                <input type="url" id="imageUrl" th:field="*{imageUrl}" class="form-control"-->
+<!--                                       placeholder="Nhập URL hình ảnh...">-->
+<!--                                <div th:if="${#fields.hasErrors('imageUrl')}" class="invalid-feedback">-->
+<!--                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{imageUrl}"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <!-- Hình ảnh -->
+<!--                            <div class="col-md-12 mb-3">-->
+<!--                                <label for="imageFile" class="form-label">Thêm hình ảnh</label>-->
+<!--                                <input type="file" class="form-control" id="imageFile" name="imageFile"-->
+<!--                                       accept="image/*">-->
+<!--                                <div class="form-text">Chọn 1 ảnh để upload</div>-->
+
+<!--                                &lt;!&ndash; Nếu đang edit, hiển thị ảnh hiện tại &ndash;&gt;-->
+<!--                                <div th:if="${branchRequest.imageUrl != null}" class="mt-2">-->
+<!--                                    <img th:src="${branchRequest.imageUrl}"-->
+<!--                                         alt="Branch image"-->
+<!--                                         class="img-thumbnail"-->
+<!--                                         style="height: 100px; object-fit: cover;">-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                            <!-- Upload ảnh -->
+                            <div class="col-md-12 mb-3">
+                                <label for="imageFile" class="form-label">Hình ảnh chi nhánh</label>
+                                <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*">
+                                <div class="form-text">Chọn 1 ảnh (jpg, png, webp...)</div>
+
+                                <!-- Nếu edit thì show ảnh cũ -->
+                                <div th:if="${branchRequest.imageUrl != null}" class="mt-2">
+                                    <img th:src="${branchRequest.imageUrl}" class="img-thumbnail" style="height: 100px; object-fit: cover;">
+                                </div>
+                            </div>
+
+
+
+                            <!-- Tọa độ -->
+                            <div class="col-md-6 mb-3">
+                                <label for="latitude" class="form-label">Vĩ độ (Latitude)</label>
+                                <input type="number" step="any" id="latitude" th:field="*{latitude}" class="form-control"
+                                       placeholder="VD: 10.762622">
+                                <div th:if="${#fields.hasErrors('latitude')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{latitude}"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="longitude" class="form-label">Kinh độ (Longitude)</label>
+                                <input type="number" step="any" id="longitude" th:field="*{longitude}" class="form-control"
+                                       placeholder="VD: 106.660172">
+                                <div th:if="${#fields.hasErrors('longitude')}" class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{longitude}"></span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+
+                        <!-- Form actions -->
+<!--                        <div class="form-actions">-->
+<!--                            <div class="d-flex justify-content-end gap-2">-->
+<!--                                <a href="/admin/branches" class="btn btn-secondary">-->
+<!--                                    <i class="fas fa-times me-2"></i>Hủy bỏ-->
+<!--                                </a>-->
+<!--                                <button type="submit" class="btn btn-primary">-->
+<!--                                    <i th:class="${branchId != null ? 'fas fa-save' : 'fas fa-plus'} me-2"></i>-->
+<!--                                    <span th:text="${branchId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                                    <div class="form-actions">
+                                        <div class="d-flex justify-content-end gap-2">
+
+                                            <button type="submit" class="btn btn-primary">
+                                                <i th:class="${branchId != null ? 'fas fa-save' : 'fas fa-plus'}"></i>
+                                                <span th:text="${branchId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>
+                                            </button>
+                                            <a href="/admin/branches" class="btn btn-secondary">
+                                                <i class="fas fa-times"></i> Hủy bỏ
+                                            </a>
+                                        </div>
+                                    </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i th:class="${branchId != null ? 'fas fa-save' : 'fas fa-plus'}"></i>
-                    <span th:text="${branchId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>
-                </button>
-                <a href="/admin/branches" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Hủy bỏ
-                </a>
-            </div>
-        </form>
+        </main>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Sidebar navigation active state
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPage = window.location.pathname;
+        const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
+
+        sidebarLinks.forEach(link => {
+            const linkPath = link.getAttribute('href');
+            if (currentPage.includes(linkPath.substring(1))) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
 </body>
 </html>

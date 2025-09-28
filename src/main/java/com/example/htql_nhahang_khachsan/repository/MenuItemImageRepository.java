@@ -36,4 +36,10 @@ public interface MenuItemImageRepository extends JpaRepository<MenuItemImageEnti
     @Modifying
     @Query("UPDATE MenuItemImageEntity m SET m.isPrimary = :isPrimary WHERE m.menuItem = :menuItem")
     void updatePrimaryStatusByMenuItem(@Param("menuItem") MenuItemEntity menuItem, @Param("isPrimary") Boolean isPrimary);
+
+    List<MenuItemImageEntity> findByMenuItemIdOrderByIsPrimaryDesc(Long menuItemId);
+    List<MenuItemImageEntity> findByMenuItemIdAndIsPrimaryTrue(Long menuItemId);
+
+    @Query("SELECT mii FROM MenuItemImageEntity mii WHERE mii.menuItem.id = :menuItemId ORDER BY mii.isPrimary DESC, mii.uploadedAt DESC")
+    List<MenuItemImageEntity> findByMenuItemIdOrderByPrimaryAndUploadDate(@Param("menuItemId") Long menuItemId);
 }

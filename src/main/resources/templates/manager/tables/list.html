@@ -6,6 +6,7 @@
   <title>Quản lý bàn</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/manager_sidebar.css}">
   <style>
     .status-badge {
       font-size: 0.8rem;
@@ -34,212 +35,222 @@
       background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
       border-radius: 15px;
     }
+    .a{
+        margin-bottom: 20px;
+    }
   </style>
 </head>
 <body class="bg-light">
-<div class="container-fluid py-4">
+<div class="container-fluid">
+  <div class="row">
+    <div th:replace="fragments/manager_sidebar :: manager_sidebar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
   <!-- Header -->
-  <div class="row mb-4">
-    <div class="col">
-      <h2 class="mb-0">
-        <i class="bi bi-table text-primary"></i>
-        Quản lý bàn
-      </h2>
-      <p class="text-muted">Quản lý thông tin bàn ăn tại chi nhánh</p>
-    </div>
-    <div class="col-auto">
-      <a href="/manager/tables/add" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i> Thêm bàn mới
-      </a>
-    </div>
-  </div>
-
-  <!-- Alert Messages -->
-  <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-    <i class="bi bi-check-circle"></i>
-    <span th:text="${success}"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  </div>
-
-  <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="bi bi-exclamation-triangle"></i>
-    <span th:text="${error}"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  </div>
-
-  <!-- Search Form -->
-  <div class="card search-form mb-4">
-    <div class="card-body">
-      <form method="get" action="/manager/tables">
-        <div class="row g-3">
-          <div class="col-md-3">
-            <label class="form-label fw-semibold">Số bàn</label>
-            <input type="text" name="tableNumber" class="form-control"
-                   th:value="${searchTableNumber}" placeholder="Nhập số bàn...">
-          </div>
-          <div class="col-md-3">
-            <label class="form-label fw-semibold">Trạng thái</label>
-            <select name="status" class="form-select">
-              <option value="">Tất cả trạng thái</option>
-              <option th:each="status : ${statuses}"
-                      th:value="${status}"
-                      th:text="${status.displayName}"
-                      th:selected="${searchStatus == status}"></option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <label class="form-label fw-semibold">Sức chứa</label>
-            <input type="number" name="capacity" class="form-control"
-                   th:value="${searchCapacity}" placeholder="Nhập sức chứa...">
-          </div>
-          <div class="col-md-3 d-flex align-items-end gap-2">
-            <button type="submit" class="btn btn-outline-primary flex-fill">
-              <i class="bi bi-search"></i> Tìm kiếm
-            </button>
-            <a href="/manager/tables" class="btn btn-outline-secondary">
-              <i class="bi bi-arrow-clockwise"></i>
-            </a>
-          </div>
+      <div class="row mb-4">
+        <div class="col">
+          <h2 class="mb-0">
+            <i class="bi bi-table text-primary"></i>
+            Quản lý bàn
+          </h2>
+          <p class="text-muted">Quản lý thông tin bàn ăn tại chi nhánh</p>
         </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Tables Grid -->
-  <div class="row g-3">
-    <div class="col-lg-4 col-md-6" th:each="table : ${tables}">
-      <div class="card table-card card-hover h-100"
-           th:classappend="${table.status.name().toLowerCase().replace('_', '-')}">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <div>
-              <h5 class="card-title mb-1">
-                <i class="bi bi-table"></i>
-                Bàn <span th:text="${table.tableNumber}"></span>
-              </h5>
-              <small class="text-muted">
-                <i class="bi bi-people"></i>
-                <span th:text="${table.capacity}"></span> người
-              </small>
-            </div>
-            <span class="badge status-badge"
-                  th:classappend="${table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).AVAILABLE ? 'bg-success' :
-                      (table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).OCCUPIED ? 'bg-danger' :
-                      (table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).RESERVED ? 'bg-warning text-dark' : 'bg-secondary'))}"
-                  th:text="${table.statusDisplayName}">
-            </span>
-
-
-          </div>
-
-          <div class="row text-center mb-3" th:if="${table.positionX != null or table.positionY != null}">
-            <div class="col">
-              <small class="text-muted">
-                <i class="bi bi-geo-alt"></i>
-                Vị trí: (<span th:text="${table.positionX ?: 0}"></span>, <span th:text="${table.positionY ?: 0}"></span>)
-              </small>
-            </div>
-          </div>
-
-          <div th:if="${table.notes}" class="mb-3">
-            <small class="text-muted">
-              <i class="bi bi-chat-square-text"></i>
-              <span th:text="${table.notes}"></span>
-            </small>
-          </div>
-
-          <div class="d-flex gap-2">
-            <a th:href="@{/manager/tables/{id}/edit(id=${table.id})}"
-               class="btn btn-sm btn-outline-primary flex-fill">
-              <i class="bi bi-pencil"></i> Sửa
-            </a>
-
-            <form th:action="@{/manager/tables/{id}/toggle-status(id=${table.id})}"
-                  method="post" style="display: inline;" class="flex-fill">
-              <button type="submit" class="btn btn-sm w-100"
-                      th:classappend="${table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).OUT_OF_SERVICE ? 'btn-success' : 'btn-warning'}"
-                      onclick="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái bàn này?')">
-                <i th:class="${table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).OUT_OF_SERVICE ? 'bi bi-check-circle' : 'bi bi-pause-circle'}"></i>
-                <span th:text="${table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).OUT_OF_SERVICE ? 'Kích hoạt' : 'Tạm dừng'}"></span>
-              </button>
-            </form>
-
-            <form th:action="@{/manager/tables/{id}/delete(id=${table.id})}"
-                  method="post" style="display: inline;">
-              <button type="submit" class="btn btn-sm btn-outline-danger"
-                      onclick="return confirm('Bạn có chắc chắn muốn xóa bàn này? Hành động này không thể hoàn tác!')">
-                <i class="bi bi-trash"></i>
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <div class="card-footer text-muted">
-          <small>
-            <i class="bi bi-clock"></i>
-            Tạo: <span th:text="${#temporals.format(table.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
-          </small>
+        <div class="col-auto">
+          <a href="/manager/tables/add" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Thêm bàn mới
+          </a>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Empty State -->
-  <div th:if="${tables.isEmpty()}" class="text-center py-5">
-    <i class="bi bi-table text-muted" style="font-size: 4rem;"></i>
-    <h4 class="text-muted mt-3">Không có bàn nào</h4>
-    <p class="text-muted mb-4">Hãy thêm bàn đầu tiên cho chi nhánh của bạn</p>
-    <a href="/manager/tables/add" class="btn btn-primary">
-      <i class="bi bi-plus-circle"></i> Thêm bàn mới
-    </a>
-  </div>
+      <!-- Alert Messages -->
+      <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle"></i>
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
 
-  <!-- Statistics -->
-  <div th:unless="${tables.isEmpty()}" class="row mt-4">
-    <div class="col-12">
-      <div class="card">
+      <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+
+      <!-- Search Form -->
+      <div class="card search-form mb-4">
         <div class="card-body">
-          <div class="row text-center">
-            <div class="col-md-3">
-              <div class="d-flex align-items-center justify-content-center">
-                <i class="bi bi-table text-primary me-2"></i>
-                <div>
-                  <h5 class="mb-0" th:text="${tables.size()}">0</h5>
-                  <small class="text-muted">Tổng số bàn</small>
-                </div>
+          <form method="get" action="/manager/tables">
+            <div class="row g-3">
+              <div class="col-md-3">
+                <label class="form-label fw-semibold">Số bàn</label>
+                <input type="text" name="tableNumber" class="form-control"
+                       th:value="${searchTableNumber}" placeholder="Nhập số bàn...">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-semibold">Trạng thái</label>
+                <select name="status" class="form-select">
+                  <option value="">Tất cả trạng thái</option>
+                  <option th:each="status : ${statuses}"
+                          th:value="${status}"
+                          th:text="${status.displayName}"
+                          th:selected="${searchStatus == status}"></option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-semibold">Sức chứa</label>
+                <input type="number" name="capacity" class="form-control"
+                       th:value="${searchCapacity}" placeholder="Nhập sức chứa...">
+              </div>
+              <div class="col-md-3 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-outline-primary flex-fill">
+                  <i class="bi bi-search"></i> Tìm kiếm
+                </button>
+                <a href="/manager/tables" class="btn btn-outline-secondary">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </a>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="d-flex align-items-center justify-content-center">
-                <i class="bi bi-check-circle text-success me-2"></i>
-                <div>
-                  <h5 class="mb-0" th:text="${availableCount}">0</h5>
-                  <small class="text-muted">Có sẵn</small>
+          </form>
+        </div>
+      </div>
+
+      <div th:unless="${tables.isEmpty()}" class="row mt-4 a">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row text-center">
+                <div class="col-md-3">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <i class="bi bi-table text-primary me-2"></i>
+                    <div>
+                      <h5 class="mb-0" th:text="${tables.size()}">0</h5>
+                      <small class="text-muted">Tổng số bàn</small>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="d-flex align-items-center justify-content-center">
-                <i class="bi bi-person-fill text-danger me-2"></i>
-                <div>
-                  <h5 class="mb-0" th:text="${occupiedCount}">0</h5>
-                  <small class="text-muted">Đang sử dụng</small>
+                <div class="col-md-3">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <i class="bi bi-check-circle text-success me-2"></i>
+                    <div>
+                      <h5 class="mb-0" th:text="${availableCount}">0</h5>
+                      <small class="text-muted">Có sẵn</small>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="d-flex align-items-center justify-content-center">
-                <i class="bi bi-bookmark-fill text-warning me-2"></i>
-                <div>
-                  <h5 class="mb-0" th:text="${reservedCount}">0</h5>
-                  <small class="text-muted">Đã đặt</small>
+                <div class="col-md-3">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <i class="bi bi-person-fill text-danger me-2"></i>
+                    <div>
+                      <h5 class="mb-0" th:text="${occupiedCount}">0</h5>
+                      <small class="text-muted">Đang sử dụng</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <i class="bi bi-bookmark-fill text-warning me-2"></i>
+                    <div>
+                      <h5 class="mb-0" th:text="${reservedCount}">0</h5>
+                      <small class="text-muted">Đã đặt</small>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <!-- Tables Grid -->
+      <div class="row g-3">
+        <div class="col-lg-4 col-md-6" th:each="table : ${tables}">
+          <div class="card table-card card-hover h-100"
+               th:classappend="${table.status.name().toLowerCase().replace('_', '-')}">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                  <h5 class="card-title mb-1">
+                    <i class="bi bi-table"></i>
+                    Bàn <span th:text="${table.tableNumber}"></span>
+                  </h5>
+                  <small class="text-muted">
+                    <i class="bi bi-people"></i>
+                    <span th:text="${table.capacity}"></span> người
+                  </small>
+                </div>
+                <span class="badge status-badge"
+                      th:classappend="${table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).AVAILABLE ? 'bg-success' :
+                          (table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).OCCUPIED ? 'bg-danger' :
+                          (table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).RESERVED ? 'bg-warning text-dark' : 'bg-secondary'))}"
+                      th:text="${table.statusDisplayName}">
+                </span>
+
+
+              </div>
+
+              <div class="row text-center mb-3" th:if="${table.positionX != null or table.positionY != null}">
+                <div class="col">
+                  <small class="text-muted">
+                    <i class="bi bi-geo-alt"></i>
+                    Vị trí: (<span th:text="${table.positionX ?: 0}"></span>, <span th:text="${table.positionY ?: 0}"></span>)
+                  </small>
+                </div>
+              </div>
+
+              <div th:if="${table.notes}" class="mb-3">
+                <small class="text-muted">
+                  <i class="bi bi-chat-square-text"></i>
+                  <span th:text="${table.notes}"></span>
+                </small>
+              </div>
+
+              <div class="d-flex gap-2">
+                <a th:href="@{/manager/tables/{id}/edit(id=${table.id})}"
+                   class="btn btn-sm btn-outline-primary flex-fill">
+                  <i class="bi bi-pencil"></i> Sửa
+                </a>
+
+                <form th:action="@{/manager/tables/{id}/toggle-status(id=${table.id})}"
+                      method="post" style="display: inline;" class="flex-fill">
+                  <button type="submit" class="btn btn-sm w-100"
+                          th:classappend="${table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).OUT_OF_SERVICE ? 'btn-success' : 'btn-warning'}"
+                          onclick="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái bàn này?')">
+                    <i th:class="${table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).OUT_OF_SERVICE ? 'bi bi-check-circle' : 'bi bi-pause-circle'}"></i>
+                    <span th:text="${table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).OUT_OF_SERVICE ? 'Kích hoạt' : 'Tạm dừng'}"></span>
+                  </button>
+                </form>
+
+                <form th:action="@{/manager/tables/{id}/delete(id=${table.id})}"
+                      method="post" style="display: inline;">
+                  <button type="submit" class="btn btn-sm btn-outline-danger"
+                          onclick="return confirm('Bạn có chắc chắn muốn xóa bàn này? Hành động này không thể hoàn tác!')">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div class="card-footer text-muted">
+              <small>
+                <i class="bi bi-clock"></i>
+                Tạo: <span th:text="${#temporals.format(table.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div th:if="${tables.isEmpty()}" class="text-center py-5">
+        <i class="bi bi-table text-muted" style="font-size: 4rem;"></i>
+        <h4 class="text-muted mt-3">Không có bàn nào</h4>
+        <p class="text-muted mb-4">Hãy thêm bàn đầu tiên cho chi nhánh của bạn</p>
+        <a href="/manager/tables/add" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Thêm bàn mới
+        </a>
+      </div>
+
+      <!-- Statistics -->
+
+    </main>
   </div>
 </div>
 

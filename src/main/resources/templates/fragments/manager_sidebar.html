@@ -7,7 +7,7 @@
 
     <ul class="nav flex-column">
         <li class="nav-item mb-1">
-            <a class="nav-link active" href="#dashboard" data-section="dashboard">
+            <a class="nav-link active" th:href="@{/manager/dashboard}" data-section="dashboard">
                 <i class="bi bi-speedometer2 me-2"></i>Tổng quan
             </a>
         </li>
@@ -17,12 +17,12 @@
             <h6 class="text-white-50 mt-3 mb-2 px-2">KHÁCH SẠN</h6>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#room-types" data-section="room-types">
+            <a class="nav-link" th:href="@{/manager/room-types}" data-section="room-types">
                 <i class="bi bi-house me-2"></i>Quản lý loại phòng
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#rooms" data-section="rooms">
+            <a class="nav-link" th:href="@{/manager/rooms}" data-section="rooms">
                 <i class="bi bi-door-open me-2"></i>Quản lý phòng
             </a>
         </li>
@@ -52,7 +52,7 @@
             <h6 class="text-white-50 mt-3 mb-2 px-2">NHÀ HÀNG</h6>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#tables" data-section="tables">
+            <a class="nav-link" th:href="@{/manager/tables}" data-section="tables">
                 <i class="bi bi-table me-2"></i>Quản lý bàn ăn
             </a>
         </li>
@@ -62,8 +62,13 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#menu" data-section="menu">
-                <i class="bi bi-menu-button-wide me-2"></i>Quản lý menu
+            <a class="nav-link" th:href="@{/manager/menu-categories}" data-section="menu">
+                <i class="bi bi-menu-button-wide me-2"></i>Quản lý loại menu
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/manager/menu-items}" data-section="menu">
+                <i class="bi bi-menu-button-wide me-2"></i>Quản lý món ăn
             </a>
         </li>
         <li class="nav-item">
@@ -102,7 +107,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#promotions" data-section="promotions">
+            <a class="nav-link" th:href="@{/admin/promotions}" data-section="promotions">
                 <i class="bi bi-percent me-2"></i>Quản lý khuyến mãi
             </a>
         </li>

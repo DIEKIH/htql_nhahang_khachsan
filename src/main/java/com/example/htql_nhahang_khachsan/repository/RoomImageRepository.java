@@ -35,4 +35,33 @@ public interface RoomImageRepository extends JpaRepository<RoomImageEntity, Long
 
     @Query("SELECT ri FROM RoomImageEntity ri WHERE ri.roomType = :roomType AND ri.isPrimary = true")
     Optional<RoomImageEntity> findPrimaryImageByRoomType(@Param("roomType") RoomTypeEntity roomType);
+
+
+    //new
+    List<RoomImageEntity> findByRoomTypeIdOrderByDisplayOrder(Long roomTypeId);
+    List<RoomImageEntity> findByRoomTypeIdAndIsPrimaryTrue(Long roomTypeId);
+
+    @Query("SELECT ri FROM RoomImageEntity ri WHERE ri.roomType.id = :roomTypeId ORDER BY ri.isPrimary DESC, ri.displayOrder ASC")
+    List<RoomImageEntity> findByRoomTypeIdOrderByPrimaryAndDisplayOrder(@Param("roomTypeId") Long roomTypeId);
+
+
+    /**
+     * Tìm tất cả hình ảnh của một loại phòng, sắp xếp theo thứ tự hiển thị
+     */
+    List<RoomImageEntity> findByRoomTypeIdOrderByDisplayOrderAsc(Long roomTypeId);
+
+    /**
+     * Tìm hình ảnh chính của loại phòng
+     */
+
+
+    /**
+     * Đếm số lượng hình ảnh của một loại phòng
+     */
+    Integer countByRoomTypeId(Long roomTypeId);
+
+    /**
+     * Xóa tất cả hình ảnh của một loại phòng
+     */
+    void deleteByRoomTypeId(Long roomTypeId);
 }

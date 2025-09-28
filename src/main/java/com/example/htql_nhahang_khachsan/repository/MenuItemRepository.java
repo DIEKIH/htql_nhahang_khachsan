@@ -4,6 +4,8 @@ import com.example.htql_nhahang_khachsan.entity.MenuCategoryEntity;
 import com.example.htql_nhahang_khachsan.entity.MenuItemEntity;
 import com.example.htql_nhahang_khachsan.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -50,4 +52,15 @@ public interface MenuItemRepository extends JpaRepository<MenuItemEntity, Long> 
 
     // Count by category and status
     long countByCategoryAndStatus(MenuCategoryEntity category, Status status);
+
+
+    List<MenuItemEntity> findByCategoryIdAndStatusAndIsAvailable(Long categoryId, Status status, Boolean isAvailable);
+    List<MenuItemEntity> findByCategoryBranchIdAndStatusAndIsAvailable(Long branchId, Status status, Boolean isAvailable);
+    long countByCategoryIdAndStatus(Long categoryId, Status status);
+
+    @Query("SELECT mi FROM MenuItemEntity mi WHERE mi.category.branch.id = :branchId AND mi.status = 'ACTIVE' AND mi.isAvailable = true ORDER BY mi.category.displayOrder, mi.name")
+    List<MenuItemEntity> findAvailableMenuItemsByBranch(@Param("branchId") Long branchId);
+
+    @Query("SELECT mi FROM MenuItemEntity mi WHERE mi.category.id = :categoryId AND mi.status = 'ACTIVE' AND mi.isAvailable = true ORDER BY mi.name")
+    List<MenuItemEntity> findAvailableMenuItemsByCategory(@Param("categoryId") Long categoryId);
 }

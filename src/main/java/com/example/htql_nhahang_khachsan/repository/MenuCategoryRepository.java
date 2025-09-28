@@ -51,4 +51,11 @@ public interface MenuCategoryRepository extends JpaRepository<MenuCategoryEntity
     // Đếm số lượng category active theo branch
     long countByBranchIdAndStatus(Long branchId, Status status);
 
+
+
+    List<MenuCategoryEntity> findByBranchIdOrderByDisplayOrder(Long branchId);
+
+    @Query("SELECT mc FROM MenuCategoryEntity mc WHERE mc.branch.id = :branchId AND mc.status = 'ACTIVE' ORDER BY mc.displayOrder")
+    List<MenuCategoryEntity> findActiveCategoriesByBranch(@Param("branchId") Long branchId);
+
 }

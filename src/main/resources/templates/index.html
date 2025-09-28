@@ -245,7 +245,7 @@
     }
 
     .branch-card::before {
-      content: '';
+      /*content: '';*/
       position: absolute;
       top: 0;
       left: 0;
@@ -573,24 +573,26 @@
 
 <body>
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg fixed-top">
-  <div class="container">
-    <a class="navbar-brand" href="#"><i class="fas fa-crown me-2"></i>Luxury Resort</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="#home">Trang chủ</a></li>
-        <li class="nav-item"><a class="nav-link" href="#rooms">Phòng</a></li>
-        <li class="nav-item"><a class="nav-link" href="#restaurant">Nhà hàng</a></li>
-        <li class="nav-item"><a class="nav-link" href="#facilities">Tiện ích</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>
-        <li class="nav-item"><a class="nav-link btn btn-luxury ms-2 text-white" href="#book">Đặt phòng</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+<div th:replace="fragments/user_navbar :: user_navbar"></div>
+
+<!--<nav class="navbar navbar-expand-lg fixed-top">-->
+<!--  <div class="container">-->
+<!--    <a class="navbar-brand" href="#"><i class="fas fa-crown me-2"></i>Luxury Resort</a>-->
+<!--    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">-->
+<!--      <span class="navbar-toggler-icon"></span>-->
+<!--    </button>-->
+<!--    <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--      <ul class="navbar-nav ms-auto">-->
+<!--        <li class="nav-item"><a class="nav-link" href="#home">Trang chủ</a></li>-->
+<!--        <li class="nav-item"><a class="nav-link" href="#rooms">Phòng</a></li>-->
+<!--        <li class="nav-item"><a class="nav-link" href="#restaurant">Nhà hàng</a></li>-->
+<!--        <li class="nav-item"><a class="nav-link" href="#facilities">Tiện ích</a></li>-->
+<!--        <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>-->
+<!--        <li class="nav-item"><a class="nav-link btn btn-luxury ms-2 text-white" href="#book">Đặt phòng</a></li>-->
+<!--      </ul>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</nav>-->
 
 <!-- Hero Section -->
 <section id="home" class="hero">
@@ -766,35 +768,6 @@
     </div>
 
     <div class="row g-4" id="branchesContainer">
-      <!-- TP.HCM Branches -->
-<!--      <div class="col-lg-4 col-md-6 branch-item" data-province="ho-chi-minh">-->
-<!--        <div class="branch-card animate-on-scroll">-->
-<!--          <div class="branch-image" style="background-image: url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">-->
-<!--            <div class="branch-status">Đang mở cửa</div>-->
-<!--            <div class="branch-rating"><i class="fas fa-star"></i> 4.8</div>-->
-<!--          </div>-->
-<!--          <div class="card-body p-4">-->
-<!--            <h5 class="card-title heading-font">Luxury Saigon Central</h5>-->
-<!--            <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-2"></i>Quận 1, TP. Hồ Chí Minh</p>-->
-<!--            <p class="card-text">Khách sạn & nhà hàng cao cấp tại trung tâm thành phố với view sông Sài Gòn tuyệt đẹp</p>-->
-<!--            <div class="d-flex justify-content-between align-items-center mb-3">-->
-<!--              <div class="services">-->
-<!--                <span class="badge bg-primary me-1"><i class="fas fa-bed"></i> Resort</span>-->
-<!--                <span class="badge bg-success"><i class="fas fa-utensils"></i> Restaurant</span>-->
-<!--                <span class="badge bg-info"><i class="fas fa-swimming-pool"></i> Pool</span>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="row g-2">-->
-<!--              <div class="col-6">-->
-<!--                <button class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</button>-->
-<!--              </div>-->
-<!--              <div class="col-6">-->
-<!--                <button class="btn btn-luxury btn-sm w-100">Đặt ngay</button>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
 
       <!-- Branches Grid -->
       <div class="row g-4" th:if="${not #lists.isEmpty(branches)}">
@@ -819,12 +792,11 @@
                 </div>
               </div>
               <div class="row g-2">
-                <div class="col-6">
-                  <a th:href="@{/{id}(id=${branch.id})}"
-                     class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</a>
-                </div>
-                <div class="col-6">
-                  <button class="btn btn-luxury btn-sm w-100" onclick="bookNow()">Đặt ngay</button>
+                <div class="col-12">
+                  <a th:href="@{/branches/{id}(id=${branch.id})}"
+                     class="btn btn-primary btn-sm w-100">
+                    Xem chi tiết
+                  </a>
                 </div>
               </div>
             </div>
@@ -1898,23 +1870,23 @@
   });
 
   // Add loading states to all buttons
-  document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      if (this.innerText.includes('Xem chi tiết')) {
-        e.preventDefault();
-        const originalText = this.innerHTML;
-        this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang tải...';
-        this.disabled = true;
-
-        setTimeout(() => {
-          this.innerHTML = originalText;
-          this.disabled = false;
-          // In real app, would show detailed modal or navigate to detail page
-          alert('Chức năng xem chi tiết sẽ sớm được triển khai!');
-        }, 1000);
-      }
-    });
-  });
+  // document.querySelectorAll('.btn').forEach(btn => {
+  //   btn.addEventListener('click', function(e) {
+  //     if (this.innerText.includes('Xem chi tiết')) {
+  //       e.preventDefault();
+  //       const originalText = this.innerHTML;
+  //       this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang tải...';
+  //       this.disabled = true;
+  //
+  //       setTimeout(() => {
+  //         this.innerHTML = originalText;
+  //         this.disabled = false;
+  //         // In real app, would show detailed modal or navigate to detail page
+  //         alert('Chức năng xem chi tiết sẽ sớm được triển khai!');
+  //       }, 1000);
+  //     }
+  //   });
+  // });
 
   // Intersection Observer for fade-in animations
   const fadeObserver = new IntersectionObserver((entries) => {

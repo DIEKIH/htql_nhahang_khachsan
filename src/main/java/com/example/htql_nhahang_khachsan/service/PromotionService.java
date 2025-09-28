@@ -17,7 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -322,5 +325,79 @@ public class PromotionService {
         promotion.setScope(request.getScope());
         promotion.setApplicability(request.getApplicability());
         promotion.setStatus(request.getStatus());
+    }
+
+
+
+    //new hiện giảm giá cho mấy cái phòng món
+
+
+
+    public List<PromotionResponse> getActivePromotionsByBranch(Long branchId) {
+        LocalDateTime now = LocalDateTime.now();
+
+        // Lấy promotion system-wide và branch-specific
+        List<PromotionEntity> systemPromotions = promotionRepository.findSystemWideActivePromotions(now);
+        List<PromotionEntity> branchPromotions = promotionRepository.findBranchSpecificActivePromotions(branchId, now);
+
+        List<PromotionEntity> allPromotions = new ArrayList<>();
+        allPromotions.addAll(systemPromotions);
+        allPromotions.addAll(branchPromotions);
+
+        return allPromotions.stream()
+                .map(PromotionResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public BigDecimal calculateDiscountedPrice(BigDecimal originalPrice, Long branchId,
+                                               PromotionApplicability applicability) {
+        List<PromotionResponse> promotions = getActivePromotionsByBranch(branchId);
+
+        BigDecimal bestPrice = originalPrice;
+
+        for (PromotionResponse promotion : promotions) {
+            // Chỉ áp dụng promotion phù hợp
+            if (promotion.getApplicability() != applicability &&
+                    promotion.getApplicability() != PromotionApplicability.BOTH) {
+                continue;
+            }
+
+            // Kiểm tra điều kiện tối thiểu
+            if (promotion.getMinAmount() != null &&
+                    originalPrice.compareTo(promotion.getMinAmount()) < 0) {
+                continue;
+            }
+
+            BigDecimal discountedPrice;
+
+            switch (promotion.getType()) {
+                case PERCENTAGE:
+                    BigDecimal discountAmount = originalPrice.multiply(promotion.getDiscountValue())
+                            .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
+                    // Áp dụng giảm giá tối đa nếu có
+                    if (promotion.getMaxDiscount() != null &&
+                            discountAmount.compareTo(promotion.getMaxDiscount()) > 0) {
+                        discountAmount = promotion.getMaxDiscount();
+                    }
+
+                    discountedPrice = originalPrice.subtract(discountAmount);
+                    break;
+
+                case FIXED_AMOUNT:
+                    discountedPrice = originalPrice.subtract(promotion.getDiscountValue());
+                    break;
+
+                default:
+                    continue;
+            }
+
+            // Giữ giá tốt nhất
+            if (discountedPrice.compareTo(bestPrice) < 0) {
+                bestPrice = discountedPrice;
+            }
+        }
+
+        return bestPrice.max(BigDecimal.ZERO); // Không cho phép giá âm
     }
 }

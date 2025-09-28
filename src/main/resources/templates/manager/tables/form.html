@@ -1,3 +1,287 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org" lang="vi">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title th:text="${tableId != null ? 'Chỉnh sửa bàn' : 'Thêm bàn mới'}">Quản lý bàn</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" th:href="@{/css/manager_sidebar.css}">-->
+<!--    <style>-->
+<!--        .form-container {-->
+<!--            max-width: 800px;-->
+<!--            margin: 0 auto;-->
+<!--        }-->
+<!--        .form-section {-->
+<!--            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);-->
+<!--            border-radius: 15px;-->
+<!--            border: 1px solid #dee2e6;-->
+<!--        }-->
+<!--        .position-preview {-->
+<!--            width: 200px;-->
+<!--            height: 200px;-->
+<!--            border: 2px dashed #dee2e6;-->
+<!--            border-radius: 10px;-->
+<!--            position: relative;-->
+<!--            background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%),-->
+<!--            linear-gradient(-45deg, #f8f9fa 25%, transparent 25%),-->
+<!--            linear-gradient(45deg, transparent 75%, #f8f9fa 75%),-->
+<!--            linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);-->
+<!--            background-size: 20px 20px;-->
+<!--            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;-->
+<!--        }-->
+<!--        .table-marker {-->
+<!--            width: 30px;-->
+<!--            height: 30px;-->
+<!--            background: #007bff;-->
+<!--            border-radius: 50%;-->
+<!--            position: absolute;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            color: white;-->
+<!--            font-size: 12px;-->
+<!--            font-weight: bold;-->
+<!--            transform: translate(-50%, -50%);-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        .table-marker:hover {-->
+<!--            transform: translate(-50%, -50%) scale(1.2);-->
+<!--        }-->
+<!--        .form-floating label {-->
+<!--            color: #6c757d;-->
+<!--        }-->
+<!--        .btn-back {-->
+<!--            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);-->
+<!--            border: none;-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .btn-back:hover {-->
+<!--            background: linear-gradient(135deg, #495057 0%, #343a40 100%);-->
+<!--            color: white;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body class="bg-light">-->
+<!--<div class="container-fluid ">-->
+<!--    <div class="row">-->
+<!--        <div th:replace="fragments/manager_sidebar :: manager_sidebar"></div>-->
+<!--        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">-->
+<!--            <div class="form-container">-->
+<!--                &lt;!&ndash; Header &ndash;&gt;-->
+<!--                <div class="row mb-4">-->
+<!--                    <div class="col">-->
+<!--                        <h2 class="mb-0">-->
+<!--                            <i class="bi bi-table text-primary"></i>-->
+<!--                            <span th:text="${tableId != null ? 'Chỉnh sửa bàn' : 'Thêm bàn mới'}">Thêm bàn mới</span>-->
+<!--                        </h2>-->
+<!--                        <p class="text-muted">Điền thông tin chi tiết về bàn ăn</p>-->
+<!--                    </div>-->
+<!--                    <div class="col-auto">-->
+<!--                        <a href="/manager/tables" class="btn btn-back">-->
+<!--                            <i class="bi bi-arrow-left"></i> Quay lại-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Form &ndash;&gt;-->
+<!--                <form th:action="${tableId != null ? '/manager/tables/' + tableId + '/edit' : '/manager/tables/add'}"-->
+<!--                      method="post" th:object="${tableRequest}">-->
+
+<!--                    <div class="row g-4">-->
+<!--                        &lt;!&ndash; Basic Information &ndash;&gt;-->
+<!--                        <div class="col-lg-8">-->
+<!--                            <div class="card form-section">-->
+<!--                                <div class="card-body">-->
+<!--                                    <h5 class="card-title mb-4">-->
+<!--                                        <i class="bi bi-info-circle text-primary"></i>-->
+<!--                                        Thông tin cơ bản-->
+<!--                                    </h5>-->
+
+<!--                                    <div class="row g-3">-->
+<!--                                        <div class="col-md-6">-->
+<!--                                            <div class="form-floating">-->
+<!--                                                <input type="text" class="form-control" id="tableNumber"-->
+<!--                                                       th:field="*{tableNumber}" placeholder="Nhập số bàn"-->
+<!--                                                       th:classappend="${#fields.hasErrors('tableNumber') ? 'is-invalid' : ''}">-->
+<!--                                                <label for="tableNumber">-->
+<!--                                                    <i class="bi bi-hash"></i> Số bàn *-->
+<!--                                                </label>-->
+<!--                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('tableNumber')}"-->
+<!--                                                     th:errors="*{tableNumber}"></div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+
+<!--                                        <div class="col-md-6">-->
+<!--                                            <div class="form-floating">-->
+<!--                                                <input type="number" class="form-control" id="capacity"-->
+<!--                                                       th:field="*{capacity}" placeholder="Nhập sức chứa" min="1" max="50"-->
+<!--                                                       th:classappend="${#fields.hasErrors('capacity') ? 'is-invalid' : ''}">-->
+<!--                                                <label for="capacity">-->
+<!--                                                    <i class="bi bi-people"></i> Sức chứa *-->
+<!--                                                </label>-->
+<!--                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('capacity')}"-->
+<!--                                                     th:errors="*{capacity}"></div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+
+<!--                                        <div class="col-12">-->
+<!--                                            <div class="form-floating">-->
+<!--                                                <select class="form-select" id="status" th:field="*{status}"-->
+<!--                                                        th:classappend="${#fields.hasErrors('status') ? 'is-invalid' : ''}">-->
+<!--                                                    <option value="">Chọn trạng thái</option>-->
+<!--                                                    <option th:each="status : ${statuses}"-->
+<!--                                                            th:value="${status}"-->
+<!--                                                            th:text="${status.displayName}"></option>-->
+<!--                                                </select>-->
+<!--                                                <label for="status">-->
+<!--                                                    <i class="bi bi-toggle-on"></i> Trạng thái *-->
+<!--                                                </label>-->
+<!--                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}"-->
+<!--                                                     th:errors="*{status}"></div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+
+<!--                                        <div class="col-12">-->
+<!--                                            <div class="form-floating">-->
+<!--                                                    <textarea class="form-control" id="notes" th:field="*{notes}"-->
+<!--                                                              placeholder="Ghi chú thêm..." style="height: 100px;"></textarea>-->
+<!--                                                <label for="notes">-->
+<!--                                                    <i class="bi bi-chat-square-text"></i> Ghi chú-->
+<!--                                                </label>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        &lt;!&ndash; Position Settings &ndash;&gt;-->
+<!--                        <div class="col-lg-4">-->
+<!--                            <div class="card form-section">-->
+<!--                                <div class="card-body">-->
+<!--                                    <h5 class="card-title mb-4">-->
+<!--                                        <i class="bi bi-geo-alt text-primary"></i>-->
+<!--                                        Vị trí bàn-->
+<!--                                    </h5>-->
+
+<!--                                    <div class="row g-3 mb-3">-->
+<!--                                        <div class="col-6">-->
+<!--                                            <div class="form-floating">-->
+<!--                                                <input type="number" class="form-control" id="positionX"-->
+<!--                                                       th:field="*{positionX}" placeholder="X" min="0" max="1000"-->
+<!--                                                       onchange="updatePreview()"-->
+<!--                                                       th:classappend="${#fields.hasErrors('positionX') ? 'is-invalid' : ''}">-->
+<!--                                                <label for="positionX">Tọa độ X</label>-->
+<!--                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('positionX')}"-->
+<!--                                                     th:errors="*{positionX}"></div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+
+<!--                                        <div class="col-6">-->
+<!--                                            <div class="form-floating">-->
+<!--                                                <input type="number" class="form-control" id="positionY"-->
+<!--                                                       th:field="*{positionY}" placeholder="Y" min="0" max="1000"-->
+<!--                                                       onchange="updatePreview()"-->
+<!--                                                       th:classappend="${#fields.hasErrors('positionY') ? 'is-invalid' : ''}">-->
+<!--                                                <label for="positionY">Tọa độ Y</label>-->
+<!--                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('positionY')}"-->
+<!--                                                     th:errors="*{positionY}"></div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+
+<!--                                    &lt;!&ndash; Position Preview &ndash;&gt;-->
+<!--                                    <div class="text-center">-->
+<!--                                        <div class="position-preview mx-auto" id="positionPreview">-->
+<!--                                            <div class="table-marker" id="tableMarker">-->
+<!--                                                <i class="bi bi-table"></i>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <small class="text-muted mt-2 d-block">Xem trước vị trí bàn</small>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Form Actions &ndash;&gt;-->
+<!--                    <div class="row mt-4">-->
+<!--                        <div class="col-12">-->
+<!--                            <div class="card">-->
+<!--                                <div class="card-body">-->
+<!--                                    <div class="d-flex justify-content-end gap-3">-->
+<!--                                        <a href="/manager/tables" class="btn btn-secondary">-->
+<!--                                            <i class="bi bi-x-circle"></i> Hủy bỏ-->
+<!--                                        </a>-->
+<!--                                        <button type="submit" class="btn btn-primary">-->
+<!--                                            <i class="bi bi-check-circle"></i>-->
+<!--                                            <span th:text="${tableId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </main>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script>-->
+<!--    function updatePreview() {-->
+<!--        const positionX = document.getElementById('positionX').value || 0;-->
+<!--        const positionY = document.getElementById('positionY').value || 0;-->
+<!--        const marker = document.getElementById('tableMarker');-->
+
+<!--        // Convert coordinates to percentage for preview (assuming max 1000)-->
+<!--        const xPercent = Math.min(Math.max((positionX / 1000) * 100, 5), 95);-->
+<!--        const yPercent = Math.min(Math.max((positionY / 1000) * 100, 5), 95);-->
+
+<!--        marker.style.left = xPercent + '%';-->
+<!--        marker.style.top = yPercent + '%';-->
+<!--    }-->
+
+<!--    // Initialize preview on page load-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        updatePreview();-->
+<!--    });-->
+
+<!--    // Add interactive positioning-->
+<!--    document.getElementById('positionPreview').addEventListener('click', function(e) {-->
+<!--        const rect = this.getBoundingClientRect();-->
+<!--        const x = e.clientX - rect.left;-->
+<!--        const y = e.clientY - rect.top;-->
+
+<!--        const xPercent = (x / rect.width) * 100;-->
+<!--        const yPercent = (y / rect.height) * 100;-->
+
+<!--        const positionX = Math.round((xPercent / 100) * 1000);-->
+<!--        const positionY = Math.round((yPercent / 100) * 1000);-->
+
+<!--        document.getElementById('positionX').value = positionX;-->
+<!--        document.getElementById('positionY').value = positionY;-->
+
+<!--        updatePreview();-->
+<!--    });-->
+
+<!--    // Form validation-->
+<!--    document.querySelector('form').addEventListener('submit', function(e) {-->
+<!--        const tableNumber = document.getElementById('tableNumber').value.trim();-->
+<!--        const capacity = document.getElementById('capacity').value;-->
+<!--        const status = document.getElementById('status').value;-->
+
+<!--        if (!tableNumber || !capacity || !status) {-->
+<!--            e.preventDefault();-->
+<!--            alert('Vui lòng điền đầy đủ thông tin bắt buộc!');-->
+<!--            return false;-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
@@ -6,32 +290,121 @@
     <title th:text="${tableId != null ? 'Chỉnh sửa bàn' : 'Thêm bàn mới'}">Quản lý bàn</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/manager_sidebar.css}">
     <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
         .form-container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
         }
-        .form-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            border: 1px solid #dee2e6;
+
+        .page-header {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e9ecef;
         }
+
+        .page-header h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #6c757d;
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title i {
+            font-size: 1.3rem;
+            color: #007bff;
+        }
+
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-floating > .form-control,
+        .form-floating > .form-select {
+            height: calc(3.5rem + 2px);
+            font-size: 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-floating > .form-control:focus,
+        .form-floating > .form-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .form-floating > label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #6c757d;
+        }
+
+        .form-floating > textarea.form-control {
+            height: 120px;
+            resize: vertical;
+        }
+
         .position-preview {
-            width: 200px;
-            height: 200px;
-            border: 2px dashed #dee2e6;
+            width: 250px;
+            height: 250px;
+            border: 2px dashed #ced4da;
             border-radius: 10px;
             position: relative;
+            margin: 0 auto 1rem;
             background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%),
             linear-gradient(-45deg, #f8f9fa 25%, transparent 25%),
             linear-gradient(45deg, transparent 75%, #f8f9fa 75%),
             linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            cursor: crosshair;
+            transition: all 0.2s ease;
         }
+
+        .position-preview:hover {
+            border-color: #007bff;
+        }
+
         .table-marker {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             background: #007bff;
             border-radius: 50%;
             position: absolute;
@@ -39,187 +412,227 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             transform: translate(-50%, -50%);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            border: 2px solid white;
         }
+
         .table-marker:hover {
             transform: translate(-50%, -50%) scale(1.2);
         }
-        .form-floating label {
+
+        .btn-back {
+            background: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+            border-color: #545b62;
+            color: white;
+        }
+
+        .invalid-feedback {
+            font-size: 0.9rem;
+        }
+
+        .preview-hint {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
             color: #6c757d;
         }
-        .btn-back {
-            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-            border: none;
-            color: white;
-        }
-        .btn-back:hover {
-            background: linear-gradient(135deg, #495057 0%, #343a40 100%);
-            color: white;
+
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 1.5rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .position-preview {
+                width: 200px;
+                height: 200px;
+            }
         }
     </style>
 </head>
 <body class="bg-light">
-<div class="container-fluid py-4">
-    <div class="form-container">
-        <!-- Header -->
-        <div class="row mb-4">
-            <div class="col">
-                <h2 class="mb-0">
-                    <i class="bi bi-table text-primary"></i>
-                    <span th:text="${tableId != null ? 'Chỉnh sửa bàn' : 'Thêm bàn mới'}">Thêm bàn mới</span>
-                </h2>
-                <p class="text-muted">Điền thông tin chi tiết về bàn ăn</p>
-            </div>
-            <div class="col-auto">
-                <a href="/manager/tables" class="btn btn-back">
-                    <i class="bi bi-arrow-left"></i> Quay lại
-                </a>
-            </div>
-        </div>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/manager_sidebar :: manager_sidebar"></div>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="form-container">
+                <!-- Header -->
+                <div class="row mb-4">
+                    <div class="col">
+                        <h2 class="mb-0">
+                            <i class="bi bi-table text-primary"></i>
+                            <span th:text="${tableId != null ? 'Chỉnh sửa bàn' : 'Thêm bàn mới'}">Thêm bàn mới</span>
+                        </h2>
+                        <p class="text-muted">Điền thông tin chi tiết về bàn ăn</p>
+                    </div>
+                    <div class="col-auto">
+                        <a href="/manager/tables" class="btn btn-back">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
 
-        <!-- Form -->
-        <form th:action="${tableId != null ? '/manager/tables/' + tableId + '/edit' : '/manager/tables/add'}"
-              method="post" th:object="${tableRequest}">
+                <!-- Form -->
+                <form th:action="${tableId != null ? '/manager/tables/' + tableId + '/edit' : '/manager/tables/add'}"
+                      method="post" th:object="${tableRequest}">
 
-            <div class="row g-4">
-                <!-- Basic Information -->
-                <div class="col-lg-8">
-                    <div class="card form-section">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4">
-                                <i class="bi bi-info-circle text-primary"></i>
-                                Thông tin cơ bản
-                            </h5>
+                    <div class="row g-4">
+                        <!-- Basic Information -->
+                        <div class="col-lg-8">
+                            <div class="card form-section">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="bi bi-info-circle"></i>
+                                        Thông tin cơ bản
+                                    </h5>
 
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="tableNumber"
-                                               th:field="*{tableNumber}" placeholder="Nhập số bàn"
-                                               th:classappend="${#fields.hasErrors('tableNumber') ? 'is-invalid' : ''}">
-                                        <label for="tableNumber">
-                                            <i class="bi bi-hash"></i> Số bàn *
-                                        </label>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('tableNumber')}"
-                                             th:errors="*{tableNumber}"></div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="tableNumber"
+                                                       th:field="*{tableNumber}" placeholder="Nhập số bàn"
+                                                       th:classappend="${#fields.hasErrors('tableNumber') ? 'is-invalid' : ''}">
+                                                <label for="tableNumber">
+                                                    <i class="bi bi-hash"></i> Số bàn *
+                                                </label>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('tableNumber')}"
+                                                     th:errors="*{tableNumber}"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="number" class="form-control" id="capacity"
+                                                       th:field="*{capacity}" placeholder="Nhập sức chứa" min="1" max="50"
+                                                       th:classappend="${#fields.hasErrors('capacity') ? 'is-invalid' : ''}">
+                                                <label for="capacity">
+                                                    <i class="bi bi-people"></i> Sức chứa *
+                                                </label>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('capacity')}"
+                                                     th:errors="*{capacity}"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-floating">
+                                                <select class="form-select" id="status" th:field="*{status}"
+                                                        th:classappend="${#fields.hasErrors('status') ? 'is-invalid' : ''}">
+                                                    <option value="">Chọn trạng thái</option>
+                                                    <option th:each="status : ${statuses}"
+                                                            th:value="${status}"
+                                                            th:text="${status.displayName}"></option>
+                                                </select>
+                                                <label for="status">
+                                                    <i class="bi bi-toggle-on"></i> Trạng thái *
+                                                </label>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}"
+                                                     th:errors="*{status}"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-floating">
+                                                <textarea class="form-control" id="notes" th:field="*{notes}"
+                                                          placeholder="Ghi chú thêm..."></textarea>
+                                                <label for="notes">
+                                                    <i class="bi bi-chat-square-text"></i> Ghi chú
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="number" class="form-control" id="capacity"
-                                               th:field="*{capacity}" placeholder="Nhập sức chứa" min="1" max="50"
-                                               th:classappend="${#fields.hasErrors('capacity') ? 'is-invalid' : ''}">
-                                        <label for="capacity">
-                                            <i class="bi bi-people"></i> Sức chứa *
-                                        </label>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('capacity')}"
-                                             th:errors="*{capacity}"></div>
+                        <!-- Position Settings -->
+                        <div class="col-lg-4">
+                            <div class="card form-section">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="bi bi-geo-alt"></i>
+                                        Vị trí bàn
+                                    </h5>
+
+                                    <div class="row g-3 mb-3">
+                                        <div class="col-6">
+                                            <div class="form-floating">
+                                                <input type="number" class="form-control" id="positionX"
+                                                       th:field="*{positionX}" placeholder="X" min="0" max="1000"
+                                                       onchange="updatePreview()"
+                                                       th:classappend="${#fields.hasErrors('positionX') ? 'is-invalid' : ''}">
+                                                <label for="positionX">Tọa độ X</label>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('positionX')}"
+                                                     th:errors="*{positionX}"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="form-floating">
+                                                <input type="number" class="form-control" id="positionY"
+                                                       th:field="*{positionY}" placeholder="Y" min="0" max="1000"
+                                                       onchange="updatePreview()"
+                                                       th:classappend="${#fields.hasErrors('positionY') ? 'is-invalid' : ''}">
+                                                <label for="positionY">Tọa độ Y</label>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('positionY')}"
+                                                     th:errors="*{positionY}"></div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <select class="form-select" id="status" th:field="*{status}"
-                                                th:classappend="${#fields.hasErrors('status') ? 'is-invalid' : ''}">
-                                            <option value="">Chọn trạng thái</option>
-                                            <option th:each="status : ${statuses}"
-                                                    th:value="${status}"
-                                                    th:text="${status.displayName}"></option>
-                                        </select>
-                                        <label for="status">
-                                            <i class="bi bi-toggle-on"></i> Trạng thái *
-                                        </label>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}"
-                                             th:errors="*{status}"></div>
-                                    </div>
-                                </div>
+                                    <!-- Position Preview -->
+                                    <div class="text-center">
+                                        <div class="position-preview" id="positionPreview">
+                                            <div class="table-marker" id="tableMarker">
+                                                <i class="bi bi-table"></i>
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">Xem trước vị trí bàn</small>
 
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                            <textarea class="form-control" id="notes" th:field="*{notes}"
-                                                      placeholder="Ghi chú thêm..." style="height: 100px;"></textarea>
-                                        <label for="notes">
-                                            <i class="bi bi-chat-square-text"></i> Ghi chú
-                                        </label>
+                                        <div class="preview-hint mt-2">
+                                            <strong>Hướng dẫn:</strong> Click vào vùng xem trước để đặt vị trí bàn
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Position Settings -->
-                <div class="col-lg-4">
-                    <div class="card form-section">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4">
-                                <i class="bi bi-geo-alt text-primary"></i>
-                                Vị trí bàn
-                            </h5>
-
-                            <div class="row g-3 mb-3">
-                                <div class="col-6">
-                                    <div class="form-floating">
-                                        <input type="number" class="form-control" id="positionX"
-                                               th:field="*{positionX}" placeholder="X" min="0" max="1000"
-                                               onchange="updatePreview()"
-                                               th:classappend="${#fields.hasErrors('positionX') ? 'is-invalid' : ''}">
-                                        <label for="positionX">Tọa độ X</label>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('positionX')}"
-                                             th:errors="*{positionX}"></div>
+                    <!-- Form Actions -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-end gap-3">
+                                        <a href="/manager/tables" class="btn btn-secondary">
+                                            <i class="bi bi-x-circle"></i> Hủy bỏ
+                                        </a>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-check-circle"></i>
+                                            <span th:text="${tableId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>
+                                        </button>
                                     </div>
                                 </div>
-
-                                <div class="col-6">
-                                    <div class="form-floating">
-                                        <input type="number" class="form-control" id="positionY"
-                                               th:field="*{positionY}" placeholder="Y" min="0" max="1000"
-                                               onchange="updatePreview()"
-                                               th:classappend="${#fields.hasErrors('positionY') ? 'is-invalid' : ''}">
-                                        <label for="positionY">Tọa độ Y</label>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('positionY')}"
-                                             th:errors="*{positionY}"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Position Preview -->
-                            <div class="text-center">
-                                <div class="position-preview mx-auto" id="positionPreview">
-                                    <div class="table-marker" id="tableMarker">
-                                        <i class="bi bi-table"></i>
-                                    </div>
-                                </div>
-                                <small class="text-muted mt-2 d-block">Xem trước vị trí bàn</small>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
-
-            <!-- Form Actions -->
-            <div class="row mt-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-end gap-3">
-                                <a href="/manager/tables" class="btn btn-secondary">
-                                    <i class="bi bi-x-circle"></i> Hủy bỏ
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-check-circle"></i>
-                                    <span th:text="${tableId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
+        </main>
     </div>
 </div>
 

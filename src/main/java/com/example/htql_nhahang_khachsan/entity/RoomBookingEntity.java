@@ -72,6 +72,19 @@ public class RoomBookingEntity {
     @Column(name = "final_amount")
     private BigDecimal finalAmount;
 
+    // Số tiền khách đặt cọc
+    @Column(name = "deposit_amount")
+    private BigDecimal depositAmount;
+
+    // Ngày đặt cọc
+    @Column(name = "deposit_date")
+    private LocalDateTime depositDate;
+
+    // Đã hoàn cọc chưa (true/false)
+    @Column(name = "deposit_returned")
+    private Boolean depositReturned = false;
+
+
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 

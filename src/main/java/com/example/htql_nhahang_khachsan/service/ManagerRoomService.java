@@ -2,8 +2,10 @@ package com.example.htql_nhahang_khachsan.service;
 
 import com.example.htql_nhahang_khachsan.dto.RoomRequest;
 import com.example.htql_nhahang_khachsan.dto.RoomResponse;
+import com.example.htql_nhahang_khachsan.entity.RoomBookingEntity;
 import com.example.htql_nhahang_khachsan.entity.RoomEntity;
 import com.example.htql_nhahang_khachsan.entity.RoomTypeEntity;
+import com.example.htql_nhahang_khachsan.enums.BookingStatus;
 import com.example.htql_nhahang_khachsan.enums.RoomStatus;
 import com.example.htql_nhahang_khachsan.repository.BranchRepository;
 import com.example.htql_nhahang_khachsan.repository.RoomRepository;
@@ -15,7 +17,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -150,6 +156,8 @@ public class ManagerRoomService {
                 .createdAt(room.getCreatedAt())
                 .build();
     }
+
+
 
 
 }

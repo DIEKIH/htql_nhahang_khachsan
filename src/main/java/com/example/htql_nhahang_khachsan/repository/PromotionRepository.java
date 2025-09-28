@@ -54,4 +54,19 @@ public interface PromotionRepository extends JpaRepository<PromotionEntity, Long
     List<PromotionEntity> findByStatus(Status status);
 
 
+    @Query("SELECT p FROM PromotionEntity p WHERE p.scope = 'SYSTEM_WIDE' AND p.status = 'ACTIVE' AND p.startDate <= :now AND p.endDate > :now AND (p.usageLimit IS NULL OR p.usedCount < p.usageLimit)")
+    List<PromotionEntity> findSystemWideActivePromotions(@Param("now") LocalDateTime now);
+
+    @Query("SELECT p FROM PromotionEntity p JOIN p.branches b WHERE b.id = :branchId AND p.scope = 'BRANCH_SPECIFIC' AND p.status = 'ACTIVE' AND p.startDate <= :now AND p.endDate > :now AND (p.usageLimit IS NULL OR p.usedCount < p.usageLimit)")
+    List<PromotionEntity> findBranchSpecificActivePromotions(@Param("branchId") Long branchId,
+                                                             @Param("now") LocalDateTime now);
+
+    @Query("SELECT p FROM PromotionEntity p LEFT JOIN p.branches b WHERE (p.scope = 'SYSTEM_WIDE' OR (p.scope = 'BRANCH_SPECIFIC' AND b.id = :branchId)) AND p.status = 'ACTIVE' AND p.startDate <= :now AND p.endDate > :now AND (p.usageLimit IS NULL OR p.usedCount < p.usageLimit) AND (p.applicability = :applicability OR p.applicability = 'BOTH')")
+    List<PromotionEntity> findActivePromotionsByBranchAndApplicability(@Param("branchId") Long branchId,
+                                                                       @Param("applicability") PromotionApplicability applicability,
+                                                                       @Param("now") LocalDateTime now);
+
+    List<PromotionEntity> findByStatusAndEndDateAfterOrderByEndDateAsc(Status status, LocalDateTime now);
+
+
 }

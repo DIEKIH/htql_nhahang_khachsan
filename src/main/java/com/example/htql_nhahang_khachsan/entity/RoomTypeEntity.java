@@ -49,6 +49,7 @@ public class RoomTypeEntity {
     @Column(columnDefinition = "TEXT")
     private String amenities; // JSON string
 
+
     @Column(name = "image_urls", columnDefinition = "TEXT")
     private String imageUrls; // JSON array
 
@@ -57,6 +58,8 @@ public class RoomTypeEntity {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+
 
     @PrePersist
     protected void onCreate() {

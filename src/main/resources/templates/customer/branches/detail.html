@@ -1,0 +1,3049 @@
+<!--&lt;!&ndash;giao diện 1&ndash;&gt;-->
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title th:text="${branch.name} + ' - Chi tiết'">Chi tiết chi nhánh</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">-->
+
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;primary-color: #c9a96e;-->
+<!--            &#45;&#45;secondary-color: #2c3e50;-->
+<!--            &#45;&#45;accent-color: #f8f9fa;-->
+<!--            &#45;&#45;text-dark: #2c3e50;-->
+<!--            &#45;&#45;text-light: #6c757d;-->
+<!--            &#45;&#45;success-color: #28a745;-->
+<!--            &#45;&#45;warning-color: #ffc107;-->
+<!--            &#45;&#45;danger-color: #dc3545;-->
+<!--        }-->
+
+<!--        body {-->
+<!--            font-family: 'Inter', sans-serif;-->
+<!--            line-height: 1.6;-->
+<!--            color: var(&#45;&#45;text-dark);-->
+<!--            padding-top: 80px;-->
+<!--        }-->
+
+<!--        .heading-font {-->
+<!--            font-family: 'Playfair Display', serif;-->
+<!--        }-->
+
+<!--        /* Navigation */-->
+<!--        .navbar {-->
+<!--            background: rgba(255, 255, 255, 0.98) !important;-->
+<!--            backdrop-filter: blur(10px);-->
+<!--            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);-->
+<!--        }-->
+
+<!--        .navbar-brand {-->
+<!--            font-family: 'Playfair Display', serif;-->
+<!--            font-size: 2rem;-->
+<!--            font-weight: 600;-->
+<!--            color: var(&#45;&#45;primary-color) !important;-->
+<!--        }-->
+
+<!--        /* Branch Header */-->
+<!--        .branch-header {-->
+<!--            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4));-->
+<!--            background-size: cover;-->
+<!--            background-position: center;-->
+<!--            color: white;-->
+<!--            padding: 100px 0 80px;-->
+<!--            text-align: center;-->
+<!--            position: relative;-->
+<!--        }-->
+
+<!--        .branch-info {-->
+<!--            background: rgba(255,255,255,0.95);-->
+<!--            backdrop-filter: blur(10px);-->
+<!--            border-radius: 20px;-->
+<!--            padding: 30px;-->
+<!--            margin-top: -50px;-->
+<!--            position: relative;-->
+<!--            z-index: 10;-->
+<!--            box-shadow: 0 20px 40px rgba(0,0,0,0.1);-->
+<!--        }-->
+
+<!--        .branch-badges {-->
+<!--            display: flex;-->
+<!--            flex-wrap: wrap;-->
+<!--            gap: 10px;-->
+<!--            margin: 20px 0;-->
+<!--        }-->
+
+<!--        /* Service Tabs */-->
+<!--        .service-tabs {-->
+<!--            background: white;-->
+<!--            padding: 20px 0;-->
+<!--            box-shadow: 0 2px 10px rgba(0,0,0,0.1);-->
+<!--            position: sticky;-->
+<!--            top: 80px;-->
+<!--            z-index: 999;-->
+<!--        }-->
+
+<!--        .nav-pills .nav-link {-->
+<!--            background: transparent;-->
+<!--            color: var(&#45;&#45;text-dark);-->
+<!--            border: 2px solid #e9ecef;-->
+<!--            border-radius: 50px;-->
+<!--            padding: 15px 25px;-->
+<!--            font-weight: 600;-->
+<!--            margin: 0 5px;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+
+<!--        .nav-pills .nav-link:hover {-->
+<!--            border-color: var(&#45;&#45;primary-color);-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--        }-->
+
+<!--        .nav-pills .nav-link.active {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            border-color: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        /* Promotion Banner */-->
+<!--        .promotion-banner {-->
+<!--            background: linear-gradient(45deg, #ff6b6b, #ff8e53);-->
+<!--            color: white;-->
+<!--            padding: 15px;-->
+<!--            border-radius: 15px;-->
+<!--            margin: 20px 0;-->
+<!--            position: relative;-->
+<!--            overflow: hidden;-->
+<!--        }-->
+
+<!--        .promotion-banner::before {-->
+<!--            content: '';-->
+<!--            position: absolute;-->
+<!--            top: -50%;-->
+<!--            left: -50%;-->
+<!--            width: 200%;-->
+<!--            height: 200%;-->
+<!--            background: repeating-linear-gradient(-->
+<!--                    45deg,-->
+<!--                    transparent,-->
+<!--                    transparent 10px,-->
+<!--                    rgba(255,255,255,0.1) 10px,-->
+<!--                    rgba(255,255,255,0.1) 20px-->
+<!--            );-->
+<!--            animation: moveStripes 20s linear infinite;-->
+<!--        }-->
+
+<!--        @keyframes moveStripes {-->
+<!--            0% { transform: translateX(-20px); }-->
+<!--            100% { transform: translateX(20px); }-->
+<!--        }-->
+
+<!--        /* Room Type Cards */-->
+<!--        .room-type-card {-->
+<!--            background: white;-->
+<!--            border-radius: 15px;-->
+<!--            box-shadow: 0 10px 30px rgba(0,0,0,0.1);-->
+<!--            overflow: hidden;-->
+<!--            transition: all 0.3s ease;-->
+<!--            margin-bottom: 25px;-->
+<!--        }-->
+
+<!--        .room-type-card:hover {-->
+<!--            transform: translateY(-5px);-->
+<!--            box-shadow: 0 20px 40px rgba(0,0,0,0.15);-->
+<!--        }-->
+
+<!--        .room-image-carousel {-->
+<!--            height: 250px;-->
+<!--            position: relative;-->
+<!--        }-->
+
+<!--        .room-image-carousel img {-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--            object-fit: cover;-->
+<!--        }-->
+
+<!--        .price-display {-->
+<!--            position: absolute;-->
+<!--            top: 15px;-->
+<!--            right: 15px;-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--            padding: 8px 15px;-->
+<!--            border-radius: 20px;-->
+<!--            font-weight: 600;-->
+<!--        }-->
+
+<!--        .original-price {-->
+<!--            text-decoration: line-through;-->
+<!--            color: #999;-->
+<!--            font-size: 0.8em;-->
+<!--        }-->
+
+<!--        .discounted-price {-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--            font-weight: 700;-->
+<!--            font-size: 1.2em;-->
+<!--        }-->
+
+<!--        /* Room Status */-->
+<!--        .room-status {-->
+<!--            padding: 4px 8px;-->
+<!--            border-radius: 12px;-->
+<!--            font-size: 0.8rem;-->
+<!--            font-weight: 600;-->
+<!--        }-->
+
+<!--        .status-available { background: #d4edda; color: #155724; }-->
+<!--        .status-occupied { background: #f8d7da; color: #721c24; }-->
+<!--        .status-maintenance { background: #fff3cd; color: #856404; }-->
+<!--        .status-cleaning { background: #cce5ff; color: #004085; }-->
+
+<!--        /* Menu Items */-->
+<!--        .menu-category {-->
+<!--            margin-bottom: 40px;-->
+<!--        }-->
+
+<!--        .menu-item-card {-->
+<!--            background: white;-->
+<!--            border-radius: 15px;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--            padding: 20px;-->
+<!--            margin-bottom: 20px;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+
+<!--        .menu-item-card:hover {-->
+<!--            transform: translateY(-3px);-->
+<!--            box-shadow: 0 10px 25px rgba(0,0,0,0.15);-->
+<!--        }-->
+
+<!--        .menu-item-image {-->
+<!--            width: 80px;-->
+<!--            height: 80px;-->
+<!--            border-radius: 10px;-->
+<!--            object-fit: cover;-->
+<!--        }-->
+
+<!--        /* Restaurant Tables */-->
+<!--        .table-layout {-->
+<!--            background: #f8f9fa;-->
+<!--            padding: 30px;-->
+<!--            border-radius: 15px;-->
+<!--            margin: 20px 0;-->
+<!--        }-->
+
+<!--        .table-item {-->
+<!--            background: white;-->
+<!--            border: 2px solid #e9ecef;-->
+<!--            border-radius: 50%;-->
+<!--            width: 60px;-->
+<!--            height: 60px;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            margin: 10px;-->
+<!--            cursor: pointer;-->
+<!--            transition: all 0.3s ease;-->
+<!--            font-weight: 600;-->
+<!--        }-->
+
+<!--        .table-available { border-color: var(&#45;&#45;success-color); color: var(&#45;&#45;success-color); }-->
+<!--        .table-occupied { border-color: var(&#45;&#45;danger-color); color: var(&#45;&#45;danger-color); }-->
+<!--        .table-reserved { border-color: var(&#45;&#45;warning-color); color: var(&#45;&#45;warning-color); }-->
+
+<!--        .table-item:hover {-->
+<!--            transform: scale(1.1);-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.2);-->
+<!--        }-->
+
+<!--        /* Loading States */-->
+<!--        .loading {-->
+<!--            text-align: center;-->
+<!--            padding: 40px;-->
+<!--        }-->
+
+<!--        .spinner {-->
+<!--            width: 40px;-->
+<!--            height: 40px;-->
+<!--            border: 4px solid #f3f3f3;-->
+<!--            border-top: 4px solid var(&#45;&#45;primary-color);-->
+<!--            border-radius: 50%;-->
+<!--            animation: spin 1s linear infinite;-->
+<!--        }-->
+
+<!--        @keyframes spin {-->
+<!--            0% { transform: rotate(0deg); }-->
+<!--            100% { transform: rotate(360deg); }-->
+<!--        }-->
+
+<!--        /* Responsive */-->
+<!--        @media (max-width: 768px) {-->
+<!--            .branch-header { padding: 80px 0 60px; }-->
+<!--            .branch-info { padding: 20px; margin-top: -30px; }-->
+<!--            .nav-pills .nav-link { margin: 5px 0; padding: 12px 20px; }-->
+<!--            .room-image-carousel { height: 200px; }-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+
+<!--<body>-->
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<nav class="navbar navbar-expand-lg fixed-top">-->
+<!--    <div class="container">-->
+<!--        <a class="navbar-brand" href="/">-->
+<!--            <i class="fas fa-crown me-2"></i>Luxury Resort-->
+<!--        </a>-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+<!--        <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--            <ul class="navbar-nav ms-auto">-->
+<!--                <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>-->
+<!--                <li class="nav-item"><a class="nav-link" href="/#branches">Chi nhánh</a></li>-->
+<!--                <li class="nav-item"><a class="nav-link" href="/services">Dịch vụ</a></li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
+
+<!--&lt;!&ndash; Branch Header &ndash;&gt;-->
+<!--<section class="branch-header" th:style="'&#45;&#45;branch-bg: url(' + ${branch.defaultImage} + ')'">-->
+<!--    <div class="container">-->
+<!--        <h1 class="heading-font display-3 mb-3" th:text="${branch.name}">Tên chi nhánh</h1>-->
+<!--        <p class="lead">-->
+<!--            <i class="fas fa-map-marker-alt me-2"></i>-->
+<!--            <span th:text="${branch.fullAddress}">Địa chỉ đầy đủ</span>-->
+<!--        </p>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Branch Info &ndash;&gt;-->
+<!--<section class="py-0">-->
+<!--    <div class="container">-->
+<!--        <div class="branch-info">-->
+<!--            <div class="row align-items-center">-->
+<!--                <div class="col-md-8">-->
+<!--                    <div class="branch-badges" th:utext="${#strings.listJoin(branch.serviceBadges, '')}">-->
+<!--                        &lt;!&ndash; Service badges will be rendered here &ndash;&gt;-->
+<!--                    </div>-->
+<!--                    <p class="text-muted mb-3" th:text="${branch.description}">Mô tả chi nhánh</p>-->
+<!--                    <div class="row g-3">-->
+<!--                        <div class="col-auto">-->
+<!--                            <strong><i class="fas fa-phone text-primary me-2"></i>Điện thoại:</strong>-->
+<!--                            <span th:text="${branch.phoneNumber}">Phone</span>-->
+<!--                        </div>-->
+<!--                        <div class="col-auto">-->
+<!--                            <strong><i class="fas fa-envelope text-primary me-2"></i>Email:</strong>-->
+<!--                            <span th:text="${branch.email}">Email</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-4 text-center">-->
+<!--                    <div class="badge bg-success fs-6 px-3 py-2">-->
+<!--                        <i class="fas fa-check-circle me-2"></i>-->
+<!--                        <span th:text="${branch.statusDisplayName}">Trạng thái</span>-->
+<!--                    </div>-->
+<!--                    <div class="mt-3">-->
+<!--                        <div class="text-warning">-->
+<!--                            <i class="fas fa-star"></i>-->
+<!--                            <i class="fas fa-star"></i>-->
+<!--                            <i class="fas fa-star"></i>-->
+<!--                            <i class="fas fa-star"></i>-->
+<!--                            <i class="fas fa-star"></i>-->
+<!--                            <span class="text-muted ms-2">(4.8/5)</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Promotions Banner &ndash;&gt;-->
+<!--<section class="py-4" th:if="${promotions != null and !promotions.isEmpty()}">-->
+<!--    <div class="container">-->
+<!--        <div class="promotion-banner">-->
+<!--            <div class="position-relative">-->
+<!--                <h5 class="mb-2"><i class="fas fa-gift me-2"></i>Khuyến mãi đặc biệt</h5>-->
+<!--                <div class="row">-->
+<!--                    <div class="col-md-6" th:each="promotion : ${promotions}" th:if="${promotionStat.index < 2}">-->
+<!--                        <small th:text="${promotion.name + ': ' + promotion.description}">Promotion details</small>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Service Tabs &ndash;&gt;-->
+<!--<section class="service-tabs">-->
+<!--    <div class="container">-->
+<!--        <ul class="nav nav-pills justify-content-center" id="serviceTabs" role="tablist">-->
+<!--            &lt;!&ndash; Hotel tab - chỉ hiện khi có dịch vụ khách sạn &ndash;&gt;-->
+<!--            <li class="nav-item" role="presentation"-->
+<!--                th:if="${branch.type.name() == 'HOTEL' or branch.type.name() == 'BOTH'}">-->
+<!--                <button class="nav-link active" id="hotel-tab" data-bs-toggle="pill"-->
+<!--                        data-bs-target="#hotel" type="button" role="tab">-->
+<!--                    <i class="fas fa-bed me-2"></i>Khách sạn-->
+<!--                </button>-->
+<!--            </li>-->
+
+<!--            &lt;!&ndash; Restaurant tab - chỉ hiện khi có dịch vụ nhà hàng &ndash;&gt;-->
+<!--            <li class="nav-item" role="presentation"-->
+<!--                th:if="${branch.type.name() == 'RESTAURANT' or branch.type.name() == 'BOTH'}">-->
+<!--                <button class="nav-link" id="restaurant-tab" data-bs-toggle="pill"-->
+<!--                        data-bs-target="#restaurant" type="button" role="tab"-->
+<!--                        th:classappend="${branch.type.name() == 'RESTAURANT'} ? 'active' : ''">-->
+<!--                    <i class="fas fa-utensils me-2"></i>Nhà hàng-->
+<!--                </button>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Tab Content &ndash;&gt;-->
+<!--<section class="py-5">-->
+<!--    <div class="container">-->
+<!--        <div class="tab-content" id="serviceContent">-->
+
+<!--            &lt;!&ndash; Hotel Tab &ndash;&gt;-->
+<!--            <div class="tab-pane fade show active" id="hotel" role="tabpanel"-->
+<!--                 th:if="${branch.type.name() == 'HOTEL' or branch.type.name() == 'BOTH'}">-->
+
+<!--                &lt;!&ndash; Room Types Section &ndash;&gt;-->
+<!--                <div class="mb-5">-->
+<!--                    <h3 class="heading-font mb-4">-->
+<!--                        <i class="fas fa-bed text-primary me-2"></i>Loại phòng-->
+<!--                    </h3>-->
+
+<!--                    <div class="row" th:if="${roomTypes != null and !roomTypes.isEmpty()}">-->
+<!--                        <div class="col-lg-6 mb-4" th:each="roomType : ${roomTypes}">-->
+<!--                            <div class="room-type-card">-->
+<!--                                &lt;!&ndash; Room Images Carousel &ndash;&gt;-->
+<!--                                <div class="room-image-carousel">-->
+<!--                                    <div th:if="${roomType.hasImages()}"-->
+<!--                                         class="carousel slide" th:id="'carousel-' + ${roomType.id}"-->
+<!--                                         data-bs-ride="carousel">-->
+<!--                                        <div class="carousel-inner">-->
+<!--                                            <div class="carousel-item"-->
+<!--                                                 th:each="image : ${roomType.roomImages}"-->
+<!--                                                 th:classappend="${imageStat.first} ? 'active' : ''">-->
+<!--                                                <img th:src="${image.imageUrl}"-->
+<!--                                                     th:alt="${image.imageTitle}"-->
+<!--                                                     class="d-block w-100">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <button class="carousel-control-prev" type="button"-->
+<!--                                                th:data-bs-target="'#carousel-' + ${roomType.id}"-->
+<!--                                                data-bs-slide="prev">-->
+<!--                                            <span class="carousel-control-prev-icon"></span>-->
+<!--                                        </button>-->
+<!--                                        <button class="carousel-control-next" type="button"-->
+<!--                                                th:data-bs-target="'#carousel-' + ${roomType.id}"-->
+<!--                                                data-bs-slide="next">-->
+<!--                                            <span class="carousel-control-next-icon"></span>-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+
+<!--                                    &lt;!&ndash; Default image if no images available &ndash;&gt;-->
+<!--                                    <img th:unless="${roomType.hasImages()}"-->
+<!--                                         src="https://images.unsplash.com/photo-1611892440504-42a792e24d32"-->
+<!--                                         alt="Default room image" class="d-block w-100">-->
+
+<!--                                    <div class="price-display">-->
+<!--                                        <span class="discounted-price" th:text="${roomType.formattedPrice}">Price</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+<!--                                <div class="p-4">-->
+<!--                                    <h5 class="heading-font mb-2" th:text="${roomType.name}">Room Type Name</h5>-->
+<!--                                    <p class="text-muted mb-3" th:text="${roomType.description}">Description</p>-->
+
+<!--                                    <div class="row g-2 mb-3">-->
+<!--                                        <div class="col-6">-->
+<!--                                            <small class="text-muted">-->
+<!--                                                <i class="fas fa-users me-1"></i>-->
+<!--                                                <span th:text="${roomType.maxOccupancy}">2</span> khách-->
+<!--                                            </small>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-6">-->
+<!--                                            <small class="text-muted">-->
+<!--                                                <i class="fas fa-bed me-1"></i>-->
+<!--                                                <span th:text="${roomType.bedType}">Double</span>-->
+<!--                                            </small>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-6">-->
+<!--                                            <small class="text-muted">-->
+<!--                                                <i class="fas fa-expand-arrows-alt me-1"></i>-->
+<!--                                                <span th:text="${roomType.roomSize}">25</span>m²-->
+<!--                                            </small>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+
+<!--                                    &lt;!&ndash; Amenities &ndash;&gt;-->
+<!--                                    <div class="mb-3" th:if="${roomType.amenitiesList != null}">-->
+<!--                                        <div class="d-flex flex-wrap gap-1">-->
+<!--                                                <span class="badge bg-light text-dark"-->
+<!--                                                      th:each="amenity : ${roomType.amenitiesList}"-->
+<!--                                                      th:text="${amenity}">Amenity</span>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+
+<!--                                    <button class="btn btn-primary w-100"-->
+<!--                                            th:onclick="'bookRoom(' + ${roomType.id} + ')'">-->
+<!--                                        <i class="fas fa-calendar-check me-2"></i>Đặt phòng-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div th:if="${roomTypes == null or roomTypes.isEmpty()}" class="text-center py-5">-->
+<!--                        <i class="fas fa-bed fa-3x text-muted mb-3"></i>-->
+<!--                        <h5 class="text-muted">Chưa có thông tin loại phòng</h5>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Room List Section &ndash;&gt;-->
+<!--                <div class="mb-5">-->
+<!--                    <h3 class="heading-font mb-4">-->
+<!--                        <i class="fas fa-door-open text-primary me-2"></i>Danh sách phòng-->
+<!--                    </h3>-->
+
+<!--                    <div class="table-responsive" th:if="${rooms != null and !rooms.isEmpty()}">-->
+<!--                        <table class="table table-hover">-->
+<!--                            <thead class="table-light">-->
+<!--                            <tr>-->
+<!--                                <th>Số phòng</th>-->
+<!--                                <th>Tầng</th>-->
+<!--                                <th>Loại phòng</th>-->
+<!--                                <th>Trạng thái</th>-->
+<!--                                <th>Dọn dẹp lần cuối</th>-->
+<!--                                <th>Thao tác</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                            <tr th:each="room : ${rooms}">-->
+<!--                                <td>-->
+<!--                                    <strong th:text="${room.roomNumber}">101</strong>-->
+<!--                                </td>-->
+<!--                                <td th:text="${room.floor}">1</td>-->
+<!--                                <td th:text="${room.roomTypeName}">Deluxe</td>-->
+<!--                                <td>-->
+<!--                                            <span class="room-status"-->
+<!--                                                  th:classappend="'status-' + ${room.status.name().toLowerCase()}"-->
+<!--                                                  th:text="${room.statusDisplay}">Available</span>-->
+<!--                                </td>-->
+<!--                                <td th:text="${room.lastCleaned != null ? #temporals.format(room.lastCleaned, 'dd/MM/yyyy HH:mm') : 'Chưa có'}">-</td>-->
+<!--                                <td>-->
+<!--                                    <button class="btn btn-sm btn-outline-primary"-->
+<!--                                            th:onclick="'viewRoomDetail(' + ${room.id} + ')'"-->
+<!--                                            th:disabled="${room.status.name() == 'OUT_OF_ORDER'}">-->
+<!--                                        Xem chi tiết-->
+<!--                                    </button>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+
+<!--                    <div th:if="${rooms == null or rooms.isEmpty()}" class="text-center py-5">-->
+<!--                        <i class="fas fa-door-open fa-3x text-muted mb-3"></i>-->
+<!--                        <h5 class="text-muted">Chưa có thông tin phòng</h5>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Restaurant Tab &ndash;&gt;-->
+<!--            <div class="tab-pane fade" id="restaurant" role="tabpanel"-->
+<!--                 th:classappend="${branch.type.name() == 'RESTAURANT'} ? 'show active' : ''"-->
+<!--                 th:if="${branch.type.name() == 'RESTAURANT' or branch.type.name() == 'BOTH'}">-->
+
+<!--                &lt;!&ndash; Menu Categories and Items &ndash;&gt;-->
+<!--                <div class="mb-5">-->
+<!--                    <h3 class="heading-font mb-4">-->
+<!--                        <i class="fas fa-utensils text-primary me-2"></i>Thực đơn-->
+<!--                    </h3>-->
+
+<!--                    &lt;!&ndash; Category Filter Buttons &ndash;&gt;-->
+<!--                    <div class="mb-4" th:if="${menuCategories != null and !menuCategories.isEmpty()}">-->
+<!--                        <button class="btn btn-outline-primary me-2 mb-2 category-filter active"-->
+<!--                                data-category="all">Tất cả</button>-->
+<!--                        <button class="btn btn-outline-primary me-2 mb-2 category-filter"-->
+<!--                                th:each="category : ${menuCategories}"-->
+<!--                                th:data-category="${category.id}"-->
+<!--                                th:text="${category.name + ' (' + category.menuItemCount + ')'}">Category</button>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Menu Items &ndash;&gt;-->
+<!--                    <div class="row" th:if="${menuItems != null and !menuItems.isEmpty()}">-->
+<!--                        <div class="col-lg-6 mb-3 menu-item"-->
+<!--                             th:each="item : ${menuItems}"-->
+<!--                             th:data-category="${item.categoryId}">-->
+<!--                            <div class="menu-item-card">-->
+<!--                                <div class="row align-items-center">-->
+<!--                                    <div class="col-3">-->
+<!--                                        <img th:src="${item.imageUrl != null ? item.imageUrl : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'}"-->
+<!--                                             th:alt="${item.name}" class="menu-item-image">-->
+<!--                                    </div>-->
+<!--                                    <div class="col-9">-->
+<!--                                        <h6 class="mb-1" th:text="${item.name}">Item Name</h6>-->
+<!--                                        <p class="text-muted small mb-2" th:text="${item.description}">Description</p>-->
+
+<!--                                        <div class="d-flex justify-content-between align-items-center">-->
+<!--                                            <div>-->
+<!--                                                <span class="discounted-price" th:text="${item.formattedPrice}">Price</span>-->
+<!--                                                <div class="small text-muted" th:if="${item.preparationTime != null}">-->
+<!--                                                    <i class="fas fa-clock me-1"></i>-->
+<!--                                                    <span th:text="${item.preparationTime}">15</span> phút-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <button class="btn btn-sm btn-primary"-->
+<!--                                                    th:onclick="'orderItem(' + ${item.id} + ')'">-->
+<!--                                                <i class="fas fa-plus"></i>-->
+<!--                                            </button>-->
+<!--                                        </div>-->
+
+<!--                                        &lt;!&ndash; Allergens &ndash;&gt;-->
+<!--                                        <div th:if="${item.allergens != null}" class="mt-2">-->
+<!--                                            <small class="text-warning">-->
+<!--                                                <i class="fas fa-exclamation-triangle me-1"></i>-->
+<!--                                                <span th:text="${item.allergens}">Allergens</span>-->
+<!--                                            </small>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div th:if="${menuItems == null or menuItems.isEmpty()}" class="text-center py-5">-->
+<!--                        <i class="fas fa-utensils fa-3x text-muted mb-3"></i>-->
+<!--                        <h5 class="text-muted">Chưa có thông tin thực đơn</h5>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Restaurant Tables &ndash;&gt;-->
+<!--                <div class="mb-5">-->
+<!--                    <h3 class="heading-font mb-4">-->
+<!--                        <i class="fas fa-chair text-primary me-2"></i>Sơ đồ bàn-->
+<!--                    </h3>-->
+
+<!--                    <div class="table-layout" th:if="${tables != null and !tables.isEmpty()}">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-12 mb-3">-->
+<!--                                <div class="d-flex gap-3 mb-3">-->
+<!--                                    <div><span class="table-item table-available">A</span> Có thể đặt</div>-->
+<!--                                    <div><span class="table-item table-occupied">O</span> Đang sử dụng</div>-->
+<!--                                    <div><span class="table-item table-reserved">R</span> Đã đặt trước</div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        <div class="d-flex flex-wrap justify-content-center">-->
+<!--                            <div class="table-item"-->
+<!--                                 th:each="table : ${tables}"-->
+<!--                                 th:classappend="'table-' + ${table.status.name().toLowerCase()}"-->
+<!--                                 th:onclick="'selectTable(' + ${table.id} + ')'"-->
+<!--                                 th:title="'Bàn ' + ${table.tableNumber} + ' - ' + ${table.capacity} + ' ghế - ' + ${table.statusDisplayName}">-->
+<!--                                <span th:text="${table.tableNumber}">1</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div th:if="${tables == null or tables.isEmpty()}" class="text-center py-5">-->
+<!--                        <i class="fas fa-chair fa-3x text-muted mb-3"></i>-->
+<!--                        <h5 class="text-muted">Chưa có thông tin bàn</h5>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Loading Modal &ndash;&gt;-->
+<!--&lt;!&ndash;<div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static">&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="modal-dialog modal-sm">&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="modal-content">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="modal-body text-center py-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="spinner mx-auto mb-3"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <p class="mb-0">Đang xử lý...</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+<!--&lt;!&ndash; Bootstrap JS &ndash;&gt;-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+
+<!--<script th:inline="javascript">-->
+<!--    // Branch data from Thymeleaf-->
+<!--    const branchData = {-->
+<!--        id: /*[[${branch.id}]]*/ 0,-->
+<!--        type: /*[[${branch.type}]]*/ 'BOTH'-->
+<!--    };-->
+
+<!--    // Tab switching handler-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        // Initialize tooltips-->
+<!--        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));-->
+<!--        tooltipTriggerList.map(function (tooltipTriggerEl) {-->
+<!--            return new bootstrap.Tooltip(tooltipTriggerEl);-->
+<!--        });-->
+
+<!--        // Category filter functionality-->
+<!--        const categoryFilters = document.querySelectorAll('.category-filter');-->
+<!--        const menuItems = document.querySelectorAll('.menu-item');-->
+
+<!--        categoryFilters.forEach(filter => {-->
+<!--            filter.addEventListener('click', function() {-->
+<!--                // Remove active class from all filters-->
+<!--                categoryFilters.forEach(f => f.classList.remove('active'));-->
+<!--                // Add active class to clicked filter-->
+<!--                this.classList.add('active');-->
+
+<!--                const categoryId = this.getAttribute('data-category');-->
+
+<!--                menuItems.forEach(item => {-->
+<!--                    if (categoryId === 'all' || item.getAttribute('data-category') === categoryId) {-->
+<!--                        item.style.display = 'block';-->
+<!--                    } else {-->
+<!--                        item.style.display = 'none';-->
+<!--                    }-->
+<!--                });-->
+<!--            });-->
+<!--        });-->
+
+<!--        // Auto-activate first tab based on branch type-->
+<!--        if (branchData.type === 'RESTAURANT') {-->
+<!--            const restaurantTab = document.getElementById('restaurant-tab');-->
+<!--            const restaurantPane = document.getElementById('restaurant');-->
+<!--            const hotelPane = document.getElementById('hotel');-->
+
+<!--            if (restaurantTab && restaurantPane) {-->
+<!--                // Remove active from hotel tab/pane-->
+<!--                if (hotelPane) {-->
+<!--                    hotelPane.classList.remove('show', 'active');-->
+<!--                }-->
+
+<!--                // Activate restaurant tab/pane-->
+<!--                restaurantTab.classList.add('active');-->
+<!--                restaurantPane.classList.add('show', 'active');-->
+<!--            }-->
+<!--        }-->
+<!--    });-->
+
+<!--    // Business functions-->
+<!--    function bookRoom(roomTypeId) {-->
+<!--        showLoading();-->
+<!--        // Simulate API call-->
+<!--        setTimeout(() => {-->
+<!--            hideLoading();-->
+<!--            alert('Chuyển đến trang đặt phòng cho loại phòng ID: ' + roomTypeId);-->
+<!--            // In real app: window.location.href = '/booking/room/' + roomTypeId;-->
+<!--        }, 1000);-->
+<!--    }-->
+
+<!--    function viewRoomDetail(roomId) {-->
+<!--        showLoading();-->
+<!--        // Load room details via AJAX-->
+<!--        fetch(`/api/rooms/${roomId}/details`)-->
+<!--            .then(response => response.json())-->
+<!--            .then(data => {-->
+<!--                hideLoading();-->
+<!--                showRoomDetailModal(data);-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                hideLoading();-->
+<!--                console.error('Error loading room details:', error);-->
+<!--                alert('Không thể tải thông tin phòng. Vui lòng thử lại sau.');-->
+<!--            });-->
+<!--    }-->
+
+<!--    function orderItem(itemId) {-->
+<!--        showLoading();-->
+<!--        // Simulate adding to cart-->
+<!--        setTimeout(() => {-->
+<!--            hideLoading();-->
+<!--            const itemName = document.querySelector(`[onclick="orderItem(${itemId})"]`)-->
+<!--                .closest('.menu-item-card')-->
+<!--                .querySelector('h6').textContent;-->
+
+<!--            if (confirm(`Thêm "${itemName}" vào giỏ hàng?`)) {-->
+<!--                // In real app: add to cart via API-->
+<!--                showSuccessMessage('Đã thêm vào giỏ hàng!');-->
+<!--            }-->
+<!--        }, 500);-->
+<!--    }-->
+
+<!--    function selectTable(tableId) {-->
+<!--        const tableElement = document.querySelector(`[onclick="selectTable(${tableId})"]`);-->
+<!--        const isAvailable = tableElement.classList.contains('table-available');-->
+
+<!--        if (!isAvailable) {-->
+<!--            alert('Bàn này hiện không khả dụng.');-->
+<!--            return;-->
+<!--        }-->
+
+<!--        showLoading();-->
+<!--        // Load table details and booking form-->
+<!--        setTimeout(() => {-->
+<!--            hideLoading();-->
+<!--            const tableNumber = tableElement.querySelector('span').textContent;-->
+<!--            if (confirm(`Đặt bàn số ${tableNumber}?`)) {-->
+<!--                // In real app: redirect to table booking-->
+<!--                alert(`Chuyển đến trang đặt bàn số ${tableNumber}`);-->
+<!--            }-->
+<!--        }, 500);-->
+<!--    }-->
+
+<!--    function loadMenuByCategory(categoryId) {-->
+<!--        showLoading();-->
+
+<!--        const url = categoryId === 'all'-->
+<!--            ? `/api/branches/${branchData.id}/menu`-->
+<!--            : `/api/branches/${branchData.id}/menu?categoryId=${categoryId}`;-->
+
+<!--        fetch(url)-->
+<!--            .then(response => response.json())-->
+<!--            .then(data => {-->
+<!--                hideLoading();-->
+<!--                updateMenuDisplay(data);-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                hideLoading();-->
+<!--                console.error('Error loading menu:', error);-->
+<!--                alert('Không thể tải thực đơn. Vui lòng thử lại sau.');-->
+<!--            });-->
+<!--    }-->
+
+<!--    function updateMenuDisplay(menuItems) {-->
+<!--        const menuContainer = document.querySelector('.row .menu-item').parentElement;-->
+<!--        menuContainer.innerHTML = '';-->
+
+<!--        menuItems.forEach(item => {-->
+<!--            const menuItemHtml = `-->
+<!--                    <div class="col-lg-6 mb-3 menu-item" data-category="${item.categoryId}">-->
+<!--                        <div class="menu-item-card">-->
+<!--                            <div class="row align-items-center">-->
+<!--                                <div class="col-3">-->
+<!--                                    <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'}"-->
+<!--                                         alt="${item.name}" class="menu-item-image">-->
+<!--                                </div>-->
+<!--                                <div class="col-9">-->
+<!--                                    <h6 class="mb-1">${item.name}</h6>-->
+<!--                                    <p class="text-muted small mb-2">${item.description || ''}</p>-->
+
+<!--                                    <div class="d-flex justify-content-between align-items-center">-->
+<!--                                        <div>-->
+<!--                                            <span class="discounted-price">${item.formattedPrice}</span>-->
+<!--                                            ${item.preparationTime ? `<div class="small text-muted"><i class="fas fa-clock me-1"></i>${item.preparationTime} phút</div>` : ''}-->
+<!--                                        </div>-->
+<!--                                        <button class="btn btn-sm btn-primary" onclick="orderItem(${item.id})">-->
+<!--                                            <i class="fas fa-plus"></i>-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+
+<!--                                    ${item.allergens ? `<div class="mt-2"><small class="text-warning"><i class="fas fa-exclamation-triangle me-1"></i>${item.allergens}</small></div>` : ''}-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                `;-->
+<!--            menuContainer.insertAdjacentHTML('beforeend', menuItemHtml);-->
+<!--        });-->
+<!--    }-->
+
+<!--    function showRoomDetailModal(roomData) {-->
+<!--        // Create and show room detail modal-->
+<!--        const modalHtml = `-->
+<!--                <div class="modal fade" id="roomDetailModal" tabindex="-1">-->
+<!--                    <div class="modal-dialog modal-lg">-->
+<!--                        <div class="modal-content">-->
+<!--                            <div class="modal-header">-->
+<!--                                <h5 class="modal-title">Chi tiết phòng ${roomData.roomNumber}</h5>-->
+<!--                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>-->
+<!--                            </div>-->
+<!--                            <div class="modal-body">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-md-6">-->
+<!--                                        <h6>Thông tin cơ bản</h6>-->
+<!--                                        <ul class="list-unstyled">-->
+<!--                                            <li><strong>Số phòng:</strong> ${roomData.roomNumber}</li>-->
+<!--                                            <li><strong>Tầng:</strong> ${roomData.floor}</li>-->
+<!--                                            <li><strong>Loại phòng:</strong> ${roomData.roomTypeName}</li>-->
+<!--                                            <li><strong>Trạng thái:</strong> <span class="room-status status-${roomData.status.toLowerCase()}">${roomData.statusDisplay}</span></li>-->
+<!--                                        </ul>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-md-6">-->
+<!--                                        <h6>Thông tin bảo trì</h6>-->
+<!--                                        <ul class="list-unstyled">-->
+<!--                                            <li><strong>Dọn dẹp lần cuối:</strong> ${roomData.lastCleaned || 'Chưa có thông tin'}</li>-->
+<!--                                            <li><strong>Ghi chú:</strong> ${roomData.notes || 'Không có'}</li>-->
+<!--                                        </ul>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="modal-footer">-->
+<!--                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>-->
+<!--                                ${roomData.status === 'AVAILABLE' ? '<button type="button" class="btn btn-primary" onclick="bookSpecificRoom(' + roomData.id + ')">Đặt phòng này</button>' : ''}-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            `;-->
+
+<!--        // Remove existing modal if any-->
+<!--        const existingModal = document.getElementById('roomDetailModal');-->
+<!--        if (existingModal) {-->
+<!--            existingModal.remove();-->
+<!--        }-->
+
+<!--        document.body.insertAdjacentHTML('beforeend', modalHtml);-->
+<!--        const modal = new bootstrap.Modal(document.getElementById('roomDetailModal'));-->
+<!--        modal.show();-->
+<!--    }-->
+
+<!--    function bookSpecificRoom(roomId) {-->
+<!--        if (confirm('Xác nhận đặt phòng này?')) {-->
+<!--            showLoading();-->
+<!--            setTimeout(() => {-->
+<!--                hideLoading();-->
+<!--                bootstrap.Modal.getInstance(document.getElementById('roomDetailModal')).hide();-->
+<!--                alert('Chuyển đến trang đặt phòng cụ thể ID: ' + roomId);-->
+<!--                // In real app: window.location.href = '/booking/specific-room/' + roomId;-->
+<!--            }, 1000);-->
+<!--        }-->
+<!--    }-->
+
+<!--    // Tab switching with dynamic content loading-->
+<!--    document.querySelectorAll('[data-bs-toggle="pill"]').forEach(tab => {-->
+<!--        tab.addEventListener('shown.bs.tab', function(e) {-->
+<!--            const targetId = e.target.getAttribute('data-bs-target').substring(1);-->
+
+<!--            if (targetId === 'restaurant') {-->
+<!--                // Load fresh menu data when switching to restaurant tab-->
+<!--                setTimeout(() => {-->
+<!--                    loadMenuByCategory('all');-->
+<!--                }, 300);-->
+<!--            } else if (targetId === 'hotel') {-->
+<!--                // Load fresh room data when switching to hotel tab-->
+<!--                loadHotelData();-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+
+<!--    function loadHotelData() {-->
+<!--        // Load rooms and room types data-->
+<!--        Promise.all([-->
+<!--            fetch(`/api/branches/${branchData.id}/rooms`),-->
+<!--            fetch(`/api/branches/${branchData.id}/room-types`)-->
+<!--        ])-->
+<!--            .then(responses => Promise.all(responses.map(r => r.json())))-->
+<!--            .then(([roomsData, roomTypesData]) => {-->
+<!--                updateRoomsDisplay(roomsData);-->
+<!--                updateRoomTypesDisplay(roomTypesData);-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                console.error('Error loading hotel data:', error);-->
+<!--            });-->
+<!--    }-->
+
+<!--    function updateRoomsDisplay(roomsData) {-->
+<!--        const tbody = document.querySelector('#hotel table tbody');-->
+<!--        if (!tbody) return;-->
+
+<!--        tbody.innerHTML = '';-->
+<!--        roomsData.forEach(room => {-->
+<!--            const row = `-->
+<!--                    <tr>-->
+<!--                        <td><strong>${room.roomNumber}</strong></td>-->
+<!--                        <td>${room.floor}</td>-->
+<!--                        <td>${room.roomTypeName}</td>-->
+<!--                        <td><span class="room-status status-${room.status.toLowerCase()}">${room.statusDisplay}</span></td>-->
+<!--                        <td>${room.lastCleaned || 'Chưa có'}</td>-->
+<!--                        <td>-->
+<!--                            <button class="btn btn-sm btn-outline-primary" onclick="viewRoomDetail(${room.id})"-->
+<!--                                    ${room.status === 'OUT_OF_ORDER' ? 'disabled' : ''}>-->
+<!--                                Xem chi tiết-->
+<!--                            </button>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                `;-->
+<!--            tbody.insertAdjacentHTML('beforeend', row);-->
+<!--        });-->
+<!--    }-->
+
+<!--    function updateRoomTypesDisplay(roomTypesData) {-->
+<!--        // Update room types section if needed-->
+<!--        console.log('Room types updated:', roomTypesData);-->
+<!--    }-->
+
+<!--    // Utility functions-->
+<!--    function showLoading() {-->
+<!--        const modal = new bootstrap.Modal(document.getElementById('loadingModal'));-->
+<!--        modal.show();-->
+<!--    }-->
+
+<!--    function hideLoading() {-->
+<!--        const modal = bootstrap.Modal.getInstance(document.getElementById('loadingModal'));-->
+<!--        if (modal) {-->
+<!--            modal.hide();-->
+<!--        }-->
+<!--    }-->
+
+<!--    function showSuccessMessage(message) {-->
+<!--        // Create success toast-->
+<!--        const toastHtml = `-->
+<!--                <div class="toast align-items-center text-white bg-success border-0" role="alert">-->
+<!--                    <div class="d-flex">-->
+<!--                        <div class="toast-body">-->
+<!--                            <i class="fas fa-check-circle me-2"></i>${message}-->
+<!--                        </div>-->
+<!--                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            `;-->
+
+<!--        let toastContainer = document.querySelector('.toast-container');-->
+<!--        if (!toastContainer) {-->
+<!--            toastContainer = document.createElement('div');-->
+<!--            toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';-->
+<!--            toastContainer.style.zIndex = '9999';-->
+<!--            document.body.appendChild(toastContainer);-->
+<!--        }-->
+
+<!--        toastContainer.insertAdjacentHTML('beforeend', toastHtml);-->
+<!--        const toast = new bootstrap.Toast(toastContainer.lastElementChild);-->
+<!--        toast.show();-->
+
+<!--        // Remove toast element after hiding-->
+<!--        toastContainer.lastElementChild.addEventListener('hidden.bs.toast', function() {-->
+<!--            this.remove();-->
+<!--        });-->
+<!--    }-->
+
+<!--    // Enhanced category filtering with animation-->
+<!--    function enhancedCategoryFilter() {-->
+<!--        const categoryFilters = document.querySelectorAll('.category-filter');-->
+<!--        const menuItems = document.querySelectorAll('.menu-item');-->
+
+<!--        categoryFilters.forEach(filter => {-->
+<!--            filter.addEventListener('click', function() {-->
+<!--                const categoryId = this.getAttribute('data-category');-->
+
+<!--                // Update active state-->
+<!--                categoryFilters.forEach(f => f.classList.remove('active'));-->
+<!--                this.classList.add('active');-->
+
+<!--                // Animate filter-->
+<!--                menuItems.forEach(item => {-->
+<!--                    const shouldShow = categoryId === 'all' ||-->
+<!--                        item.getAttribute('data-category') === categoryId;-->
+
+<!--                    if (shouldShow) {-->
+<!--                        item.style.display = 'block';-->
+<!--                        item.style.animation = 'fadeInUp 0.5s ease-out';-->
+<!--                    } else {-->
+<!--                        item.style.animation = 'fadeOutDown 0.3s ease-out';-->
+<!--                        setTimeout(() => {-->
+<!--                            item.style.display = 'none';-->
+<!--                        }, 300);-->
+<!--                    }-->
+<!--                });-->
+<!--            });-->
+<!--        });-->
+<!--    }-->
+
+<!--    // Initialize enhanced filtering on page load-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        enhancedCategoryFilter();-->
+
+<!--        // Add CSS animations-->
+<!--        const animationCSS = `-->
+<!--                @keyframes fadeInUp {-->
+<!--                    from { opacity: 0; transform: translateY(20px); }-->
+<!--                    to { opacity: 1; transform: translateY(0); }-->
+<!--                }-->
+<!--                @keyframes fadeOutDown {-->
+<!--                    from { opacity: 1; transform: translateY(0); }-->
+<!--                    to { opacity: 0; transform: translateY(-20px); }-->
+<!--                }-->
+<!--            `;-->
+
+<!--        const style = document.createElement('style');-->
+<!--        style.textContent = animationCSS;-->
+<!--        document.head.appendChild(style);-->
+<!--    });-->
+
+<!--    // Lazy loading for images-->
+<!--    function initLazyLoading() {-->
+<!--        const images = document.querySelectorAll('img[data-src]');-->
+<!--        const imageObserver = new IntersectionObserver((entries) => {-->
+<!--            entries.forEach(entry => {-->
+<!--                if (entry.isIntersecting) {-->
+<!--                    const img = entry.target;-->
+<!--                    img.src = img.dataset.src;-->
+<!--                    img.removeAttribute('data-src');-->
+<!--                    imageObserver.unobserve(img);-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+
+<!--        images.forEach(img => imageObserver.observe(img));-->
+<!--    }-->
+
+<!--    // Auto-refresh room status every 30 seconds-->
+<!--    function startAutoRefresh() {-->
+<!--        setInterval(() => {-->
+<!--            if (document.querySelector('#hotel.active')) {-->
+<!--                fetch(`/api/branches/${branchData.id}/rooms`)-->
+<!--                    .then(response => response.json())-->
+<!--                    .then(data => {-->
+<!--                        updateRoomStatusOnly(data);-->
+<!--                    })-->
+<!--                    .catch(error => {-->
+<!--                        console.error('Auto-refresh failed:', error);-->
+<!--                    });-->
+<!--            }-->
+<!--        }, 30000);-->
+<!--    }-->
+
+<!--    function updateRoomStatusOnly(roomsData) {-->
+<!--        roomsData.forEach(room => {-->
+<!--            const statusCell = document.querySelector(`td:nth-child(4) .room-status`);-->
+<!--            if (statusCell && statusCell.closest('tr').querySelector('strong').textContent === room.roomNumber) {-->
+<!--                statusCell.className = `room-status status-${room.status.toLowerCase()}`;-->
+<!--                statusCell.textContent = room.statusDisplay;-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+
+<!--    // Initialize all features-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        initLazyLoading();-->
+<!--        startAutoRefresh();-->
+<!--    });-->
+
+<!--    // Print functionality-->
+<!--    function printMenu() {-->
+<!--        window.print();-->
+<!--    }-->
+
+<!--    // Share functionality-->
+<!--    function shareBranch() {-->
+<!--        if (navigator.share) {-->
+<!--            navigator.share({-->
+<!--                title: document.title,-->
+<!--                text: 'Xem chi tiết chi nhánh này',-->
+<!--                url: window.location.href-->
+<!--            });-->
+<!--        } else {-->
+<!--            // Fallback: copy to clipboard-->
+<!--            navigator.clipboard.writeText(window.location.href).then(() => {-->
+<!--                showSuccessMessage('Đã copy link vào clipboard!');-->
+<!--            });-->
+<!--        }-->
+<!--    }-->
+
+<!--    // Add floating action buttons-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        const fabHtml = `-->
+<!--                <div class="floating-action-buttons">-->
+<!--                    <button class="fab fab-primary" onclick="shareBranch()" title="Chia sẻ">-->
+<!--                        <i class="fas fa-share-alt"></i>-->
+<!--                    </button>-->
+<!--                    <button class="fab fab-secondary" onclick="window.history.back()" title="Quay lại">-->
+<!--                        <i class="fas fa-arrow-left"></i>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            `;-->
+
+<!--        document.body.insertAdjacentHTML('beforeend', fabHtml);-->
+
+<!--        // Add FAB styles-->
+<!--        const fabStyles = `-->
+<!--                .floating-action-buttons {-->
+<!--                    position: fixed;-->
+<!--                    bottom: 20px;-->
+<!--                    right: 20px;-->
+<!--                    display: flex;-->
+<!--                    flex-direction: column;-->
+<!--                    gap: 10px;-->
+<!--                    z-index: 1000;-->
+<!--                }-->
+
+<!--                .fab {-->
+<!--                    width: 56px;-->
+<!--                    height: 56px;-->
+<!--                    border-radius: 50%;-->
+<!--                    border: none;-->
+<!--                    color: white;-->
+<!--                    font-size: 20px;-->
+<!--                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);-->
+<!--                    transition: all 0.3s ease;-->
+<!--                    cursor: pointer;-->
+<!--                }-->
+
+<!--                .fab:hover {-->
+<!--                    transform: scale(1.1);-->
+<!--                    box-shadow: 0 6px 20px rgba(0,0,0,0.4);-->
+<!--                }-->
+
+<!--                .fab-primary { background: var(&#45;&#45;primary-color); }-->
+<!--                .fab-secondary { background: #6c757d; }-->
+
+<!--                @media (max-width: 768px) {-->
+<!--                    .floating-action-buttons {-->
+<!--                        bottom: 15px;-->
+<!--                        right: 15px;-->
+<!--                    }-->
+<!--                    .fab {-->
+<!--                        width: 48px;-->
+<!--                        height: 48px;-->
+<!--                        font-size: 18px;-->
+<!--                    }-->
+<!--                }-->
+<!--            `;-->
+
+<!--        const fabStyle = document.createElement('style');-->
+<!--        fabStyle.textContent = fabStyles;-->
+<!--        document.head.appendChild(fabStyle);-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${branch.name} + ' - Chi tiết'">Chi tiết chi nhánh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">
+    <style>
+        :root {
+            --primary-color: #c9a96e;
+            --secondary-color: #2c3e50;
+            --accent-color: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --bg-overlay: rgba(44, 62, 80, 0.7);
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --branch-bg: url('https://example.com/default.jpg');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            padding-top: 80px;
+        }
+
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            margin: 0 10px;
+            color: var(--text-dark) !important;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+
+        .btn-luxury {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+        }
+
+        .btn-luxury:hover {
+            background: #b8956b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(201, 169, 110, 0.4);
+            color: white;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+            var(--branch-bg, url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')) center/cover;
+            padding: 80px 0 60px;
+            color: white;
+            text-align: center;
+        }
+
+        .breadcrumb {
+            background: none;
+            padding: 0;
+        }
+
+        .breadcrumb-item a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--primary-color);
+        }
+
+        /* Branch Info */
+        .branch-info {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .branch-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .promotion-banner {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Service Tabs */
+        .service-nav {
+            background: white;
+            padding: 30px 0;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 80px;
+            z-index: 999;
+        }
+
+        .nav-pills .nav-link {
+            background: transparent;
+            color: var(--text-dark);
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-weight: 600;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-pills .nav-link:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-pills .nav-link.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .filter-widget {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .filter-widget h6 {
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            font-weight: 600;
+        }
+
+        .form-range::-webkit-slider-thumb {
+            background: var(--primary-color);
+        }
+
+        .form-range::-moz-range-thumb {
+            background: var(--primary-color);
+            border: none;
+        }
+
+        /* Service Cards */
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            margin-bottom: 30px;
+            height: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-image {
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .service-card:hover .service-image img {
+            transform: scale(1.1);
+        }
+
+        .price-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .branch-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .service-content {
+            padding: 25px;
+        }
+
+        .service-title {
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+        }
+
+        .service-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .amenities-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .amenity-tag {
+            background: #f0f0f0;
+            color: var(--text-dark);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid #e9ecef;
+        }
+
+        .service-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .rating {
+            color: #ffc107;
+        }
+
+        /* Room Status */
+        .room-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-available { background: #d4edda; color: #155724; }
+        .status-occupied { background: #f8d7da; color: #721c24; }
+        .status-maintenance { background: #fff3cd; color: #856404; }
+        .status-cleaning { background: #cce5ff; color: #004085; }
+
+        /* Restaurant Tables */
+        .table-layout {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .table-item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .table-available { border-color: var(--success-color); color: var(--success-color); }
+        .table-occupied { border-color: var(--danger-color); color: var(--danger-color); }
+        .table-reserved { border-color: var(--warning-color); color: var(--warning-color); }
+
+        .table-item:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Mobile Filter Button */
+        .mobile-filter-btn {
+            display: none;
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .mobile-filter-btn {
+                display: block;
+                margin-bottom: 20px;
+            }
+
+            .desktop-filter {
+                display: none;
+            }
+
+            .nav-pills .nav-link {
+                margin: 5px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .service-content {
+                padding: 20px;
+            }
+
+            .service-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+
+            .page-header {
+                padding: 60px 0 40px;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .nav-pills {
+                flex-direction: column;
+            }
+
+            .nav-pills .nav-link {
+                margin: 5px 0;
+                text-align: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Navigation -->
+<!--<nav class="navbar navbar-expand-lg fixed-top">-->
+<!--    <div class="container">-->
+<!--        <a class="navbar-brand" href="/">-->
+<!--            <i class="fas fa-crown me-2"></i>Luxury Resort-->
+<!--        </a>-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+<!--        <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--            <ul class="navbar-nav ms-auto">-->
+<!--                <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>-->
+<!--                <li class="nav-item"><a class="nav-link active" href="/services">Dịch vụ</a></li>-->
+<!--                <li class="nav-item"><a class="nav-link" href="/contact">Liên hệ</a></li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
+<div th:replace="fragments/user_navbar :: user_navbar"></div>
+
+
+<!-- Page Header -->
+<section class="page-header" th:style="'--branch-bg: url(' + ${branch.defaultImage} + ')'">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center mb-4">
+                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/#branches">Chi nhánh</a></li>
+                <li class="breadcrumb-item active" th:text="${branch.name}">Chi nhánh</li>
+            </ol>
+        </nav>
+        <h1 class="heading-font display-3 mb-3" th:text="${branch.name}">Tên chi nhánh</h1>
+        <p class="lead">
+            <i class="fas fa-map-marker-alt me-2"></i>
+            <span th:text="${branch.fullAddress}">Địa chỉ đầy đủ</span>
+        </p>
+    </div>
+</section>
+
+<!-- Branch Info -->
+<section class="py-0">
+    <div class="container">
+        <div class="branch-info">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="branch-badges" th:utext="${#strings.listJoin(branch.serviceBadges, '')}">
+                        <!-- Service badges will be rendered here -->
+                    </div>
+                    <p class="text-muted mb-3" th:text="${branch.description}">Mô tả chi nhánh</p>
+                    <div class="row g-3">
+                        <div class="col-auto">
+                            <strong><i class="fas fa-phone text-primary me-2"></i>Điện thoại:</strong>
+                            <span th:text="${branch.phoneNumber}">Phone</span>
+                        </div>
+                        <div class="col-auto">
+                            <strong><i class="fas fa-envelope text-primary me-2"></i>Email:</strong>
+                            <span th:text="${branch.email}">Email</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="badge bg-success fs-6 px-3 py-2">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span th:text="${branch.statusDisplayName}">Trạng thái</span>
+                    </div>
+                    <div class="mt-3">
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span class="text-muted ms-2">(4.8/5)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Promotions Banner -->
+<section class="py-4" th:if="${promotions != null and !promotions.isEmpty()}">
+    <div class="container">
+        <div class="promotion-banner">
+            <div class="position-relative">
+                <h5 class="mb-2"><i class="fas fa-gift me-2"></i>Khuyến mãi đặc biệt</h5>
+                <div class="row">
+                    <div class="col-md-6" th:each="promotion : ${promotions}" th:if="${promotionStat.index < 2}">
+                        <small th:text="${promotion.name + ': ' + promotion.description}">Promotion details</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Service Navigation Tabs -->
+<section class="service-nav">
+    <div class="container">
+        <ul class="nav nav-pills justify-content-center" id="service-tabs" role="tablist">
+            <!-- Hotel tab -->
+            <li class="nav-item" role="presentation"
+                th:if="${branch.type.name() == 'HOTEL' or branch.type.name() == 'BOTH'}">
+                <button class="nav-link active" id="rooms-tab" data-bs-toggle="pill"
+                        data-bs-target="#rooms" type="button" role="tab">
+                    <i class="fas fa-bed me-2"></i>Phòng khách sạn
+                </button>
+            </li>
+
+            <!-- Restaurant tab -->
+            <li class="nav-item" role="presentation"
+                th:if="${branch.type.name() == 'RESTAURANT' or branch.type.name() == 'BOTH'}">
+                <button class="nav-link" id="restaurant-tab" data-bs-toggle="pill"
+                        data-bs-target="#restaurant" type="button" role="tab"
+                        th:classappend="${branch.type.name() == 'RESTAURANT'} ? 'active' : ''">
+                    <i class="fas fa-utensils me-2"></i>Ẩm thực & Nhà hàng
+                </button>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="tab-content" id="service-content">
+            <!-- Rooms Tab -->
+            <div class="tab-pane fade show active" id="rooms" role="tabpanel"
+                 th:if="${branch.type.name() == 'HOTEL' or branch.type.name() == 'BOTH'}">
+                <div class="row">
+                    <!-- Mobile Filter Button -->
+                    <div class="col-12">
+                        <button class="btn btn-outline-primary mobile-filter-btn w-100" type="button"
+                                data-bs-toggle="offcanvas" data-bs-target="#roomFilters">
+                            <i class="fas fa-filter me-2"></i>Bộ lọc
+                        </button>
+                    </div>
+
+                    <!-- Desktop Sidebar Filter -->
+                    <div class="col-lg-3 desktop-filter">
+                        <div class="filter-section">
+                            <h5 class="heading-font mb-4">
+                                <i class="fas fa-filter me-2"></i>Bộ lọc phòng
+                            </h5>
+
+                            <div class="filter-widget">
+                                <h6>Loại phòng</h6>
+                                <select class="form-select" id="roomTypeFilter">
+                                    <option value="">Tất cả loại phòng</option>
+                                    <option th:each="roomType : ${roomTypes}"
+                                            th:value="${roomType.id}"
+                                            th:text="${roomType.name}">Room Type</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-widget">
+                                <h6>Khoảng giá (VNĐ/đêm)</h6>
+                                <input type="range" class="form-range" min="500000" max="5000000"
+                                       step="100000" value="2000000" id="roomPriceRange">
+                                <div class="d-flex justify-content-between">
+                                    <span>500K</span>
+                                    <span id="roomPriceValue">2.000K</span>
+                                    <span>5.000K</span>
+                                </div>
+                            </div>
+
+                            <div class="filter-widget">
+                                <h6>Trạng thái phòng</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="available">
+                                    <label class="form-check-label" for="available">Có thể thuê</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="occupied">
+                                    <label class="form-check-label" for="occupied">Đang thuê</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="cleaning">
+                                    <label class="form-check-label" for="cleaning">Đang dọn dẹp</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rooms Content -->
+                    <div class="col-lg-9">
+                        <!-- Room Types Section -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4>Tìm thấy <span id="roomCount" th:text="${#lists.size(roomTypes)}">0</span> loại phòng</h4>
+                            <select class="form-select" style="width: auto;" id="roomSort">
+                                <option>Sắp xếp: Phù hợp nhất</option>
+                                <option>Giá thấp đến cao</option>
+                                <option>Giá cao đến thấp</option>
+                                <option>Đánh giá cao nhất</option>
+                            </select>
+                        </div>
+
+                        <div class="row" id="roomsGrid">
+                            <!-- Room Type Cards -->
+                            <div class="col-lg-6 col-md-6 room-type-card" th:each="roomType : ${roomTypes}">
+                                <div class="service-card">
+                                    <div class="service-image">
+                                        <!-- Room Images Carousel -->
+                                        <div th:if="${roomType.hasImages()}"
+                                             class="carousel slide" th:id="'carousel-' + ${roomType.id}"
+                                             data-bs-ride="carousel">
+                                            <div class="carousel-inner">
+                                                <div class="carousel-item"
+                                                     th:each="image : ${roomType.roomImages}"
+                                                     th:classappend="${imageStat.first} ? 'active' : ''">
+                                                    <img th:src="${image.imageUrl}"
+                                                         th:alt="${image.imageTitle}"
+                                                         class="d-block w-100">
+                                                </div>
+                                            </div>
+                                            <button class="carousel-control-prev" type="button"
+                                                    th:data-bs-target="'#carousel-' + ${roomType.id}"
+                                                    data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon"></span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button"
+                                                    th:data-bs-target="'#carousel-' + ${roomType.id}"
+                                                    data-bs-slide="next">
+                                                <span class="carousel-control-next-icon"></span>
+                                            </button>
+                                        </div>
+
+                                        <!-- Default image -->
+                                        <img th:unless="${roomType.hasImages()}"
+                                             src="https://images.unsplash.com/photo-1611892440504-42a792e24d32"
+                                             alt="Default room image" class="d-block w-100">
+
+                                        <div class="price-badge">
+                                            <span th:text="${roomType.formattedPrice}">Price</span>
+                                        </div>
+                                    </div>
+                                    <div class="service-content">
+                                        <h5 class="service-title heading-font" th:text="${roomType.name}">Room Type Name</h5>
+                                        <p class="service-description" th:text="${roomType.description}">Description</p>
+
+                                        <div class="amenities-tags">
+                                                <span class="amenity-tag">
+                                                    <i class="fas fa-users me-1"></i>
+                                                    <span th:text="${roomType.maxOccupancy}">2</span> khách
+                                                </span>
+                                            <span class="amenity-tag">
+                                                    <i class="fas fa-bed me-1"></i>
+                                                    <span th:text="${roomType.bedType}">Double</span>
+                                                </span>
+                                            <span class="amenity-tag">
+                                                    <i class="fas fa-expand-arrows-alt me-1"></i>
+                                                    <span th:text="${roomType.roomSize}">25</span>m²
+                                                </span>
+                                        </div>
+
+                                        <div class="service-actions">
+                                            <div class="rating">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <span class="text-muted">(24)</span>
+                                            </div>
+<!--                                            <button class="btn btn-luxury btn-sm"-->
+<!--                                                    th:onclick="'bookRoom(' + ${roomType.id} + ')'">-->
+<!--                                                Đặt phòng-->
+<!--                                            </button>-->
+
+                                            <div class="action-buttons">
+                                                <!-- Nút xem chi tiết -->
+                                                <a th:href="@{/room-types/{id}(id=${roomType.id})}"
+                                                   class="btn btn-outline-luxury btn-sm me-2">
+                                                    <i class="fas fa-eye me-1"></i>Chi tiết
+                                                </a>
+                                                <!-- Nút đặt phòng -->
+                                                <button class="btn btn-luxury btn-sm"
+                                                        th:onclick="'bookRoom(' + ${roomType.id} + ')'">
+                                                    <i class="fas fa-calendar-plus me-1"></i>Đặt phòng
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Tab -->
+                <div class="tab-pane fade" id="restaurant" role="tabpanel"
+                     th:classappend="${branch.type.name() == 'RESTAURANT'} ? 'show active' : ''"
+                     th:if="${branch.type.name() == 'RESTAURANT' or branch.type.name() == 'BOTH'}">
+                    <div class="row">
+                        <!-- Mobile Filter Button -->
+                        <div class="col-12">
+                            <button class="btn btn-outline-primary mobile-filter-btn w-100" type="button"
+                                    data-bs-toggle="offcanvas" data-bs-target="#restaurantFilters">
+                                <i class="fas fa-filter me-2"></i>Bộ lọc
+                            </button>
+                        </div>
+
+                        <!-- Desktop Sidebar Filter -->
+                        <div class="col-lg-3 desktop-filter">
+                            <div class="filter-section">
+                                <h5 class="heading-font mb-4">
+                                    <i class="fas fa-filter me-2"></i>Bộ lọc món ăn
+                                </h5>
+
+                                <div class="filter-widget">
+                                    <h6>Danh mục món</h6>
+                                    <select class="form-select" id="categoryFilter">
+                                        <option value="">Tất cả danh mục</option>
+                                        <option th:each="category : ${menuCategories}"
+                                                th:value="${category.id}"
+                                                th:text="${category.name + ' (' + category.menuItemCount + ')'}">Category</option>
+                                    </select>
+                                </div>
+
+                                <div class="filter-widget">
+                                    <h6>Khoảng giá (VNĐ)</h6>
+                                    <input type="range" class="form-range" min="50000" max="500000"
+                                           step="10000" value="200000" id="foodPriceRange">
+                                    <div class="d-flex justify-content-between">
+                                        <span>50K</span>
+                                        <span id="foodPriceValue">200K</span>
+                                        <span>500K</span>
+                                    </div>
+                                </div>
+
+                                <div class="filter-widget">
+                                    <h6>Có sẵn</h6>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="availableOnly" checked>
+                                        <label class="form-check-label" for="availableOnly">Chỉ món có sẵn</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Restaurant Content -->
+                        <div class="col-lg-9">
+                            <!-- Menu Items Section -->
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4>Tìm thấy <span id="foodCount" th:text="${#lists.size(menuItems)}">0</span> món ăn</h4>
+                                <select class="form-select" style="width: auto;" id="foodSort">
+                                    <option>Sắp xếp: Phù hợp nhất</option>
+                                    <option>Giá thấp đến cao</option>
+                                    <option>Giá cao đến thấp</option>
+                                    <option>Đánh giá cao nhất</option>
+                                </select>
+                            </div>
+
+                            <!-- Category Filter Buttons -->
+                            <div class="mb-4" th:if="${menuCategories != null and !menuCategories.isEmpty()}">
+                                <button class="btn btn-outline-primary me-2 mb-2 category-filter active"
+                                        data-category="all">Tất cả</button>
+                                <button class="btn btn-outline-primary me-2 mb-2 category-filter"
+                                        th:each="category : ${menuCategories}"
+                                        th:data-category="${category.id}"
+                                        th:text="${category.name + ' (' + category.menuItemCount + ')'}">Category</button>
+                            </div>
+
+                            <div class="row" id="foodGrid">
+                                <div class="col-lg-4 col-md-6 menu-item"
+                                     th:each="item : ${menuItems}"
+                                     th:if="${menuItems != null and !menuItems.isEmpty()}"
+                                     th:data-category="${item.categoryId}"
+                                     th:data-price="${item.price}"
+                                     th:data-available="${item.isAvailable}">
+                                    <div class="service-card">
+                                            <div class="service-image">
+                                                <img th:src="${item.imageUrl != null ? item.imageUrl : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'}"
+                                                     th:alt="${item.name}">
+                                                <div class="branch-badge" th:text="${item.categoryName}">Category</div>
+                                                <div class="price-badge" th:text="${item.formattedPrice}">Price</div>
+                                            </div>
+                                            <div class="service-content">
+                                                <h5 class="service-title heading-font" th:text="${item.name}">Item Name</h5>
+                                                <p class="service-description" th:text="${item.description}">Description</p>
+
+                                                <div class="amenities-tags">
+                                                    <span class="amenity-tag" th:if="${item.preparationTime != null}">
+                                                        <i class="fas fa-clock me-1"></i>
+                                                        <span th:text="${item.preparationTime}">15</span> phút
+                                                    </span>
+                                                    <span class="amenity-tag" th:if="${item.calories != null}">
+                                                        <i class="fas fa-fire me-1"></i>
+                                                        <span th:text="${item.calories}">250</span> kcal
+                                                    </span>
+                                                    <span class="amenity-tag text-success" th:if="${item.isAvailable}">
+                                                        <i class="fas fa-check me-1"></i>Có sẵn
+                                                    </span>
+                                                    <span class="amenity-tag text-danger" th:unless="${item.isAvailable}">
+                                                        <i class="fas fa-times me-1"></i>Hết món
+                                                    </span>
+                                                </div>
+
+                                                <div class="service-actions">
+                                                    <div class="rating">
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="far fa-star"></i>
+                                                        <span class="text-muted">(89)</span>
+                                                    </div>
+<!--                                                    <button class="btn btn-luxury btn-sm"-->
+<!--                                                            th:onclick="'orderFood(' + ${item.id} + ')'"-->
+<!--                                                            th:disabled="${!item.isAvailable}">-->
+<!--                                                        <span th:if="${item.isAvailable}">Đặt ngay</span>-->
+<!--                                                        <span th:unless="${item.isAvailable}">Hết món</span>-->
+<!--                                                    </button>-->
+                                                    <div class="btn-group">
+                                                        <!-- Nút xem chi tiết món ăn -->
+                                                        <a th:href="@{'/menu-items/' + ${item.id}}"
+                                                           class="btn btn-outline-primary btn-sm">
+                                                            <i class="fas fa-eye me-1"></i>Chi tiết
+                                                        </a>
+
+                                                        <!-- Nút đặt món -->
+                                                        <button class="btn btn-luxury btn-sm"
+                                                                th:onclick="'orderFood(' + ${item.id} + ')'"
+                                                                th:disabled="${!item.isAvailable}">
+                                                            <i class="fas fa-cart-plus me-1"></i>
+                                                            <span th:if="${item.isAvailable}">Đặt ngay</span>
+                                                            <span th:unless="${item.isAvailable}">Hết món</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Allergens Warning -->
+                                                <div th:if="${item.allergens != null}" class="mt-2">
+                                                    <small class="text-warning">
+                                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                                        <strong>Chú ý:</strong> <span th:text="${item.allergens}">Allergens</span>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- No Menu Items Message -->
+                                <div th:if="${menuItems == null or menuItems.isEmpty()}" class="col-12 text-center py-5">
+                                    <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">Chưa có thông tin thực đơn</h5>
+                                    <p class="text-muted">Chi nhánh này hiện chưa cập nhật thực đơn.</p>
+                                </div>
+                            </div>
+
+                            <!-- Restaurant Tables Section -->
+                            <div class="mt-5" th:if="${tables != null and !tables.isEmpty()}">
+                                <h4 class="heading-font mb-4">
+                                    <i class="fas fa-chair text-primary me-2"></i>Sơ đồ bàn
+                                </h4>
+
+                                <div class="table-layout">
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <div class="d-flex gap-3 mb-3">
+                                                <div><span class="table-item table-available">A</span> Có thể đặt</div>
+                                                <div><span class="table-item table-occupied">O</span> Đang sử dụng</div>
+                                                <div><span class="table-item table-reserved">R</span> Đã đặt trước</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-wrap justify-content-center">
+                                        <div class="table-item"
+                                             th:each="table : ${tables}"
+                                             th:classappend="'table-' + ${table.status.name().toLowerCase()}"
+                                             th:onclick="'selectTable(' + ${table.id} + ')'"
+                                             th:title="'Bàn ' + ${table.tableNumber} + ' - ' + ${table.capacity} + ' ghế - ' + ${table.statusDisplayName}">
+                                            <span th:text="${table.tableNumber}">1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+<!-- Mobile Filter Offcanvas for Rooms -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="roomFilters">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Bộ lọc phòng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="filter-widget">
+            <h6>Loại phòng</h6>
+            <select class="form-select">
+                <option value="">Tất cả loại phòng</option>
+                <option th:each="roomType : ${roomTypes}"
+                        th:value="${roomType.id}"
+                        th:text="${roomType.name}">Room Type</option>
+            </select>
+        </div>
+
+        <div class="filter-widget">
+            <h6>Khoảng giá (VNĐ/đêm)</h6>
+            <input type="range" class="form-range" min="500000" max="5000000" step="100000" value="2000000">
+            <div class="d-flex justify-content-between">
+                <span>500K</span>
+                <span>2.000K</span>
+                <span>5.000K</span>
+            </div>
+        </div>
+
+        <button class="btn btn-luxury w-100 mt-3">Áp dụng bộ lọc</button>
+    </div>
+</div>
+
+<!-- Mobile Filter Offcanvas for Restaurant -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="restaurantFilters">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Bộ lọc món ăn</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="filter-widget">
+            <h6>Danh mục món</h6>
+            <select class="form-select">
+                <option value="">Tất cả danh mục</option>
+                <option th:each="category : ${menuCategories}"
+                        th:value="${category.id}"
+                        th:text="${category.name + ' (' + category.menuItemCount + ')'}">Category</option>
+            </select>
+        </div>
+
+        <div class="filter-widget">
+            <h6>Khoảng giá (VNĐ)</h6>
+            <input type="range" class="form-range" min="50000" max="500000" step="10000" value="200000">
+            <div class="d-flex justify-content-between">
+                <span>50K</span>
+                <span>200K</span>
+                <span>500K</span>
+            </div>
+        </div>
+
+        <button class="btn btn-luxury w-100 mt-3">Áp dụng bộ lọc</button>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center py-4">
+                <div class="spinner mx-auto mb-3"></div>
+                <p class="mb-0">Đang xử lý...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h3 class="heading-font mb-4">
+                    <i class="fas fa-crown me-2" style="color: var(--primary-color);"></i>
+                    Luxury Resort
+                </h3>
+                <p class="text-light mb-4">Trải nghiệm dịch vụ khách sạn và nhà hàng đẳng cấp quốc tế với sự kết hợp hoàn hảo giữa sang trọng và ấm cúng.</p>
+                <div class="d-flex gap-3">
+                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h5 style="color: var(--primary-color);">Dịch vụ</h5>
+                <div class="footer-links">
+                    <div><a href="#" class="text-light text-decoration-none">Đặt phòng</a></div>
+                    <div><a href="#" class="text-light text-decoration-none">Nhà hàng</a></div>
+                    <div><a href="#" class="text-light text-decoration-none">Spa & Massage</a></div>
+                    <div><a href="#" class="text-light text-decoration-none">Hội nghị</a></div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h5 style="color: var(--primary-color);">Thông tin</h5>
+                <div class="footer-links">
+                    <div><a href="#" class="text-light text-decoration-none">Về chúng tôi</a></div>
+                    <div><a href="#" class="text-light text-decoration-none">Tin tức</a></div>
+                    <div><a href="#" class="text-light text-decoration-none">Chính sách</a></div>
+                    <div><a href="#" class="text-light text-decoration-none">Liên hệ</a></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <h5 style="color: var(--primary-color);">Liên hệ</h5>
+                <div class="contact-info">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-map-marker-alt me-3" style="color: var(--primary-color); width: 20px;"></i>
+                        <span>123 Đường Biển Xanh, Phú Quốc, Kiên Giang</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-phone me-3" style="color: var(--primary-color); width: 20px;"></i>
+                        <span>+84 297 123 4567</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-envelope me-3" style="color: var(--primary-color); width: 20px;"></i>
+                        <span>info@luxuryresort.vn</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4" style="border-color: #555;">
+        <div class="text-center">
+            <p class="mb-0">&copy; 2024 Luxury Resort. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script th:inline="javascript">
+    // Branch data from Thymeleaf
+    const branchData = {
+        id: /*[[${branch.id}]]*/ 0,
+        type: /*[[${branch.type}]]*/ 'BOTH'
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        initializePage();
+        setupEventListeners();
+        setupFilters();
+    });
+
+    function initializePage() {
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Auto-activate first tab based on branch type
+        if (branchData.type === 'RESTAURANT') {
+            const restaurantTab = document.getElementById('restaurant-tab');
+            const restaurantPane = document.getElementById('restaurant');
+            const hotelPane = document.getElementById('hotel');
+
+            if (restaurantTab && restaurantPane) {
+                // Remove active from hotel tab/pane
+                if (hotelPane) {
+                    hotelPane.classList.remove('show', 'active');
+                }
+
+                // Activate restaurant tab/pane
+                restaurantTab.classList.add('active');
+                restaurantPane.classList.add('show', 'active');
+            }
+        }
+    }
+
+    function setupEventListeners() {
+        // Price range sliders
+        const roomPriceRange = document.getElementById('roomPriceRange');
+        const roomPriceValue = document.getElementById('roomPriceValue');
+        const foodPriceRange = document.getElementById('foodPriceRange');
+        const foodPriceValue = document.getElementById('foodPriceValue');
+
+        if (roomPriceRange && roomPriceValue) {
+            roomPriceRange.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                roomPriceValue.textContent = (value / 1000).toFixed(0) + '.000K';
+                filterRooms();
+            });
+        }
+
+        if (foodPriceRange && foodPriceValue) {
+            foodPriceRange.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                foodPriceValue.textContent = (value / 1000).toFixed(0) + 'K';
+                filterMenuItems();
+            });
+        }
+
+        // Sort handlers
+        const roomSort = document.getElementById('roomSort');
+        if (roomSort) {
+            roomSort.addEventListener('change', function() {
+                sortRooms(this.value);
+            });
+        }
+
+        const foodSort = document.getElementById('foodSort');
+        if (foodSort) {
+            foodSort.addEventListener('change', function() {
+                sortMenuItems(this.value);
+            });
+        }
+    }
+
+    function setupFilters() {
+        // Category filter functionality
+        const categoryFilters = document.querySelectorAll('.category-filter');
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        categoryFilters.forEach(filter => {
+            filter.addEventListener('click', function() {
+                // Remove active class from all filters
+                categoryFilters.forEach(f => f.classList.remove('active'));
+                // Add active class to clicked filter
+                this.classList.add('active');
+
+                const categoryId = this.getAttribute('data-category');
+
+                menuItems.forEach(item => {
+                    if (categoryId === 'all' || item.getAttribute('data-category') === categoryId) {
+                        item.style.display = 'block';
+                        item.style.animation = 'fadeInUp 0.5s ease-out';
+                    } else {
+                        item.style.animation = 'fadeOutDown 0.3s ease-out';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+
+                updateFoodCount();
+            });
+        });
+
+        // Filter change handlers
+        const roomTypeFilter = document.getElementById('roomTypeFilter');
+        if (roomTypeFilter) {
+            roomTypeFilter.addEventListener('change', filterRooms);
+        }
+
+        const categoryFilter = document.getElementById('categoryFilter');
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', filterMenuItems);
+        }
+
+        // Checkbox filters
+        const checkboxFilters = document.querySelectorAll('.filter-widget input[type="checkbox"]');
+        checkboxFilters.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.closest('#rooms')) {
+                    filterRooms();
+                } else {
+                    filterMenuItems();
+                }
+            });
+        });
+    }
+
+    // Room filtering and sorting
+    function filterRooms() {
+        const roomTypeFilter = document.getElementById('roomTypeFilter').value;
+        const priceRange = document.getElementById('roomPriceRange').value;
+        const roomCards = document.querySelectorAll('.room-type-card');
+
+        let visibleCount = 0;
+
+        roomCards.forEach(card => {
+            let show = true;
+
+            // Filter by room type
+            if (roomTypeFilter && !card.dataset.roomTypeId === roomTypeFilter) {
+                show = false;
+            }
+
+            // Filter by price (you would need to add data-price to cards)
+            // ... price filtering logic
+
+            if (show) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        document.getElementById('roomCount').textContent = visibleCount;
+    }
+
+    function sortRooms(sortBy) {
+        const roomsGrid = document.getElementById('roomsGrid');
+        const roomCards = Array.from(roomsGrid.children);
+
+        roomCards.sort((a, b) => {
+            switch(sortBy) {
+                case 'Giá thấp đến cao':
+                    return parseFloat(a.dataset.price || '0') - parseFloat(b.dataset.price || '0');
+                case 'Giá cao đến thấp':
+                    return parseFloat(b.dataset.price || '0') - parseFloat(a.dataset.price || '0');
+                // Add more sorting options
+                default:
+                    return 0;
+            }
+        });
+
+        roomCards.forEach(card => roomsGrid.appendChild(card));
+    }
+
+    // Menu filtering and sorting
+    function filterMenuItems() {
+        const categoryFilter = document.getElementById('categoryFilter').value;
+        const priceRange = document.getElementById('foodPriceRange').value;
+        const availableOnly = document.getElementById('availableOnly').checked;
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        let visibleCount = 0;
+
+        menuItems.forEach(item => {
+            let show = true;
+
+            // Filter by category
+            if (categoryFilter && item.dataset.category !== categoryFilter) {
+                show = false;
+            }
+
+            // Filter by price
+            const itemPrice = parseFloat(item.dataset.price || '0');
+            if (itemPrice > parseFloat(priceRange)) {
+                show = false;
+            }
+
+            // Filter by availability
+            if (availableOnly && item.dataset.available !== 'true') {
+                show = false;
+            }
+
+            if (show) {
+                item.style.display = 'block';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        document.getElementById('foodCount').textContent = visibleCount;
+    }
+
+    function sortMenuItems(sortBy) {
+        const foodGrid = document.getElementById('foodGrid');
+        const menuItems = Array.from(foodGrid.children);
+
+        menuItems.sort((a, b) => {
+            switch(sortBy) {
+                case 'Giá thấp đến cao':
+                    return parseFloat(a.dataset.price || '0') - parseFloat(b.dataset.price || '0');
+                case 'Giá cao đến thấp':
+                    return parseFloat(b.dataset.price || '0') - parseFloat(a.dataset.price || '0');
+                default:
+                    return 0;
+            }
+        });
+
+        menuItems.forEach(item => foodGrid.appendChild(item));
+    }
+
+    function updateFoodCount() {
+        const visibleItems = document.querySelectorAll('.menu-item:not([style*="display: none"])').length;
+        document.getElementById('foodCount').textContent = visibleItems;
+    }
+
+    // Business functions
+    function bookRoom(roomTypeId) {
+        showLoading();
+        setTimeout(() => {
+            hideLoading();
+            alert('Chuyển đến trang đặt phòng cho loại phòng ID: ' + roomTypeId);
+            // window.location.href = '/booking/room/' + roomTypeId;
+        }, 1000);
+    }
+
+    function orderFood(itemId) {
+        showLoading();
+        setTimeout(() => {
+            hideLoading();
+            const itemCard = document.querySelector(`[onclick="orderFood(${itemId})"]`)
+                .closest('.service-card');
+            const itemName = itemCard.querySelector('.service-title').textContent;
+
+            if (confirm(`Thêm "${itemName}" vào giỏ hàng?`)) {
+                showSuccessMessage('Đã thêm vào giỏ hàng!');
+            }
+        }, 500);
+    }
+
+    function selectTable(tableId) {
+        const tableElement = document.querySelector(`[onclick="selectTable(${tableId})"]`);
+        const isAvailable = tableElement.classList.contains('table-available');
+
+        if (!isAvailable) {
+            alert('Bàn này hiện không khả dụng.');
+            return;
+        }
+
+        showLoading();
+        setTimeout(() => {
+            hideLoading();
+            const tableNumber = tableElement.querySelector('span').textContent;
+            if (confirm(`Đặt bàn số ${tableNumber}?`)) {
+                alert(`Chuyển đến trang đặt bàn số ${tableNumber}`);
+            }
+        }, 500);
+    }
+
+    // Utility functions
+    function showLoading() {
+        const modal = new bootstrap.Modal(document.getElementById('loadingModal'));
+        modal.show();
+    }
+
+    function hideLoading() {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('loadingModal'));
+        if (modal) {
+            modal.hide();
+        }
+    }
+
+    function showSuccessMessage(message) {
+        const toastHtml = `
+                <div class="toast align-items-center text-white bg-success border-0" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-check-circle me-2"></i>${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+
+        let toastContainer = document.querySelector('.toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+            toastContainer.style.zIndex = '9999';
+            document.body.appendChild(toastContainer);
+        }
+
+        toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+        const toast = new bootstrap.Toast(toastContainer.lastElementChild);
+        toast.show();
+
+        toastContainer.lastElementChild.addEventListener('hidden.bs.toast', function() {
+            this.remove();
+        });
+    }
+
+    // Add CSS animations
+    const animationCSS = `
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeOutDown {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(-20px); }
+            }
+        `;
+
+    const style = document.createElement('style');
+    style.textContent = animationCSS;
+    document.head.appendChild(style);
+
+    // Tab switching with dynamic content loading
+    document.querySelectorAll('[data-bs-toggle="pill"]').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function(e) {
+            const targetId = e.target.getAttribute('data-bs-target').substring(1);
+
+            if (targetId === 'restaurant') {
+                // Reset category filter when switching to restaurant tab
+                setTimeout(() => {
+                    const firstCategoryBtn = document.querySelector('.category-filter');
+                    if (firstCategoryBtn && !firstCategoryBtn.classList.contains('active')) {
+                        firstCategoryBtn.click();
+                    }
+                }, 300);
+            }
+        });
+    });
+
+    // Enhanced image lazy loading
+    function initLazyLoading() {
+        const images = document.querySelectorAll('img[data-src]');
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    imageObserver.unobserve(img);
+
+                    // Add fade in animation
+                    img.style.opacity = '0';
+                    img.onload = function() {
+                        img.style.transition = 'opacity 0.3s ease';
+                        img.style.opacity = '1';
+                    };
+                }
+            });
+        });
+
+        images.forEach(img => imageObserver.observe(img));
+    }
+
+    // Mobile menu improvements for offcanvas
+    document.addEventListener('DOMContentLoaded', function() {
+        // Close mobile offcanvas when clicking apply filter
+        document.querySelectorAll('.offcanvas .btn-luxury').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const offcanvas = this.closest('.offcanvas');
+                const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+                if (bsOffcanvas) {
+                    bsOffcanvas.hide();
+                }
+
+                // Apply filters based on the offcanvas type
+                const isRoomFilter = offcanvas.id === 'roomFilters';
+                if (isRoomFilter) {
+                    filterRooms();
+                } else {
+                    filterMenuItems();
+                }
+            });
+        });
+
+        // Initialize lazy loading
+        initLazyLoading();
+    });
+
+    // Advanced search functionality
+    function initAdvancedSearch() {
+        // Add search input to filters
+        const searchInputHtml = `
+                <div class="filter-widget">
+                    <h6>Tìm kiếm</h6>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Tìm theo tên...">
+                </div>
+            `;
+
+        // Add search to room filters
+        const roomFilterSection = document.querySelector('#rooms .filter-section');
+        if (roomFilterSection) {
+            roomFilterSection.insertAdjacentHTML('beforeend', searchInputHtml.replace('searchInput', 'roomSearchInput'));
+        }
+
+        // Add search to restaurant filters
+        const restaurantFilterSection = document.querySelector('#restaurant .filter-section');
+        if (restaurantFilterSection) {
+            restaurantFilterSection.insertAdjacentHTML('beforeend', searchInputHtml.replace('searchInput', 'foodSearchInput'));
+        }
+
+        // Bind search events
+        const roomSearch = document.getElementById('roomSearchInput');
+        if (roomSearch) {
+            roomSearch.addEventListener('input', debounce(filterRooms, 300));
+        }
+
+        const foodSearch = document.getElementById('foodSearchInput');
+        if (foodSearch) {
+            foodSearch.addEventListener('input', debounce(filterMenuItems, 300));
+        }
+    }
+
+    // Debounce function for search
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Enhanced filter functions with search
+    function filterRoomsWithSearch() {
+        const searchTerm = document.getElementById('roomSearchInput')?.value.toLowerCase() || '';
+        const roomTypeFilter = document.getElementById('roomTypeFilter').value;
+        const priceRange = document.getElementById('roomPriceRange').value;
+        const roomCards = document.querySelectorAll('.room-type-card');
+
+        let visibleCount = 0;
+
+        roomCards.forEach(card => {
+            let show = true;
+            const title = card.querySelector('.service-title').textContent.toLowerCase();
+            const description = card.querySelector('.service-description').textContent.toLowerCase();
+
+            // Filter by search term
+            if (searchTerm && !title.includes(searchTerm) && !description.includes(searchTerm)) {
+                show = false;
+            }
+
+            // Filter by room type
+            if (roomTypeFilter && card.dataset.roomTypeId !== roomTypeFilter) {
+                show = false;
+            }
+
+            if (show) {
+                card.style.display = 'block';
+                card.style.animation = 'fadeInUp 0.5s ease-out';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        document.getElementById('roomCount').textContent = visibleCount;
+    }
+
+    function filterMenuItemsWithSearch() {
+        const searchTerm = document.getElementById('foodSearchInput')?.value.toLowerCase() || '';
+        const categoryFilter = document.getElementById('categoryFilter').value;
+        const priceRange = document.getElementById('foodPriceRange').value;
+        const availableOnly = document.getElementById('availableOnly').checked;
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        let visibleCount = 0;
+
+        menuItems.forEach(item => {
+            let show = true;
+            const title = item.querySelector('.service-title').textContent.toLowerCase();
+            const description = item.querySelector('.service-description').textContent.toLowerCase();
+
+            // Filter by search term
+            if (searchTerm && !title.includes(searchTerm) && !description.includes(searchTerm)) {
+                show = false;
+            }
+
+            // Filter by category
+            if (categoryFilter && item.dataset.category !== categoryFilter) {
+                show = false;
+            }
+
+            // Filter by price
+            const itemPrice = parseFloat(item.dataset.price || '0');
+            if (itemPrice > parseFloat(priceRange)) {
+                show = false;
+            }
+
+            // Filter by availability
+            if (availableOnly && item.dataset.available !== 'true') {
+                show = false;
+            }
+
+            if (show) {
+                item.style.display = 'block';
+                item.style.animation = 'fadeInUp 0.5s ease-out';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        document.getElementById('foodCount').textContent = visibleCount;
+    }
+
+    // Update filter functions to use enhanced versions
+    filterRooms = filterRoomsWithSearch;
+    filterMenuItems = filterMenuItemsWithSearch;
+
+    // Print functionality
+    function printMenu() {
+        const printContent = document.getElementById('restaurant').cloneNode(true);
+        const printWindow = window.open('', '_blank');
+
+        printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Thực đơn - ${branchData.name}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; }
+                            .service-card { border: 1px solid #ddd; margin: 10px 0; padding: 15px; }
+                            .service-title { font-weight: bold; margin-bottom: 10px; }
+                            .price-badge { font-weight: bold; color: #c9a96e; }
+                            .amenities-tags { margin: 10px 0; }
+                            .amenity-tag { background: #f0f0f0; padding: 3px 8px; margin: 2px; border-radius: 10px; display: inline-block; }
+                        </style>
+                    </head>
+                    <body>
+                        ${printContent.innerHTML}
+                    </body>
+                </html>
+            `);
+
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    // Share functionality
+    function shareBranch() {
+        if (navigator.share) {
+            navigator.share({
+                title: document.title,
+                text: 'Xem chi tiết chi nhánh này tại Luxury Resort',
+                url: window.location.href
+            });
+        } else {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showSuccessMessage('Đã copy link vào clipboard!');
+            });
+        }
+    }
+
+    // Floating action buttons
+    document.addEventListener('DOMContentLoaded', function() {
+        const fabHtml = `
+                <div class="floating-action-buttons">
+                    <button class="fab fab-primary" onclick="shareBranch()" title="Chia sẻ">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    <button class="fab fab-secondary" onclick="window.history.back()" title="Quay lại">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            `;
+
+        document.body.insertAdjacentHTML('beforeend', fabHtml);
+
+        // Add FAB styles
+        const fabStyles = `
+                .floating-action-buttons {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    z-index: 1000;
+                }
+
+                .fab {
+                    width: 56px;
+                    height: 56px;
+                    border-radius: 50%;
+                    border: none;
+                    color: white;
+                    font-size: 20px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                }
+
+                .fab:hover {
+                    transform: scale(1.1);
+                    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+                }
+
+                .fab-primary { background: var(--primary-color); }
+                .fab-secondary { background: #6c757d; }
+
+                @media (max-width: 768px) {
+                    .floating-action-buttons {
+                        bottom: 15px;
+                        right: 15px;
+                    }
+                    .fab {
+                        width: 48px;
+                        height: 48px;
+                        font-size: 18px;
+                    }
+                }
+            `;
+
+        const fabStyle = document.createElement('style');
+        fabStyle.textContent = fabStyles;
+        document.head.appendChild(fabStyle);
+
+        // Initialize advanced search
+        setTimeout(initAdvancedSearch, 1000);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add scroll-based animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+            }
+        });
+    }, observerOptions);
+
+    // Observe all service cards
+    setTimeout(() => {
+        document.querySelectorAll('.service-card').forEach(card => {
+            observer.observe(card);
+        });
+    }, 500);
+
+    // Auto-refresh functionality for real-time updates
+    function startAutoRefresh() {
+        // Refresh every 2 minutes for table status
+        setInterval(() => {
+            if (document.querySelector('#restaurant.active')) {
+                refreshTableStatus();
+            }
+        }, 120000);
+    }
+
+    function refreshTableStatus() {
+        fetch(`/api/branches/${branchData.id}/tables/availability`)
+            .then(response => response.json())
+            .then(data => {
+                updateTableDisplay(data.tables);
+            })
+            .catch(error => {
+                console.error('Auto-refresh failed:', error);
+            });
+    }
+
+    function updateTableDisplay(tables) {
+        tables.forEach(table => {
+            const tableElement = document.querySelector(`[onclick="selectTable(${table.id})"]`);
+            if (tableElement) {
+                // Remove old status classes
+                tableElement.classList.remove('table-available', 'table-occupied', 'table-reserved');
+                // Add new status class
+                tableElement.classList.add('table-' + table.status.toLowerCase());
+            }
+        });
+    }
+
+    // Initialize auto-refresh
+    setTimeout(startAutoRefresh, 5000);
+
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Escape key to close modals/offcanvas
+        if (e.key === 'Escape') {
+            const openModals = document.querySelectorAll('.modal.show');
+            openModals.forEach(modal => {
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                if (modalInstance) modalInstance.hide();
+            });
+
+            const openOffcanvas = document.querySelectorAll('.offcanvas.show');
+            openOffcanvas.forEach(offcanvas => {
+                const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvas);
+                if (offcanvasInstance) offcanvasInstance.hide();
+            });
+        }
+
+        // Ctrl+F for search
+        if (e.ctrlKey && e.key === 'f') {
+            e.preventDefault();
+            const activeTab = document.querySelector('.tab-pane.active');
+            const searchInput = activeTab.querySelector('input[type="text"]');
+            if (searchInput) {
+                searchInput.focus();
+            }
+        }
+    });
+
+    console.log('Branch Detail Page Initialized Successfully');
+</script>
+</body>
+</html>

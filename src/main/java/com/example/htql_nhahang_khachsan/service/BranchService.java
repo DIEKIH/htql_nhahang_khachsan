@@ -3,9 +3,13 @@ package com.example.htql_nhahang_khachsan.service;
 import com.example.htql_nhahang_khachsan.dto.BranchRequest;
 import com.example.htql_nhahang_khachsan.dto.BranchResponse;
 import com.example.htql_nhahang_khachsan.entity.BranchEntity;
+import com.example.htql_nhahang_khachsan.entity.RoomEntity;
+import com.example.htql_nhahang_khachsan.entity.RoomTypeEntity;
 import com.example.htql_nhahang_khachsan.enums.BranchStatus;
 import com.example.htql_nhahang_khachsan.enums.BranchType;
 import com.example.htql_nhahang_khachsan.repository.BranchRepository;
+import com.example.htql_nhahang_khachsan.repository.RoomRepository;
+import com.example.htql_nhahang_khachsan.repository.RoomTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -183,4 +187,17 @@ public class BranchService {
                 .map(BranchResponse::from)
                 .collect(Collectors.toList());
     }
+
+
+    private final RoomRepository roomRepository;
+    private final RoomTypeRepository roomTypeRepository;
+
+    public List<RoomTypeEntity> getRoomTypesByBranchId(Long branchId) {
+        return roomTypeRepository.findByBranchId(branchId);
+    }
+
+    public List<RoomEntity> getRoomsByBranchId(Long branchId) {
+        return roomRepository.findByRoomTypeBranchId(branchId);
+    }
+
 }

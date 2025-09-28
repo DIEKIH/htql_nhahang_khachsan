@@ -5,7 +5,11 @@ public enum TableStatus {
     AVAILABLE("Có sẵn"),
     OCCUPIED("Đang sử dụng"),
     RESERVED("Đã đặt"),
-    OUT_OF_SERVICE("Ngừng phục vụ");
+    OUT_OF_SERVICE("Ngừng phục vụ"),
+
+    CLEANING("Đang dọn dẹp");
+
+
 
     private final String displayName;
 

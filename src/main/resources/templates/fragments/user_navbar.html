@@ -1,0 +1,18 @@
+<nav th:fragment="user_navbar" class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#"><i class="fas fa-crown me-2"></i>DIEK</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link" href="#rooms">Chi nhánh</a></li>
+<!--                <li class="nav-item"><a class="nav-link" href="#restaurant">Nhà hàng</a></li>-->
+                <li class="nav-item"><a class="nav-link" href="#facilities">Tiện ích</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>
+                <li class="nav-item"><a class="nav-link btn btn-luxury ms-2 text-white" href="#book">Đặt phòng</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

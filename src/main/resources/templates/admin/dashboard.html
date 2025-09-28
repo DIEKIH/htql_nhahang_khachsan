@@ -251,13 +251,13 @@
     document.addEventListener('DOMContentLoaded', function() {
         const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
         sidebarLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
+            link.addEventListener('click', function() {
                 sidebarLinks.forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
             });
         });
     });
+
 </script>
 </body>
 </html>

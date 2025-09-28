@@ -7,7 +7,7 @@
 
     <ul class="nav flex-column px-2">
         <li class="nav-item">
-            <a class="nav-link active" href="#dashboard">
+            <a class="nav-link active" th:href="@{/admin/dashboard}">
                 <i class="fas fa-tachometer-alt me-2"></i>
                 Dashboard
             </a>
@@ -18,21 +18,21 @@
             <span>Quản lý tài khoản</span>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#branch-management">
+            <a class="nav-link" th:href="@{/admin/branches}">
                 <i class="fas fa-building me-2"></i>
                 Quản lý chi nhánh
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#manager-management">
+            <a class="nav-link" th:href="@{/admin/staff}">
                 <i class="fas fa-user-tie me-2"></i>
                 Quản lý tài khoản nhân viên
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#customer-management">
+            <a class="nav-link" th:href="@{/admin/promotions}">
                 <i class="fas fa-user-friends me-2"></i>
-                Quản lý khách hàng
+                Quản lý chương trình giảm giá
             </a>
         </li>
         <li class="nav-item">

@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý phòng Real-time - Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .room-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .room-card.available {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .room-card.booked {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: white;
+        }
+
+        .room-card.occupied {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: white;
+        }
+
+        .room-card.maintenance {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+        }
+
+        .room-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .room-status {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .status-icon {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .stats-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Timeline styles */
+        .timeline-grid {
+            overflow-x: auto;
+        }
+
+        .timeline-table {
+            min-width: 800px;
+        }
+
+        .timeline-room {
+            width: 100px;
+            min-width: 100px;
+        }
+
+        .timeline-date {
+            width: 80px;
+            min-width: 80px;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        .timeline-cell {
+            height: 40px;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .timeline-cell.available {
+            background-color: #d4edda;
+        }
+
+        .timeline-cell.booked {
+            background-color: #fff3cd;
+        }
+
+        .timeline-cell.occupied {
+            background-color: #f8d7da;
+        }
+
+        .timeline-cell.maintenance {
+            background-color: #e2e3e5;
+        }
+
+        .timeline-cell:hover {
+            opacity: 0.8;
+            box-shadow: inset 0 0 0 2px #007bff;
+        }
+
+        .timeline-booking-info {
+            font-size: 0.6rem;
+            line-height: 1.1;
+            padding: 2px;
+            overflow: hidden;
+        }
+
+        .room-card.has-future-booking {
+            border: 2px solid #ffc107;
+        }
+
+        .room-card.has-gaps {
+            border: 2px dashed #17a2b8;
+        }
+
+        .modal-header {
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .info-group {
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #007bff;
+        }
+
+        @media (max-width: 768px) {
+            .room-card {
+                height: 100px;
+            }
+            .room-number {
+                font-size: 1.2rem;
+            }
+            .legend {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">
+                    <i class="bi bi-building"></i> Quản lý phòng Real-time
+                </h2>
+                <button class="btn btn-outline-primary" onclick="refreshData()">
+                    <i class="bi bi-arrow-clockwise"></i> Cập nhật
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Bar -->
+    <div class="stats-bar">
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number text-success" id="availableCount">12</div>
+                    <small class="text-muted">Trống</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number text-warning" id="bookedCount">8</div>
+                    <small class="text-muted">Đã đặt</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number text-danger" id="occupiedCount">15</div>
+                    <small class="text-muted">Đang ở</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number text-secondary" id="maintenanceCount">3</div>
+                    <small class="text-muted">Bảo trì</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-section">
+        <h5 class="mb-3">
+            <i class="bi bi-funnel"></i> Bộ lọc
+        </h5>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Trạng thái phòng</label>
+                <select class="form-select" id="statusFilter" onchange="applyFilters()">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="available">Trống</option>
+                    <option value="booked">Đã đặt</option>
+                    <option value="occupied">Đang ở</option>
+                    <option value="maintenance">Bảo trì</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Từ ngày</label>
+                <input type="date" class="form-control" id="fromDate" onchange="applyFilters()">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Đến ngày</label>
+                <input type="date" class="form-control" id="toDate" onchange="applyFilters()">
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <span><strong>Chú thích:</strong></span>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #28a745, #20c997);"></div>
+                <span>Trống</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #ffc107, #fd7e14);"></div>
+                <span>Đã đặt</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #dc3545, #e83e8c);"></div>
+                <span>Đang ở</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #6c757d, #495057);"></div>
+                <span>Bảo trì</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Mode Toggle -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Sơ đồ phòng</h5>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="viewMode" id="currentView" checked onchange="switchView('current')">
+            <label class="btn btn-outline-primary" for="currentView">Hiện tại</label>
+
+            <input type="radio" class="btn-check" name="viewMode" id="timelineView" onchange="switchView('timeline')">
+            <label class="btn btn-outline-primary" for="timelineView">Timeline</label>
+        </div>
+    </div>
+
+    <!-- Room Grid -->
+    <div class="row" id="roomGrid">
+        <!-- Rooms will be populated by JavaScript -->
+    </div>
+
+    <!-- Timeline View -->
+    <div id="timelineContainer" style="display: none;">
+        <div class="timeline-header mb-3">
+            <button class="btn btn-sm btn-outline-secondary" onclick="changeTimelineDate(-7)">
+                <i class="bi bi-chevron-left"></i> 7 ngày trước
+            </button>
+            <span class="mx-3" id="timelineCurrentDate"></span>
+            <button class="btn btn-sm btn-outline-secondary" onclick="changeTimelineDate(7)">
+                7 ngày sau <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+        <div id="timelineGrid">
+            <!-- Timeline grid will be populated by JavaScript -->
+        </div>
+    </div>
+</div>
+
+<!-- Room Detail Modal -->
+<div class="modal fade" id="roomDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-door-open"></i> Chi tiết phòng <span id="modalRoomNumber"></span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-group">
+                            <div class="info-label">Số phòng</div>
+                            <div class="info-value" id="detailRoomNumber"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Loại phòng</div>
+                            <div class="info-value" id="detailRoomType"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Tầng</div>
+                            <div class="info-value" id="detailFloor"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Trạng thái hiện tại</div>
+                            <div class="info-value">
+                                <span class="badge" id="detailCurrentStatus"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="info-group">
+                            <div class="info-label">Tên khách hàng</div>
+                            <div class="info-value" id="detailCustomerName"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Ngày check-in</div>
+                            <div class="info-value" id="detailCheckIn"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Ngày check-out</div>
+                            <div class="info-value" id="detailCheckOut"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Trạng thái booking</div>
+                            <div class="info-value">
+                                <span class="badge" id="detailBookingStatus"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Ghi chú đặc biệt</div>
+                    <div class="info-value" id="detailSpecialRequests"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="me-auto">
+                    <label class="form-label">Cập nhật trạng thái phòng:</label>
+                    <select class="form-select d-inline-block w-auto" id="newRoomStatus">
+                        <option value="available">Trống</option>
+                        <option value="occupied">Đang ở</option>
+                        <option value="maintenance">Bảo trì</option>
+                    </select>
+                </div>
+
+                <button type="button" class="btn btn-success" onclick="confirmBooking()">
+                    <i class="bi bi-check-circle"></i> Xác nhận booking
+                </button>
+                <button type="button" class="btn btn-danger" onclick="cancelBooking()">
+                    <i class="bi bi-x-circle"></i> Hủy booking
+                </button>
+                <button type="button" class="btn btn-primary" onclick="updateRoomStatus()">
+                    <i class="bi bi-arrow-up-circle"></i> Cập nhật trạng thái
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Sample data - sử dụng ngày hiện tại thay vì tháng 11
+    const today = new Date();
+    const baseDate = new Date(); // Ngày hôm nay làm base
+
+    const rooms = [
+        // Phòng 101 - Trường hợp đơn giản: chỉ có 1 booking
+        {
+            id: 1, roomNumber: "101", floor: 1, roomType: "Standard Single", status: "available",
+            currentBooking: null,
+            futureBookings: [
+                {
+                    id: 101, customer: "Nguyễn Văn Long",
+                    checkIn: formatDateStr(addDays(baseDate, 2)),
+                    checkOut: formatDateStr(addDays(baseDate, 5)),
+                    bookingStatus: "confirmed", specialRequests: "Phòng không hút thuốc"
+                }
+            ]
+        },
+
+        // Phòng 102 - Ví dụ chính: có khoảng trống giữa các booking
+        {
+            id: 2, roomNumber: "102", floor: 1, roomType: "Standard Double", status: "occupied",
+            currentBooking: {
+                id: 102, customer: "Khách A",
+                checkIn: formatDateStr(addDays(baseDate, -1)), // Hôm qua
+                checkOut: formatDateStr(addDays(baseDate, 2)), // 2 ngày nữa
+                bookingStatus: "checkedIn", specialRequests: "VIP guest - Phòng đặc biệt"
+            },
+            futureBookings: [
+                // Gap: 2-4 ngày nữa trống
+                {
+                    id: 103, customer: "Khách B",
+                    checkIn: formatDateStr(addDays(baseDate, 4)), // 4 ngày nữa
+                    checkOut: formatDateStr(addDays(baseDate, 7)), // 7 ngày nữa
+                    bookingStatus: "confirmed", specialRequests: "Late check-in 22h"
+                },
+                // Gap: 7-9 ngày nữa trống
+                {
+                    id: 104, customer: "Khách C",
+                    checkIn: formatDateStr(addDays(baseDate, 9)), // 9 ngày nữa
+                    checkOut: formatDateStr(addDays(baseDate, 12)), // 12 ngày nữa
+                    bookingStatus: "pending", specialRequests: "Phòng yên tĩnh"
+                }
+            ]
+        },
+
+        // Phòng 103 - Booking liên tiếp không có gap
+        {
+            id: 3, roomNumber: "103", floor: 1, roomType: "Deluxe Single", status: "booked",
+            currentBooking: {
+                id: 105, customer: "Trần Thị Mai",
+                checkIn: formatDateStr(addDays(baseDate, 1)),
+                checkOut: formatDateStr(addDays(baseDate, 4)),
+                bookingStatus: "confirmed", specialRequests: "Celebration stay"
+            },
+            futureBookings: [
+                {
+                    id: 106, customer: "Lê Văn Nam",
+                    checkIn: formatDateStr(addDays(baseDate, 4)), // Liền kề
+                    checkOut: formatDateStr(addDays(baseDate, 7)),
+                    bookingStatus: "confirmed", specialRequests: ""
+                },
+                {
+                    id: 107, customer: "Phạm Thị Hoa",
+                    checkIn: formatDateStr(addDays(baseDate, 7)), // Liền kề
+                    checkOut: formatDateStr(addDays(baseDate, 10)),
+                    bookingStatus: "confirmed", specialRequests: "Business trip"
+                }
+            ]
+        },
+
+        // Phòng 104 - Đang bảo trì
+        {
+            id: 4, roomNumber: "104", floor: 1, roomType: "Standard Single", status: "maintenance",
+            currentBooking: null,
+            futureBookings: [
+                {
+                    id: 108, customer: "Booking sau bảo trì",
+                    checkIn: formatDateStr(addDays(baseDate, 5)),
+                    checkOut: formatDateStr(addDays(baseDate, 8)),
+                    bookingStatus: "confirmed", specialRequests: "Sau khi hoàn thành bảo trì"
+                }
+            ]
+        },
+
+        // Phòng 201 - Có nhiều gap nhỏ
+        {
+            id: 5, roomNumber: "201", floor: 2, roomType: "Deluxe Double", status: "available",
+            currentBooking: null,
+            futureBookings: [
+                {
+                    id: 109, customer: "Đoàn A",
+                    checkIn: formatDateStr(addDays(baseDate, 3)),
+                    checkOut: formatDateStr(addDays(baseDate, 5)),
+                    bookingStatus: "confirmed", specialRequests: ""
+                },
+                // Gap: 5-7 ngày
+                {
+                    id: 110, customer: "Đoàn B",
+                    checkIn: formatDateStr(addDays(baseDate, 7)),
+                    checkOut: formatDateStr(addDays(baseDate, 8)),
+                    bookingStatus: "pending", specialRequests: "1 night only"
+                },
+                // Gap: 8-10 ngày
+                {
+                    id: 111, customer: "Đoàn C",
+                    checkIn: formatDateStr(addDays(baseDate, 10)),
+                    checkOut: formatDateStr(addDays(baseDate, 13)),
+                    bookingStatus: "confirmed", specialRequests: ""
+                }
+            ]
+        },
+
+        // Phòng 202 - Hoàn toàn trống
+        {
+            id: 6, roomNumber: "202", floor: 2, roomType: "Standard Double", status: "available",
+            currentBooking: null,
+            futureBookings: []
+        }
+    ];
+
+    // Thêm một số phòng khác để demo
+    for (let i = 7; i <= 15; i++) {
+        const floor = Math.ceil(i / 5) + 2; // Tầng 3, 4
+        const roomInFloor = ((i - 1) % 5) + 1;
+        const roomNum = (floor * 100) + roomInFloor;
+
+        rooms.push({
+            id: i,
+            roomNumber: roomNum.toString(),
+            floor: floor,
+            roomType: ['Standard Single', 'Standard Double', 'Deluxe Single', 'Suite'][i % 4],
+            status: ['available', 'occupied', 'maintenance'][i % 3],
+            currentBooking: i % 3 === 1 ? {
+                id: i * 100,
+                customer: `Khách hiện tại ${i}`,
+                checkIn: formatDateStr(addDays(nov10, -2)),
+                checkOut: formatDateStr(addDays(nov10, 2)),
+                bookingStatus: 'checkedIn',
+                specialRequests: ''
+            } : null,
+            futureBookings: i % 2 === 0 ? [
+                {
+                    id: i * 100 + 50,
+                    customer: `Booking ${i}`,
+                    checkIn: formatDateStr(addDays(nov10, 3 + i)),
+                    checkOut: formatDateStr(addDays(nov10, 6 + i)),
+                    bookingStatus: 'confirmed',
+                    specialRequests: ''
+                }
+            ] : []
+        });
+    }
+
+    function addDays(date, days) {
+        const result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
+    function formatDateStr(date) {
+        return date.toISOString().split('T')[0];
+    }
+
+    let filteredRooms = [...rooms];
+    let currentRoomId = null;
+    let currentView = 'current';
+    // Set timeline bắt đầu từ hôm nay
+    let timelineStartDate = new Date();
+
+    function getStatusIcon(status) {
+        const icons = {
+            available: 'bi-check-circle',
+            booked: 'bi-calendar-check',
+            occupied: 'bi-person-fill',
+            maintenance: 'bi-tools'
+        };
+        return icons[status] || 'bi-question-circle';
+    }
+
+    function getStatusText(status) {
+        const texts = {
+            available: 'Trống',
+            booked: 'Đã đặt',
+            occupied: 'Đang ở',
+            maintenance: 'Bảo trì'
+        };
+        return texts[status] || 'Không xác định';
+    }
+
+    function getBookingStatusBadge(status) {
+        const badges = {
+            confirmed: '<span class="badge bg-success">Đã xác nhận</span>',
+            pending: '<span class="badge bg-warning">Đang chờ</span>',
+            checkedIn: '<span class="badge bg-info">Đã check-in</span>',
+            cancelled: '<span class="badge bg-danger">Đã hủy</span>'
+        };
+        return badges[status] || '<span class="badge bg-secondary">Không có</span>';
+    }
+
+    function getRoomStatusBadge(status) {
+        const badges = {
+            available: '<span class="badge bg-success">Trống</span>',
+            booked: '<span class="badge bg-warning">Đã đặt</span>',
+            occupied: '<span class="badge bg-danger">Đang ở</span>',
+            maintenance: '<span class="badge bg-secondary">Bảo trì</span>'
+        };
+        return badges[status] || '<span class="badge bg-secondary">Không xác định</span>';
+    }
+
+    function renderRooms() {
+        if (currentView === 'current') {
+            renderCurrentView();
+        } else {
+            renderTimelineView();
+        }
+    }
+
+    function renderCurrentView() {
+        const roomGrid = document.getElementById('roomGrid');
+        roomGrid.innerHTML = '';
+
+        filteredRooms.forEach(room => {
+            const roomCard = document.createElement('div');
+            roomCard.className = 'col-6 col-sm-4 col-md-3 col-lg-2 mb-3';
+
+            // Add special indicators for rooms with future bookings or gaps
+            let cardClasses = `room-card ${room.status}`;
+            if (room.futureBookings && room.futureBookings.length > 0) {
+                cardClasses += ' has-future-booking';
+
+                // Check for gaps between bookings
+                if (hasBookingGaps(room)) {
+                    cardClasses += ' has-gaps';
+                }
+            }
+
+            roomCard.innerHTML = `
+                    <div class="${cardClasses}" onclick="showRoomDetail(${room.id})">
+                        <i class="status-icon bi ${getStatusIcon(room.status)}"></i>
+                        <div class="room-number">${room.roomNumber}</div>
+                        <div class="room-status">${getStatusText(room.status)}</div>
+                        ${room.futureBookings && room.futureBookings.length > 0 ?
+                `<small style="font-size: 0.7rem; opacity: 0.8;">+${room.futureBookings.length} booking</small>` : ''}
+                    </div>
+                `;
+
+            roomGrid.appendChild(roomCard);
+        });
+
+        updateStatistics();
+    }
+
+    function renderTimelineView() {
+        const timelineGrid = document.getElementById('timelineGrid');
+        const dates = generateDateRange(timelineStartDate, 14); // 14 days
+
+        document.getElementById('timelineCurrentDate').textContent =
+            `${formatDate(dates[0])} - ${formatDate(dates[dates.length - 1])}`;
+
+        let html = `
+                <div class="timeline-grid">
+                    <table class="table table-sm timeline-table">
+                        <thead>
+                            <tr>
+                                <th class="timeline-room">Phòng</th>
+                                ${dates.map(date => `<th class="timeline-date">${formatDateShort(date)}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+        filteredRooms.forEach(room => {
+            html += `<tr><td class="timeline-room fw-bold">${room.roomNumber}</td>`;
+
+            dates.forEach(date => {
+                const booking = getBookingForDate(room, date);
+                const status = getStatusForDate(room, date);
+
+                html += `
+                        <td class="timeline-cell ${status}"
+                            onclick="showTimelineDetail(${room.id}, '${date.toISOString().split('T')[0]}')"
+                            title="${room.roomNumber} - ${formatDate(date)}">
+                            ${booking ? `<div class="timeline-booking-info">${booking.customer.substring(0, 8)}</div>` : ''}
+                        </td>
+                    `;
+            });
+
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        timelineGrid.innerHTML = html;
+    }
+
+    function hasBookingGaps(room) {
+        if (!room.futureBookings || room.futureBookings.length < 2) return false;
+
+        // Sort bookings by check-in date
+        const sortedBookings = [...room.futureBookings].sort((a, b) =>
+            new Date(a.checkIn) - new Date(b.checkIn)
+        );
+
+        // Check for gaps between consecutive bookings
+        for (let i = 0; i < sortedBookings.length - 1; i++) {
+            const currentCheckOut = new Date(sortedBookings[i].checkOut);
+            const nextCheckIn = new Date(sortedBookings[i + 1].checkIn);
+
+            // If there's more than 1 day gap
+            if ((nextCheckIn - currentCheckOut) / (1000 * 60 * 60 * 24) > 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function getBookingForDate(room, date) {
+        const dateStr = date.toISOString().split('T')[0];
+
+        // Check current booking
+        if (room.currentBooking) {
+            const checkIn = room.currentBooking.checkIn;
+            const checkOut = room.currentBooking.checkOut;
+            if (dateStr >= checkIn && dateStr < checkOut) {
+                return room.currentBooking;
+            }
+        }
+
+        // Check future bookings
+        if (room.futureBookings) {
+            for (const booking of room.futureBookings) {
+                if (dateStr >= booking.checkIn && dateStr < booking.checkOut) {
+                    return booking;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    function getStatusForDate(room, date) {
+        const booking = getBookingForDate(room, date);
+
+        if (room.status === 'maintenance') return 'maintenance';
+        if (booking) {
+            if (booking.bookingStatus === 'checkedIn') return 'occupied';
+            return 'booked';
+        }
+        return 'available';
+    }
+
+    function generateDateRange(startDate, days) {
+        const dates = [];
+        for (let i = 0; i < days; i++) {
+            const date = new Date(startDate);
+            date.setDate(startDate.getDate() + i);
+            dates.push(date);
+        }
+        return dates;
+    }
+
+    function formatDate(date) {
+        return date.toLocaleDateString('vi-VN');
+    }
+
+    function formatDateShort(date) {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        return `${day}/${month}`;
+    }
+
+    function switchView(view) {
+        currentView = view;
+        const roomGrid = document.getElementById('roomGrid');
+        const timelineContainer = document.getElementById('timelineContainer');
+
+        if (view === 'current') {
+            roomGrid.style.display = 'flex';
+            timelineContainer.style.display = 'none';
+        } else {
+            roomGrid.style.display = 'none';
+            timelineContainer.style.display = 'block';
+        }
+
+        renderRooms();
+    }
+
+    function changeTimelineDate(days) {
+        timelineStartDate.setDate(timelineStartDate.getDate() + days);
+        renderTimelineView();
+    }
+
+    function showTimelineDetail(roomId, dateStr) {
+        const room = rooms.find(r => r.id === roomId);
+        const date = new Date(dateStr);
+        const booking = getBookingForDate(room, date);
+
+        if (booking) {
+            // Show booking detail
+            showRoomDetailWithBooking(roomId, booking);
+        } else {
+            // Show room detail for that date
+            showRoomDetail(roomId);
+        }
+    }
+
+    function showRoomDetailWithBooking(roomId, booking) {
+        const room = rooms.find(r => r.id === roomId);
+        if (!room) return;
+
+        currentRoomId = roomId;
+
+        document.getElementById('modalRoomNumber').textContent = room.roomNumber;
+        document.getElementById('detailRoomNumber').textContent = room.roomNumber;
+        document.getElementById('detailRoomType').textContent = room.roomType;
+        document.getElementById('detailFloor').textContent = `Tầng ${room.floor}`;
+        document.getElementById('detailCurrentStatus').innerHTML = getRoomStatusBadge(room.status);
+
+        document.getElementById('detailCustomerName').textContent = booking.customer || 'Không có';
+        document.getElementById('detailCheckIn').textContent = booking.checkIn || 'Không có';
+        document.getElementById('detailCheckOut').textContent = booking.checkOut || 'Không có';
+        document.getElementById('detailBookingStatus').innerHTML = getBookingStatusBadge(booking.bookingStatus);
+        document.getElementById('detailSpecialRequests').textContent = booking.specialRequests || 'Không có';
+
+        document.getElementById('newRoomStatus').value = room.status;
+
+        new bootstrap.Modal(document.getElementById('roomDetailModal')).show();
+    }
+
+    function updateStatistics() {
+        const stats = {
+            available: 0,
+            booked: 0,
+            occupied: 0,
+            maintenance: 0
+        };
+
+        filteredRooms.forEach(room => {
+            stats[room.status]++;
+        });
+
+        document.getElementById('availableCount').textContent = stats.available;
+        document.getElementById('bookedCount').textContent = stats.booked;
+        document.getElementById('occupiedCount').textContent = stats.occupied;
+        document.getElementById('maintenanceCount').textContent = stats.maintenance;
+    }
+
+    function showRoomDetail(roomId) {
+        const room = rooms.find(r => r.id === roomId);
+        if (!room) return;
+
+        currentRoomId = roomId;
+
+        document.getElementById('modalRoomNumber').textContent = room.roomNumber;
+        document.getElementById('detailRoomNumber').textContent = room.roomNumber;
+        document.getElementById('detailRoomType').textContent = room.roomType;
+        document.getElementById('detailFloor').textContent = `Tầng ${room.floor}`;
+        document.getElementById('detailCurrentStatus').innerHTML = getRoomStatusBadge(room.status);
+
+        // Show current booking info
+        const currentBooking = room.currentBooking;
+        document.getElementById('detailCustomerName').textContent = currentBooking?.customer || 'Không có';
+        document.getElementById('detailCheckIn').textContent = currentBooking?.checkIn || 'Không có';
+        document.getElementById('detailCheckOut').textContent = currentBooking?.checkOut || 'Không có';
+        document.getElementById('detailBookingStatus').innerHTML = getBookingStatusBadge(currentBooking?.bookingStatus);
+        document.getElementById('detailSpecialRequests').textContent = currentBooking?.specialRequests || 'Không có';
+
+        // Add future bookings info if exists
+        if (room.futureBookings && room.futureBookings.length > 0) {
+            const futureBookingsHtml = room.futureBookings.map(booking => `
+                    <div class="alert alert-info mb-2">
+                        <strong>Booking tiếp theo:</strong><br>
+                        <small>
+                            <i class="bi bi-person"></i> ${booking.customer}<br>
+                            <i class="bi bi-calendar"></i> ${booking.checkIn} → ${booking.checkOut}<br>
+                            <i class="bi bi-info-circle"></i> ${getBookingStatusText(booking.bookingStatus)}
+                        </small>
+                    </div>
+                `).join('');
+
+            // Add future bookings section to modal
+            const modalBody = document.querySelector('#roomDetailModal .modal-body');
+            let futureSection = modalBody.querySelector('.future-bookings-section');
+            if (!futureSection) {
+                futureSection = document.createElement('div');
+                futureSection.className = 'future-bookings-section mt-3';
+                modalBody.appendChild(futureSection);
+            }
+            futureSection.innerHTML = `
+                    <hr>
+                    <h6><i class="bi bi-calendar-plus"></i> Booking trong tương lai (${room.futureBookings.length})</h6>
+                    ${futureBookingsHtml}
+                `;
+        } else {
+            // Remove future bookings section if no future bookings
+            const futureSection = document.querySelector('.future-bookings-section');
+            if (futureSection) futureSection.remove();
+        }
+
+        document.getElementById('newRoomStatus').value = room.status;
+
+        new bootstrap.Modal(document.getElementById('roomDetailModal')).show();
+    }
+
+    function getBookingStatusText(status) {
+        const texts = {
+            confirmed: 'Đã xác nhận',
+            pending: 'Đang chờ',
+            checkedIn: 'Đã check-in',
+            cancelled: 'Đã hủy'
+        };
+        return texts[status] || 'Không xác định';
+    }
+
+    function applyFilters() {
+        const statusFilter = document.getElementById('statusFilter').value;
+        const fromDate = document.getElementById('fromDate').value;
+        const toDate = document.getElementById('toDate').value;
+
+        filteredRooms = rooms.filter(room => {
+            let matchStatus = !statusFilter || room.status === statusFilter;
+
+            let matchDate = true;
+            if (fromDate && room.checkIn) {
+                matchDate = matchDate && new Date(room.checkIn) >= new Date(fromDate);
+            }
+            if (toDate && room.checkOut) {
+                matchDate = matchDate && new Date(room.checkOut) <= new Date(toDate);
+            }
+
+            return matchStatus && matchDate;
+        });
+
+        renderRooms();
+    }
+
+    function confirmBooking() {
+        if (!currentRoomId) return;
+
+        const room = rooms.find(r => r.id === currentRoomId);
+        if (room && room.bookingStatus === 'pending') {
+            room.bookingStatus = 'confirmed';
+            showNotification('Đã xác nhận booking thành công!', 'success');
+            showRoomDetail(currentRoomId); // Refresh modal
+            renderRooms();
+        }
+    }
+
+    function cancelBooking() {
+        if (!currentRoomId) return;
+
+        const room = rooms.find(r => r.id === currentRoomId);
+        if (room && (room.bookingStatus === 'pending' || room.bookingStatus === 'confirmed')) {
+            room.bookingStatus = 'cancelled';
+            room.status = 'available';
+            room.customer = null;
+            room.checkIn = null;
+            room.checkOut = null;
+            room.specialRequests = '';
+
+            showNotification('Đã hủy booking thành công!', 'warning');
+            bootstrap.Modal.getInstance(document.getElementById('roomDetailModal')).hide();
+            renderRooms();
+        }
+    }
+
+    function updateRoomStatus() {
+        if (!currentRoomId) return;
+
+        const newStatus = document.getElementById('newRoomStatus').value;
+        const room = rooms.find(r => r.id === currentRoomId);
+
+        if (room) {
+            room.status = newStatus;
+            showNotification('Đã cập nhật trạng thái phòng thành công!', 'info');
+            bootstrap.Modal.getInstance(document.getElementById('roomDetailModal')).hide();
+            renderRooms();
+        }
+    }
+
+    function refreshData() {
+        showNotification('Đang cập nhật dữ liệu...', 'info');
+        // Simulate data refresh
+        setTimeout(() => {
+            renderRooms();
+            showNotification('Dữ liệu đã được cập nhật!', 'success');
+        }, 1000);
+    }
+
+    function showNotification(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 5000);
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        renderRooms();
+
+        // Set default dates
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fromDate').value = today;
+
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        document.getElementById('toDate').value = nextWeek.toISOString().split('T')[0];
+    });
+
+    // Auto refresh every 30 seconds
+    setInterval(() => {
+        console.log('Auto refresh...');
+        // In real application, this would fetch new data from server
+    }, 30000);
+</script>
+</body>
+</html>

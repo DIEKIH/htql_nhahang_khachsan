@@ -22,6 +22,8 @@ public class MenuItemResponse {
     private String name;
     private String description;
     private BigDecimal price;
+    private BigDecimal currentPrice;     // Giá sau giảm
+    private BigDecimal originalPrice;    // Giá gốc khi có khuyến mãi
     private String formattedPrice;
     private String imageUrl;
     private Integer preparationTime;
@@ -35,4 +37,11 @@ public class MenuItemResponse {
     // For multiple images
     private List<String> imageUrlsList;
     private List<MenuItemImageEntity> menuItemImages;
+
+    // Helper
+    public boolean hasPromotion() {
+        return originalPrice != null
+                && currentPrice != null
+                && originalPrice.compareTo(currentPrice) > 0;
+    }
 }

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Booking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/manager_sidebar.css}">
+</head>
+<body class="bg-light">
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/manager_sidebar :: manager_sidebar"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="/manager">
+                            <i class="bi bi-building"></i> Manager Dashboard
+                        </a>
+                        <div class="navbar-nav ms-auto">
+                            <a class="nav-link" href="/manager/logout">
+                                <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2><i class="bi bi-calendar-check"></i> Quản lý Booking</h2>
+                    </div>
+
+                    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+                        <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
+                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                        <i class="bi bi-exclamation-circle"></i> <span th:text="${error}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
+                    <!-- Bộ lọc -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form method="get" th:action="@{/manager/bookings}">
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Mã booking</label>
+                                        <input type="text" class="form-control" name="bookingCode"
+                                               th:value="${searchCode}" placeholder="Nhập mã...">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Trạng thái</label>
+                                        <select class="form-select" name="status">
+                                            <option value="">Tất cả</option>
+                                            <option th:each="s : ${statuses}"
+                                                    th:value="${s}"
+                                                    th:text="${s}"
+                                                    th:selected="${s == searchStatus}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Từ ngày</label>
+                                        <input type="date" class="form-control" name="fromDate"
+                                               th:value="${fromDate}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Đến ngày</label>
+                                        <input type="date" class="form-control" name="toDate"
+                                               th:value="${toDate}">
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end gap-2">
+                                        <button type="submit" class="btn btn-outline-primary">
+                                            <i class="bi bi-search"></i> Tìm
+                                        </button>
+                                        <a href="/manager/bookings" class="btn btn-outline-secondary">
+                                            <i class="bi bi-arrow-clockwise"></i> Làm mới
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Bảng danh sách -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="bi bi-list-ul"></i> Danh sách Booking
+                                <span class="badge bg-secondary ms-2" th:text="${#lists.size(bookings)}"></span>
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th>Mã Booking</th>
+                                        <th>Khách hàng</th>
+                                        <th>Loại phòng</th>
+                                        <th>Phòng</th>
+                                        <th>Check-in</th>
+                                        <th>Check-out</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Thanh toán</th>
+                                        <th>Trạng thái</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:if="${#lists.isEmpty(bookings)}">
+                                        <td colspan="10" class="text-center text-muted py-4">
+                                            <i class="bi bi-inbox display-6 d-block mb-2"></i>
+                                            Không có booking nào
+                                        </td>
+                                    </tr>
+                                    <tr th:each="booking : ${bookings}">
+                                        <td>
+                                            <strong th:text="${booking.bookingCode}"></strong>
+                                            <div class="text-muted small"
+                                                 th:text="${#temporals.format(booking.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div th:text="${booking.guestName}"></div>
+                                            <div class="text-muted small" th:text="${booking.guestPhone}"></div>
+                                        </td>
+                                        <td th:text="${booking.roomTypeName}"></td>
+                                        <td>
+                                            <span th:if="${booking.roomNumber != 'Chưa gán'}"
+                                                  class="badge bg-info"
+                                                  th:text="${booking.roomNumber}"></span>
+                                            <span th:if="${booking.roomNumber == 'Chưa gán'}"
+                                                  class="badge bg-secondary"
+                                                  th:text="${booking.roomNumber}"></span>
+                                        </td>
+                                        <td th:text="${#temporals.format(booking.checkInDate, 'dd/MM/yyyy')}"></td>
+                                        <td th:text="${#temporals.format(booking.checkOutDate, 'dd/MM/yyyy')}"></td>
+                                        <td class="text-success fw-bold" th:text="${booking.formattedTotalAmount}"></td>
+                                        <td>
+                                            <span th:if="${booking.paymentStatus == T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PAID}"
+                                                  class="badge bg-success">Đã thanh toán</span>
+                                            <span th:if="${booking.paymentStatus == T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PARTIALLY_PAID}"
+                                                  class="badge bg-warning">Đã cọc</span>
+                                            <span th:if="${booking.paymentStatus == T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PENDING}"
+                                                  class="badge bg-secondary">Chưa thanh toán</span>
+                                        </td>
+                                        <td>
+                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CHECKED_OUT}"
+                                                  class="badge bg-success">Đã trả phòng</span>
+                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CANCELLED}"
+                                                  class="badge bg-danger">Đã hủy</span>
+                                            <span th:if="${booking.status == null}"
+                                                  class="badge bg-secondary">Chưa xác định</span>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/manager/bookings/{id}(id=${booking.id})}"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i> Chi tiết
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

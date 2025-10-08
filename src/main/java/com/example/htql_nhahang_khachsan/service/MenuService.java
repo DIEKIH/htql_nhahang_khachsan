@@ -50,18 +50,64 @@ public class MenuService {
         }).collect(Collectors.toList());
     }
 
+//    public List<MenuItemResponse> getMenuItemsByBranchWithPromotions(Long branchId) {
+//        List<MenuItemEntity> menuItems = menuItemRepository.findByCategoryBranchIdAndStatusAndIsAvailable(
+//                branchId, Status.ACTIVE, true);
+//
+//        return menuItems.stream().map(item -> {
+//            MenuItemResponse response = MenuItemResponse.builder()
+//                    .id(item.getId())
+//                    .categoryId(item.getCategory().getId())
+//                    .categoryName(item.getCategory().getName())
+//                    .name(item.getName())
+//                    .description(item.getDescription())
+//                    .price(item.getPrice())
+//                    .imageUrl(item.getImageUrl())
+//                    .preparationTime(item.getPreparationTime())
+//                    .isAvailable(item.getIsAvailable())
+//                    .ingredients(item.getIngredients())
+//                    .allergens(item.getAllergens())
+//                    .calories(item.getCalories())
+//                    .status(item.getStatus())
+//                    .createdAt(item.getCreatedAt())
+//                    .build();
+//
+//            // Lấy ảnh của món ăn
+//            List<MenuItemImageEntity> images = menuItemImageRepository.findByMenuItemIdOrderByIsPrimaryDesc(item.getId());
+//            response.setMenuItemImages(images);
+//
+//            // Tính giá sau giảm giá
+//            BigDecimal originalPrice = item.getPrice();
+//            BigDecimal discountedPrice = promotionService.calculateDiscountedPrice(
+//                    originalPrice, branchId, PromotionApplicability.RESTAURANT);
+//
+//            response.setPrice(discountedPrice);
+//            response.setFormattedPrice(formatPrice(discountedPrice));
+//
+//            return response;
+//        }).collect(Collectors.toList());
+//    }
+
     public List<MenuItemResponse> getMenuItemsByBranchWithPromotions(Long branchId) {
         List<MenuItemEntity> menuItems = menuItemRepository.findByCategoryBranchIdAndStatusAndIsAvailable(
                 branchId, Status.ACTIVE, true);
 
         return menuItems.stream().map(item -> {
+            BigDecimal originalPrice = item.getPrice();
+            BigDecimal discountedPrice = promotionService.calculateDiscountedPrice(
+                    originalPrice, branchId, PromotionApplicability.RESTAURANT
+            );
+
             MenuItemResponse response = MenuItemResponse.builder()
                     .id(item.getId())
                     .categoryId(item.getCategory().getId())
                     .categoryName(item.getCategory().getName())
                     .name(item.getName())
                     .description(item.getDescription())
-                    .price(item.getPrice())
+                    .price(originalPrice)              // Giá gốc trong DB
+                    .originalPrice(originalPrice)      // Hiển thị khi có KM
+                    .currentPrice(discountedPrice)     // Giá sau giảm
+                    .formattedPrice(formatPrice(discountedPrice))
                     .imageUrl(item.getImageUrl())
                     .preparationTime(item.getPreparationTime())
                     .isAvailable(item.getIsAvailable())
@@ -72,21 +118,14 @@ public class MenuService {
                     .createdAt(item.getCreatedAt())
                     .build();
 
-            // Lấy ảnh của món ăn
+            // Lấy ảnh phụ
             List<MenuItemImageEntity> images = menuItemImageRepository.findByMenuItemIdOrderByIsPrimaryDesc(item.getId());
             response.setMenuItemImages(images);
-
-            // Tính giá sau giảm giá
-            BigDecimal originalPrice = item.getPrice();
-            BigDecimal discountedPrice = promotionService.calculateDiscountedPrice(
-                    originalPrice, branchId, PromotionApplicability.RESTAURANT);
-
-            response.setPrice(discountedPrice);
-            response.setFormattedPrice(formatPrice(discountedPrice));
 
             return response;
         }).collect(Collectors.toList());
     }
+
 
     public List<MenuItemResponse> getMenuItemsByCategory(Long categoryId) {
         List<MenuItemEntity> menuItems = menuItemRepository.findByCategoryIdAndStatusAndIsAvailable(

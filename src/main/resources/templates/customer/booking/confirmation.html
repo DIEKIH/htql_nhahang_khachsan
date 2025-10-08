@@ -1,0 +1,1320 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Xác nhận đặt phòng</title>-->
+<!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+<!--  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">-->
+<!--  <style>-->
+<!--    :root {-->
+<!--      &#45;&#45;primary-color: #c9a96e;-->
+<!--      &#45;&#45;secondary-color: #2c3e50;-->
+<!--      &#45;&#45;text-dark: #2c3e50;-->
+<!--      &#45;&#45;text-light: #6c757d;-->
+<!--    }-->
+
+<!--    body {-->
+<!--      font-family: 'Inter', sans-serif;-->
+<!--      background: #f8f9fa;-->
+<!--      padding-top: 80px;-->
+<!--    }-->
+
+<!--    .heading-font {-->
+<!--      font-family: 'Playfair Display', serif;-->
+<!--    }-->
+
+<!--    .booking-container {-->
+<!--      max-width: 1200px;-->
+<!--      margin: 40px auto;-->
+<!--      padding: 0 20px;-->
+<!--    }-->
+
+<!--    /* Progress Steps */-->
+<!--    .booking-progress {-->
+<!--      background: white;-->
+<!--      border-radius: 15px;-->
+<!--      padding: 30px;-->
+<!--      margin-bottom: 30px;-->
+<!--      box-shadow: 0 2px 10px rgba(0,0,0,0.05);-->
+<!--    }-->
+
+<!--    .progress-steps {-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      justify-content: space-between;-->
+<!--      position: relative;-->
+<!--    }-->
+
+<!--    .progress-line {-->
+<!--      position: absolute;-->
+<!--      top: 25px;-->
+<!--      left: 0;-->
+<!--      right: 0;-->
+<!--      height: 3px;-->
+<!--      background: #e9ecef;-->
+<!--      z-index: 0;-->
+<!--    }-->
+
+<!--    .progress-line-fill {-->
+<!--      position: absolute;-->
+<!--      top: 0;-->
+<!--      left: 0;-->
+<!--      height: 100%;-->
+<!--      background: var(&#45;&#45;primary-color);-->
+<!--      transition: width 0.5s ease;-->
+<!--      width: 100%;-->
+<!--    }-->
+
+<!--    .progress-step {-->
+<!--      display: flex;-->
+<!--      flex-direction: column;-->
+<!--      align-items: center;-->
+<!--      position: relative;-->
+<!--      z-index: 1;-->
+<!--      flex: 1;-->
+<!--    }-->
+
+<!--    .step-circle {-->
+<!--      width: 50px;-->
+<!--      height: 50px;-->
+<!--      border-radius: 50%;-->
+<!--      background: white;-->
+<!--      border: 3px solid #e9ecef;-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      justify-content: center;-->
+<!--      font-weight: 700;-->
+<!--      color: #6c757d;-->
+<!--      transition: all 0.3s ease;-->
+<!--      margin-bottom: 10px;-->
+<!--    }-->
+
+<!--    .progress-step.completed .step-circle {-->
+<!--      background: #28a745;-->
+<!--      border-color: #28a745;-->
+<!--      color: white;-->
+<!--    }-->
+
+<!--    .progress-step.active .step-circle {-->
+<!--      background: var(&#45;&#45;primary-color);-->
+<!--      border-color: var(&#45;&#45;primary-color);-->
+<!--      color: white;-->
+<!--      box-shadow: 0 4px 15px rgba(201, 169, 110, 0.4);-->
+<!--    }-->
+
+<!--    .step-label {-->
+<!--      font-size: 0.9rem;-->
+<!--      font-weight: 600;-->
+<!--      color: #6c757d;-->
+<!--    }-->
+
+<!--    .progress-step.active .step-label {-->
+<!--      color: var(&#45;&#45;primary-color);-->
+<!--    }-->
+
+<!--    /* Main Content */-->
+<!--    .booking-content {-->
+<!--      display: grid;-->
+<!--      grid-template-columns: 1fr 400px;-->
+<!--      gap: 30px;-->
+<!--    }-->
+
+<!--    .content-section {-->
+<!--      background: white;-->
+<!--      border-radius: 15px;-->
+<!--      padding: 35px;-->
+<!--      box-shadow: 0 2px 10px rgba(0,0,0,0.05);-->
+<!--      margin-bottom: 20px;-->
+<!--    }-->
+
+<!--    .section-title {-->
+<!--      font-size: 1.5rem;-->
+<!--      font-weight: 600;-->
+<!--      color: var(&#45;&#45;text-dark);-->
+<!--      margin-bottom: 25px;-->
+<!--      padding-bottom: 15px;-->
+<!--      border-bottom: 2px solid #f0f0f0;-->
+<!--    }-->
+
+<!--    .section-title i {-->
+<!--      color: var(&#45;&#45;primary-color);-->
+<!--      margin-right: 10px;-->
+<!--    }-->
+
+<!--    /* Customer Info Review */-->
+<!--    .info-grid {-->
+<!--      display: grid;-->
+<!--      grid-template-columns: repeat(2, 1fr);-->
+<!--      gap: 20px;-->
+<!--    }-->
+
+<!--    .info-item {-->
+<!--      display: flex;-->
+<!--      flex-direction: column;-->
+<!--    }-->
+
+<!--    .info-label {-->
+<!--      color: var(&#45;&#45;text-light);-->
+<!--      font-size: 0.9rem;-->
+<!--      margin-bottom: 5px;-->
+<!--    }-->
+
+<!--    .info-value {-->
+<!--      color: var(&#45;&#45;text-dark);-->
+<!--      font-weight: 600;-->
+<!--      font-size: 1.05rem;-->
+<!--    }-->
+
+<!--    /* Payment Options */-->
+<!--    .payment-options {-->
+<!--      display: grid;-->
+<!--      gap: 15px;-->
+<!--    }-->
+
+<!--    .payment-option {-->
+<!--      border: 2px solid #e9ecef;-->
+<!--      border-radius: 12px;-->
+<!--      padding: 20px;-->
+<!--      cursor: pointer;-->
+<!--      transition: all 0.3s ease;-->
+<!--      position: relative;-->
+<!--    }-->
+
+<!--    .payment-option:hover {-->
+<!--      border-color: var(&#45;&#45;primary-color);-->
+<!--      background: #fef9f2;-->
+<!--    }-->
+
+<!--    .payment-option.selected {-->
+<!--      border-color: var(&#45;&#45;primary-color);-->
+<!--      background: #fef9f2;-->
+<!--      box-shadow: 0 4px 15px rgba(201, 169, 110, 0.2);-->
+<!--    }-->
+
+<!--    .payment-option input[type="radio"] {-->
+<!--      position: absolute;-->
+<!--      opacity: 0;-->
+<!--    }-->
+
+<!--    .payment-header {-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      margin-bottom: 10px;-->
+<!--    }-->
+
+<!--    .payment-icon {-->
+<!--      width: 50px;-->
+<!--      height: 50px;-->
+<!--      border-radius: 10px;-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      justify-content: center;-->
+<!--      background: #f8f9fa;-->
+<!--      margin-right: 15px;-->
+<!--      font-size: 1.5rem;-->
+<!--    }-->
+
+<!--    .payment-name {-->
+<!--      font-weight: 600;-->
+<!--      font-size: 1.1rem;-->
+<!--      color: var(&#45;&#45;text-dark);-->
+<!--    }-->
+
+<!--    .payment-desc {-->
+<!--      color: var(&#45;&#45;text-light);-->
+<!--      font-size: 0.9rem;-->
+<!--      margin-left: 65px;-->
+<!--    }-->
+
+<!--    .check-circle {-->
+<!--      position: absolute;-->
+<!--      top: 20px;-->
+<!--      right: 20px;-->
+<!--      width: 30px;-->
+<!--      height: 30px;-->
+<!--      border-radius: 50%;-->
+<!--      border: 2px solid #dee2e6;-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      justify-content: center;-->
+<!--      transition: all 0.3s ease;-->
+<!--    }-->
+
+<!--    .payment-option.selected .check-circle {-->
+<!--      background: var(&#45;&#45;primary-color);-->
+<!--      border-color: var(&#45;&#45;primary-color);-->
+<!--      color: white;-->
+<!--    }-->
+
+<!--    /* Deposit Option */-->
+<!--    .deposit-option {-->
+<!--      background: #e7f3ff;-->
+<!--      border: 2px solid #0d6efd;-->
+<!--      border-radius: 12px;-->
+<!--      padding: 20px;-->
+<!--      margin-top: 20px;-->
+<!--    }-->
+
+<!--    .deposit-toggle {-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      cursor: pointer;-->
+<!--    }-->
+
+<!--    .deposit-toggle input[type="checkbox"] {-->
+<!--      width: 20px;-->
+<!--      height: 20px;-->
+<!--      margin-right: 12px;-->
+<!--      cursor: pointer;-->
+<!--    }-->
+
+<!--    .deposit-label {-->
+<!--      font-weight: 600;-->
+<!--      color: var(&#45;&#45;text-dark);-->
+<!--    }-->
+
+<!--    .deposit-info {-->
+<!--      margin-top: 15px;-->
+<!--      padding-top: 15px;-->
+<!--      border-top: 1px solid #bee5ff;-->
+<!--    }-->
+
+<!--    .deposit-amount {-->
+<!--      display: flex;-->
+<!--      justify-content: space-between;-->
+<!--      align-items: center;-->
+<!--      margin-bottom: 10px;-->
+<!--    }-->
+
+<!--    .deposit-amount span:last-child {-->
+<!--      font-size: 1.3rem;-->
+<!--      font-weight: 700;-->
+<!--      color: #0d6efd;-->
+<!--    }-->
+
+<!--    /* Terms Checkbox */-->
+<!--    .terms-agreement {-->
+<!--      background: #f8f9fa;-->
+<!--      border-radius: 10px;-->
+<!--      padding: 20px;-->
+<!--      margin-top: 25px;-->
+<!--    }-->
+
+<!--    .terms-checkbox {-->
+<!--      display: flex;-->
+<!--      align-items: flex-start;-->
+<!--    }-->
+
+<!--    .terms-checkbox input[type="checkbox"] {-->
+<!--      width: 20px;-->
+<!--      height: 20px;-->
+<!--      margin-right: 12px;-->
+<!--      margin-top: 3px;-->
+<!--      cursor: pointer;-->
+<!--    }-->
+
+<!--    .terms-text {-->
+<!--      font-size: 0.95rem;-->
+<!--      color: var(&#45;&#45;text-dark);-->
+<!--    }-->
+
+<!--    .terms-text a {-->
+<!--      color: var(&#45;&#45;primary-color);-->
+<!--      text-decoration: none;-->
+<!--      font-weight: 600;-->
+<!--    }-->
+
+<!--    .terms-text a:hover {-->
+<!--      text-decoration: underline;-->
+<!--    }-->
+
+<!--    /* Summary Sidebar */-->
+<!--    .booking-summary {-->
+<!--      background: white;-->
+<!--      border-radius: 15px;-->
+<!--      padding: 30px;-->
+<!--      box-shadow: 0 2px 10px rgba(0,0,0,0.05);-->
+<!--      position: sticky;-->
+<!--      top: 100px;-->
+<!--      height: fit-content;-->
+<!--    }-->
+
+<!--    .summary-title {-->
+<!--      font-size: 1.3rem;-->
+<!--      font-weight: 600;-->
+<!--      color: var(&#45;&#45;text-dark);-->
+<!--      margin-bottom: 20px;-->
+<!--    }-->
+
+<!--    .room-info {-->
+<!--      border-bottom: 1px solid #e9ecef;-->
+<!--      padding-bottom: 20px;-->
+<!--      margin-bottom: 20px;-->
+<!--    }-->
+
+<!--    .room-info img {-->
+<!--      width: 100%;-->
+<!--      height: 150px;-->
+<!--      object-fit: cover;-->
+<!--      border-radius: 10px;-->
+<!--      margin-bottom: 15px;-->
+<!--    }-->
+
+<!--    .room-name {-->
+<!--      font-weight: 600;-->
+<!--      font-size: 1.1rem;-->
+<!--      color: var(&#45;&#45;text-dark);-->
+<!--      margin-bottom: 5px;-->
+<!--    }-->
+
+<!--    .branch-name {-->
+<!--      color: var(&#45;&#45;text-light);-->
+<!--      font-size: 0.9rem;-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--    }-->
+
+<!--    .detail-row {-->
+<!--      display: flex;-->
+<!--      justify-content: space-between;-->
+<!--      padding: 10px 0;-->
+<!--      border-bottom: 1px solid #f0f0f0;-->
+<!--    }-->
+
+<!--    .detail-label {-->
+<!--      color: var(&#45;&#45;text-light);-->
+<!--      font-size: 0.9rem;-->
+<!--    }-->
+
+<!--    .detail-value {-->
+<!--      font-weight: 600;-->
+<!--      color: var(&#45;&#45;text-dark);-->
+<!--    }-->
+
+<!--    .pricing-breakdown {-->
+<!--      background: #f8f9fa;-->
+<!--      border-radius: 10px;-->
+<!--      padding: 20px;-->
+<!--      margin-top: 20px;-->
+<!--    }-->
+
+<!--    .price-row {-->
+<!--      display: flex;-->
+<!--      justify-content: space-between;-->
+<!--      margin-bottom: 12px;-->
+<!--      font-size: 0.95rem;-->
+<!--    }-->
+
+<!--    .price-row.total {-->
+<!--      border-top: 2px solid #dee2e6;-->
+<!--      padding-top: 15px;-->
+<!--      margin-top: 15px;-->
+<!--      font-weight: 700;-->
+<!--      font-size: 1.2rem;-->
+<!--      color: var(&#45;&#45;primary-color);-->
+<!--    }-->
+
+<!--    /* Action Buttons */-->
+<!--    .action-buttons {-->
+<!--      display: flex;-->
+<!--      gap: 15px;-->
+<!--      margin-top: 30px;-->
+<!--    }-->
+
+<!--    .btn-luxury {-->
+<!--      background: var(&#45;&#45;primary-color);-->
+<!--      color: white;-->
+<!--      padding: 14px 30px;-->
+<!--      border: none;-->
+<!--      font-weight: 600;-->
+<!--      text-transform: uppercase;-->
+<!--      letter-spacing: 0.5px;-->
+<!--      border-radius: 10px;-->
+<!--      transition: all 0.3s ease;-->
+<!--      flex: 1;-->
+<!--    }-->
+
+<!--    .btn-luxury:hover {-->
+<!--      background: #b8956b;-->
+<!--      transform: translateY(-2px);-->
+<!--      box-shadow: 0 8px 20px rgba(201, 169, 110, 0.3);-->
+<!--      color: white;-->
+<!--    }-->
+
+<!--    .btn-luxury:disabled {-->
+<!--      background: #ccc;-->
+<!--      cursor: not-allowed;-->
+<!--      transform: none;-->
+<!--    }-->
+
+<!--    .btn-outline-luxury {-->
+<!--      background: white;-->
+<!--      color: var(&#45;&#45;primary-color);-->
+<!--      border: 2px solid var(&#45;&#45;primary-color);-->
+<!--      padding: 14px 30px;-->
+<!--      font-weight: 600;-->
+<!--      text-transform: uppercase;-->
+<!--      letter-spacing: 0.5px;-->
+<!--      border-radius: 10px;-->
+<!--      transition: all 0.3s ease;-->
+<!--    }-->
+
+<!--    .btn-outline-luxury:hover {-->
+<!--      background: var(&#45;&#45;primary-color);-->
+<!--      color: white;-->
+<!--    }-->
+
+<!--    @media (max-width: 992px) {-->
+<!--      .booking-content {-->
+<!--        grid-template-columns: 1fr;-->
+<!--      }-->
+
+<!--      .booking-summary {-->
+<!--        position: static;-->
+<!--      }-->
+
+<!--      .info-grid {-->
+<!--        grid-template-columns: 1fr;-->
+<!--      }-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">-->
+<!--  <div class="container">-->
+<!--    <a class="navbar-brand heading-font" href="/">LuxuryResort</a>-->
+<!--  </div>-->
+<!--</nav>-->
+
+<!--<div class="booking-container">-->
+<!--  &lt;!&ndash; Progress Steps &ndash;&gt;-->
+<!--  <div class="booking-progress">-->
+<!--    <div class="progress-steps">-->
+<!--      <div class="progress-line">-->
+<!--        <div class="progress-line-fill"></div>-->
+<!--      </div>-->
+
+<!--      <div class="progress-step completed">-->
+<!--        <div class="step-circle">-->
+<!--          <i class="fas fa-check"></i>-->
+<!--        </div>-->
+<!--        <span class="step-label">Chọn phòng</span>-->
+<!--      </div>-->
+
+<!--      <div class="progress-step completed">-->
+<!--        <div class="step-circle">-->
+<!--          <i class="fas fa-check"></i>-->
+<!--        </div>-->
+<!--        <span class="step-label">Thông tin</span>-->
+<!--      </div>-->
+
+<!--      <div class="progress-step active">-->
+<!--        <div class="step-circle">3</div>-->
+<!--        <span class="step-label">Xác nhận</span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Main Content &ndash;&gt;-->
+<!--  <div class="booking-content">-->
+<!--    <div>-->
+<!--      &lt;!&ndash; Customer Info Review &ndash;&gt;-->
+<!--      <div class="content-section">-->
+<!--        <h2 class="section-title heading-font">-->
+<!--          <i class="fas fa-user-check"></i>Thông tin khách hàng-->
+<!--        </h2>-->
+
+<!--        <div class="info-grid">-->
+<!--          <div class="info-item">-->
+<!--            <span class="info-label">Họ và tên</span>-->
+<!--            <span class="info-value">Nguyễn Văn A</span>-->
+<!--          </div>-->
+<!--          <div class="info-item">-->
+<!--            <span class="info-label">Email</span>-->
+<!--            <span class="info-value">example@email.com</span>-->
+<!--          </div>-->
+<!--          <div class="info-item">-->
+<!--            <span class="info-label">Số điện thoại</span>-->
+<!--            <span class="info-value">0901234567</span>-->
+<!--          </div>-->
+<!--          <div class="info-item">-->
+<!--            <span class="info-label">Yêu cầu đặc biệt</span>-->
+<!--            <span class="info-value">Tầng cao, view biển</span>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        <button type="button" class="btn-outline-luxury mt-3" onclick="history.back()">-->
+<!--          <i class="fas fa-edit me-2"></i>Chỉnh sửa thông tin-->
+<!--        </button>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Payment Method &ndash;&gt;-->
+<!--      <div class="content-section">-->
+<!--        <h2 class="section-title heading-font">-->
+<!--          <i class="fas fa-credit-card"></i>Phương thức thanh toán-->
+<!--        </h2>-->
+
+<!--        <form action="/booking/confirm" method="post" id="confirmForm">-->
+<!--          <div class="payment-options">-->
+<!--            &lt;!&ndash; VNPay &ndash;&gt;-->
+<!--            <label class="payment-option" data-method="VNPAY">-->
+<!--              <input type="radio" name="paymentMethod" value="VNPAY" required>-->
+<!--              <div class="payment-header">-->
+<!--                <div class="payment-icon" style="color: #0066cc;">-->
+<!--                  <i class="fas fa-mobile-alt"></i>-->
+<!--                </div>-->
+<!--                <div class="payment-name">VNPay</div>-->
+<!--              </div>-->
+<!--              <div class="payment-desc">-->
+<!--                Thanh toán qua ví điện tử VNPay, QR Code hoặc thẻ ngân hàng-->
+<!--              </div>-->
+<!--              <div class="check-circle">-->
+<!--                <i class="fas fa-check"></i>-->
+<!--              </div>-->
+<!--            </label>-->
+
+<!--            &lt;!&ndash; Bank Transfer &ndash;&gt;-->
+<!--            <label class="payment-option" data-method="BANK_TRANSFER">-->
+<!--              <input type="radio" name="paymentMethod" value="BANK_TRANSFER">-->
+<!--              <div class="payment-header">-->
+<!--                <div class="payment-icon" style="color: #28a745;">-->
+<!--                  <i class="fas fa-university"></i>-->
+<!--                </div>-->
+<!--                <div class="payment-name">Chuyển khoản ngân hàng</div>-->
+<!--              </div>-->
+<!--              <div class="payment-desc">-->
+<!--                Chuyển khoản trực tiếp đến tài khoản của resort-->
+<!--              </div>-->
+<!--              <div class="check-circle">-->
+<!--                <i class="fas fa-check"></i>-->
+<!--              </div>-->
+<!--            </label>-->
+
+<!--            &lt;!&ndash; Cash &ndash;&gt;-->
+<!--            <label class="payment-option" data-method="CASH">-->
+<!--              <input type="radio" name="paymentMethod" value="CASH">-->
+<!--              <div class="payment-header">-->
+<!--                <div class="payment-icon" style="color: #ffc107;">-->
+<!--                  <i class="fas fa-money-bill-wave"></i>-->
+<!--                </div>-->
+<!--                <div class="payment-name">Thanh toán tại quầy</div>-->
+<!--              </div>-->
+<!--              <div class="payment-desc">-->
+<!--                Thanh toán bằng tiền mặt khi nhận phòng-->
+<!--              </div>-->
+<!--              <div class="check-circle">-->
+<!--                <i class="fas fa-check"></i>-->
+<!--              </div>-->
+<!--            </label>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; Deposit Option &ndash;&gt;-->
+<!--          <div class="deposit-option">-->
+<!--            <label class="deposit-toggle">-->
+<!--              <input type="checkbox" name="payDeposit" id="payDeposit" value="true">-->
+<!--              <span class="deposit-label">Đặt cọc 50% và thanh toán phần còn lại khi nhận phòng</span>-->
+<!--            </label>-->
+
+<!--            <div class="deposit-info" id="depositInfo" style="display: none;">-->
+<!--              <div class="deposit-amount">-->
+<!--                <span>Số tiền đặt cọc (50%):</span>-->
+<!--                <span>9.075.000₫</span>-->
+<!--              </div>-->
+<!--              <div class="deposit-amount">-->
+<!--                <span>Thanh toán khi nhận phòng:</span>-->
+<!--                <span>9.075.000₫</span>-->
+<!--              </div>-->
+<!--              <small class="text-muted">-->
+<!--                <i class="fas fa-info-circle me-1"></i>-->
+<!--                Số tiền còn lại sẽ được thanh toán khi check-in-->
+<!--              </small>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; Terms Agreement &ndash;&gt;-->
+<!--          <div class="terms-agreement">-->
+<!--            <label class="terms-checkbox">-->
+<!--              <input type="checkbox" name="agreeTerms" id="agreeTerms" required>-->
+<!--              <div class="terms-text">-->
+<!--                Tôi đã đọc và đồng ý với-->
+<!--                <a href="#" target="_blank">Điều khoản và điều kiện</a>-->
+<!--                và-->
+<!--                <a href="#" target="_blank">Chính sách hủy phòng</a>-->
+<!--                của Luxury Resort-->
+<!--              </div>-->
+<!--            </label>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; Action Buttons &ndash;&gt;-->
+<!--          <div class="action-buttons">-->
+<!--            <button type="button" class="btn-outline-luxury" onclick="history.back()">-->
+<!--              <i class="fas fa-arrow-left me-2"></i>Quay lại-->
+<!--            </button>-->
+<!--            <button type="submit" class="btn-luxury" id="submitBtn" disabled>-->
+<!--              <i class="fas fa-check-circle me-2"></i>Xác nhận đặt phòng-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Booking Summary &ndash;&gt;-->
+<!--    <div class="booking-summary">-->
+<!--      <h3 class="summary-title heading-font">Chi tiết đặt phòng</h3>-->
+
+<!--      <div class="room-info">-->
+<!--        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b" alt="Room">-->
+<!--        <div class="room-name">Deluxe Ocean View</div>-->
+<!--        <div class="branch-name">-->
+<!--          <i class="fas fa-map-marker-alt"></i>-->
+<!--          Luxury Resort Đà Nẵng-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="booking-details">-->
+<!--        <div class="detail-row">-->
+<!--          <span class="detail-label">Nhận phòng</span>-->
+<!--          <span class="detail-value">15/12/2024</span>-->
+<!--        </div>-->
+<!--        <div class="detail-row">-->
+<!--          <span class="detail-label">Trả phòng</span>-->
+<!--          <span class="detail-value">18/12/2024</span>-->
+<!--        </div>-->
+<!--        <div class="detail-row">-->
+<!--          <span class="detail-label">Số đêm</span>-->
+<!--          <span class="detail-value">3 đêm</span>-->
+<!--        </div>-->
+<!--        <div class="detail-row">-->
+<!--          <span class="detail-label">Số phòng</span>-->
+<!--          <span class="detail-value">2 phòng</span>-->
+<!--        </div>-->
+<!--        <div class="detail-row">-->
+<!--          <span class="detail-label">Khách</span>-->
+<!--          <span class="detail-value">4 người lớn, 1 trẻ em</span>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="pricing-breakdown">-->
+<!--        <div class="price-row">-->
+<!--          <span>2.500.000₫ x 3 đêm x 2 phòng</span>-->
+<!--          <span>15.000.000₫</span>-->
+<!--        </div>-->
+<!--        <div class="price-row">-->
+<!--          <span>Phí dịch vụ (10%)</span>-->
+<!--          <span>1.500.000₫</span>-->
+<!--        </div>-->
+<!--        <div class="price-row">-->
+<!--          <span>Thuế VAT (10%)</span>-->
+<!--          <span>1.650.000₫</span>-->
+<!--        </div>-->
+<!--        <div class="price-row total">-->
+<!--          <span id="totalLabel">Tổng cộng</span>-->
+<!--          <span id="totalAmount">18.150.000₫</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script>-->
+<!--  // Payment method selection-->
+<!--  document.querySelectorAll('.payment-option').forEach(option => {-->
+<!--    option.addEventListener('click', function() {-->
+<!--      document.querySelectorAll('.payment-option').forEach(opt => {-->
+<!--        opt.classList.remove('selected');-->
+<!--      });-->
+<!--      this.classList.add('selected');-->
+<!--      this.querySelector('input[type="radio"]').checked = true;-->
+<!--      checkFormValidity();-->
+<!--    });-->
+<!--  });-->
+
+<!--  // Deposit option toggle-->
+<!--  document.getElementById('payDeposit').addEventListener('change', function() {-->
+<!--    const depositInfo = document.getElementById('depositInfo');-->
+<!--    const totalLabel = document.getElementById('totalLabel');-->
+<!--    const totalAmount = document.getElementById('totalAmount');-->
+
+<!--    if (this.checked) {-->
+<!--      depositInfo.style.display = 'block';-->
+<!--      totalLabel.textContent = 'Thanh toán ngay';-->
+<!--      totalAmount.textContent = '9.075.000₫';-->
+<!--    } else {-->
+<!--      depositInfo.style.display = 'none';-->
+<!--      totalLabel.textContent = 'Tổng cộng';-->
+<!--      totalAmount.textContent = '18.150.000₫';-->
+<!--    }-->
+<!--  });-->
+
+<!--  // Terms agreement checkbox-->
+<!--  document.getElementById('agreeTerms').addEventListener('change', checkFormValidity);-->
+
+<!--  function checkFormValidity() {-->
+<!--    const paymentSelected = document.querySelector('input[name="paymentMethod"]:checked');-->
+<!--    const termsAgreed = document.getElementById('agreeTerms').checked;-->
+<!--    const submitBtn = document.getElementById('submitBtn');-->
+
+<!--    submitBtn.disabled = !(paymentSelected && termsAgreed);-->
+<!--  }-->
+
+<!--  // Form submission-->
+<!--  document.getElementById('confirmForm').addEventListener('submit', function(e) {-->
+<!--    e.preventDefault();-->
+
+<!--    const submitBtn = document.getElementById('submitBtn');-->
+<!--    submitBtn.disabled = true;-->
+<!--    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';-->
+
+<!--    // Simulate processing-->
+<!--    setTimeout(() => {-->
+<!--      this.submit();-->
+<!--    }, 1500);-->
+<!--  });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xác nhận & Thanh toán - Bước 3</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #c9a96e;
+    }
+    body {
+      background: #f8f9fa;
+      padding-top: 80px;
+    }
+    .booking-steps {
+      background: white;
+      padding: 30px;
+      margin-bottom: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .step-number {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .step.active .step-number {
+      background: var(--primary-color);
+      color: white;
+    }
+    .step.completed .step-number {
+      background: #28a745;
+      color: white;
+    }
+    .booking-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    .payment-method {
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .payment-method:hover {
+      border-color: var(--primary-color);
+    }
+    .payment-method.selected {
+      border-color: var(--primary-color);
+      background: rgba(201, 169, 110, 0.05);
+    }
+    .payment-method input[type="radio"] {
+      cursor: pointer;
+    }
+    .payment-option {
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .payment-option:hover {
+      border-color: var(--primary-color);
+    }
+    .payment-option.selected {
+      border-color: var(--primary-color);
+      background: rgba(201, 169, 110, 0.05);
+    }
+    .btn-luxury {
+      background: var(--primary-color);
+      color: white;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .btn-luxury:hover {
+      background: #b8956b;
+      color: white;
+    }
+    .total-box {
+      background: linear-gradient(135deg, var(--primary-color), #d4b079);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+    }
+    .total-amount {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="fragments/user_navbar :: user_navbar"></div>
+
+<div class="container my-5">
+  <!-- Booking Steps -->
+  <div class="booking-steps">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="step completed">
+          <div class="step-number"><i class="fas fa-check"></i></div>
+          <div class="step-title">Chọn phòng</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="step completed">
+          <div class="step-number"><i class="fas fa-check"></i></div>
+          <div class="step-title">Dịch vụ</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="step completed">
+          <div class="step-number"><i class="fas fa-check"></i></div>
+          <div class="step-title">Thông tin</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="step active">
+          <div class="step-number">4</div>
+          <div class="step-title">Thanh toán</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- Thông tin đặt phòng -->
+      <div class="booking-card">
+        <h4><i class="fas fa-clipboard-check me-2"></i>Xác nhận thông tin đặt phòng</h4>
+        <hr>
+
+        <h6 class="text-primary mb-3">Thông tin phòng</h6>
+        <div class="info-row">
+          <span><strong>Loại phòng:</strong></span>
+          <span th:text="${bookingSession.roomType.name}">Deluxe Room</span>
+        </div>
+        <div class="info-row">
+          <span><strong>Chi nhánh:</strong></span>
+          <span th:text="${bookingSession.roomType.branchName}">Phú Quốc</span>
+        </div>
+        <div class="info-row">
+          <span><strong>Nhận phòng:</strong></span>
+          <span th:text="${#temporals.format(bookingSession.checkInDate, 'dd/MM/yyyy')}">15/12/2024</span>
+        </div>
+        <div class="info-row">
+          <span><strong>Trả phòng:</strong></span>
+          <span th:text="${#temporals.format(bookingSession.checkOutDate, 'dd/MM/yyyy')}">18/12/2024</span>
+        </div>
+        <div class="info-row">
+          <span><strong>Số đêm:</strong></span>
+          <span><span th:text="${bookingSession.numberOfNights}">3</span> đêm</span>
+        </div>
+        <div class="info-row">
+          <span><strong>Số phòng:</strong></span>
+          <span th:text="${bookingSession.numberOfRooms}">1</span>
+        </div>
+        <div class="info-row">
+          <span><strong>Khách:</strong></span>
+          <span>
+                            <span th:text="${bookingSession.adults}">2</span> người lớn
+                            <span th:if="${bookingSession.children > 0}" th:text="', ' + ${bookingSession.children} + ' trẻ em'"></span>
+                        </span>
+        </div>
+
+        <h6 class="text-primary mb-3 mt-4">Thông tin khách hàng</h6>
+        <div class="info-row">
+          <span><strong>Họ tên:</strong></span>
+          <span th:text="${bookingSession.guestName}">Nguyễn Văn A</span>
+        </div>
+        <div class="info-row">
+          <span><strong>Email:</strong></span>
+          <span th:text="${bookingSession.guestEmail}">email@example.com</span>
+        </div>
+        <div class="info-row">
+          <span><strong>Điện thoại:</strong></span>
+          <span th:text="${bookingSession.guestPhone}">0912345678</span>
+        </div>
+        <div class="info-row" th:if="${bookingSession.guestIdNumber}">
+          <span><strong>CMND/CCCD:</strong></span>
+          <span th:text="${bookingSession.guestIdNumber}">001234567890</span>
+        </div>
+        <div th:if="${bookingSession.specialRequests}" class="mt-3">
+          <strong>Yêu cầu đặc biệt:</strong>
+          <p class="text-muted mb-0 mt-2" th:text="${bookingSession.specialRequests}">Phòng tầng cao, view biển</p>
+        </div>
+
+        <div th:if="${bookingSession.includeBreakfast || bookingSession.includeSpa || bookingSession.includeAirportTransfer}">
+          <h6 class="text-primary mb-3 mt-4">Dịch vụ bổ sung</h6>
+          <div th:if="${bookingSession.includeBreakfast}" class="info-row">
+            <span><i class="fas fa-check text-success me-2"></i>Buffet sáng</span>
+            <span th:text="${#numbers.formatDecimal(bookingSession.breakfastFee, 0, 'COMMA', 0, 'POINT') + 'đ'}">600,000đ</span>
+          </div>
+          <div th:if="${bookingSession.includeSpa}" class="info-row">
+            <span><i class="fas fa-check text-success me-2"></i>Spa package</span>
+            <span th:text="${#numbers.formatDecimal(bookingSession.spaFee, 0, 'COMMA', 0, 'POINT') + 'đ'}">1,000,000đ</span>
+          </div>
+          <div th:if="${bookingSession.includeAirportTransfer}" class="info-row">
+            <span><i class="fas fa-check text-success me-2"></i>Đưa đón sân bay</span>
+            <span th:text="${#numbers.formatDecimal(bookingSession.airportTransferFee, 0, 'COMMA', 0, 'POINT') + 'đ'}">300,000đ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chọn phương thức thanh toán -->
+      <div class="booking-card">
+        <h4><i class="fas fa-credit-card me-2"></i>Phương thức thanh toán</h4>
+        <hr>
+
+        <form th:action="@{/bookings/complete}" method="post" id="paymentForm">
+          <input type="hidden" name="sessionId" th:value="${bookingSession.sessionId}">
+
+          <!-- Chọn thanh toán full hay đặt cọc -->
+          <h6 class="mb-3">Chọn hình thức thanh toán</h6>
+
+          <div class="payment-option" onclick="selectPaymentType('full')">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="isDepositOnly"
+                     id="fullPayment" value="false" checked>
+              <label class="form-check-label" for="fullPayment">
+                <strong>Thanh toán toàn bộ</strong>
+                <div class="text-muted mt-1">
+                  Thanh toán <span th:text="${#numbers.formatDecimal(bookingSession.totalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">7,900,000đ</span>
+                </div>
+                <div class="text-success mt-1">
+                  <i class="fas fa-gift me-1"></i>Giảm thêm 2% khi thanh toán full
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="payment-option" onclick="selectPaymentType('deposit')">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="isDepositOnly"
+                     id="depositPayment" value="true">
+              <label class="form-check-label" for="depositPayment">
+                <strong>Đặt cọc 50%</strong>
+                <div class="text-muted mt-1">
+                  Thanh toán <span th:text="${#numbers.formatDecimal(bookingSession.depositAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">3,950,000đ</span>
+                  ngay, phần còn lại thanh toán khi check-in
+                </div>
+                <div class="text-info mt-1">
+                  <i class="fas fa-info-circle me-1"></i>Số tiền còn lại:
+                  <span th:text="${#numbers.formatDecimal(bookingSession.remainingAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">3,950,000đ</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <h6 class="mb-3">Phương thức thanh toán</h6>
+
+<!--          <div class="payment-method" onclick="selectPaymentMethod('VNPAY')">-->
+<!--            <div class="form-check">-->
+<!--              <input class="form-check-input" type="radio" name="paymentMethod"-->
+<!--                     id="vnpay" value="VNPAY" checked>-->
+<!--              <label class="form-check-label d-flex align-items-center" for="vnpay">-->
+<!--                <div class="me-3" style="width: 50px; height: 50px; background: #0088cc; border-radius: 10px; display: flex; align-items: center; justify-content: center;">-->
+<!--                  <i class="fas fa-wallet text-white fa-lg"></i>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                  <strong>VNPay</strong>-->
+<!--                  <div class="text-muted">Thanh toán qua VNPay, hỗ trợ nhiều ngân hàng</div>-->
+<!--                </div>-->
+<!--              </label>-->
+<!--            </div>-->
+<!--          </div>-->
+
+          <!-- VNPay -->
+          <div class="payment-method">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="paymentMethod"
+                     id="vnpay" value="VNPAY" checked>
+              <label class="form-check-label d-flex align-items-center" for="vnpay">
+                <div class="me-3" style="width: 50px; height: 50px; background: #0088cc; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-wallet text-white fa-lg"></i>
+                </div>
+                <div>
+                  <strong>VNPay</strong>
+                  <div class="text-muted">Thanh toán qua VNPay, hỗ trợ nhiều ngân hàng</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="payment-method" onclick="selectPaymentMethod('BANK_TRANSFER')">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="paymentMethod"
+                     id="bank" value="BANK_TRANSFER">
+              <label class="form-check-label d-flex align-items-center" for="bank">
+                <div class="me-3" style="width: 50px; height: 50px; background: #28a745; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-university text-white fa-lg"></i>
+                </div>
+                <div>
+                  <strong>Chuyển khoản ngân hàng</strong>
+                  <div class="text-muted">Chuyển khoản trực tiếp qua ngân hàng</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="payment-method" onclick="selectPaymentMethod('CREDIT_CARD')">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="paymentMethod"
+                     id="credit" value="CREDIT_CARD">
+              <label class="form-check-label d-flex align-items-center" for="credit">
+                <div class="me-3" style="width: 50px; height: 50px; background: var(--primary-color); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-credit-card text-white fa-lg"></i>
+                </div>
+                <div>
+                  <strong>Thẻ tín dụng / Ghi nợ</strong>
+                  <div class="text-muted">Visa, Mastercard, JCB</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="alert alert-warning mt-4">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Chính sách hủy phòng:</strong>
+            <ul class="mb-0 mt-2">
+              <li>Miễn phí hủy trước 24 giờ so với giờ check-in</li>
+              <li>Hủy trong vòng 24 giờ: Tính phí 50% tổng hóa đơn</li>
+              <li>No-show (không đến): Tính 100% phí phòng</li>
+            </ul>
+          </div>
+
+          <div class="form-check mt-4">
+            <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+            <label class="form-check-label" for="agreeTerms">
+              Tôi đã đọc và đồng ý với <a href="#">Điều khoản & Điều kiện</a> và
+              <a href="#">Chính sách hủy phòng</a>
+            </label>
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+<!--            <button type="button" class="btn btn-outline-secondary"-->
+<!--                    th:onclick="|location.href='@{/bookings/guest-info/{id}(id=${bookingSession.sessionId})}'|">-->
+<!--              <i class="fas fa-arrow-left me-2"></i>Quay lại-->
+<!--            </button>-->
+
+            <a th:href="@{/bookings/guest-info/{id}(id=${bookingSession.sessionId})}"
+               class="btn btn-outline-secondary">
+              <i class="fas fa-arrow-left me-2"></i>Quay lại
+            </a>
+
+            <button type="submit" class="btn btn-luxury flex-grow-1" id="submitBtn">
+              <i class="fas fa-lock me-2"></i>Xác nhận và thanh toán
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Summary Sidebar -->
+    <div class="col-lg-4">
+      <div class="booking-card" style="position: sticky; top: 100px;">
+        <div class="total-box">
+          <h6 class="mb-2">Tổng thanh toán</h6>
+          <div class="total-amount" id="displayAmount"
+               th:text="${#strings.concat(#numbers.formatDecimal(bookingSession.totalAmount, 0, 'COMMA', 0, 'POINT'), ' đ')}">
+            7,900,000 đ
+          </div>
+          <small id="paymentNote">Thanh toán toàn bộ</small>
+        </div>
+
+        <hr>
+
+        <h6 class="mb-3">Chi tiết giá</h6>
+        <div class="info-row">
+          <span>Giá phòng x <span th:text="${bookingSession.numberOfNights}">3</span> đêm</span>
+          <span th:text="${#strings.concat(#numbers.formatDecimal(bookingSession.totalRoomPrice, 0, 'COMMA', 0, 'POINT'), ' đ')}">5,400,000 đ</span>
+        </div>
+        <div class="info-row" th:if="${bookingSession.includeBreakfast}">
+          <span>Buffet sáng</span>
+          <span th:text="${#strings.concat(#numbers.formatDecimal(bookingSession.breakfastFee, 0, 'COMMA', 0, 'POINT'), ' đ')}">600,000 đ</span>
+        </div>
+        <div class="info-row" th:if="${bookingSession.includeSpa}">
+          <span>Spa package</span>
+          <span th:text="${#strings.concat(#numbers.formatDecimal(bookingSession.spaFee, 0, 'COMMA', 0, 'POINT'), ' đ')}">1,000,000 đ</span>
+        </div>
+        <div class="info-row" th:if="${bookingSession.includeAirportTransfer}">
+          <span>Đưa đón sân bay</span>
+          <span th:text="${#strings.concat(#numbers.formatDecimal(bookingSession.airportTransferFee, 0, 'COMMA', 0, 'POINT'), ' đ')}">300,000 đ</span>
+        </div>
+        <div class="info-row">
+          <span>Phí dịch vụ (10%)</span>
+          <span th:text="${#strings.concat(#numbers.formatDecimal(bookingSession.serviceFee, 0, 'COMMA', 0, 'POINT'), ' đ')}">540,000 đ</span>
+        </div>
+        <div class="info-row">
+          <span>VAT (10%)</span>
+          <span th:text="${#strings.concat(#numbers.formatDecimal(bookingSession.vat, 0, 'COMMA', 0, 'POINT'), ' đ')}">594,000 đ</span>
+        </div>
+
+        <div class="alert alert-success mt-3 mb-0">
+          <i class="fas fa-shield-alt me-2"></i>
+          <strong>Thanh toán an toàn</strong>
+          <div class="mt-1">Giao dịch được mã hóa SSL 256-bit</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script th:inline="javascript">
+  const totalAmount = /*[[${bookingSession.totalAmount}]]*/ 0;
+  const depositAmount = /*[[${bookingSession.depositAmount}]]*/ 0;
+
+  // Toggle chọn payment method
+  document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      document.querySelectorAll('.payment-method').forEach(pm => {
+        pm.classList.remove('selected');
+      });
+      this.closest('.payment-method').classList.add('selected');
+    });
+  });
+
+  // Hàm chọn kiểu thanh toán (full / deposit)
+  function selectPaymentType(type) {
+    const fullRadio = document.getElementById('fullPayment');
+    const depositRadio = document.getElementById('depositPayment');
+
+    if (type === 'full') {
+      fullRadio.checked = true;
+      updateDisplayAmount(totalAmount, 'Thanh toán toàn bộ');
+    } else {
+      depositRadio.checked = true;
+      updateDisplayAmount(depositAmount, 'Đặt cọc 50% - Còn lại thanh toán khi check-in');
+    }
+  }
+
+  // Hàm chọn phương thức thanh toán (momo, vnpay, ...)
+  function selectPaymentMethod(method) {
+    document.querySelectorAll('.payment-method').forEach(pm => {
+      pm.classList.remove('selected');
+    });
+
+    const selectedMethod = document.querySelector(`input[value="${method}"]`);
+    selectedMethod.checked = true;
+    selectedMethod.closest('.payment-method').classList.add('selected');
+  }
+
+  // Cập nhật số tiền hiển thị
+  function updateDisplayAmount(amount, note) {
+    document.getElementById('displayAmount').textContent = formatCurrency(amount);
+    document.getElementById('paymentNote').textContent = note;
+  }
+
+  // Định dạng tiền VNĐ
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN').format(amount) + ' đ'; // thêm khoảng trắng
+  }
+
+  // Event listener khi đổi loại thanh toán
+  document.getElementById('fullPayment').addEventListener('change', function() {
+    if (this.checked) {
+      updateDisplayAmount(totalAmount, 'Thanh toán toàn bộ');
+    }
+  });
+
+  document.getElementById('depositPayment').addEventListener('change', function() {
+    if (this.checked) {
+      updateDisplayAmount(depositAmount, 'Đặt cọc 50% - Còn lại thanh toán khi check-in');
+    }
+  });
+
+  // Form submission
+  document.getElementById('paymentForm').addEventListener('submit', function(e) {
+    const agreeTerms = document.getElementById('agreeTerms');
+    if (!agreeTerms.checked) {
+      e.preventDefault();
+      alert('Vui lòng đồng ý với điều khoản và điều kiện để tiếp tục.');
+      return false;
+    }
+
+    // Confirm trước khi submit
+    const isDepositOnly = document.getElementById('depositPayment').checked;
+    const amount = isDepositOnly ? depositAmount : totalAmount;
+    const amountFormatted = formatCurrency(amount);
+
+    if (!confirm(`Xác nhận thanh toán ${amountFormatted}?`)) {
+      e.preventDefault();
+      return false;
+    }
+
+    // Show loading state
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý thanh toán...';
+
+    // ✅ QUAN TRỌNG: Không preventDefault nữa, để form tự submit
+    // Đã xác nhận rồi thì cho phép submit
+  });
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', function() {
+    // Set default selected payment method theo radio đang check
+    const checkedMethod = document.querySelector('input[name="paymentMethod"]:checked');
+    if (checkedMethod) {
+      checkedMethod.closest('.payment-method').classList.add('selected');
+    }
+  });
+</script>
+</body>
+</html>

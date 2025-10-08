@@ -168,36 +168,36 @@ public class AuthController {
     }
 
     // === CASHIER RESTAURANT LOGIN ===
-    @GetMapping("/cashier-restaurant/login")
-    public String cashierRestaurantLoginPage(Model model, HttpSession session) {
-        if (authService.isLoggedIn(session) && authService.isCashierRestaurant(session)) {
-            return "redirect:/cashier-restaurant/dashboard";
-        }
-        model.addAttribute("loginRequest", new LoginRequest());
-        return "cashier-restaurant/login";
-    }
-
-    @PostMapping("/cashier-restaurant/login")
-    public String cashierRestaurantLogin(@Valid @ModelAttribute LoginRequest request,
-                                         BindingResult result,
-                                         HttpSession session,
-                                         RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            return "cashier-restaurant/login";
-        }
-
-        try {
-            UserResponse user = authService.login(request, session);
-            if (user.getRole() != UserRole.CASHIER_RESTAURANT) {
-                redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập trang Thu ngân nhà hàng");
-                return "redirect:/cashier-restaurant/login";
-            }
-            return "redirect:/cashier-restaurant/dashboard";
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/cashier-restaurant/login";
-        }
-    }
+//    @GetMapping("/cashier-restaurant/login")
+//    public String cashierRestaurantLoginPage(Model model, HttpSession session) {
+//        if (authService.isLoggedIn(session) && authService.isCashierRestaurant(session)) {
+//            return "redirect:/cashier-restaurant/dashboard";
+//        }
+//        model.addAttribute("loginRequest", new LoginRequest());
+//        return "staff/cashier_hotel/login";
+//    }
+//
+//    @PostMapping("/cashier-restaurant/login")
+//    public String cashierRestaurantLogin(@Valid @ModelAttribute LoginRequest request,
+//                                         BindingResult result,
+//                                         HttpSession session,
+//                                         RedirectAttributes redirectAttributes) {
+//        if (result.hasErrors()) {
+//            return "staff/cashier_hotel/login";
+//        }
+//
+//        try {
+//            UserResponse user = authService.login(request, session);
+//            if (user.getRole() != UserRole.CASHIER_RESTAURANT) {
+//                redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập trang Thu ngân nhà hàng");
+//                return "redirect:/cashier-restaurant/login";
+//            }
+//            return "redirect:/cashier-restaurant/dashboard";
+//        } catch (Exception e) {
+//            redirectAttributes.addFlashAttribute("error", e.getMessage());
+//            return "redirect:/cashier-restaurant/login";
+//        }
+//    }
 
     // === CASHIER HOTEL LOGIN ===
     @GetMapping("/cashier-hotel/login")
@@ -206,7 +206,7 @@ public class AuthController {
             return "redirect:/cashier-hotel/dashboard";
         }
         model.addAttribute("loginRequest", new LoginRequest());
-        return "cashier-hotel/login";
+        return "staff/cashier_hotel/login";
     }
 
     @PostMapping("/cashier-hotel/login")
@@ -215,7 +215,7 @@ public class AuthController {
                                     HttpSession session,
                                     RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            return "cashier-hotel/login";
+            return "staff/cashier_hotel/login";
         }
 
         try {
@@ -340,6 +340,6 @@ public class AuthController {
             return "redirect:/cashier-hotel/login";
         }
         model.addAttribute("user", authService.getCurrentUser(session));
-        return "cashier-hotel/dashboard";
+        return "staff/cashier_hotel/dashboard";
     }
 }

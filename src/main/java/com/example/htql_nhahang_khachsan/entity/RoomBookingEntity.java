@@ -1,6 +1,7 @@
 package com.example.htql_nhahang_khachsan.entity;
 
 import com.example.htql_nhahang_khachsan.enums.BookingStatus;
+import com.example.htql_nhahang_khachsan.enums.PaymentMethod;
 import com.example.htql_nhahang_khachsan.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class RoomBookingEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,12 +32,20 @@ public class RoomBookingEntity {
     private String bookingCode;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private UserEntity customer;
 
     @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)
-    private RoomEntity room;
+    @JoinColumn(name = "room_type_id", nullable = false)
+    private RoomTypeEntity roomType;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private RoomEntity room; // Phòng cụ thể được assign
+
+    @ManyToOne
+    @JoinColumn(name = "branch_id", nullable = false)
+    private BranchEntity branch;
 
     @Column(name = "check_in_date", nullable = false)
     private LocalDate checkInDate;
@@ -43,62 +53,107 @@ public class RoomBookingEntity {
     @Column(name = "check_out_date", nullable = false)
     private LocalDate checkOutDate;
 
-    @Column(name = "actual_check_in")
-    private LocalDateTime actualCheckIn;
+    @Column(name = "number_of_rooms", nullable = false)
+    private Integer numberOfRooms = 1;
 
-    @Column(name = "actual_check_out")
-    private LocalDateTime actualCheckOut;
+    @Column(name = "adults", nullable = false)
+    private Integer adults;
 
-    // Tổng số khách
-    @Column(name = "guest_count")
-    private Integer guestCount;
+    @Column(name = "children")
+    private Integer children = 0;
 
-    // Chi tiết theo nhóm tuổi
-    @Column(name = "adult_count")
-    private Integer adultCount;
+    // Thông tin khách hàng
+    @Column(name = "guest_name", nullable = false)
+    private String guestName;
 
-    @Column(name = "child_count")
-    private Integer childCount;
+    @Column(name = "guest_email", nullable = false)
+    private String guestEmail;
 
-    @Column(name = "infant_count")
-    private Integer infantCount;
+    @Column(name = "guest_phone", nullable = false)
+    private String guestPhone;
+
+    @Column(name = "guest_id_number")
+    private String guestIdNumber;
+
+    // Giá và thanh toán
+    @Column(name = "room_price", nullable = false)
+    private BigDecimal roomPrice; // Giá phòng/đêm
+
+    @Column(name = "base_price")
+    private BigDecimal basePrice;
+
+    @Column(name = "number_of_nights", nullable = false)
+    private Integer numberOfNights;
+
+    @Column(name = "total_room_price", nullable = false)
+    private BigDecimal totalRoomPrice;
+
+    @Column(name = "service_fee")
+    private BigDecimal serviceFee = BigDecimal.ZERO;
+
+    @Column(name = "vat")
+    private BigDecimal vat = BigDecimal.ZERO;
 
     @Column(name = "total_amount", nullable = false)
     private BigDecimal totalAmount;
 
-    @Column(name = "discount_amount")
-    private BigDecimal discountAmount;
-
-    @Column(name = "final_amount")
-    private BigDecimal finalAmount;
-
-    // Số tiền khách đặt cọc
     @Column(name = "deposit_amount")
-    private BigDecimal depositAmount;
+    private BigDecimal depositAmount; // Tiền đặt cọc 50%
 
-    // Ngày đặt cọc
-    @Column(name = "deposit_date")
-    private LocalDateTime depositDate;
+    @Column(name = "remaining_amount")
+    private BigDecimal remainingAmount;
 
-    // Đã hoàn cọc chưa (true/false)
-    @Column(name = "deposit_returned")
-    private Boolean depositReturned = false;
+    // Dịch vụ bổ sung
+    @Column(name = "include_breakfast")
+    private Boolean includeBreakfast = false;
 
+    @Column(name = "breakfast_fee")
+    private BigDecimal breakfastFee = BigDecimal.ZERO;
 
-    @Enumerated(EnumType.STRING)
-    private BookingStatus status;
+    @Column(name = "include_spa")
+    private Boolean includeSpa = false;
 
-    @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;
+    @Column(name = "spa_fee")
+    private BigDecimal spaFee = BigDecimal.ZERO;
 
-    @Column(name = "payment_method")
-    private String paymentMethod;
+    @Column(name = "include_airport_transfer")
+    private Boolean includeAirportTransfer = false;
+
+    @Column(name = "airport_transfer_fee")
+    private BigDecimal airportTransferFee = BigDecimal.ZERO;
 
     @Column(name = "special_requests", columnDefinition = "TEXT")
     private String specialRequests;
 
-    @Column(name = "qr_code")
-    private String qrCode;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BookingStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status", nullable = false)
+    private PaymentStatus paymentStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method")
+    private PaymentMethod paymentMethod;
+
+    @Column(name = "booking_date")
+    private LocalDateTime bookingDate;
+
+    @Column(name = "confirmed_at")
+    private LocalDateTime confirmedAt;
+
+    @Column(name = "checked_in_at")
+    private LocalDateTime checkedInAt;
+
+    @Column(name = "checked_out_at")
+    private LocalDateTime checkedOutAt;
+
+    @Column(name = "cancelled_at")
+    private LocalDateTime cancelledAt;
+
+    @Column(name = "cancellation_reason", columnDefinition = "TEXT")
+    private String cancellationReason;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -109,8 +164,16 @@ public class RoomBookingEntity {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-        bookingCode = generateBookingCode();
+        bookingDate = LocalDateTime.now();
+        if (bookingCode == null) {
+            bookingCode = generateBookingCode();
+        }
+        if (status == null) {
+            status = BookingStatus.PENDING;
+        }
+        if (paymentStatus == null) {
+            paymentStatus = PaymentStatus.PENDING;
+        }
     }
 
     @PreUpdate
@@ -119,6 +182,6 @@ public class RoomBookingEntity {
     }
 
     private String generateBookingCode() {
-        return "RM" + System.currentTimeMillis();
+        return "RB" + System.currentTimeMillis();
     }
 }

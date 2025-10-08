@@ -91,9 +91,11 @@
                   <option th:each="status : ${statuses}"
                           th:value="${status}"
                           th:text="${status.displayName}"
-                          th:selected="${searchStatus == status}"></option>
+                          th:selected="${searchStatus != null and status == searchStatus}">
+                  </option>
                 </select>
               </div>
+
               <div class="col-md-3">
                 <label class="form-label fw-semibold">Sức chứa</label>
                 <input type="number" name="capacity" class="form-control"
@@ -176,12 +178,37 @@
                     <span th:text="${table.capacity}"></span> người
                   </small>
                 </div>
-                <span class="badge status-badge"
-                      th:classappend="${table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).AVAILABLE ? 'bg-success' :
-                          (table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).OCCUPIED ? 'bg-danger' :
-                          (table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).RESERVED ? 'bg-warning text-dark' : 'bg-secondary'))}"
-                      th:text="${table.statusDisplayName}">
-                </span>
+<!--                <span class="badge status-badge"-->
+<!--                      th:classappend="${table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).AVAILABLE ? 'bg-success' :-->
+<!--                          (table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).OCCUPIED ? 'bg-danger' :-->
+<!--                          (table.status == T(com.example.htql_nhahang_khachsan.enums.TableStatus).RESERVED ? 'bg-warning text-dark' : 'bg-secondary'))}"-->
+<!--                      th:text="${table.statusDisplayName}">-->
+<!--                </span>-->
+                <span class="badge" th:switch="${table.status}">
+                  <span th:case="AVAILABLE"
+                        class="bg-success"
+                        th:text="${table.status.displayName}"></span>
+
+                  <span th:case="OCCUPIED"
+                        class="bg-danger"
+                        th:text="${table.status.displayName}"></span>
+
+                  <span th:case="RESERVED"
+                        class="bg-warning text-dark"
+                        th:text="${table.status.displayName}"></span>
+
+                  <span th:case="OUT_OF_SERVICE"
+                        class="bg-secondary"
+                        th:text="${table.status.displayName}"></span>
+
+                  <span th:case="CLEANING"
+                        class="bg-info text-dark"
+                        th:text="${table.status.displayName}"></span>
+
+                  <span th:case="*"
+                        class="bg-dark"
+                        th:text="'Chưa rõ'"></span>
+              </span>
 
 
               </div>

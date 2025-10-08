@@ -70,22 +70,41 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long>, JpaSpec
      * Tìm các phòng trống trong khoảng thời gian
      * (Phòng không có booking nào trong khoảng thời gian này)
      */
+//    @Query("SELECT r FROM RoomEntity r " +
+//            "WHERE r.roomType.id = :roomTypeId " +
+//            "AND r.status = 'AVAILABLE' " +
+//            "AND r.id NOT IN (" +
+//            "    SELECT DISTINCT b.room.id FROM RoomBookingEntity b " +
+//            "    WHERE b.room.id IS NOT NULL " +
+//            "    AND b.status NOT IN (com.example.htql_nhahang_khachsan.enums.BookingStatus.CANCELLED, " +
+//            "                         com.example.htql_nhahang_khachsan.enums.BookingStatus.NO_SHOW) " +
+//            "    AND (" +
+//            "        (b.checkInDate <= :checkOutDate AND b.checkOutDate >= :checkInDate)" +
+//            "    )" +
+//            ")")
+//    List<RoomEntity> findAvailableRoomsByTypeAndDateRange(
+//            @Param("roomTypeId") Long roomTypeId,
+//            @Param("checkInDate") LocalDate checkInDate,
+//            @Param("checkOutDate") LocalDate checkOutDate);
+
     @Query("SELECT r FROM RoomEntity r " +
             "WHERE r.roomType.id = :roomTypeId " +
-            "AND r.status = 'AVAILABLE' " +
+            "AND r.status = :availableStatus " +
             "AND r.id NOT IN (" +
             "    SELECT DISTINCT b.room.id FROM RoomBookingEntity b " +
             "    WHERE b.room.id IS NOT NULL " +
-            "    AND b.status NOT IN (com.example.htql_nhahang_khachsan.enums.BookingStatus.CANCELLED, " +
-            "                         com.example.htql_nhahang_khachsan.enums.BookingStatus.NO_SHOW) " +
-            "    AND (" +
-            "        (b.checkInDate <= :checkOutDate AND b.checkOutDate >= :checkInDate)" +
-            "    )" +
+            "    AND b.status NOT IN :excludedStatuses " +
+            "    AND (b.checkInDate <= :checkOutDate AND b.checkOutDate >= :checkInDate)" +
             ")")
     List<RoomEntity> findAvailableRoomsByTypeAndDateRange(
             @Param("roomTypeId") Long roomTypeId,
             @Param("checkInDate") LocalDate checkInDate,
-            @Param("checkOutDate") LocalDate checkOutDate);
+            @Param("checkOutDate") LocalDate checkOutDate,
+            @Param("availableStatus") com.example.htql_nhahang_khachsan.enums.RoomStatus availableStatus,
+            @Param("excludedStatuses") List<com.example.htql_nhahang_khachsan.enums.BookingStatus> excludedStatuses);
+
+
+
 
 
 //    /**
@@ -163,6 +182,24 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long>, JpaSpec
 //            "ORDER BY r.floor ASC")
 //    List<Integer> findDistinctFloorsByBranchId(@Param("branchId") Long branchId);
 
+
+
+    //booking room realtime
+    @Query("""
+        SELECT COUNT(r) FROM RoomEntity r
+        WHERE r.roomType.id = :roomTypeId
+          AND r.id NOT IN (
+              SELECT b.room.id FROM RoomBookingEntity b
+              WHERE b.status <> 'CANCELLED'
+                AND b.checkInDate < :checkOut
+                AND b.checkOutDate > :checkIn
+          )
+    """)
+    int countAvailableRoomsByTypeAndDateRange(
+            @Param("roomTypeId") Long roomTypeId,
+            @Param("checkIn") LocalDate checkIn,
+            @Param("checkOut") LocalDate checkOut
+    );
 
 
 }

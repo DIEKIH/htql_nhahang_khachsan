@@ -1,87 +1,189 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý phòng Real-time - Manager</title>
+    <title>Room Timeline - Gantt View</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/manager_sidebar.css}">
     <style>
-        .room-card {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 12px;
-            height: 120px;
+        :root {
+            --row-height: 50px;
+            --day-width: 100px;
+            --gap: 4px;
+        }
+
+        body { margin: 0; background: #f5f7fa; font-family: system-ui, -apple-system, sans-serif; }
+
+        .header {
+            background: #fff;
+            padding: 12px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header h1 { font-size: 20px; margin: 0; font-weight: 600; }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+            align-items: center;
+        }
+
+        .btn-nav { padding: 6px 12px; border: 1px solid #ddd; background: #fff; border-radius: 6px; cursor: pointer; }
+        .btn-nav:hover { background: #f8f9fa; }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 60px);
+            padding: 16px;
+            gap: 16px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            overflow-y: auto;
+        }
+
+        .timeline-wrapper {
+            flex: 1;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
             overflow: hidden;
         }
 
-        .room-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .room-card.available {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-        }
-
-        .room-card.booked {
-            background: linear-gradient(135deg, #ffc107, #fd7e14);
-            color: white;
-        }
-
-        .room-card.occupied {
-            background: linear-gradient(135deg, #dc3545, #e83e8c);
-            color: white;
-        }
-
-        .room-card.maintenance {
-            background: linear-gradient(135deg, #6c757d, #495057);
-            color: white;
-        }
-
-        .room-number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .room-status {
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
-
-        .status-icon {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 1.2rem;
-        }
-
-        .filter-section {
+        .timeline-header {
+            display: flex;
+            border-bottom: 2px solid #e9ecef;
             background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
         }
+
+        .room-header {
+            width: 200px;
+            padding: 12px;
+            font-weight: 600;
+            border-right: 2px solid #e9ecef;
+        }
+
+        .days-header {
+            display: flex;
+            flex: 1;
+            overflow-x: auto;
+        }
+
+        .day-cell {
+            min-width: var(--day-width);
+            padding: 12px 8px;
+            text-align: center;
+            border-right: 1px solid #e9ecef;
+            font-size: 13px;
+        }
+
+        .day-cell.today { background: #e7f3ff; font-weight: 600; }
+
+        .timeline-body {
+            display: flex;
+            flex: 1;
+            overflow: auto;
+        }
+
+        .rooms-column {
+            width: 200px;
+            border-right: 2px solid #e9ecef;
+            background: #fafbfc;
+        }
+
+        .room-row {
+            height: var(--row-height);
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .room-number { font-weight: 600; font-size: 15px; }
+        .room-type { font-size: 12px; color: #6c757d; margin-top: 2px; }
+
+        .grid-container {
+            position: relative;
+            flex: 1;
+        }
+
+        .grid-rows {
+            position: relative;
+        }
+
+        .grid-row {
+            height: var(--row-height);
+            position: relative;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+        }
+
+        .grid-cell {
+            min-width: var(--day-width);
+            border-right: 1px solid #f0f0f0;
+        }
+
+        .grid-cell.today { background: #f0f8ff; }
+
+        .booking-block {
+            position: absolute;
+            height: 40px;
+            top: 5px;
+            border-radius: 6px;
+            color: #fff;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+            z-index: 10;
+        }
+
+        .booking-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            z-index: 20;
+        }
+
+        .booking-block.status-PENDING { background: linear-gradient(135deg, #ffc107, #ff9800); }
+        .booking-block.status-CONFIRMED { background: linear-gradient(135deg, #17a2b8, #138496); }
+        .booking-block.status-CHECKED_IN { background: linear-gradient(135deg, #28a745, #218838); }
+        .booking-block.status-CHECKED_OUT { background: linear-gradient(135deg, #6c757d, #545b62); }
+        .booking-block.status-CANCELLED { background: linear-gradient(135deg, #dc3545, #c82333); opacity: 0.6; }
 
         .legend {
             display: flex;
+            gap: 12px;
             flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            font-size: 13px;
         }
 
         .legend-color {
@@ -90,524 +192,411 @@
             border-radius: 4px;
         }
 
-        .stats-bar {
-            background: white;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .stats {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
         }
 
         .stat-item {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 14px;
         }
 
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 5px;
+        .filter-group {
+            margin-bottom: 16px;
         }
 
-        .modal-header {
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .info-group {
-            margin-bottom: 20px;
-        }
-
-        .info-label {
+        .filter-group label {
+            display: block;
+            font-size: 13px;
             font-weight: 600;
+            margin-bottom: 6px;
             color: #495057;
-            margin-bottom: 5px;
         }
 
-        .info-value {
+        .tooltip-custom {
+            position: fixed;
+            background: #222;
+            color: #fff;
             padding: 8px 12px;
-            background: #f8f9fa;
             border-radius: 6px;
-            border-left: 3px solid #007bff;
+            font-size: 12px;
+            z-index: 1000;
+            pointer-events: none;
+            display: none;
+            white-space: nowrap;
         }
 
         @media (max-width: 768px) {
-            .room-card {
-                height: 100px;
-            }
-            .room-number {
-                font-size: 1.2rem;
-            }
-            .legend {
-                justify-content: center;
-            }
+            .sidebar { display: none; }
+            .room-header, .rooms-column { width: 120px; }
         }
     </style>
 </head>
 <body>
-<div class="container-fluid py-4">
-    <!-- Header -->
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">
-                    <i class="bi bi-building"></i> Quản lý phòng Real-time
-                </h2>
-                <button class="btn btn-outline-primary" onclick="refreshData()">
-                    <i class="bi bi-arrow-clockwise"></i> Cập nhật
-                </button>
-            </div>
-        </div>
+<div class="header">
+
+    <h1><i class="bi bi-calendar3-range"></i> Room Timeline - Gantt View</h1>
+
+    <div class="controls">
+        <button class="btn-nav" id="prevBtn"><i class="bi bi-chevron-left"></i> Trước</button>
+        <button class="btn-nav" id="todayBtn">Hôm nay</button>
+        <button class="btn-nav" id="nextBtn">Sau <i class="bi bi-chevron-right"></i></button>
+
+        <select id="daysRange" class="form-select form-select-sm" style="width: 120px;">
+            <option value="7">7 ngày</option>
+            <option value="14" selected>14 ngày</option>
+            <option value="30">30 ngày</option>
+        </select>
+
+        <button class="btn-nav" onclick="refreshData()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+
+        <a href="/manager" class="btn-nav">
+            <i class="bi bi-house"></i> Dashboard
+        </a>
     </div>
+</div>
 
-    <!-- Statistics Bar -->
-    <div class="stats-bar">
-        <div class="row">
-            <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number text-success" id="availableCount">12</div>
-                    <small class="text-muted">Trống</small>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number text-warning" id="bookedCount">8</div>
-                    <small class="text-muted">Đã đặt</small>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number text-danger" id="occupiedCount">15</div>
-                    <small class="text-muted">Đang ở</small>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number text-secondary" id="maintenanceCount">3</div>
-                    <small class="text-muted">Bảo trì</small>
-                </div>
-            </div>
+<div class="main-container">
+    <aside class="sidebar">
+        <h5 style="margin-bottom: 12px;">Bộ lọc</h5>
+
+        <div class="filter-group">
+            <label>Loại phòng</label>
+            <select id="roomTypeFilter" class="form-select form-select-sm">
+                <option value="">Tất cả</option>
+                <option th:each="type : ${roomTypes}" th:value="${type}" th:text="${type}"></option>
+            </select>
         </div>
-    </div>
 
-    <!-- Filters -->
-    <div class="filter-section">
-        <h5 class="mb-3">
-            <i class="bi bi-funnel"></i> Bộ lọc
-        </h5>
+        <div class="filter-group">
+            <label>Trạng thái phòng</label>
+            <select id="roomStatusFilter" class="form-select form-select-sm">
+                <option value="">Tất cả</option>
+                <option value="AVAILABLE">Trống</option>
+                <option value="OCCUPIED">Đang ở</option>
+                <option value="CLEANING">Đang dọn</option>
+                <option value="MAINTENANCE">Bảo trì</option>
+            </select>
+        </div>
 
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Trạng thái phòng</label>
-                <select class="form-select" id="statusFilter" onchange="applyFilters()">
-                    <option value="">Tất cả trạng thái</option>
-                    <option value="available">Trống</option>
-                    <option value="booked">Đã đặt</option>
-                    <option value="occupied">Đang ở</option>
-                    <option value="maintenance">Bảo trì</option>
-                </select>
+        <div class="stats">
+            <h6 style="margin-bottom: 10px;">Thống kê</h6>
+            <div class="stat-item">
+                <span>Tổng phòng:</span>
+                <strong id="totalRooms">0</strong>
             </div>
-
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Từ ngày</label>
-                <input type="date" class="form-control" id="fromDate" onchange="applyFilters()">
+            <div class="stat-item">
+                <span>Đã đặt hôm nay:</span>
+                <strong id="bookedToday">0</strong>
             </div>
-
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Đến ngày</label>
-                <input type="date" class="form-control" id="toDate" onchange="applyFilters()">
+            <div class="stat-item">
+                <span>Check-in hôm nay:</span>
+                <strong id="checkinToday">0</strong>
+            </div>
+            <div class="stat-item">
+                <span>Check-out hôm nay:</span>
+                <strong id="checkoutToday">0</strong>
             </div>
         </div>
 
-        <!-- Legend -->
         <div class="legend">
-            <span><strong>Chú thích:</strong></span>
+            <div style="font-weight: 600; margin-bottom: 8px; width: 100%;">Chú thích:</div>
             <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #28a745, #20c997);"></div>
-                <span>Trống</span>
+                <div class="legend-color" style="background: linear-gradient(135deg, #ffc107, #ff9800);"></div>
+                <span>Chờ xác nhận</span>
             </div>
             <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #ffc107, #fd7e14);"></div>
-                <span>Đã đặt</span>
+                <div class="legend-color" style="background: linear-gradient(135deg, #17a2b8, #138496);"></div>
+                <span>Đã xác nhận</span>
             </div>
             <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #dc3545, #e83e8c);"></div>
+                <div class="legend-color" style="background: linear-gradient(135deg, #28a745, #218838);"></div>
                 <span>Đang ở</span>
             </div>
             <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #6c757d, #495057);"></div>
-                <span>Bảo trì</span>
+                <div class="legend-color" style="background: linear-gradient(135deg, #6c757d, #545b62);"></div>
+                <span>Đã trả</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #dc3545, #c82333);"></div>
+                <span>Đã hủy</span>
             </div>
         </div>
-    </div>
+    </aside>
 
-    <!-- Room Grid -->
-    <div class="row" id="roomGrid">
-        <!-- Rooms will be populated by JavaScript -->
-    </div>
-</div>
+    <div class="timeline-wrapper">
+        <div class="timeline-header">
+            <div class="room-header">Phòng</div>
+            <div class="days-header" id="daysHeader"></div>
+        </div>
 
-<!-- Room Detail Modal -->
-<div class="modal fade" id="roomDetailModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">
-                    <i class="bi bi-door-open"></i> Chi tiết phòng <span id="modalRoomNumber"></span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="info-group">
-                            <div class="info-label">Số phòng</div>
-                            <div class="info-value" id="detailRoomNumber"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Loại phòng</div>
-                            <div class="info-value" id="detailRoomType"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Tầng</div>
-                            <div class="info-value" id="detailFloor"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Trạng thái hiện tại</div>
-                            <div class="info-value">
-                                <span class="badge" id="detailCurrentStatus"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="info-group">
-                            <div class="info-label">Tên khách hàng</div>
-                            <div class="info-value" id="detailCustomerName"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Ngày check-in</div>
-                            <div class="info-value" id="detailCheckIn"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Ngày check-out</div>
-                            <div class="info-value" id="detailCheckOut"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Trạng thái booking</div>
-                            <div class="info-value">
-                                <span class="badge" id="detailBookingStatus"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-group">
-                    <div class="info-label">Ghi chú đặc biệt</div>
-                    <div class="info-value" id="detailSpecialRequests"></div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <div class="me-auto">
-                    <label class="form-label">Cập nhật trạng thái phòng:</label>
-                    <select class="form-select d-inline-block w-auto" id="newRoomStatus">
-                        <option value="available">Trống</option>
-                        <option value="occupied">Đang ở</option>
-                        <option value="maintenance">Bảo trì</option>
-                    </select>
-                </div>
-
-                <button type="button" class="btn btn-success" onclick="confirmBooking()">
-                    <i class="bi bi-check-circle"></i> Xác nhận booking
-                </button>
-                <button type="button" class="btn btn-danger" onclick="cancelBooking()">
-                    <i class="bi bi-x-circle"></i> Hủy booking
-                </button>
-                <button type="button" class="btn btn-primary" onclick="updateRoomStatus()">
-                    <i class="bi bi-arrow-up-circle"></i> Cập nhật trạng thái
-                </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <div class="timeline-body">
+            <div class="rooms-column" id="roomsColumn"></div>
+            <div class="grid-container" id="gridContainer">
+                <div class="grid-rows" id="gridRows"></div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="tooltip-custom" id="tooltip"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Sample room data
-    const rooms = [
-        {
-            id: 1, roomNumber: "101", floor: 1, roomType: "Standard Single", status: "available",
-            customer: null, checkIn: null, checkOut: null, bookingStatus: null, specialRequests: ""
-        },
-        {
-            id: 2, roomNumber: "102", floor: 1, roomType: "Standard Double", status: "booked",
-            customer: "Nguyễn Văn A", checkIn: "2024-01-15", checkOut: "2024-01-18",
-            bookingStatus: "confirmed", specialRequests: "Phòng không hút thuốc"
-        },
-        {
-            id: 3, roomNumber: "103", floor: 1, roomType: "Standard Single", status: "occupied",
-            customer: "Trần Thị B", checkIn: "2024-01-14", checkOut: "2024-01-16",
-            bookingStatus: "checkedIn", specialRequests: "Yêu cầu phòng yên tĩnh"
-        },
-        {
-            id: 4, roomNumber: "104", floor: 1, roomType: "Standard Double", status: "maintenance",
-            customer: null, checkIn: null, checkOut: null, bookingStatus: null, specialRequests: "Sửa chữa điều hòa"
-        },
-        {
-            id: 5, roomNumber: "201", floor: 2, roomType: "Deluxe Single", status: "available",
-            customer: null, checkIn: null, checkOut: null, bookingStatus: null, specialRequests: ""
-        },
-        {
-            id: 6, roomNumber: "202", floor: 2, roomType: "Deluxe Double", status: "booked",
-            customer: "Lê Văn C", checkIn: "2024-01-16", checkOut: "2024-01-20",
-            bookingStatus: "pending", specialRequests: "Giường đôi"
-        },
-        // Add more rooms for demonstration
-    ];
+    const state = {
+        startDate: new Date(),
+        days: 14,
+        rooms: [],
+        bookings: [],
+        roomTypeFilter: '',
+        roomStatusFilter: ''
+    };
 
-    // Add more sample rooms
-    for (let i = 7; i <= 40; i++) {
-        const floor = Math.ceil(i / 10);
-        const roomNum = (floor * 100) + (i % 10 || 10);
-        const statuses = ['available', 'booked', 'occupied', 'maintenance'];
-        const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+    // Utility functions
+    function formatDate(date) {
+        return date.toISOString().split('T')[0];
+    }
 
-        rooms.push({
-            id: i,
-            roomNumber: roomNum.toString(),
-            floor: floor,
-            roomType: ['Standard Single', 'Standard Double', 'Deluxe Single', 'Deluxe Double'][Math.floor(Math.random() * 4)],
-            status: randomStatus,
-            customer: randomStatus !== 'available' && randomStatus !== 'maintenance' ? `Khách ${i}` : null,
-            checkIn: randomStatus !== 'available' && randomStatus !== 'maintenance' ? "2024-01-15" : null,
-            checkOut: randomStatus !== 'available' && randomStatus !== 'maintenance' ? "2024-01-18" : null,
-            bookingStatus: randomStatus === 'booked' ? 'confirmed' : randomStatus === 'occupied' ? 'checkedIn' : null,
-            specialRequests: randomStatus === 'maintenance' ? 'Bảo trì định kỳ' : ''
+    function addDays(date, days) {
+        const result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
+    function daysBetween(date1, date2) {
+        const d1 = new Date(date1);
+        const d2 = new Date(date2);
+        return Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));
+    }
+
+    // Load data
+    async function loadData() {
+        try {
+            const startDate = formatDate(state.startDate);
+            const endDate = formatDate(addDays(state.startDate, state.days));
+
+            const [roomsRes, bookingsRes] = await Promise.all([
+                fetch(`/manager/rooms-timeline/api/rooms?roomTypeId=${state.roomTypeFilter || ''}`),
+                fetch(`/manager/rooms-timeline/api/bookings?startDate=${startDate}&endDate=${endDate}&roomTypeId=${state.roomTypeFilter || ''}`)
+            ]);
+
+            state.rooms = await roomsRes.json();
+            state.bookings = await bookingsRes.json();
+
+            render();
+        } catch (error) {
+            console.error('Error loading data:', error);
+            alert('Không thể tải dữ liệu');
+        }
+    }
+
+    // Render functions
+    function render() {
+        renderDaysHeader();
+        renderRoomsAndGrid();
+        renderBookings();
+        updateStats();
+    }
+
+    function renderDaysHeader() {
+        const header = document.getElementById('daysHeader');
+        header.innerHTML = '';
+        const today = formatDate(new Date());
+
+        for (let i = 0; i < state.days; i++) {
+            const date = addDays(state.startDate, i);
+            const dateStr = formatDate(date);
+            const day = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+            const weekday = date.toLocaleDateString('vi-VN', { weekday: 'short' });
+
+            const cell = document.createElement('div');
+            cell.className = 'day-cell' + (dateStr === today ? ' today' : '');
+            cell.innerHTML = `<div>${weekday}</div><div>${day}</div>`;
+            header.appendChild(cell);
+        }
+    }
+
+    function renderRoomsAndGrid() {
+        const roomsCol = document.getElementById('roomsColumn');
+        const gridRows = document.getElementById('gridRows');
+
+        roomsCol.innerHTML = '';
+        gridRows.innerHTML = '';
+
+        const filteredRooms = state.rooms.filter(r => {
+            if (state.roomStatusFilter && r.status !== state.roomStatusFilter) return false;
+            return true;
+        });
+
+        filteredRooms.forEach(room => {
+            // Room name cell
+            const roomDiv = document.createElement('div');
+            roomDiv.className = 'room-row';
+            roomDiv.innerHTML = `
+            <div class="room-number">${room.roomNumber}</div>
+            <div class="room-type">${room.roomTypeName}</div>
+        `;
+            roomsCol.appendChild(roomDiv);
+
+            // Grid row
+            const gridRow = document.createElement('div');
+            gridRow.className = 'grid-row';
+            gridRow.dataset.roomId = room.id;
+
+            const today = formatDate(new Date());
+            for (let i = 0; i < state.days; i++) {
+                const date = formatDate(addDays(state.startDate, i));
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell' + (date === today ? ' today' : '');
+                cell.dataset.date = date;
+                gridRow.appendChild(cell);
+            }
+
+            gridRows.appendChild(gridRow);
         });
     }
 
-    let filteredRooms = [...rooms];
-    let currentRoomId = null;
+    function renderBookings() {
+        const gridRows = document.getElementById('gridRows');
+        const today = formatDate(new Date());
 
-    function getStatusIcon(status) {
-        const icons = {
-            available: 'bi-check-circle',
-            booked: 'bi-calendar-check',
-            occupied: 'bi-person-fill',
-            maintenance: 'bi-tools'
-        };
-        return icons[status] || 'bi-question-circle';
+        state.bookings.forEach(booking => {
+            if (!booking.roomId) return; // Skip unassigned bookings
+
+            const row = gridRows.querySelector(`[data-room-id="${booking.roomId}"]`);
+            if (!row) return;
+
+            const startDate = new Date(booking.checkInDate);
+            const endDate = new Date(booking.checkOutDate);
+            const dayWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--day-width')) || 100;
+
+            // Calculate position
+            const startOffset = daysBetween(formatDate(state.startDate), booking.checkInDate);
+            const duration = daysBetween(booking.checkInDate, booking.checkOutDate);
+
+            if (startOffset + duration < 0 || startOffset >= state.days) return; // Outside view range
+
+            const leftPx = Math.max(0, startOffset) * dayWidth;
+            const widthPx = Math.min(duration, state.days - Math.max(0, startOffset)) * dayWidth - 4;
+
+            const block = document.createElement('div');
+            block.className = `booking-block status-${booking.status}`;
+            block.style.left = leftPx + 'px';
+            block.style.width = Math.max(widthPx, 60) + 'px';
+            block.dataset.bookingId = booking.id;
+
+            block.innerHTML = `
+            <span><i class="bi bi-bookmark-fill"></i> ${booking.bookingCode}</span>
+            <span style="font-size: 11px; opacity: 0.9;">${booking.guestName}</span>
+        `;
+
+            block.addEventListener('mouseenter', (e) => showTooltip(e, booking));
+            block.addEventListener('mouseleave', hideTooltip);
+            block.addEventListener('click', () => showBookingDetail(booking));
+
+            row.appendChild(block);
+        });
+    }
+
+    function showTooltip(e, booking) {
+        const tooltip = document.getElementById('tooltip');
+        tooltip.style.display = 'block';
+        tooltip.style.left = e.pageX + 'px';
+        tooltip.style.top = (e.pageY - 40) + 'px';
+        tooltip.innerHTML = `
+        <strong>${booking.bookingCode}</strong><br>
+        Khách: ${booking.guestName}<br>
+        Phòng: ${booking.roomNumber}<br>
+        ${booking.checkInDate} → ${booking.checkOutDate}<br>
+        Trạng thái: ${getStatusText(booking.status)}
+    `;
+    }
+
+    function hideTooltip() {
+        document.getElementById('tooltip').style.display = 'none';
     }
 
     function getStatusText(status) {
-        const texts = {
-            available: 'Trống',
-            booked: 'Đã đặt',
-            occupied: 'Đang ở',
-            maintenance: 'Bảo trì'
+        const map = {
+            'PENDING': 'Chờ xác nhận',
+            'CONFIRMED': 'Đã xác nhận',
+            'CHECKED_IN': 'Đang ở',
+            'CHECKED_OUT': 'Đã trả',
+            'CANCELLED': 'Đã hủy'
         };
-        return texts[status] || 'Không xác định';
+        return map[status] || status;
     }
 
-    function getBookingStatusBadge(status) {
-        const badges = {
-            confirmed: '<span class="badge bg-success">Đã xác nhận</span>',
-            pending: '<span class="badge bg-warning">Đang chờ</span>',
-            checkedIn: '<span class="badge bg-info">Đã check-in</span>',
-            cancelled: '<span class="badge bg-danger">Đã hủy</span>'
-        };
-        return badges[status] || '<span class="badge bg-secondary">Không có</span>';
+    function showBookingDetail(booking) {
+        window.location.href = `/manager/bookings/${booking.id}`;
     }
 
-    function getRoomStatusBadge(status) {
-        const badges = {
-            available: '<span class="badge bg-success">Trống</span>',
-            booked: '<span class="badge bg-warning">Đã đặt</span>',
-            occupied: '<span class="badge bg-danger">Đang ở</span>',
-            maintenance: '<span class="badge bg-secondary">Bảo trì</span>'
-        };
-        return badges[status] || '<span class="badge bg-secondary">Không xác định</span>';
-    }
+    function updateStats() {
+        const today = formatDate(new Date());
+        document.getElementById('totalRooms').textContent = state.rooms.length;
 
-    function renderRooms() {
-        const roomGrid = document.getElementById('roomGrid');
-        roomGrid.innerHTML = '';
+        const bookedToday = state.bookings.filter(b =>
+            b.checkInDate <= today && b.checkOutDate > today
+        ).length;
+        document.getElementById('bookedToday').textContent = bookedToday;
 
-        filteredRooms.forEach(room => {
-            const roomCard = document.createElement('div');
-            roomCard.className = 'col-6 col-sm-4 col-md-3 col-lg-2 mb-3';
+        const checkinToday = state.bookings.filter(b => b.checkInDate === today).length;
+        document.getElementById('checkinToday').textContent = checkinToday;
 
-            roomCard.innerHTML = `
-                    <div class="room-card ${room.status}" onclick="showRoomDetail(${room.id})">
-                        <i class="status-icon bi ${getStatusIcon(room.status)}"></i>
-                        <div class="room-number">${room.roomNumber}</div>
-                        <div class="room-status">${getStatusText(room.status)}</div>
-                    </div>
-                `;
-
-            roomGrid.appendChild(roomCard);
-        });
-
-        updateStatistics();
-    }
-
-    function updateStatistics() {
-        const stats = {
-            available: 0,
-            booked: 0,
-            occupied: 0,
-            maintenance: 0
-        };
-
-        filteredRooms.forEach(room => {
-            stats[room.status]++;
-        });
-
-        document.getElementById('availableCount').textContent = stats.available;
-        document.getElementById('bookedCount').textContent = stats.booked;
-        document.getElementById('occupiedCount').textContent = stats.occupied;
-        document.getElementById('maintenanceCount').textContent = stats.maintenance;
-    }
-
-    function showRoomDetail(roomId) {
-        const room = rooms.find(r => r.id === roomId);
-        if (!room) return;
-
-        currentRoomId = roomId;
-
-        document.getElementById('modalRoomNumber').textContent = room.roomNumber;
-        document.getElementById('detailRoomNumber').textContent = room.roomNumber;
-        document.getElementById('detailRoomType').textContent = room.roomType;
-        document.getElementById('detailFloor').textContent = `Tầng ${room.floor}`;
-        document.getElementById('detailCurrentStatus').innerHTML = getRoomStatusBadge(room.status);
-
-        document.getElementById('detailCustomerName').textContent = room.customer || 'Không có';
-        document.getElementById('detailCheckIn').textContent = room.checkIn || 'Không có';
-        document.getElementById('detailCheckOut').textContent = room.checkOut || 'Không có';
-        document.getElementById('detailBookingStatus').innerHTML = getBookingStatusBadge(room.bookingStatus);
-        document.getElementById('detailSpecialRequests').textContent = room.specialRequests || 'Không có';
-
-        document.getElementById('newRoomStatus').value = room.status;
-
-        new bootstrap.Modal(document.getElementById('roomDetailModal')).show();
-    }
-
-    function applyFilters() {
-        const statusFilter = document.getElementById('statusFilter').value;
-        const fromDate = document.getElementById('fromDate').value;
-        const toDate = document.getElementById('toDate').value;
-
-        filteredRooms = rooms.filter(room => {
-            let matchStatus = !statusFilter || room.status === statusFilter;
-
-            let matchDate = true;
-            if (fromDate && room.checkIn) {
-                matchDate = matchDate && new Date(room.checkIn) >= new Date(fromDate);
-            }
-            if (toDate && room.checkOut) {
-                matchDate = matchDate && new Date(room.checkOut) <= new Date(toDate);
-            }
-
-            return matchStatus && matchDate;
-        });
-
-        renderRooms();
-    }
-
-    function confirmBooking() {
-        if (!currentRoomId) return;
-
-        const room = rooms.find(r => r.id === currentRoomId);
-        if (room && room.bookingStatus === 'pending') {
-            room.bookingStatus = 'confirmed';
-            showNotification('Đã xác nhận booking thành công!', 'success');
-            showRoomDetail(currentRoomId); // Refresh modal
-            renderRooms();
-        }
-    }
-
-    function cancelBooking() {
-        if (!currentRoomId) return;
-
-        const room = rooms.find(r => r.id === currentRoomId);
-        if (room && (room.bookingStatus === 'pending' || room.bookingStatus === 'confirmed')) {
-            room.bookingStatus = 'cancelled';
-            room.status = 'available';
-            room.customer = null;
-            room.checkIn = null;
-            room.checkOut = null;
-            room.specialRequests = '';
-
-            showNotification('Đã hủy booking thành công!', 'warning');
-            bootstrap.Modal.getInstance(document.getElementById('roomDetailModal')).hide();
-            renderRooms();
-        }
-    }
-
-    function updateRoomStatus() {
-        if (!currentRoomId) return;
-
-        const newStatus = document.getElementById('newRoomStatus').value;
-        const room = rooms.find(r => r.id === currentRoomId);
-
-        if (room) {
-            room.status = newStatus;
-            showNotification('Đã cập nhật trạng thái phòng thành công!', 'info');
-            bootstrap.Modal.getInstance(document.getElementById('roomDetailModal')).hide();
-            renderRooms();
-        }
+        const checkoutToday = state.bookings.filter(b => b.checkOutDate === today).length;
+        document.getElementById('checkoutToday').textContent = checkoutToday;
     }
 
     function refreshData() {
-        showNotification('Đang cập nhật dữ liệu...', 'info');
-        // Simulate data refresh
-        setTimeout(() => {
-            renderRooms();
-            showNotification('Dữ liệu đã được cập nhật!', 'success');
-        }, 1000);
+        loadData();
     }
 
-    function showNotification(message, type) {
-        const toast = document.createElement('div');
-        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-        toast.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.remove();
-        }, 5000);
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-        renderRooms();
-
-        // Set default dates
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('fromDate').value = today;
-
-        const nextWeek = new Date();
-        nextWeek.setDate(nextWeek.getDate() + 7);
-        document.getElementById('toDate').value = nextWeek.toISOString().split('T')[0];
+    // Event listeners
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        state.startDate = addDays(state.startDate, -state.days);
+        loadData();
     });
 
-    // Auto refresh every 30 seconds
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        state.startDate = addDays(state.startDate, state.days);
+        loadData();
+    });
+
+    document.getElementById('todayBtn').addEventListener('click', () => {
+        state.startDate = new Date();
+        loadData();
+    });
+
+    document.getElementById('daysRange').addEventListener('change', (e) => {
+        state.days = parseInt(e.target.value);
+        loadData();
+    });
+
+    document.getElementById('roomTypeFilter').addEventListener('change', (e) => {
+        state.roomTypeFilter = e.target.value;
+        loadData();
+    });
+
+    document.getElementById('roomStatusFilter').addEventListener('change', (e) => {
+        state.roomStatusFilter = e.target.value;
+        render();
+    });
+
+    // Initialize
+    loadData();
+
+    // Auto refresh every 60 seconds
     setInterval(() => {
-        console.log('Auto refresh...');
-        // In real application, this would fetch new data from server
-    }, 30000);
+        console.log('Auto refreshing...');
+        loadData();
+    }, 60000);
 </script>
 </body>
 </html>

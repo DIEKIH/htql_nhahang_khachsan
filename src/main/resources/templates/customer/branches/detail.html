@@ -1889,7 +1889,16 @@
                                              alt="Default room image" class="d-block w-100">
 
                                         <div class="price-badge">
-                                            <span th:text="${roomType.formattedPrice}">Price</span>
+<!--                                            <span th:text="${roomType.formattedPrice}">Price</span>-->
+                                            <span th:if="${roomType.hasPromotion()}"
+                                                  class="text-muted text-decoration-line-through me-2">
+                                                <span th:text="${roomType.formattedOriginalPrice}">0₫</span>
+                                            </span>
+
+                                            <!-- Giá sau giảm hoặc giá thường -->
+                                            <span class="fw-bold text-danger"
+                                                  th:text="${roomType.formattedPrice}">0₫</span>
+
                                         </div>
                                     </div>
                                     <div class="service-content">
@@ -2034,7 +2043,19 @@
                                                 <img th:src="${item.imageUrl != null ? item.imageUrl : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'}"
                                                      th:alt="${item.name}">
                                                 <div class="branch-badge" th:text="${item.categoryName}">Category</div>
-                                                <div class="price-badge" th:text="${item.formattedPrice}">Price</div>
+<!--                                                <div class="price-badge" th:text="${item.formattedPrice}">Price</div>-->
+                                                <div class="price-badge">
+                                                    <!-- Giá gốc gạch ngang nếu có khuyến mãi -->
+                                                    <span th:if="${item.hasPromotion()}"
+                                                          class="text-muted text-decoration-line-through me-2">
+                                                        <span th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0₫</span>
+                                                    </span>
+
+                                                    <!-- Giá sau giảm hoặc giá thường -->
+                                                    <span class="fw-bold text-danger"
+                                                          th:text="${#numbers.formatDecimal(item.currentPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0₫</span>
+                                                </div>
+
                                             </div>
                                             <div class="service-content">
                                                 <h5 class="service-title heading-font" th:text="${item.name}">Item Name</h5>

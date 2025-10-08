@@ -64,14 +64,26 @@
                                         <input type="text" class="form-control" name="name"
                                                th:value="${searchName}" placeholder="Nhập tên loại phòng...">
                                     </div>
+<!--                                    <div class="col-md-3">-->
+<!--                                        <label class="form-label">Trạng thái</label>-->
+<!--                                        <select class="form-select" name="status">-->
+<!--                                            <option value="">Tất cả</option>-->
+<!--                                            <option th:each="status : ${statuses}"-->
+<!--                                                    th:value="${status}"-->
+<!--                                                    th:text="${status == T(com.example.htql_nhahang_khachsan.enums.Status).ACTIVE ? 'Hoạt động' : 'Không hoạt động'}"-->
+<!--                                                    th:selected="${status == searchStatus}">-->
+<!--                                            </option>-->
+<!--                                        </select>-->
+<!--                                    </div>-->
+
                                     <div class="col-md-3">
                                         <label class="form-label">Trạng thái</label>
                                         <select class="form-select" name="status">
                                             <option value="">Tất cả</option>
                                             <option th:each="status : ${statuses}"
                                                     th:value="${status}"
-                                                    th:text="${status == T(com.example.htql_nhahang_khachsan.enums.Status).ACTIVE ? 'Hoạt động' : 'Không hoạt động'}"
-                                                    th:selected="${status == searchStatus}">
+                                                    th:text="${status.displayName}"
+                                                    th:selected="${searchStatus != null ? (status == searchStatus) : false}">
                                             </option>
                                         </select>
                                     </div>

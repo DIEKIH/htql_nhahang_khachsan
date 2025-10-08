@@ -49,15 +49,15 @@ public class RoomTypeDetailController {
         }
     }
 
-    // API để check phòng trống theo ngày
-    @GetMapping("/api/room-types/{id}/availability")
-    @ResponseBody
-    public List<RoomResponse> checkRoomAvailability(
-            @PathVariable Long id,
-            @RequestParam String checkInDate,
-            @RequestParam String checkOutDate) {
-        return roomService.getAvailableRoomsByTypeAndDate(id, checkInDate, checkOutDate);
-    }
+//    // API để check phòng trống theo ngày
+//    @GetMapping("/api/room-types/{id}/availability")
+//    @ResponseBody
+//    public List<RoomResponse> checkRoomAvailability(
+//            @PathVariable Long id,
+//            @RequestParam String checkInDate,
+//            @RequestParam String checkOutDate) {
+//        return roomService.getAvailableRoomsByTypeAndDate(id, checkInDate, checkOutDate);
+//    }
 
     // API để lấy giá phòng theo ngày
     @GetMapping("/api/room-types/{id}/pricing")
@@ -68,4 +68,7 @@ public class RoomTypeDetailController {
             @RequestParam String checkOutDate) {
         return roomService.calculateRoomPricing(id, checkInDate, checkOutDate);
     }
+
+
+
 }

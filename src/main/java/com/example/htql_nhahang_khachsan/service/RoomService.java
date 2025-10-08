@@ -88,12 +88,27 @@ public class RoomService {
             response.setRoomImages(images);
 
             // Tính giá sau giảm giá
-            BigDecimal originalPrice = roomType.getPrice();
-            BigDecimal discountedPrice = promotionService.calculateDiscountedPrice(
-                    originalPrice, branchId, PromotionApplicability.ROOM);
+//            BigDecimal originalPrice = roomType.getPrice();
+//            BigDecimal discountedPrice = promotionService.calculateDiscountedPrice(
+//                    originalPrice, branchId, PromotionApplicability.ROOM);
 
-            response.setPrice(discountedPrice);
-            response.setFormattedPrice(formatPrice(discountedPrice));
+//            response.setPrice(discountedPrice);
+//            response.setFormattedPrice(formatPrice(discountedPrice));
+
+            BigDecimal basePrice = roomType.getPrice();
+            BigDecimal discountedPrice = promotionService.calculateDiscountedPrice(
+                    basePrice, branchId, PromotionApplicability.ROOM);
+
+// Nếu có giảm giá
+            if (discountedPrice.compareTo(basePrice) < 0) {
+                response.setOriginalPrice(basePrice);       // giá gốc
+                response.setCurrentPrice(discountedPrice);  // giá sau giảm
+            } else {
+                // Không có khuyến mãi thì chỉ để giá gốc
+                response.setCurrentPrice(basePrice);
+                response.setOriginalPrice(null);
+            }
+
 
             // Parse amenities JSON
             if (roomType.getAmenities() != null) {
@@ -184,26 +199,26 @@ public class RoomService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Kiểm tra phòng trống theo loại và khoảng thời gian
-     */
-    public List<RoomResponse> getAvailableRoomsByTypeAndDate(Long roomTypeId, String checkInDate, String checkOutDate) {
-        try {
-            LocalDate checkIn = LocalDate.parse(checkInDate);
-            LocalDate checkOut = LocalDate.parse(checkOutDate);
-
-            // Tìm các phòng không có booking trong khoảng thời gian này
-            List<RoomEntity> availableRooms = roomRepository
-                    .findAvailableRoomsByTypeAndDateRange(roomTypeId, checkIn, checkOut);
-
-            return availableRooms.stream()
-                    .map(this::mapToRoomResponse)
-                    .collect(Collectors.toList());
-
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid date format");
-        }
-    }
+//    /**
+//     * Kiểm tra phòng trống theo loại và khoảng thời gian
+//     */
+//    public List<RoomResponse> getAvailableRoomsByTypeAndDate(Long roomTypeId, String checkInDate, String checkOutDate) {
+//        try {
+//            LocalDate checkIn = LocalDate.parse(checkInDate);
+//            LocalDate checkOut = LocalDate.parse(checkOutDate);
+//
+//            // Tìm các phòng không có booking trong khoảng thời gian này
+//            List<RoomEntity> availableRooms = roomRepository
+//                    .findAvailableRoomsByTypeAndDateRange(roomTypeId, checkIn, checkOut);
+//
+//            return availableRooms.stream()
+//                    .map(this::mapToRoomResponse)
+//                    .collect(Collectors.toList());
+//
+//        } catch (DateTimeParseException e) {
+//            throw new IllegalArgumentException("Invalid date format");
+//        }
+//    }
 
     /**
      * Tính toán giá phòng theo khoảng thời gian
@@ -251,46 +266,86 @@ public class RoomService {
     }
 
     // Helper methods
-    private RoomTypeResponse mapToRoomTypeResponse(RoomTypeEntity entity) {
-        // Lấy thông tin khuyến mãi
-        BigDecimal currentPrice = getCurrentPriceWithPromotion(entity);
-        BigDecimal originalPrice = null;
-        String promotionName = null;
+//    private RoomTypeResponse mapToRoomTypeResponse(RoomTypeEntity entity) {
+//        // Lấy thông tin khuyến mãi
+//        BigDecimal currentPrice = getCurrentPriceWithPromotion(entity);
+//        BigDecimal originalPrice = null;
+//        String promotionName = null;
+//
+//        if (currentPrice.compareTo(entity.getPrice()) < 0) {
+//            originalPrice = entity.getPrice();
+//            // Lấy thông tin promotion (implement logic tùy theo business)
+//        }
+//
+//
+//
+//        // Lấy số lượng phòng available
+//        Integer availableRooms = roomRepository.countByRoomTypeIdAndStatus(entity.getId(), RoomStatus.AVAILABLE);
+//
+//        // Lấy danh sách hình ảnh
+//        List<RoomImageResponse> roomImages = getRoomImagesByRoomType(entity.getId());
+//
+//        return RoomTypeResponse.builder()
+//                .id(entity.getId())
+//                .branchId(entity.getBranch().getId())
+//                .branchName(entity.getBranch().getName())
+//                .name(entity.getName())
+//                .description(entity.getDescription())
+//                .price(entity.getPrice())
+//                .currentPrice(currentPrice)
+//                .originalPrice(originalPrice)
+//                .bedType(entity.getBedType())
+//                .maxOccupancy(entity.getMaxOccupancy())
+//                .roomSize(entity.getRoomSize())
+////                .viewType(entity.getViewType())
+//                .amenities(entity.getAmenities())
+////                .isAvailable(entity.getIsAvailable())
+//                .createdAt(entity.getCreatedAt())
+//                .roomImageResponses(roomImages)
+//                .availableRooms(availableRooms)
+//                .promotionName(promotionName)
+//                .build();
+//    }
 
-        if (currentPrice.compareTo(entity.getPrice()) < 0) {
-            originalPrice = entity.getPrice();
-            // Lấy thông tin promotion (implement logic tùy theo business)
+    private RoomTypeResponse mapToRoomTypeResponse(RoomTypeEntity entity) {
+        Long branchId = entity.getBranch().getId();
+
+        BigDecimal basePrice = entity.getPrice();
+        BigDecimal discountedPrice = promotionService.calculateDiscountedPrice(
+                basePrice, branchId, PromotionApplicability.ROOM
+        );
+
+        // Nếu có giảm thì lưu giá gốc
+        BigDecimal originalPrice = null;
+        if (discountedPrice.compareTo(basePrice) < 0) {
+            originalPrice = basePrice;
         }
 
+        Integer availableRooms = roomRepository.countByRoomTypeIdAndStatus(
+                entity.getId(), RoomStatus.AVAILABLE
+        );
 
-
-        // Lấy số lượng phòng available
-        Integer availableRooms = roomRepository.countByRoomTypeIdAndStatus(entity.getId(), RoomStatus.AVAILABLE);
-
-        // Lấy danh sách hình ảnh
         List<RoomImageResponse> roomImages = getRoomImagesByRoomType(entity.getId());
 
         return RoomTypeResponse.builder()
                 .id(entity.getId())
-                .branchId(entity.getBranch().getId())
+                .branchId(branchId)
                 .branchName(entity.getBranch().getName())
                 .name(entity.getName())
                 .description(entity.getDescription())
-                .price(entity.getPrice())
-                .currentPrice(currentPrice)
+                .price(basePrice)
+                .currentPrice(discountedPrice)
                 .originalPrice(originalPrice)
                 .bedType(entity.getBedType())
                 .maxOccupancy(entity.getMaxOccupancy())
                 .roomSize(entity.getRoomSize())
-//                .viewType(entity.getViewType())
                 .amenities(entity.getAmenities())
-//                .isAvailable(entity.getIsAvailable())
                 .createdAt(entity.getCreatedAt())
                 .roomImageResponses(roomImages)
                 .availableRooms(availableRooms)
-                .promotionName(promotionName)
                 .build();
     }
+
 
     private RoomImageResponse mapToRoomImageResponse(RoomImageEntity entity) {
         return RoomImageResponse.builder()

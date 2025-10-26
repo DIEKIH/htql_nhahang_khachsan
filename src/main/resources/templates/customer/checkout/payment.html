@@ -1,0 +1,1206 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Phương thức thanh toán - Luxury Resort</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">-->
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;primary-color: #c9a96e;-->
+<!--        }-->
+<!--        body {-->
+<!--            background: #f8f9fa;-->
+<!--            padding-top: 80px;-->
+<!--            font-family: 'Inter', sans-serif;-->
+<!--        }-->
+<!--        .checkout-container {-->
+<!--            max-width: 1200px;-->
+<!--            margin: 0 auto;-->
+<!--            padding: 40px 15px;-->
+<!--        }-->
+<!--        .checkout-steps {-->
+<!--            background: white;-->
+<!--            padding: 30px;-->
+<!--            margin-bottom: 30px;-->
+<!--            border-radius: 15px;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--        }-->
+<!--        .step {-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--            align-items: center;-->
+<!--        }-->
+<!--        .step-number {-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--            border-radius: 50%;-->
+<!--            background: #e9ecef;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            font-weight: bold;-->
+<!--            margin-bottom: 10px;-->
+<!--        }-->
+<!--        .step.active .step-number {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .step.completed .step-number {-->
+<!--            background: #28a745;-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .checkout-card {-->
+<!--            background: white;-->
+<!--            border-radius: 15px;-->
+<!--            padding: 30px;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .payment-method {-->
+<!--            border: 2px solid #e9ecef;-->
+<!--            border-radius: 15px;-->
+<!--            padding: 20px;-->
+<!--            margin-bottom: 15px;-->
+<!--            cursor: pointer;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        .payment-method:hover {-->
+<!--            border-color: var(&#45;&#45;primary-color);-->
+<!--            background: #f8f9fa;-->
+<!--        }-->
+<!--        .payment-method.selected {-->
+<!--            border-color: var(&#45;&#45;primary-color);-->
+<!--            background: #fff8f0;-->
+<!--        }-->
+<!--        .payment-method input[type="radio"] {-->
+<!--            width: 20px;-->
+<!--            height: 20px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+<!--        .payment-icon {-->
+<!--            width: 60px;-->
+<!--            height: 60px;-->
+<!--            background: #f8f9fa;-->
+<!--            border-radius: 10px;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            font-size: 1.8rem;-->
+<!--            margin-right: 15px;-->
+<!--        }-->
+<!--        .btn-luxury {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--            padding: 15px 30px;-->
+<!--            border: none;-->
+<!--            border-radius: 50px;-->
+<!--            font-weight: 600;-->
+<!--            transition: all 0.3s ease;-->
+<!--            width: 100%;-->
+<!--        }-->
+<!--        .btn-luxury:hover {-->
+<!--            background: #b8956b;-->
+<!--            color: white;-->
+<!--            transform: translateY(-2px);-->
+<!--        }-->
+<!--        .btn-luxury:disabled {-->
+<!--            background: #ccc;-->
+<!--            cursor: not-allowed;-->
+<!--            transform: none;-->
+<!--        }-->
+<!--        .summary-row {-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            padding: 8px 0;-->
+<!--            border-bottom: 1px solid #eee;-->
+<!--        }-->
+<!--        .summary-total {-->
+<!--            font-size: 1.3rem;-->
+<!--            font-weight: 700;-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--            padding-top: 15px;-->
+<!--            border-top: 2px solid var(&#45;&#45;primary-color);-->
+<!--        }-->
+<!--        .info-badge {-->
+<!--            background: #fff3cd;-->
+<!--            border: 1px solid #ffc107;-->
+<!--            border-radius: 10px;-->
+<!--            padding: 15px;-->
+<!--            margin-top: 15px;-->
+<!--            display: none;-->
+<!--        }-->
+<!--        .info-badge.show {-->
+<!--            display: block;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div th:replace="fragments/user_navbar :: user_navbar"></div>-->
+
+<!--<div class="checkout-container">-->
+<!--    &lt;!&ndash; Flash Messages &ndash;&gt;-->
+<!--    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">-->
+<!--        <i class="fas fa-exclamation-circle me-2"></i>-->
+<!--        <span th:text="${error}"></span>-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Checkout Steps &ndash;&gt;-->
+<!--    <div class="checkout-steps">-->
+<!--        <div class="row">-->
+<!--            <div class="col-4">-->
+<!--                <div class="step completed">-->
+<!--                    <div class="step-number"><i class="fas fa-check"></i></div>-->
+<!--                    <div class="step-title">Giỏ hàng</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-4">-->
+<!--                <div class="step completed">-->
+<!--                    <div class="step-number"><i class="fas fa-check"></i></div>-->
+<!--                    <div class="step-title">Thông tin</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-4">-->
+<!--                <div class="step active">-->
+<!--                    <div class="step-number">3</div>-->
+<!--                    <div class="step-title">Thanh toán</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="row">-->
+<!--        <div class="col-lg-8">-->
+<!--            <div class="checkout-card">-->
+<!--                <h4><i class="fas fa-credit-card me-2"></i>Phương thức thanh toán</h4>-->
+<!--                <p class="text-muted">Chọn phương thức thanh toán phù hợp với bạn</p>-->
+<!--                <hr>-->
+
+<!--                &lt;!&ndash; ✅ CRITICAL: Add th:action and ensure CSRF token &ndash;&gt;-->
+<!--                <form th:action="@{/checkout/payment}" method="post" id="paymentForm">-->
+
+<!--                    &lt;!&ndash; Cash on Delivery &ndash;&gt;-->
+<!--                    <div class="payment-method selected" data-method="CASH_ON_DELIVERY">-->
+<!--                        <div class="d-flex align-items-center">-->
+<!--                            <input type="radio" name="paymentMethod" value="CASH_ON_DELIVERY"-->
+<!--                                   id="cash" checked>-->
+<!--                            <div class="payment-icon ms-3">-->
+<!--                                <i class="fas fa-money-bill-wave text-success"></i>-->
+<!--                            </div>-->
+<!--                            <div class="flex-grow-1">-->
+<!--                                <h5 class="mb-1">Thanh toán khi nhận hàng (COD)</h5>-->
+<!--                                <small class="text-muted">Thanh toán bằng tiền mặt khi nhận món</small>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="info-badge show">-->
+<!--                            <small>-->
+<!--                                <i class="fas fa-info-circle me-2"></i>-->
+<!--                                <strong>Lưu ý:</strong> Vui lòng chuẩn bị đủ tiền mặt khi nhận hàng.-->
+<!--                                Shipper sẽ không có tiền lẻ thối.-->
+<!--                            </small>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; VNPay &ndash;&gt;-->
+<!--                    <div class="payment-method" data-method="VNPAY">-->
+<!--                        <div class="d-flex align-items-center">-->
+<!--                            <input type="radio" name="paymentMethod" value="VNPAY" id="vnpay">-->
+<!--                            <div class="payment-icon ms-3">-->
+<!--                                <i class="fas fa-credit-card text-primary"></i>-->
+<!--                            </div>-->
+<!--                            <div class="flex-grow-1">-->
+<!--                                <h5 class="mb-1">Thanh toán qua VNPay</h5>-->
+<!--                                <small class="text-muted">Thẻ ATM, Visa, MasterCard, JCB</small>-->
+<!--                            </div>-->
+<!--                            <img src="https://vinadesign.vn/uploads/images/2023/05/vnpay-logo-vinadesign-25-12-57-55.jpg"-->
+<!--                                 alt="VNPay" style="height: 30px;">-->
+<!--                        </div>-->
+<!--                        <div class="info-badge">-->
+<!--                            <small>-->
+<!--                                <i class="fas fa-shield-alt me-2"></i>-->
+<!--                                Thanh toán an toàn qua cổng VNPay. Hỗ trợ đa dạng ngân hàng.-->
+<!--                            </small>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; MoMo &ndash;&gt;-->
+<!--                    <div class="payment-method" data-method="MOMO">-->
+<!--                        <div class="d-flex align-items-center">-->
+<!--                            <input type="radio" name="paymentMethod" value="MOMO" id="momo">-->
+<!--                            <div class="payment-icon ms-3">-->
+<!--                                <i class="fas fa-mobile-alt text-danger"></i>-->
+<!--                            </div>-->
+<!--                            <div class="flex-grow-1">-->
+<!--                                <h5 class="mb-1">Ví điện tử MoMo</h5>-->
+<!--                                <small class="text-muted">Thanh toán nhanh qua ví MoMo</small>-->
+<!--                            </div>-->
+<!--                            <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Circle.png"-->
+<!--                                 alt="MoMo" style="height: 40px;">-->
+<!--                        </div>-->
+<!--                        <div class="info-badge">-->
+<!--                            <small>-->
+<!--                                <i class="fas fa-qrcode me-2"></i>-->
+<!--                                Quét mã QR hoặc thanh toán bằng số điện thoại ví MoMo.-->
+<!--                            </small>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Bank Transfer &ndash;&gt;-->
+<!--                    <div class="payment-method" data-method="BANK_TRANSFER">-->
+<!--                        <div class="d-flex align-items-center">-->
+<!--                            <input type="radio" name="paymentMethod" value="BANK_TRANSFER" id="bank">-->
+<!--                            <div class="payment-icon ms-3">-->
+<!--                                <i class="fas fa-university" style="color: #1e88e5;"></i>-->
+<!--                            </div>-->
+<!--                            <div class="flex-grow-1">-->
+<!--                                <h5 class="mb-1">Chuyển khoản ngân hàng</h5>-->
+<!--                                <small class="text-muted">Chuyển khoản trực tiếp qua ngân hàng</small>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="info-badge">-->
+<!--                            <small>-->
+<!--                                <strong>Thông tin chuyển khoản:</strong><br>-->
+<!--                                <i class="fas fa-university me-2"></i>Ngân hàng: Vietcombank<br>-->
+<!--                                <i class="fas fa-credit-card me-2"></i>STK: 1234567890<br>-->
+<!--                                <i class="fas fa-user me-2"></i>Chủ TK: LUXURY RESORT JSC<br>-->
+<!--                                <i class="fas fa-comment-dots me-2"></i>Nội dung: [Mã đơn hàng] [Số điện thoại]-->
+<!--                            </small>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="alert alert-warning mt-4">-->
+<!--                        <i class="fas fa-exclamation-triangle me-2"></i>-->
+<!--                        <strong>Chính sách:</strong> Vui lòng kiểm tra kỹ thông tin trước khi xác nhận.-->
+<!--                        Đơn hàng sẽ được xác nhận sau khi thanh toán thành công.-->
+<!--                    </div>-->
+
+<!--                    <div class="d-flex gap-2">-->
+<!--                        <a href="/checkout/customer-info" class="btn btn-outline-secondary" style="width: auto; padding: 12px 30px;">-->
+<!--                            <i class="fas fa-arrow-left me-2"></i>Quay lại-->
+<!--                        </a>-->
+<!--                        <button type="submit" class="btn btn-luxury" id="submitBtn">-->
+<!--                            <i class="fas fa-check-circle me-2"></i>Xác nhận đặt hàng-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Customer Info Review &ndash;&gt;-->
+<!--            <div class="checkout-card">-->
+<!--                <h5><i class="fas fa-user-check me-2"></i>Thông tin đã nhập</h5>-->
+<!--                <hr>-->
+<!--                <div class="row">-->
+<!--                    <div class="col-md-6">-->
+<!--                        <p><strong>Họ tên:</strong><br><span th:text="${customerInfo.customerName}">Nguyễn Văn A</span></p>-->
+<!--                        <p><strong>Số điện thoại:</strong><br><span th:text="${customerInfo.customerPhone}">0912345678</span></p>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-6">-->
+<!--                        <p><strong>Địa chỉ giao hàng:</strong><br><span th:text="${customerInfo.customerAddress}">123 Đường ABC...</span></p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div th:if="${customerInfo.orderNotes}">-->
+<!--                    <p><strong>Ghi chú:</strong><br><span th:text="${customerInfo.orderNotes}"></span></p>-->
+<!--                </div>-->
+<!--                <a href="/checkout/customer-info" class="btn btn-sm btn-outline-primary">-->
+<!--                    <i class="fas fa-edit me-1"></i>Chỉnh sửa-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Order Summary Sidebar &ndash;&gt;-->
+<!--        <div class="col-lg-4">-->
+<!--            <div class="checkout-card" style="position: sticky; top: 100px;">-->
+<!--                <h5><i class="fas fa-receipt me-2"></i>Tóm tắt đơn hàng</h5>-->
+<!--                <hr>-->
+
+<!--                <div class="mb-3">-->
+<!--                    <small class="text-muted">Chi nhánh</small>-->
+<!--                    <h6 th:text="${cart.branchName}">Chi nhánh Phú Quốc</h6>-->
+<!--                </div>-->
+
+<!--                <div class="summary-row">-->
+<!--                    <span><i class="fas fa-utensils me-2"></i>Số món:</span>-->
+<!--                    <strong th:text="${cart.totalItems}">5</strong>-->
+<!--                </div>-->
+
+<!--                <hr>-->
+
+<!--                <div class="summary-row">-->
+<!--                    <span>Tạm tính:</span>-->
+<!--                    <span th:text="${cart.formattedSubtotal}">1,500,000 VNĐ</span>-->
+<!--                </div>-->
+<!--                <div class="summary-row">-->
+<!--                    <span>Phí phục vụ (10%):</span>-->
+<!--                    <span th:text="${cart.formattedServiceCharge}">150,000 VNĐ</span>-->
+<!--                </div>-->
+<!--                <div class="summary-row">-->
+<!--                    <span>VAT (8%):</span>-->
+<!--                    <span th:text="${cart.formattedVat}">132,000 VNĐ</span>-->
+<!--                </div>-->
+
+<!--                <div class="summary-row summary-total">-->
+<!--                    <span>Tổng thanh toán:</span>-->
+<!--                    <span th:text="${cart.formattedTotalAmount}">1,782,000 VNĐ</span>-->
+<!--                </div>-->
+
+<!--                <div class="alert alert-success mt-3 mb-0">-->
+<!--                    <small>-->
+<!--                        <i class="fas fa-truck me-1"></i>-->
+<!--                        Giao hàng trong vòng 30-45 phút-->
+<!--                    </small>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script>-->
+<!--    // Handle payment method selection-->
+<!--    document.querySelectorAll('.payment-method').forEach(method => {-->
+<!--        method.addEventListener('click', function(e) {-->
+<!--            if (e.target !== this.querySelector('input[type="radio"]')) {-->
+<!--                e.preventDefault();-->
+<!--            }-->
+
+<!--            document.querySelectorAll('.payment-method').forEach(m => {-->
+<!--                m.classList.remove('selected');-->
+<!--            });-->
+
+<!--            this.classList.add('selected');-->
+
+<!--            const radio = this.querySelector('input[type="radio"]');-->
+<!--            if (radio) {-->
+<!--                radio.checked = true;-->
+<!--                console.log('Selected payment method:', radio.value);-->
+<!--            }-->
+
+<!--            document.querySelectorAll('.info-badge').forEach(badge => {-->
+<!--                badge.classList.remove('show');-->
+<!--            });-->
+
+<!--            const infoBadge = this.querySelector('.info-badge');-->
+<!--            if (infoBadge) {-->
+<!--                infoBadge.classList.add('show');-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+
+<!--    // Handle form submission-->
+<!--    document.getElementById('paymentForm').addEventListener('submit', function(e) {-->
+<!--        console.log('=== FORM SUBMIT EVENT ===');-->
+
+<!--        const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked');-->
+<!--        console.log('Selected method:', selectedMethod ? selectedMethod.value : 'NONE');-->
+
+<!--        if (!selectedMethod) {-->
+<!--            e.preventDefault();-->
+<!--            alert('Vui lòng chọn phương thức thanh toán!');-->
+<!--            return false;-->
+<!--        }-->
+
+<!--        const formData = new FormData(this);-->
+<!--        console.log('Form data being submitted:');-->
+<!--        for (let [key, value] of formData.entries()) {-->
+<!--            console.log(`  ${key}: ${value}`);-->
+<!--        }-->
+
+<!--        const submitBtn = document.getElementById('submitBtn');-->
+<!--        submitBtn.disabled = true;-->
+<!--        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';-->
+
+<!--        console.log('Form submitting to:', this.action);-->
+<!--        return true;-->
+<!--    });-->
+
+<!--    // Debug on page load-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        console.log('=== PAYMENT PAGE LOADED ===');-->
+<!--        const form = document.getElementById('paymentForm');-->
+<!--        console.log('Form action:', form.action);-->
+<!--        console.log('Form method:', form.method);-->
+
+<!--        const csrfToken = document.querySelector('input[name="_csrf"]');-->
+<!--        if (csrfToken) {-->
+<!--            console.log('✅ CSRF token found:', csrfToken.value.substring(0, 10) + '...');-->
+<!--        } else {-->
+<!--            console.warn('⚠️ CSRF token NOT found');-->
+<!--        }-->
+
+<!--        const selected = document.querySelector('input[name="paymentMethod"]:checked');-->
+<!--        if (selected) {-->
+<!--            console.log('Pre-selected payment method:', selected.value);-->
+<!--        }-->
+
+<!--        console.log('All form inputs:');-->
+<!--        form.querySelectorAll('input').forEach(input => {-->
+<!--            console.log(`  ${input.name || 'unnamed'}: ${input.value} (type: ${input.type}, checked: ${input.checked})`);-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phương thức thanh toán - Luxury Resort</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">
+    <style>
+        :root {
+            --primary-color: #c9a96e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f8f9fa;
+            padding-top: 60px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .checkout-container {
+            max-width: 990px;
+            margin: 0 auto;
+            padding: 30px 11.25px;
+        }
+
+        /* Checkout Steps */
+        .checkout-steps {
+            background: white;
+            padding: 22.5px;
+            margin-bottom: 22.5px;
+            border-radius: 11.25px;
+            box-shadow: 0 3.75px 11.25px rgba(0,0,0,0.08);
+        }
+
+        .checkout-steps .row {
+            margin-left: -7.5px;
+            margin-right: -7.5px;
+        }
+
+        .checkout-steps [class*="col-"] {
+            padding-left: 7.5px;
+            padding-right: 7.5px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 37.5px;
+            height: 37.5px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 7.5px;
+            z-index: 2;
+            font-size: 11px;
+        }
+
+        .step.active .step-number {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-line {
+            position: absolute;
+            top: 18.75px;
+            left: 50%;
+            width: 100%;
+            height: 1.5px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .step.completed .step-line {
+            background: #28a745;
+        }
+
+        .step-title {
+            font-size: 10.5px;
+            text-align: center;
+        }
+
+        /* Main row */
+        .row {
+            margin-left: -7.5px;
+            margin-right: -7.5px;
+        }
+
+        [class*="col-"] {
+            padding-left: 7.5px;
+            padding-right: 7.5px;
+        }
+
+        /* Checkout Card */
+        .checkout-card {
+            background: white;
+            border-radius: 11.25px;
+            padding: 22.5px;
+            box-shadow: 0 3.75px 11.25px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+        }
+
+        .checkout-card h4 {
+            font-size: 14px;
+            margin-bottom: 7.5px;
+            font-weight: 600;
+        }
+
+        .checkout-card h5 {
+            font-size: 13px;
+            margin-bottom: 9px;
+            font-weight: 600;
+        }
+
+        .checkout-card h6 {
+            font-size: 12px;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .checkout-card hr {
+            margin: 11.25px 0;
+            opacity: 0.1;
+        }
+
+        .checkout-card p {
+            font-size: 11px;
+            margin-bottom: 9px;
+            line-height: 1.4;
+        }
+
+        /* Payment Method */
+        .payment-method {
+            border: 1.5px solid #e9ecef;
+            border-radius: 11.25px;
+            padding: 15px;
+            margin-bottom: 11.25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary-color);
+            background: #f8f9fa;
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary-color);
+            background: #fff8f0;
+        }
+
+        .payment-method input[type="radio"] {
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+
+        .payment-method h5 {
+            font-size: 12px;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .payment-icon {
+            width: 45px;
+            height: 45px;
+            background: #f8f9fa;
+            border-radius: 7.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-right: 11.25px;
+        }
+
+        .payment-method img {
+            height: 30px !important;
+            width: auto;
+        }
+
+        .info-badge {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 7.5px;
+            padding: 11.25px;
+            margin-top: 11.25px;
+            display: none;
+        }
+
+        .info-badge.show {
+            display: block;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 9px 12px;
+            font-size: 10.5px;
+            border-radius: 6px;
+            margin-bottom: 11.25px;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c2c7;
+            color: #842029;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffecb5;
+            color: #856404;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        /* Summary row */
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 10.5px;
+        }
+
+        .summary-total {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-color);
+            padding-top: 11.25px;
+            border-top: 1.5px solid var(--primary-color);
+        }
+
+        /* Buttons */
+        .btn-luxury {
+            background: var(--primary-color);
+            color: white;
+            padding: 9px 22.5px;
+            border: none;
+            border-radius: 37.5px;
+            font-weight: 600;
+            font-size: 11.5px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-luxury:hover {
+            background: #b8956b;
+            color: white;
+            transform: translateY(-1.5px);
+        }
+
+        .btn-luxury:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-outline-secondary {
+            padding: 9px 22.5px;
+            font-size: 11.5px;
+            border-radius: 37.5px;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            background: white;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 15px;
+            font-size: 10.5px;
+        }
+
+        .btn-outline-primary {
+            border: 1px solid #0d6efd;
+            color: #0d6efd;
+            background: white;
+        }
+
+        .btn-outline-primary:hover {
+            background: #0d6efd;
+            color: white;
+        }
+
+        /* Sticky sidebar */
+        .sticky-top {
+            position: sticky;
+            top: 75px;
+        }
+
+        /* Grid gap */
+        .d-flex.gap-2 {
+            gap: 7.5px !important;
+        }
+
+        /* Icons */
+        .fa, .fas {
+            font-size: 10px;
+        }
+
+        .me-1 {
+            margin-right: 3px !important;
+        }
+
+        .me-2 {
+            margin-right: 6px !important;
+        }
+
+        .mt-3 {
+            margin-top: 11.25px !important;
+        }
+
+        .mt-4 {
+            margin-top: 15px !important;
+        }
+
+        .mb-0 {
+            margin-bottom: 0 !important;
+        }
+
+        .mb-1 {
+            margin-bottom: 3.75px !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 11.25px !important;
+        }
+
+        .ms-3 {
+            margin-left: 11.25px !important;
+        }
+
+        /* Text utilities */
+        .text-muted {
+            color: #6c757d !important;
+            font-size: 10px;
+        }
+
+
+        .text-danger {
+            color: #dc3545 !important;
+        }
+
+        .text-success {
+            color: #28a745 !important;
+        }
+
+        .text-primary {
+            color: #0d6efd !important;
+        }
+
+        small {
+            font-size: 9.5px;
+        }
+
+        /* Flex utilities */
+        .flex-grow-1 {
+            flex-grow: 1 !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .checkout-container {
+                max-width: 855px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            body {
+                font-size: 11px;
+            }
+
+            .checkout-card {
+                padding: 18px 20px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sticky-top {
+                position: static;
+                margin-top: 15px;
+            }
+
+            .checkout-container {
+                max-width: 540px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 52.5px;
+                font-size: 10px;
+            }
+
+            .checkout-container {
+                max-width: 405px;
+            }
+
+            .checkout-steps {
+                padding: 15px;
+            }
+
+            .step-number {
+                width: 33px;
+                height: 33px;
+                font-size: 10px;
+            }
+
+            .step-title {
+                font-size: 9px;
+            }
+
+            .payment-icon {
+                width: 37.5px;
+                height: 37.5px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .checkout-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/user_navbar :: user_navbar"></div>
+
+<div class="checkout-container">
+    <!-- Flash Messages -->
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Checkout Steps -->
+    <div class="checkout-steps">
+        <div class="row position-relative">
+            <div class="col-4">
+                <div class="step completed">
+                    <div class="step-number"><i class="fas fa-check"></i></div>
+                    <div class="step-title">Giỏ hàng</div>
+                    <div class="step-line"></div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="step completed">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Thông tin</div>
+                    <div class="step-line"></div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Thanh toán</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="checkout-card">
+                <h4><i class="fas fa-credit-card me-2"></i>Phương thức thanh toán</h4>
+                <p class="text-muted">Chọn phương thức thanh toán phù hợp với bạn</p>
+                <hr>
+
+                <!-- ✅ CRITICAL: Add th:action and ensure CSRF token -->
+                <form th:action="@{/checkout/payment}" method="post" id="paymentForm">
+
+                    <!-- Cash on Delivery -->
+                    <div class="payment-method selected" data-method="CASH_ON_DELIVERY">
+                        <div class="d-flex align-items-center">
+                            <input type="radio" name="paymentMethod" value="CASH_ON_DELIVERY"
+                                   id="cash" checked>
+                            <div class="payment-icon ms-3">
+                                <i class="fas fa-money-bill-wave text-success"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">Thanh toán khi nhận hàng (COD)</h5>
+                                <small class="text-muted">Thanh toán bằng tiền mặt khi nhận món</small>
+                            </div>
+                        </div>
+                        <div class="info-badge show">
+                            <small>
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Lưu ý:</strong> Vui lòng chuẩn bị đủ tiền mặt khi nhận hàng.
+                                Shipper sẽ không có tiền lẻ thối.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- VNPay -->
+                    <div class="payment-method" data-method="VNPAY">
+                        <div class="d-flex align-items-center">
+                            <input type="radio" name="paymentMethod" value="VNPAY" id="vnpay">
+                            <div class="payment-icon ms-3">
+                                <i class="fas fa-credit-card text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">Thanh toán qua VNPay</h5>
+                                <small class="text-muted">Thẻ ATM, Visa, MasterCard, JCB</small>
+                            </div>
+                            <img src="https://vinadesign.vn/uploads/images/2023/05/vnpay-logo-vinadesign-25-12-57-55.jpg"
+                                 alt="VNPay">
+                        </div>
+                        <div class="info-badge">
+                            <small>
+                                <i class="fas fa-shield-alt me-2"></i>
+                                Thanh toán an toàn qua cổng VNPay. Hỗ trợ đa dạng ngân hàng.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- MoMo -->
+                    <div class="payment-method" data-method="MOMO">
+                        <div class="d-flex align-items-center">
+                            <input type="radio" name="paymentMethod" value="MOMO" id="momo">
+                            <div class="payment-icon ms-3">
+                                <i class="fas fa-mobile-alt text-danger"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">Ví điện tử MoMo</h5>
+                                <small class="text-muted">Thanh toán nhanh qua ví MoMo</small>
+                            </div>
+                            <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Circle.png"
+                                 alt="MoMo">
+                        </div>
+                        <div class="info-badge">
+                            <small>
+                                <i class="fas fa-qrcode me-2"></i>
+                                Quét mã QR hoặc thanh toán bằng số điện thoại ví MoMo.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Bank Transfer -->
+                    <div class="payment-method" data-method="BANK_TRANSFER">
+                        <div class="d-flex align-items-center">
+                            <input type="radio" name="paymentMethod" value="BANK_TRANSFER" id="bank">
+                            <div class="payment-icon ms-3">
+                                <i class="fas fa-university" style="color: #1e88e5;"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">Chuyển khoản ngân hàng</h5>
+                                <small class="text-muted">Chuyển khoản trực tiếp qua ngân hàng</small>
+                            </div>
+                        </div>
+                        <div class="info-badge">
+                            <small>
+                                <strong>Thông tin chuyển khoản:</strong><br>
+                                <i class="fas fa-university me-2"></i>Ngân hàng: Vietcombank<br>
+                                <i class="fas fa-credit-card me-2"></i>STK: 1234567890<br>
+                                <i class="fas fa-user me-2"></i>Chủ TK: LUXURY RESORT JSC<br>
+                                <i class="fas fa-comment-dots me-2"></i>Nội dung: [Mã đơn hàng] [Số điện thoại]
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning mt-4">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Chính sách:</strong> Vui lòng kiểm tra kỹ thông tin trước khi xác nhận.
+                        Đơn hàng sẽ được xác nhận sau khi thanh toán thành công.
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="/checkout/customer-info" class="btn btn-outline-secondary" style="width: auto; padding: 9px 22.5px;">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại
+                        </a>
+                        <button type="submit" class="btn btn-luxury" id="submitBtn">
+                            <i class="fas fa-check-circle me-2"></i>Xác nhận đặt hàng
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Customer Info Review -->
+            <div class="checkout-card">
+                <h5><i class="fas fa-user-check me-2"></i>Thông tin đã nhập</h5>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Họ tên:</strong><br><span th:text="${customerInfo.customerName}">Nguyễn Văn A</span></p>
+                        <p><strong>Số điện thoại:</strong><br><span th:text="${customerInfo.customerPhone}">0912345678</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Địa chỉ giao hàng:</strong><br><span th:text="${customerInfo.customerAddress}">123 Đường ABC...</span></p>
+                    </div>
+                </div>
+                <div th:if="${customerInfo.orderNotes}">
+                    <p><strong>Ghi chú:</strong><br><span th:text="${customerInfo.orderNotes}"></span></p>
+                </div>
+                <a href="/checkout/customer-info" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-edit me-1"></i>Chỉnh sửa
+                </a>
+            </div>
+        </div>
+
+        <!-- Order Summary Sidebar -->
+        <div class="col-lg-4">
+            <div class="checkout-card sticky-top">
+                <h5><i class="fas fa-receipt me-2"></i>Tóm tắt đơn hàng</h5>
+                <hr>
+
+                <div class="mb-3">
+                    <small class="text-muted">Chi nhánh</small>
+                    <h6 th:text="${cart.branchName}">Chi nhánh Phú Quốc</h6>
+                </div>
+
+                <div class="summary-row">
+                    <span><i class="fas fa-utensils me-2"></i>Số món:</span>
+                    <strong th:text="${cart.totalItems}">5</strong>
+                </div>
+
+                <hr>
+
+                <div class="summary-row">
+                    <span>Tạm tính:</span>
+                    <span th:text="${cart.formattedSubtotal}">1,500,000 VNĐ</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí phục vụ (10%):</span>
+                    <span th:text="${cart.formattedServiceCharge}">150,000 VNĐ</span>
+                </div>
+                <div class="summary-row">
+                    <span>VAT (8%):</span>
+                    <span th:text="${cart.formattedVat}">132,000 VNĐ</span>
+                </div>
+
+                <div class="summary-row summary-total">
+                    <span>Tổng thanh toán:</span>
+                    <span th:text="${cart.formattedTotalAmount}">1,782,000 VNĐ</span>
+                </div>
+
+                <div class="alert alert-success mt-3 mb-0">
+                    <small>
+                        <i class="fas fa-truck me-1"></i>
+                        Giao hàng trong vòng 30-45 phút
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Handle payment method selection
+    document.querySelectorAll('.payment-method').forEach(method => {
+        method.addEventListener('click', function(e) {
+            if (e.target !== this.querySelector('input[type="radio"]')) {
+                e.preventDefault();
+            }
+
+            document.querySelectorAll('.payment-method').forEach(m => {
+                m.classList.remove('selected');
+            });
+
+            this.classList.add('selected');
+
+            const radio = this.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+                console.log('Selected payment method:', radio.value);
+            }
+
+            document.querySelectorAll('.info-badge').forEach(badge => {
+                badge.classList.remove('show');
+            });
+
+            const infoBadge = this.querySelector('.info-badge');
+            if (infoBadge) {
+                infoBadge.classList.add('show');
+            }
+        });
+    });
+
+    // Handle form submission
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        console.log('=== FORM SUBMIT EVENT ===');
+
+        const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked');
+        console.log('Selected method:', selectedMethod ? selectedMethod.value : 'NONE');
+
+        if (!selectedMethod) {
+            e.preventDefault();
+            alert('Vui lòng chọn phương thức thanh toán!');
+            return false;
+        }
+
+        const formData = new FormData(this);
+        console.log('Form data being submitted:');
+        for (let [key, value] of formData.entries()) {
+            console.log(`  ${key}: ${value}`);
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+
+        console.log('Form submitting to:', this.action);
+        return true;
+    });
+
+    // Debug on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('=== PAYMENT PAGE LOADED ===');
+        const form = document.getElementById('paymentForm');
+        console.log('Form action:', form.action);
+        console.log('Form method:', form.method);
+
+        const csrfToken = document.querySelector('input[name="_csrf"]');
+        if (csrfToken) {
+            console.log('✅ CSRF token found:', csrfToken.value.substring(0, 10) + '...');
+        } else {
+            console.warn('⚠️ CSRF token NOT found');
+        }
+
+        const selected = document.querySelector('input[name="paymentMethod"]:checked');
+        if (selected) {
+            console.log('Pre-selected payment method:', selected.value);
+        }
+
+        console.log('All form inputs:');
+        form.querySelectorAll('input').forEach(input => {
+            console.log(`  ${input.name || 'unnamed'}: ${input.value} (type: ${input.type}, checked: ${input.checked})`);
+        });
+    });
+</script>
+</body>
+</html>

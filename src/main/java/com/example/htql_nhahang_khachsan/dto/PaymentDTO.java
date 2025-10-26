@@ -23,6 +23,11 @@ public class PaymentDTO {
     private LocalDateTime processedAt;
     private LocalDateTime createdAt;
 
+
+    // ✅ THÊM thông tin booking để hiển thị trong danh sách all payments
+    private String bookingCode;
+    private String guestName;
+
     public String getFormattedAmount() {
         return String.format("%,d đ", amount.longValue());
     }

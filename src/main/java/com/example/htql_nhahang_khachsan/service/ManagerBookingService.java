@@ -7,6 +7,7 @@ import com.example.htql_nhahang_khachsan.entity.PaymentEntity;
 import com.example.htql_nhahang_khachsan.entity.RoomBookingEntity;
 import com.example.htql_nhahang_khachsan.entity.RoomEntity;
 import com.example.htql_nhahang_khachsan.enums.BookingStatus;
+import com.example.htql_nhahang_khachsan.enums.PaymentMethod;
 import com.example.htql_nhahang_khachsan.enums.PaymentStatus;
 import com.example.htql_nhahang_khachsan.enums.RoomStatus;
 import com.example.htql_nhahang_khachsan.repository.PaymentRepository;
@@ -158,6 +159,124 @@ public class ManagerBookingService {
                 .collect(Collectors.toList());
     }
 
+
+
+//    @Transactional
+//    public void confirmPayment(Long paymentId, Long staffId) {
+//        PaymentEntity payment = paymentRepository.findById(paymentId)
+//                .orElseThrow(() -> new EntityNotFoundException("Payment not found"));
+//
+//        if (payment.getStatus() != PaymentStatus.PENDING) {
+//            throw new IllegalStateException("Payment is not pending");
+//        }
+//
+//        payment.setStatus(PaymentStatus.PAID);
+//        payment.setProcessedBy(staffId);
+//        payment.setProcessedAt(LocalDateTime.now());
+//        paymentRepository.save(payment);
+//
+//        // Cập nhật booking payment status
+//        if (payment.getRoomBooking() != null) {
+//            RoomBookingEntity booking = payment.getRoomBooking();
+//            BigDecimal totalPaid = paymentRepository.findByRoomBookingId(booking.getId()).stream()
+//                    .filter(p -> p.getStatus() == PaymentStatus.PAID)
+//                    .map(PaymentEntity::getAmount)
+//                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//            if (totalPaid.compareTo(booking.getTotalAmount()) >= 0) {
+//                booking.setPaymentStatus(PaymentStatus.PAID);
+//            } else {
+//                booking.setPaymentStatus(PaymentStatus.PARTIALLY_PAID);
+//            }
+//            bookingRepository.save(booking);
+//        }
+//
+//        log.info("Confirmed payment {} by staff {}", paymentId, staffId);
+//    }
+
+    // ✅ SỬA lại method createAndConfirmPayment
+    @Transactional
+    public void createAndConfirmPayment(Long bookingId, BigDecimal amount, PaymentMethod method, Long staffId, Long branchId) {
+        RoomBookingEntity booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
+
+        if (!booking.getBranch().getId().equals(branchId)) {
+            throw new SecurityException("Access denied");
+        }
+
+        // Tạo payment mới
+        PaymentEntity payment = new PaymentEntity();
+        payment.setRoomBooking(booking);
+        payment.setTransactionId("PAY" + System.currentTimeMillis());
+        payment.setAmount(amount);
+        payment.setMethod(method);
+        payment.setStatus(PaymentStatus.PAID);
+        payment.setProcessedBy(staffId);
+        payment.setProcessedAt(LocalDateTime.now());
+        paymentRepository.save(payment);
+
+        // ✅ Cập nhật booking payment status (tự động tính remaining)
+        updateBookingPaymentStatus(booking);
+
+        log.info("Created and confirmed payment for booking {} by staff {}", bookingId, staffId);
+    }
+
+    // ✅ THÊM method lấy tất cả payments của branch
+    public List<PaymentDTO> getAllPaymentsByBranch(Long branchId) {
+        return paymentRepository.findAll().stream()
+                .filter(p -> p.getRoomBooking() != null &&
+                        p.getRoomBooking().getBranch().getId().equals(branchId))
+                .map(this::convertToPaymentDTO)
+                .sorted(Comparator.comparing(PaymentDTO::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+
+//    // ✅ THÊM helper method để cập nhật payment status
+//    private void updateBookingPaymentStatus(RoomBookingEntity booking) {
+//        BigDecimal totalPaid = paymentRepository.findByRoomBookingId(booking.getId()).stream()
+//                .filter(p -> p.getStatus() == PaymentStatus.PAID)
+//                .map(PaymentEntity::getAmount)
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//        BigDecimal depositAmount = booking.getDepositAmount();
+//        BigDecimal totalAmount = booking.getTotalAmount();
+//
+//        // 🔹 Logic phân biệt: đã cọc vs đã thanh toán đầy đủ
+//        if (totalPaid.compareTo(totalAmount) >= 0) {
+//            booking.setPaymentStatus(PaymentStatus.PAID); // Đã thanh toán đầy đủ
+//        } else if (totalPaid.compareTo(BigDecimal.ZERO) > 0) {
+//            booking.setPaymentStatus(PaymentStatus.PARTIALLY_PAID); // Đã cọc (một phần)
+//        } else {
+//            booking.setPaymentStatus(PaymentStatus.PENDING); // Chưa thanh toán
+//        }
+//
+//        bookingRepository.save(booking);
+//    }
+    // ✅ SỬA lại helper method để cập nhật payment status
+    private void updateBookingPaymentStatus(RoomBookingEntity booking) {
+        BigDecimal totalPaid = paymentRepository.findByRoomBookingId(booking.getId()).stream()
+                .filter(p -> p.getStatus() == PaymentStatus.PAID)
+                .map(PaymentEntity::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalAmount = booking.getTotalAmount();
+
+        // 🔹 Logic phân biệt: đã cọc vs đã thanh toán đầy đủ
+        if (totalPaid.compareTo(totalAmount) >= 0) {
+            booking.setPaymentStatus(PaymentStatus.PAID); // Đã thanh toán đầy đủ
+            booking.setRemainingAmount(BigDecimal.ZERO); // ✅ Set về 0
+        } else if (totalPaid.compareTo(BigDecimal.ZERO) > 0) {
+            booking.setPaymentStatus(PaymentStatus.PARTIALLY_PAID); // Đã cọc (một phần)
+            booking.setRemainingAmount(totalAmount.subtract(totalPaid)); // ✅ Cập nhật remaining
+        } else {
+            booking.setPaymentStatus(PaymentStatus.PENDING); // Chưa thanh toán
+            booking.setRemainingAmount(totalAmount); // ✅ Toàn bộ chưa thanh toán
+        }
+
+        bookingRepository.save(booking);
+    }
+
+    // ✅ SỬA lại method confirmPayment để dùng helper
     @Transactional
     public void confirmPayment(Long paymentId, Long staffId) {
         PaymentEntity payment = paymentRepository.findById(paymentId)
@@ -172,24 +291,97 @@ public class ManagerBookingService {
         payment.setProcessedAt(LocalDateTime.now());
         paymentRepository.save(payment);
 
-        // Cập nhật booking payment status
         if (payment.getRoomBooking() != null) {
-            RoomBookingEntity booking = payment.getRoomBooking();
-            BigDecimal totalPaid = paymentRepository.findByRoomBookingId(booking.getId()).stream()
-                    .filter(p -> p.getStatus() == PaymentStatus.PAID)
-                    .map(PaymentEntity::getAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            if (totalPaid.compareTo(booking.getTotalAmount()) >= 0) {
-                booking.setPaymentStatus(PaymentStatus.PAID);
-            } else {
-                booking.setPaymentStatus(PaymentStatus.PARTIALLY_PAID);
-            }
-            bookingRepository.save(booking);
+            updateBookingPaymentStatus(payment.getRoomBooking()); // 🔹 Dùng helper
         }
 
         log.info("Confirmed payment {} by staff {}", paymentId, staffId);
     }
+
+//    // ✅ THÊM method xác nhận thanh toán phần còn lại
+//    @Transactional
+//    public void confirmRemainingPayment(Long bookingId, Long staffId, Long branchId) {
+//        RoomBookingEntity booking = bookingRepository.findById(bookingId)
+//                .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
+//
+//        if (!booking.getBranch().getId().equals(branchId)) {
+//            throw new SecurityException("Access denied");
+//        }
+//
+//        // Tính số tiền còn phải thanh toán
+//        BigDecimal totalPaid = paymentRepository.findByRoomBookingId(bookingId).stream()
+//                .filter(p -> p.getStatus() == PaymentStatus.PAID)
+//                .map(PaymentEntity::getAmount)
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//        BigDecimal remainingAmount = booking.getTotalAmount().subtract(totalPaid);
+//
+//        if (remainingAmount.compareTo(BigDecimal.ZERO) <= 0) {
+//            throw new IllegalStateException("Không còn số tiền cần thanh toán");
+//        }
+//
+//        // Tạo payment cho phần còn lại
+//        PaymentEntity payment = new PaymentEntity();
+//        payment.setRoomBooking(booking);
+//        payment.setTransactionId("PAY" + System.currentTimeMillis());
+//        payment.setAmount(remainingAmount);
+//        payment.setMethod(booking.getPaymentMethod() != null ? booking.getPaymentMethod() : PaymentMethod.CASH);
+//        payment.setStatus(PaymentStatus.PAID);
+//        payment.setProcessedBy(staffId);
+//        payment.setProcessedAt(LocalDateTime.now());
+//        paymentRepository.save(payment);
+//
+//        // Cập nhật trạng thái booking
+//        booking.setPaymentStatus(PaymentStatus.PAID);
+//        bookingRepository.save(booking);
+//
+//        log.info("Confirmed remaining payment {} for booking {} by staff {}", remainingAmount, bookingId, staffId);
+//    }
+// ✅ SỬA lại method confirmRemainingPayment
+@Transactional
+public void confirmRemainingPayment(Long bookingId, Long staffId, Long branchId) {
+    RoomBookingEntity booking = bookingRepository.findById(bookingId)
+            .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
+
+    if (!booking.getBranch().getId().equals(branchId)) {
+        throw new SecurityException("Access denied");
+    }
+
+    // Kiểm tra trạng thái thanh toán
+    if (booking.getPaymentStatus() == PaymentStatus.PAID) {
+        throw new IllegalStateException("Booking đã được thanh toán đầy đủ");
+    }
+
+    // Tính số tiền đã thanh toán
+    BigDecimal totalPaid = paymentRepository.findByRoomBookingId(bookingId).stream()
+            .filter(p -> p.getStatus() == PaymentStatus.PAID)
+            .map(PaymentEntity::getAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    // Tính số tiền còn lại
+    BigDecimal remainingAmount = booking.getTotalAmount().subtract(totalPaid);
+
+    if (remainingAmount.compareTo(BigDecimal.ZERO) <= 0) {
+        throw new IllegalStateException("Không còn số tiền cần thanh toán");
+    }
+
+    // Tạo payment cho phần còn lại
+    PaymentEntity payment = new PaymentEntity();
+    payment.setRoomBooking(booking);
+    payment.setTransactionId("PAY" + System.currentTimeMillis());
+    payment.setAmount(remainingAmount);
+    payment.setMethod(booking.getPaymentMethod() != null ? booking.getPaymentMethod() : PaymentMethod.CASH);
+    payment.setStatus(PaymentStatus.PAID);
+    payment.setProcessedBy(staffId);
+    payment.setProcessedAt(LocalDateTime.now());
+    paymentRepository.save(payment);
+
+    // ✅ Cập nhật trạng thái booking (sẽ tự động set remaining = 0)
+    updateBookingPaymentStatus(booking);
+
+    log.info("Confirmed remaining payment {} VND for booking {} by staff {}",
+            remainingAmount, bookingId, staffId);
+}
 
     private BookingListDTO convertToListDTO(RoomBookingEntity entity) {
         return BookingListDTO.builder()
@@ -257,6 +449,19 @@ public class ManagerBookingService {
                 .build();
     }
 
+//    private PaymentDTO convertToPaymentDTO(PaymentEntity entity) {
+//        return PaymentDTO.builder()
+//                .id(entity.getId())
+//                .transactionId(entity.getTransactionId())
+//                .amount(entity.getAmount())
+//                .method(entity.getMethod())
+//                .status(entity.getStatus())
+//                .processedAt(entity.getProcessedAt())
+//                .createdAt(entity.getCreatedAt())
+//                .build();
+//    }
+
+    // ✅ SỬA để bao gồm thông tin booking
     private PaymentDTO convertToPaymentDTO(PaymentEntity entity) {
         return PaymentDTO.builder()
                 .id(entity.getId())
@@ -266,6 +471,9 @@ public class ManagerBookingService {
                 .status(entity.getStatus())
                 .processedAt(entity.getProcessedAt())
                 .createdAt(entity.getCreatedAt())
+                // 🔹 Thêm thông tin booking
+                .bookingCode(entity.getRoomBooking() != null ? entity.getRoomBooking().getBookingCode() : null)
+                .guestName(entity.getRoomBooking() != null ? entity.getRoomBooking().getGuestName() : null)
                 .build();
     }
 }

@@ -44,4 +44,9 @@ public interface RestaurantTableRepository extends JpaRepository<RestaurantTable
     @Query("SELECT rt FROM RestaurantTableEntity rt WHERE rt.branch.id = :branchId AND rt.capacity >= :minCapacity ORDER BY rt.capacity, rt.tableNumber")
     List<RestaurantTableEntity> findAvailableTablesByCapacity(@Param("branchId") Long branchId,
                                                               @Param("minCapacity") Integer minCapacity);
+
+    List<RestaurantTableEntity> findByBranchId(Long branchId);
+
+    long countByBranchIdAndStatus(Long branchId, TableStatus status);
+
 }

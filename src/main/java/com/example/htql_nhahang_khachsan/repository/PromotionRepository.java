@@ -69,4 +69,25 @@ public interface PromotionRepository extends JpaRepository<PromotionEntity, Long
     List<PromotionEntity> findByStatusAndEndDateAfterOrderByEndDateAsc(Status status, LocalDateTime now);
 
 
+
+    @Query("SELECT p FROM PromotionEntity p " +
+            "JOIN p.branches b " +
+            "WHERE b.id = :branchId " +
+            "AND p.status = 'ACTIVE' " +
+            "AND p.startDate <= :now " +
+            "AND p.endDate >= :now " +
+            "AND (p.applicability = 'RESTAURANT' OR p.applicability = 'BOTH') " +
+            "AND (p.usageLimit IS NULL OR p.usedCount < p.usageLimit)")
+    List<PromotionEntity> findActivePromotionsForRestaurant(
+            @Param("branchId") Long branchId,
+            @Param("now") LocalDateTime now);
+
+    @Query("SELECT p FROM PromotionEntity p " +
+            "WHERE p.status = 'ACTIVE' " +
+            "AND p.scope = 'SYSTEM_WIDE' " +
+            "AND p.startDate <= :now " +
+            "AND p.endDate >= :now " +
+            "AND (p.applicability = 'RESTAURANT' OR p.applicability = 'BOTH') " +
+            "AND (p.usageLimit IS NULL OR p.usedCount < p.usageLimit)")
+    List<PromotionEntity> findSystemWidePromotionsForRestaurant(@Param("now") LocalDateTime now);
 }

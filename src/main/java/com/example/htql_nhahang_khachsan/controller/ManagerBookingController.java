@@ -5,6 +5,7 @@ import com.example.htql_nhahang_khachsan.dto.BookingListDTO;
 import com.example.htql_nhahang_khachsan.dto.PaymentDTO;
 import com.example.htql_nhahang_khachsan.entity.RoomEntity;
 import com.example.htql_nhahang_khachsan.enums.BookingStatus;
+import com.example.htql_nhahang_khachsan.enums.PaymentMethod;
 import com.example.htql_nhahang_khachsan.enums.PaymentStatus;
 import com.example.htql_nhahang_khachsan.enums.RoomStatus;
 import com.example.htql_nhahang_khachsan.repository.RoomRepository;
@@ -84,6 +85,8 @@ public class ManagerBookingController {
         return "manager/bookings/detail";
     }
 
+
+
     @PostMapping("/{id}/assign-room")
     public String assignRoom(@PathVariable Long id,
                              @RequestParam Long roomId,
@@ -125,25 +128,104 @@ public class ManagerBookingController {
         return "redirect:/manager/bookings/" + id;
     }
 
+    // ✅ THÊM method xác nhận thanh toán phần còn lại (remaining amount)
+    // Controller: ManagerBookingController.java
+    @PostMapping("/{id}/confirm-remaining")
+    public String confirmRemainingPayment(@PathVariable Long id,
+                                          HttpSession session,
+                                          RedirectAttributes redirectAttributes) {
+        if (!authService.isLoggedIn(session) || !authService.isManager(session)) {
+            return "redirect:/manager/login";
+        }
+        try {
+            Long staffId = authService.getCurrentUserId(session);
+            Long branchId = authService.getCurrentUserBranchId(session);
+            bookingService.confirmRemainingPayment(id, staffId, branchId);
+            redirectAttributes.addFlashAttribute("success", "Xác nhận thanh toán phần còn lại thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/manager/bookings/" + id;
+    }
+
+    // ✅ THÊM method mới để xác nhận thanh toán trực tiếp từ trang detail
+    @PostMapping("/{id}/quick-payment")
+    public String quickPayment(@PathVariable Long id,
+                               @RequestParam BigDecimal amount,
+                               @RequestParam PaymentMethod method,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
+        if (!authService.isLoggedIn(session) || !authService.isManager(session)) {
+            return "redirect:/manager/login";
+        }
+
+        try {
+            Long staffId = authService.getCurrentUserId(session);
+            Long branchId = authService.getCurrentUserBranchId(session);
+            bookingService.createAndConfirmPayment(id, amount, method, staffId, branchId);
+            redirectAttributes.addFlashAttribute("success", "Xác nhận thanh toán thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/manager/bookings/" + id;
+    }
+
+//    @GetMapping("/{id}/payments")
+//    public String paymentHistory(@PathVariable Long id, Model model, HttpSession session) {
+//        if (!authService.isLoggedIn(session) || !authService.isManager(session)) {
+//            return "redirect:/manager/login";
+//        }
+//
+//        Long branchId = authService.getCurrentUserBranchId(session);
+//        List<PaymentDTO> payments = bookingService.getPaymentHistory(id, branchId);
+//        BookingDetailDTO booking = bookingService.getBookingDetail(id, branchId);
+//
+//        // ✅ Tính tổng tiền đã thanh toán
+//        BigDecimal totalPaid = payments.stream()
+//                .filter(p -> p.getStatus() == PaymentStatus.PAID)
+//                .map(PaymentDTO::getAmount) // 🔹 sửa ở đây
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//        model.addAttribute("totalPaid", totalPaid);
+//        model.addAttribute("payments", payments);
+//        model.addAttribute("booking", booking);
+//
+//        return "manager/bookings/payments";
+//    }
+
+    // ✅ SỬA lại method paymentHistory để hỗ trợ xem theo booking hoặc tất cả
     @GetMapping("/{id}/payments")
-    public String paymentHistory(@PathVariable Long id, Model model, HttpSession session) {
+    public String paymentHistory(@PathVariable Long id,
+                                 @RequestParam(required = false) String view,  // 🔹 thêm tham số view
+                                 Model model,
+                                 HttpSession session) {
         if (!authService.isLoggedIn(session) || !authService.isManager(session)) {
             return "redirect:/manager/login";
         }
 
         Long branchId = authService.getCurrentUserBranchId(session);
-        List<PaymentDTO> payments = bookingService.getPaymentHistory(id, branchId);
+
+        // 🔹 Nếu view=all thì lấy tất cả payments của branch
+        List<PaymentDTO> payments;
+        if ("all".equals(view)) {
+            payments = bookingService.getAllPaymentsByBranch(branchId);
+        } else {
+            payments = bookingService.getPaymentHistory(id, branchId);
+        }
+
         BookingDetailDTO booking = bookingService.getBookingDetail(id, branchId);
 
         // ✅ Tính tổng tiền đã thanh toán
         BigDecimal totalPaid = payments.stream()
                 .filter(p -> p.getStatus() == PaymentStatus.PAID)
-                .map(PaymentDTO::getAmount) // 🔹 sửa ở đây
+                .map(PaymentDTO::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         model.addAttribute("totalPaid", totalPaid);
         model.addAttribute("payments", payments);
         model.addAttribute("booking", booking);
+        model.addAttribute("currentView", view); // 🔹 để biết đang xem view nào
 
         return "manager/bookings/payments";
     }

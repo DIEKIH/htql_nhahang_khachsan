@@ -230,9 +230,9 @@
                         </div>
                         <div class="info-row">
                             <span><strong>Trạng thái:</strong></span>
-                            <span th:class="${confirmation.paymentStatus == T(com.example.model.PaymentStatus).PAID ? 'payment-status paid' : 'payment-status partial'}">
-                                    <span th:if="${confirmation.paymentStatus == T(com.example.model.PaymentStatus).PAID}">Đã thanh toán</span>
-                                    <span th:if="${confirmation.paymentStatus == T(com.example.model.PaymentStatus).PARTIALLY_PAID}">Đã đặt cọc</span>
+                            <span th:class="${confirmation.paymentStatus == T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PAID ? 'payment-status paid' : 'payment-status partial'}">
+                                    <span th:if="${confirmation.paymentStatus == T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PAID}">Đã thanh toán</span>
+                                    <span th:if="${confirmation.paymentStatus == T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PARTIALLY_PAID}">Đã đặt cọc</span>
                                 </span>
                         </div>
                     </div>

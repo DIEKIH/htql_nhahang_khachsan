@@ -303,7 +303,9 @@ public class BookingService {
                 .roomBooking(booking)
                 .amount(paymentAmount)
                 .method(booking.getPaymentMethod())
-                .status(PaymentStatus.PAID)
+//                .status(PaymentStatus.PAID)
+                .status(isDepositOnly ? PaymentStatus.PARTIALLY_PAID : PaymentStatus.PAID)
+
                 .processedAt(LocalDateTime.now())
                 .build();
 
@@ -344,19 +346,38 @@ public class BookingService {
                 .build();
     }
 
+//    @Transactional
+//    public void updatePaymentStatus(String bookingCode, boolean success) {
+//        RoomBookingEntity booking = bookingRepository.findByBookingCode(bookingCode)
+//                .orElseThrow(() -> new RuntimeException("Không tìm thấy booking với mã: " + bookingCode));
+//
+//        if (success) {
+//            booking.setPaymentStatus(PaymentStatus.PAID);
+//        } else {
+//            booking.setPaymentStatus(PaymentStatus.FAILED);
+//        }
+//
+//        bookingRepository.save(booking);
+//    }
+
     @Transactional
     public void updatePaymentStatus(String bookingCode, boolean success) {
         RoomBookingEntity booking = bookingRepository.findByBookingCode(bookingCode)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy booking với mã: " + bookingCode));
 
         if (success) {
-            booking.setPaymentStatus(PaymentStatus.PAID);
+            if (booking.getDepositAmount().compareTo(booking.getTotalAmount()) < 0) {
+                booking.setPaymentStatus(PaymentStatus.PARTIALLY_PAID);
+            } else {
+                booking.setPaymentStatus(PaymentStatus.PAID);
+            }
         } else {
             booking.setPaymentStatus(PaymentStatus.FAILED);
         }
 
         bookingRepository.save(booking);
     }
+
 
 
 

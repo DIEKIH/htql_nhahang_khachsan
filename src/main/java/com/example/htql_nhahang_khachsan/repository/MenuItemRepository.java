@@ -63,4 +63,7 @@ public interface MenuItemRepository extends JpaRepository<MenuItemEntity, Long> 
 
     @Query("SELECT mi FROM MenuItemEntity mi WHERE mi.category.id = :categoryId AND mi.status = 'ACTIVE' AND mi.isAvailable = true ORDER BY mi.name")
     List<MenuItemEntity> findAvailableMenuItemsByCategory(@Param("categoryId") Long categoryId);
+
+    List<MenuItemEntity> findByStatusAndIsAvailable(Status status, Boolean isAvailable);
+
 }

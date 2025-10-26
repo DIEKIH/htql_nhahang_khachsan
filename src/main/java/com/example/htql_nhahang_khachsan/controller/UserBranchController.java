@@ -81,31 +81,6 @@ public class UserBranchController {
         return "index";
     }
 
-//    @GetMapping("/branches/{id}")
-//    public String showBranchDetail(@PathVariable Long id, Model model) {
-//        try {
-//            BranchResponse branch = branchService.getBranchById(id);
-//
-//            // Chỉ hiển thị chi nhánh đang hoạt động
-//            if (branch.getStatus() != BranchStatus.ACTIVE) {
-//                return "redirect:/";
-//            }
-//
-//            model.addAttribute("branch", branch);
-//
-//            // Lấy danh sách loại phòng của chi nhánh
-//            List<RoomTypeEntity> roomTypes = branchService.getRoomTypesByBranchId(id);
-//            model.addAttribute("roomTypes", roomTypes);
-//
-//            // Lấy danh sách phòng của chi nhánh
-//            List<RoomEntity> rooms = branchService.getRoomsByBranchId(id);
-//            model.addAttribute("rooms", rooms);
-//
-//            return "customer/branches/detail";
-//        } catch (Exception e) {
-//            return "redirect:/";
-//        }
-//    }
 
 
     @GetMapping("/api/branches")

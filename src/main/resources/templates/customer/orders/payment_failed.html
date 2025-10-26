@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán thất bại - Luxury Resort</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #c9a96e;
+        }
+        body {
+            background: #f8f9fa;
+            padding: 50px 15px;
+            font-family: 'Inter', sans-serif;
+        }
+        .failed-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .failed-icon {
+            width: 100px;
+            height: 100px;
+            background: #fee;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .failed-icon i {
+            font-size: 50px;
+            color: #dc3545;
+        }
+        .btn-luxury {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .btn-luxury:hover {
+            background: #b8956b;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-outline-luxury {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .btn-outline-luxury:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        .error-details {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="failed-container">
+    <div class="failed-icon">
+        <i class="fas fa-times-circle"></i>
+    </div>
+
+    <h2 class="mb-3 text-danger">Thanh toán thất bại!</h2>
+
+    <p class="text-muted mb-4" th:if="${error}" th:text="${error}">
+        Giao dịch không thành công. Vui lòng thử lại.
+    </p>
+
+    <div class="error-details" th:if="${orderId}">
+        <h6><i class="fas fa-info-circle me-2"></i>Thông tin giao dịch:</h6>
+        <p class="mb-2">
+            <strong>Mã đơn hàng:</strong> <span th:text="${orderId}">12345</span>
+        </p>
+        <p class="mb-2" th:if="${responseCode}">
+            <strong>Mã lỗi:</strong> <span th:text="${responseCode}">24</span>
+        </p>
+        <hr>
+        <small class="text-muted">
+            <i class="fas fa-lightbulb me-1"></i>
+            Nếu tiền đã bị trừ, vui lòng liên hệ hotline để được hỗ trợ hoàn tiền.
+        </small>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="fas fa-question-circle me-2"></i>
+        <strong>Nguyên nhân thường gặp:</strong>
+        <ul class="text-start mt-2 mb-0">
+            <li>Số dư tài khoản không đủ</li>
+            <li>Vượt quá hạn mức giao dịch</li>
+            <li>Thông tin xác thực không chính xác</li>
+            <li>Hủy giao dịch trong quá trình thanh toán</li>
+            <li>Ngân hàng đang bảo trì</li>
+        </ul>
+    </div>
+
+    <div class="mt-4">
+        <a th:href="@{/checkout/payment}" class="btn btn-luxury">
+            <i class="fas fa-redo me-2"></i>Thử lại thanh toán
+        </a>
+        <a th:href="@{/}" class="btn btn-outline-luxury">
+            <i class="fas fa-home me-2"></i>Về trang chủ
+        </a>
+    </div>
+
+    <div class="mt-4">
+        <p class="text-muted mb-2">
+            <i class="fas fa-phone me-2"></i>Hotline hỗ trợ: <strong>1900 1234</strong>
+        </p>
+        <p class="text-muted">
+            <i class="fas fa-envelope me-2"></i>Email: <strong>support@luxuryresort.vn</strong>
+        </p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

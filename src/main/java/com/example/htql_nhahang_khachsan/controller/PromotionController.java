@@ -170,18 +170,7 @@ public class PromotionController {
 
 
         // Admin thì hiển thị danh sách chi nhánh, Manager thì không
-//        if (authService.isAdmin(session)) {
-////            model.addAttribute("branches", branchService.getActiveBranches());
-////        }
 
-//        if (authService.isAdmin(session)) {
-//            // Admin thì hiển thị danh sách chi nhánh
-//            model.addAttribute("branches", branchService.getActiveBranches());
-//        } else if (authService.isManager(session)) {
-//            // Manager thì gắn branchId để Thymeleaf hidden input
-//            Long branchId = authService.getCurrentUserBranchId(session);
-//            model.addAttribute("managerBranchId", branchId);
-//        }
 
         if (authService.isAdmin(session)) {
             // Admin thì hiển thị danh sách chi nhánh

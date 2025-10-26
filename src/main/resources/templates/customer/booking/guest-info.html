@@ -1,77 +1,676 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Thông tin khách hàng - Bước 3</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;primary-color: #c9a96e;-->
+<!--        }-->
+<!--        body {-->
+<!--            background: #f8f9fa;-->
+<!--            padding-top: 80px;-->
+<!--        }-->
+<!--        .booking-steps {-->
+<!--            background: white;-->
+<!--            padding: 30px;-->
+<!--            margin-bottom: 30px;-->
+<!--            border-radius: 15px;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--        }-->
+<!--        .step {-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--            align-items: center;-->
+<!--        }-->
+<!--        .step-number {-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--            border-radius: 50%;-->
+<!--            background: #e9ecef;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            font-weight: bold;-->
+<!--            margin-bottom: 10px;-->
+<!--        }-->
+<!--        .step.active .step-number {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .step.completed .step-number {-->
+<!--            background: #28a745;-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .booking-card {-->
+<!--            background: white;-->
+<!--            border-radius: 15px;-->
+<!--            padding: 30px;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .form-control:focus, .form-select:focus {-->
+<!--            border-color: var(&#45;&#45;primary-color);-->
+<!--            box-shadow: 0 0 0 0.2rem rgba(201, 169, 110, 0.25);-->
+<!--        }-->
+<!--        .btn-luxury {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--            padding: 12px 30px;-->
+<!--            border: none;-->
+<!--            border-radius: 50px;-->
+<!--            font-weight: 600;-->
+<!--        }-->
+<!--        .btn-luxury:hover {-->
+<!--            background: #b8956b;-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .summary-row {-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            padding: 8px 0;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div th:replace="fragments/user_navbar :: user_navbar"></div>-->
+
+<!--<div class="container my-5">-->
+<!--    &lt;!&ndash; Booking Steps &ndash;&gt;-->
+<!--    <div class="booking-steps">-->
+<!--        <div class="row">-->
+<!--            <div class="col-md-3">-->
+<!--                <div class="step completed">-->
+<!--                    <div class="step-number"><i class="fas fa-check"></i></div>-->
+<!--                    <div class="step-title">Chọn phòng</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-3">-->
+<!--                <div class="step completed">-->
+<!--                    <div class="step-number"><i class="fas fa-check"></i></div>-->
+<!--                    <div class="step-title">Dịch vụ</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-3">-->
+<!--                <div class="step active">-->
+<!--                    <div class="step-number">3</div>-->
+<!--                    <div class="step-title">Thông tin</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-3">-->
+<!--                <div class="step">-->
+<!--                    <div class="step-number">4</div>-->
+<!--                    <div class="step-title">Thanh toán</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="row">-->
+<!--        <div class="col-lg-8">-->
+<!--            <div class="booking-card">-->
+<!--                <h4><i class="fas fa-user me-2"></i>Thông tin khách hàng</h4>-->
+<!--                <p class="text-muted">Vui lòng điền đầy đủ thông tin để hoàn tất đặt phòng</p>-->
+<!--                <hr>-->
+
+<!--                <form th:action="@{/bookings/guest-info}" method="post" id="guestForm">-->
+<!--                    <input type="hidden" name="sessionId" th:value="${bookingSession.sessionId}">-->
+
+<!--                    <div class="row mb-3">-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label class="form-label">Họ và tên <span class="text-danger">*</span></label>-->
+<!--                            <input type="text" class="form-control" name="guestName"-->
+<!--                                   th:value="${bookingSession.guestName}" required-->
+<!--                                   placeholder="Nguyễn Văn A">-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label class="form-label">Email <span class="text-danger">*</span></label>-->
+<!--                            <input type="email" class="form-control" name="guestEmail"-->
+<!--                                   th:value="${bookingSession.guestEmail}" required-->
+<!--                                   placeholder="example@email.com">-->
+<!--                            <small class="text-muted">Xác nhận đặt phòng sẽ được gửi qua email này</small>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="row mb-3">-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>-->
+<!--                            <input type="tel" class="form-control" name="guestPhone"-->
+<!--                                   th:value="${bookingSession.guestPhone}" required-->
+<!--                                   placeholder="0912345678">-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label class="form-label">CMND/CCCD/Passport</label>-->
+<!--                            <input type="text" class="form-control" name="guestIdNumber"-->
+<!--                                   th:value="${bookingSession.guestIdNumber}"-->
+<!--                                   placeholder="001234567890">-->
+<!--                            <small class="text-muted">Bắt buộc khi check-in</small>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="mb-3">-->
+<!--                        <label class="form-label">Yêu cầu đặc biệt</label>-->
+<!--                        <textarea class="form-control" name="specialRequests" rows="4"-->
+<!--                                  th:text="${bookingSession.specialRequests}"-->
+<!--                                  placeholder="Ví dụ: Phòng tầng cao, view biển, giường đôi, kỷ niệm ngày cưới..."></textarea>-->
+<!--                        <small class="text-muted">Chúng tôi sẽ cố gắng đáp ứng yêu cầu của bạn (không đảm bảo)</small>-->
+<!--                    </div>-->
+
+<!--                    <div class="alert alert-warning">-->
+<!--                        <i class="fas fa-info-circle me-2"></i>-->
+<!--                        <strong>Lưu ý:</strong> Vui lòng kiểm tra kỹ thông tin trước khi tiếp tục.-->
+<!--                        Thông tin này sẽ được sử dụng để xác nhận đặt phòng và liên hệ với bạn.-->
+<!--                    </div>-->
+
+<!--                    <div class="d-flex gap-2">-->
+<!--                        <button type="button" class="btn btn-outline-secondary" onclick="history.back()">-->
+<!--                            <i class="fas fa-arrow-left me-2"></i>Quay lại-->
+<!--                        </button>-->
+<!--                        <button type="submit" class="btn btn-luxury flex-grow-1">-->
+<!--                            <i class="fas fa-arrow-right me-2"></i>Tiếp tục thanh toán-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Summary Sidebar &ndash;&gt;-->
+<!--        <div class="col-lg-4">-->
+<!--            <div class="booking-card" style="position: sticky; top: 100px;">-->
+<!--                <h5><i class="fas fa-receipt me-2"></i>Tóm tắt đặt phòng</h5>-->
+<!--                <hr>-->
+
+<!--                <div class="mb-3">-->
+<!--                    <h6 th:text="${bookingSession.roomType.name}">Deluxe Room</h6>-->
+<!--                    <small class="text-muted" th:text="${bookingSession.roomType.branchName}">Chi nhánh Phú Quốc</small>-->
+<!--                </div>-->
+
+<!--                <div class="summary-row">-->
+<!--                    <span><i class="fas fa-calendar-check me-2"></i>Nhận phòng:</span>-->
+<!--                    <strong th:text="${#temporals.format(bookingSession.checkInDate, 'dd/MM/yyyy')}">15/12/2024</strong>-->
+<!--                </div>-->
+<!--                <div class="summary-row">-->
+<!--                    <span><i class="fas fa-calendar-times me-2"></i>Trả phòng:</span>-->
+<!--                    <strong th:text="${#temporals.format(bookingSession.checkOutDate, 'dd/MM/yyyy')}">18/12/2024</strong>-->
+<!--                </div>-->
+<!--                <div class="summary-row">-->
+<!--                    <span><i class="fas fa-moon me-2"></i>Số đêm:</span>-->
+<!--                    <strong><span th:text="${bookingSession.numberOfNights}">3</span> đêm</strong>-->
+<!--                </div>-->
+<!--                <div class="summary-row">-->
+<!--                    <span><i class="fas fa-users me-2"></i>Khách:</span>-->
+<!--                    <strong>-->
+<!--                        <span th:text="${bookingSession.adults}">2</span> người lớn-->
+<!--                        <span th:if="${bookingSession.children > 0}" th:text="', ' + ${bookingSession.children} + ' trẻ em'"></span>-->
+<!--                    </strong>-->
+<!--                </div>-->
+<!--                <div class="summary-row">-->
+<!--                    <span><i class="fas fa-bed me-2"></i>Số phòng:</span>-->
+<!--                    <strong th:text="${bookingSession.numberOfRooms}">1</strong>-->
+<!--                </div>-->
+
+<!--                <hr>-->
+
+<!--                <div class="summary-row" th:if="${bookingSession.includeBreakfast}">-->
+<!--                    <span><i class="fas fa-check text-success me-2"></i>Buffet sáng</span>-->
+<!--                    <span th:text="${#numbers.formatDecimal(bookingSession.breakfastFee, 0, 'COMMA', 0, 'POINT') + 'đ'}">600,000đ</span>-->
+<!--                </div>-->
+<!--                <div class="summary-row" th:if="${bookingSession.includeSpa}">-->
+<!--                    <span><i class="fas fa-check text-success me-2"></i>Spa package</span>-->
+<!--                    <span th:text="${#numbers.formatDecimal(bookingSession.spaFee, 0, 'COMMA', 0, 'POINT') + 'đ'}">1,000,000đ</span>-->
+<!--                </div>-->
+<!--                <div class="summary-row" th:if="${bookingSession.includeAirportTransfer}">-->
+<!--                    <span><i class="fas fa-check text-success me-2"></i>Đưa đón sân bay</span>-->
+<!--                    <span th:text="${#numbers.formatDecimal(bookingSession.airportTransferFee, 0, 'COMMA', 0, 'POINT') + 'đ'}">300,000đ</span>-->
+<!--                </div>-->
+
+<!--                <hr>-->
+
+<!--                <div class="summary-row" style="font-size: 1.2rem; color: var(&#45;&#45;primary-color); font-weight: bold;">-->
+<!--                    <span>Tổng cộng:</span>-->
+<!--                    <span th:text="${#numbers.formatDecimal(bookingSession.totalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">7,900,000đ</span>-->
+<!--                </div>-->
+
+<!--                <div class="alert alert-info mt-3 mb-0">-->
+<!--                    <small>-->
+<!--                        <i class="fas fa-shield-alt me-1"></i>-->
+<!--                        Không tính phí cho đến khi xác nhận thanh toán-->
+<!--                    </small>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script>-->
+
+<!--    // Sửa lại script validation-->
+<!--    document.getElementById('guestForm').addEventListener('submit', function(e) {-->
+<!--        const name = document.querySelector('input[name="guestName"]').value.trim();-->
+<!--        const email = document.querySelector('input[name="guestEmail"]').value.trim();-->
+<!--        const phone = document.querySelector('input[name="guestPhone"]').value.trim();-->
+
+<!--        // Validate name-->
+<!--        if (name.length < 2) {-->
+<!--            e.preventDefault();-->
+<!--            alert('Họ tên phải có ít nhất 2 ký tự');-->
+<!--            return false;-->
+<!--        }-->
+
+<!--        // Validate email-->
+<!--        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;-->
+<!--        if (!emailRegex.test(email)) {-->
+<!--            e.preventDefault();-->
+<!--            alert('Email không hợp lệ');-->
+<!--            return false;-->
+<!--        }-->
+
+<!--        // Validate phone-->
+<!--        const phoneRegex = /^0\d{9,10}$/;-->
+<!--        if (!phoneRegex.test(phone)) {-->
+<!--            e.preventDefault();-->
+<!--            alert('Số điện thoại không hợp lệ. Vui lòng nhập 10-11 số bắt đầu bằng 0.');-->
+<!--            return false;-->
+<!--        }-->
+
+<!--        // Show loading-->
+<!--        const submitBtn = event.target.querySelector('button[type="submit"]');-->
+<!--        submitBtn.disabled = true;-->
+<!--        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';-->
+<!--    });-->
+
+<!--    // Auto format phone number - GIỮ NGUYÊN-->
+<!--    document.querySelector('input[name="guestPhone"]').addEventListener('input', function(e) {-->
+<!--        let value = e.target.value.replace(/\D/g, '');-->
+<!--        if (value.length > 11) {-->
+<!--            value = value.slice(0, 11);-->
+<!--        }-->
+<!--        e.target.value = value;-->
+<!--    });-->
+
+<!--    // Validate form trước khi submit-->
+<!--    document.getElementById('guestForm').addEventListener('submit', function(e) {-->
+<!--        const phone = document.querySelector('input[name="guestPhone"]').value;-->
+<!--        const phoneRegex = /^[0-9]{10,11}$/;-->
+
+<!--        if (!phoneRegex.test(phone.replace(/\s/g, ''))) {-->
+<!--            e.preventDefault();-->
+<!--            alert('Số điện thoại không hợp lệ. Vui lòng nhập 10-11 số.');-->
+<!--            return false;-->
+<!--        }-->
+<!--    });-->
+
+<!--    // Auto format phone number-->
+<!--    document.querySelector('input[name="guestPhone"]').addEventListener('input', function(e) {-->
+<!--        let value = e.target.value.replace(/\D/g, '');-->
+<!--        if (value.length > 11) {-->
+<!--            value = value.slice(0, 11);-->
+<!--        }-->
+<!--        e.target.value = value;-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông tin khách hàng - Bước 2</title>
+    <title>Thông tin khách hàng - Bước 3</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #c9a96e;
+            --scale: 0.75;
         }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             background: #f8f9fa;
-            padding-top: 80px;
+            padding-top: 60px;
+            font-size: 12px;
+            line-height: 1.4;
         }
+
+        .container {
+            max-width: 990px;
+            padding-left: 11.25px;
+            padding-right: 11.25px;
+        }
+
+        /* Booking Steps */
         .booking-steps {
             background: white;
-            padding: 30px;
-            margin-bottom: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            padding: 22.5px;
+            margin-bottom: 22.5px;
+            border-radius: 11.25px;
+            box-shadow: 0 3.75px 11.25px rgba(0,0,0,0.06);
         }
+
+        .booking-steps .row {
+            margin-left: -7.5px;
+            margin-right: -7.5px;
+        }
+
+        .booking-steps [class*="col-"] {
+            padding-left: 7.5px;
+            padding-right: 7.5px;
+        }
+
         .step {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .step-number {
-            width: 50px;
-            height: 50px;
+            width: 37.5px;
+            height: 37.5px;
             border-radius: 50%;
             background: #e9ecef;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 7.5px;
+            font-size: 11px;
         }
+
         .step.active .step-number {
             background: var(--primary-color);
             color: white;
         }
+
         .step.completed .step-number {
             background: #28a745;
             color: white;
         }
+
+        .step-title {
+            font-size: 10.5px;
+            text-align: center;
+        }
+
+        /* Main row */
+        .main-row {
+            margin-left: -7.5px;
+            margin-right: -7.5px;
+        }
+
+        .main-row > [class*="col-"] {
+            padding-left: 7.5px;
+            padding-right: 7.5px;
+        }
+
+        /* Booking Card */
         .booking-card {
             background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
+            border-radius: 11.25px;
+            padding: 22.5px;
+            box-shadow: 0 3.75px 11.25px rgba(0,0,0,0.06);
+            margin-bottom: 15px;
         }
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(201, 169, 110, 0.25);
-        }
-        .btn-luxury {
-            background: var(--primary-color);
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 50px;
+
+        .booking-card h4 {
+            font-size: 14px;
+            margin-bottom: 7.5px;
             font-weight: 600;
         }
-        .btn-luxury:hover {
-            background: #b8956b;
-            color: white;
+
+        .booking-card h5 {
+            font-size: 13px;
+            margin-bottom: 9px;
+            font-weight: 600;
         }
+
+        .booking-card h6 {
+            font-size: 12px;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .booking-card hr {
+            margin: 11.25px 0;
+            opacity: 0.1;
+        }
+
+        .booking-card p {
+            font-size: 11px;
+            margin-bottom: 9px;
+            line-height: 1.4;
+        }
+
+        .booking-card .row {
+            margin-left: -7.5px;
+            margin-right: -7.5px;
+        }
+
+        .booking-card [class*="col-"] {
+            padding-left: 7.5px;
+            padding-right: 7.5px;
+        }
+
+        /* Form elements */
+        .form-label {
+            margin-bottom: 6px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .form-control, .form-select {
+            padding: 7.5px 9px;
+            font-size: 11px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.15rem rgba(201, 169, 110, 0.25);
+        }
+
+        textarea.form-control {
+            min-height: 60px;
+        }
+
+        .mb-3 {
+            margin-bottom: 11.25px !important;
+        }
+
+        .mt-3 {
+            margin-top: 11.25px !important;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 9px 12px;
+            font-size: 10.5px;
+            border-radius: 6px;
+            margin-bottom: 11.25px;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffecb5;
+            color: #856404;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+
+        /* Summary row */
         .summary-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 6px 0;
+            font-size: 10.5px;
+        }
+
+        .summary-row.total {
+            font-size: 13px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        .btn-luxury {
+            background: var(--primary-color);
+            color: white;
+            padding: 9px 22.5px;
+            border: none;
+            border-radius: 37.5px;
+            font-weight: 600;
+            font-size: 11.5px;
+            transition: all 0.3s;
+        }
+
+        .btn-luxury:hover {
+            background: #b8956b;
+            color: white;
+            transform: translateY(-1.5px);
+        }
+
+        .btn-outline-secondary {
+            padding: 9px 22.5px;
+            font-size: 11.5px;
+            border-radius: 37.5px;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            background: white;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* Sticky sidebar */
+        .sticky-sidebar {
+            position: sticky;
+            top: 75px;
+        }
+
+        /* Grid gap */
+        .d-flex.gap-2 {
+            gap: 7.5px !important;
+        }
+
+        /* Icons */
+        .fa, .fas {
+            font-size: 10px;
+        }
+
+        .me-1 {
+            margin-right: 3px !important;
+        }
+
+        .me-2 {
+            margin-right: 6px !important;
+        }
+
+        .my-5 {
+            margin-top: 15px !important;
+            margin-bottom: 15px !important;
+        }
+
+        /* Text utilities */
+        .text-muted {
+            color: #6c757d !important;
+            font-size: 10px;
+        }
+
+        .text-danger {
+            color: #dc3545 !important;
+        }
+
+        .text-success {
+            color: #28a745 !important;
+        }
+
+        small {
+            font-size: 9.5px;
+        }
+
+        /* Flex utilities */
+        .flex-grow-1 {
+            flex-grow: 1 !important;
+        }
+
+        .w-100 {
+            width: 100% !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .container {
+                max-width: 855px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            body {
+                font-size: 11px;
+            }
+
+            .booking-card {
+                padding: 18px 20px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sticky-sidebar {
+                position: static;
+                margin-top: 15px;
+            }
+
+            .container {
+                max-width: 540px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 52.5px;
+                font-size: 10px;
+            }
+
+            .container {
+                max-width: 405px;
+            }
+
+            .booking-steps {
+                padding: 15px;
+            }
+
+            .step-number {
+                width: 33px;
+                height: 33px;
+                font-size: 10px;
+            }
+
+            .step-title {
+                font-size: 9px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -109,7 +708,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row main-row">
         <div class="col-lg-8">
             <div class="booking-card">
                 <h4><i class="fas fa-user me-2"></i>Thông tin khách hàng</h4>
@@ -179,7 +778,7 @@
 
         <!-- Summary Sidebar -->
         <div class="col-lg-4">
-            <div class="booking-card" style="position: sticky; top: 100px;">
+            <div class="booking-card sticky-sidebar">
                 <h5><i class="fas fa-receipt me-2"></i>Tóm tắt đặt phòng</h5>
                 <hr>
 
@@ -229,12 +828,12 @@
 
                 <hr>
 
-                <div class="summary-row" style="font-size: 1.2rem; color: var(--primary-color); font-weight: bold;">
+                <div class="summary-row total">
                     <span>Tổng cộng:</span>
                     <span th:text="${#numbers.formatDecimal(bookingSession.totalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">7,900,000đ</span>
                 </div>
 
-                <div class="alert alert-info mt-3 mb-0">
+                <div class="alert alert-info mt-3">
                     <small>
                         <i class="fas fa-shield-alt me-1"></i>
                         Không tính phí cho đến khi xác nhận thanh toán
@@ -247,8 +846,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-
-    // Sửa lại script validation
+    // Validate form
     document.getElementById('guestForm').addEventListener('submit', function(e) {
         const name = document.querySelector('input[name="guestName"]').value.trim();
         const email = document.querySelector('input[name="guestEmail"]').value.trim();
@@ -278,30 +876,9 @@
         }
 
         // Show loading
-        const submitBtn = event.target.querySelector('button[type="submit"]');
+        const submitBtn = this.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
-    });
-
-    // Auto format phone number - GIỮ NGUYÊN
-    document.querySelector('input[name="guestPhone"]').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 11) {
-            value = value.slice(0, 11);
-        }
-        e.target.value = value;
-    });
-
-    // Validate form trước khi submit
-    document.getElementById('guestForm').addEventListener('submit', function(e) {
-        const phone = document.querySelector('input[name="guestPhone"]').value;
-        const phoneRegex = /^[0-9]{10,11}$/;
-
-        if (!phoneRegex.test(phone.replace(/\s/g, ''))) {
-            e.preventDefault();
-            alert('Số điện thoại không hợp lệ. Vui lòng nhập 10-11 số.');
-            return false;
-        }
     });
 
     // Auto format phone number

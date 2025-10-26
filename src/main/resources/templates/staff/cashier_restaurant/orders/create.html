@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Món Tại Quầy - Thu Ngân Nhà Hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            zoom: 0.75;
+            -moz-transform: scale(0.75);
+            -moz-transform-origin: 0 0;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .sidebar-header i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+            color: #fbbf24;
+        }
+
+        .sidebar-header h5 {
+            font-size: 16px;
+            margin: 5px 0;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9);
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.25);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link i { font-size: 18px; }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 25px;
+            flex: 1;
+            background: #f8f9fa;
+        }
+
+        .page-header {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h4 {
+            margin: 0;
+            color: #1f2937;
+            font-weight: 700;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: none;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 2px solid #e9ecef;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 15px;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body { padding: 20px; }
+
+        .table-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
+        }
+
+        .table-btn {
+            padding: 18px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .table-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .table-btn:hover::before { left: 100%; }
+
+        .table-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .table-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .category-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .menu-grid::-webkit-scrollbar { width: 8px; }
+        .menu-grid::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .menu-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .menu-grid::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .menu-item {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .menu-item-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--danger);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .menu-item-name {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #1f2937;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-item-price {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .price-original {
+            color: #9ca3af;
+            font-size: 12px;
+            text-decoration: line-through;
+        }
+
+        .price-current {
+            color: var(--danger);
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .cart-section {
+            position: sticky;
+            top: 20px;
+        }
+
+        .cart-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .cart-list::-webkit-scrollbar { width: 6px; }
+        .cart-list::-webkit-scrollbar-track { background: #f1f1f1; }
+        .cart-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .cart-item {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .cart-item:hover { background: #f9fafb; }
+        .cart-item:last-child { border-bottom: none; }
+
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-weight: 700; color: #1f2937; margin-bottom: 4px; }
+        .cart-item-price { color: var(--danger); font-size: 12px; font-weight: 600; }
+
+        .qty-control {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .qty-display {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .summary-box {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .summary-row.total {
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--danger);
+            padding-top: 12px;
+            border-top: 2px solid #e5e7eb;
+            margin-bottom: 0;
+        }
+
+        .btn {
+            font-size: 14px;
+            padding: 12px 20px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            border: none;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-outline-secondary:hover {
+            background: #6b7280;
+            border-color: #6b7280;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-cart i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 15px; }
+            .menu-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="bi bi-shop-window"></i>
+            <h5>THU NGÂN NHÀ HÀNG</h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="/cashier-restaurant/dashboard">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a class="nav-link active" href="/cashier-restaurant/create-order">
+                <i class="bi bi-plus-circle-fill"></i> Đặt Món
+            </a>
+            <a class="nav-link" href="/cashier-restaurant/orders">
+                <i class="bi bi-list-check"></i> Danh Sách Đơn
+            </a>
+        </nav>
+        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <a href="/cashier-restaurant/logout" class="nav-link">
+                <i class="bi bi-box-arrow-right"></i> Đăng Xuất
+            </a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="page-header">
+            <h4><i class="bi bi-plus-circle-fill me-2"></i>Đặt Món Tại Quầy</h4>
+            <span class="badge bg-primary" style="font-size: 13px; padding: 8px 15px;">
+                <i class="bi bi-clock me-1"></i><span id="currentTime"></span>
+            </span>
+        </div>
+
+        <!-- Alert Messages -->
+        <div th:if="${errorMessage}" class="alert alert-danger">
+            <i class="bi bi-x-circle me-2"></i><span th:text="${errorMessage}"></span>
+        </div>
+        <div th:if="${successMessage}" class="alert alert-success">
+            <i class="bi bi-check-circle me-2"></i><span th:text="${successMessage}"></span>
+        </div>
+
+        <form method="POST" action="/cashier-restaurant/api/orders/create" id="orderForm">
+            <div class="row">
+                <!-- LEFT COLUMN (8 cols) -->
+                <div class="col-lg-8">
+                    <!-- CHỌN BÀN -->
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-table"></i> Chọn Bàn
+                        </div>
+                        <div class="card-body">
+                            <div class="table-grid">
+                                <th:block th:each="table : ${tables}">
+                                    <button type="button" class="table-btn"
+                                            th:data-id="${table.id}"
+                                            th:data-number="${table.tableNumber}">
+                                        <div th:text="${table.tableNumber}" style="font-size: 18px;">Bàn 1</div>
+                                        <small th:text="${table.capacity} + ' người'" style="color: #6b7280;">4 người</small>
+                                    </button>
+                                </th:block>
+                            </div>
+                            <input type="hidden" id="selectedTableId" name="tableId" required>
+                        </div>
+                    </div>
+
+                    <!-- DANH MỤC VÀ MENU -->
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-grid-3x3-gap"></i> Menu Món Ăn
+                        </div>
+                        <div class="card-body">
+                            <!-- Danh mục -->
+                            <div class="category-tabs">
+                                <button type="button" class="category-btn active" onclick="filterByCategory(null)">
+                                    <i class="bi bi-grid-fill me-1"></i>Tất Cả
+                                </button>
+                                <th:block th:each="cat : ${categories}">
+                                    <button type="button" class="category-btn"
+                                            th:onclick="'filterByCategory(' + ${cat.id} + ')'"
+                                            th:text="${cat.name}">
+                                        Category
+                                    </button>
+                                </th:block>
+                            </div>
+
+                            <!-- Menu Items -->
+                            <div class="menu-grid" id="menuList">
+                                <th:block th:each="item : ${menuItems}">
+                                    <div class="menu-item"
+                                         th:data-id="${item.id}"
+                                         th:data-name="${item.name}"
+                                         th:data-price="${item.price}"
+                                         th:data-category="${item.categoryId}"
+                                         onclick="addToCart(this)">
+
+                                        <!-- Badge giảm giá -->
+                                        <div class="menu-item-badge" th:if="${item.hasPromotion}">
+                                            -<span th:text="${#numbers.formatDecimal(item.discountPercent, 0, 0)}">20</span>%
+                                        </div>
+
+                                        <img th:src="${item.imageUrl != null && item.imageUrl != '' ? item.imageUrl : 'https://via.placeholder.com/200x150?text=No+Image'}"
+                                             th:alt="${item.name}">
+
+                                        <div class="menu-item-name" th:text="${item.name}">Món ăn</div>
+
+                                        <div class="menu-item-price">
+                                            <div class="price-original" th:if="${item.hasPromotion}">
+                                                <span th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')}">100000</span>đ
+                                            </div>
+                                            <div class="price-current">
+                                                <span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">80000</span>đ
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN (4 cols) - GIỎ HÀNG -->
+                <div class="col-lg-4">
+                    <div class="cart-section">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-cart3"></i> Giỏ Hàng
+                                <span class="badge bg-danger ms-auto" id="cartCount">0</span>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="cart-list" id="cartList">
+                                    <div class="empty-cart">
+                                        <i class="bi bi-cart-x"></i>
+                                        <div>Chưa có món nào</div>
+                                    </div>
+                                </div>
+
+                                <!-- Summary -->
+                                <div class="summary-box" style="margin: 20px;">
+                                    <div class="summary-row">
+                                        <span>Tổng cộng:</span>
+                                        <strong id="totalPrice">0đ</strong>
+                                    </div>
+                                    <div class="summary-row total">
+                                        <span>THÀNH TIỀN:</span>
+                                        <span id="finalPrice">0đ</span>
+                                    </div>
+                                </div>
+
+                                <!-- Thông tin thêm -->
+                                <div style="padding: 0 20px 20px 20px;">
+                                    <div class="mb-3">
+                                        <label class="form-label" style="font-weight: 600; font-size: 13px;">
+                                            <i class="bi bi-person me-1"></i>Tên Thu Ngân
+                                        </label>
+                                        <input type="text" class="form-control" name="cashierName" required
+                                               placeholder="Nhập tên thu ngân">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label" style="font-weight: 600; font-size: 13px;">
+                                            <i class="bi bi-chat-left-text me-1"></i>Ghi Chú
+                                        </label>
+                                        <textarea class="form-control" name="notes" rows="2"
+                                                  placeholder="Ghi chú đặc biệt..."></textarea>
+                                    </div>
+
+                                    <!-- Buttons -->
+                                    <button type="submit" class="btn btn-success w-100 mb-2" id="submitBtn" disabled>
+                                        <i class="bi bi-check-circle me-2"></i>Xác Nhận Đặt Món
+                                    </button>
+                                    <a href="/cashier-restaurant/dashboard" class="btn btn-outline-secondary w-100">
+                                        <i class="bi bi-x-circle me-2"></i>Hủy Bỏ
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden items container -->
+            <div id="itemsContainer"></div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const branchId = [[${branchId}]];
+    let cart = {};
+    let selectedTable = null;
+    let allMenuItems = [];
+
+    // Load menu items vào biến toàn cục
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.menu-item').forEach(item => {
+            allMenuItems.push({
+                id: parseInt(item.dataset.id),
+                name: item.dataset.name,
+                price: parseFloat(item.dataset.price),
+                categoryId: item.dataset.category ? parseInt(item.dataset.category) : null,
+                element: item
+            });
+        });
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    });
+
+    // Đồng hồ
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    // Chọn bàn
+    document.querySelectorAll('.table-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.table-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedTable = {
+                id: btn.dataset.id,
+                number: btn.dataset.number
+            };
+            document.getElementById('selectedTableId').value = selectedTable.id;
+            checkFormValidity();
+        });
+    });
+
+    // Filter theo category
+    function filterByCategory(categoryId) {
+        // Update active button
+        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // Filter items
+        allMenuItems.forEach(item => {
+            if (categoryId === null || item.categoryId === categoryId) {
+                item.element.style.display = 'block';
+            } else {
+                item.element.style.display = 'none';
+            }
+        });
+    }
+
+    // Thêm vào giỏ
+    function addToCart(element) {
+        const id = parseInt(element.dataset.id);
+        const name = element.dataset.name;
+        const price = parseFloat(element.dataset.price);
+
+        if (!cart[id]) {
+            cart[id] = { id, name, price, qty: 0 };
+        }
+        cart[id].qty++;
+
+        updateCart();
+    }
+
+    // Cập nhật giỏ hàng
+    function updateCart() {
+        const cartList = document.getElementById('cartList');
+        let html = '';
+        let total = 0;
+        let itemCount = 0;
+
+        const cartItems = Object.values(cart).filter(item => item.qty > 0);
+
+        if (cartItems.length === 0) {
+            html = `
+                <div class="empty-cart">
+                    <i class="bi bi-cart-x"></i>
+                    <div>Chưa có món nào</div>
+                </div>
+            `;
+        } else {
+            cartItems.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                itemCount += item.qty;
+
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">${formatCurrency(item.price)} × ${item.qty}</div>
+                        </div>
+                        <div class="qty-control">
+                            <button type="button" class="qty-btn" onclick="decreaseQty(${item.id})">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <div class="qty-display">${item.qty}</div>
+                            <button type="button" class="qty-btn" onclick="increaseQty(${item.id})">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        cartList.innerHTML = html;
+        document.getElementById('totalPrice').textContent = formatCurrency(total);
+        document.getElementById('finalPrice').textContent = formatCurrency(total);
+        document.getElementById('cartCount').textContent = itemCount;
+
+        updateItemsContainer();
+        checkFormValidity();
+    }
+
+    function increaseQty(id) {
+        if (cart[id]) {
+            cart[id].qty++;
+            updateCart();
+        }
+    }
+
+    function decreaseQty(id) {
+        if (cart[id]) {
+            cart[id].qty--;
+            if (cart[id].qty <= 0) {
+                delete cart[id];
+            }
+            updateCart();
+        }
+    }
+
+    // Cập nhật hidden inputs
+    function updateItemsContainer() {
+        const container = document.getElementById('itemsContainer');
+        let html = '';
+        let idx = 0;
+
+        Object.values(cart).forEach(item => {
+            if (item.qty > 0) {
+                html += `
+                    <input type="hidden" name="items[${idx}].menuItemId" value="${item.id}">
+                    <input type="hidden" name="items[${idx}].quantity" value="${item.qty}">
+                `;
+                idx++;
+            }
+        });
+
+        container.innerHTML = html;
+    }
+
+    // Kiểm tra form validity
+    function checkFormValidity() {
+        const hasItems = Object.values(cart).some(item => item.qty > 0);
+        const hasTable = selectedTable !== null;
+        const submitBtn = document.getElementById('submitBtn');
+
+        submitBtn.disabled = !(hasItems && hasTable);
+    }
+
+    // Format tiền tệ
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount).replace('₫', 'đ');
+    }
+
+    // Validate form trước khi submit
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+        const cashierName = document.querySelector('input[name="cashierName"]').value.trim();
+
+        if (!selectedTable) {
+            e.preventDefault();
+            alert('Vui lòng chọn bàn!');
+            return false;
+        }
+
+        if (Object.keys(cart).length === 0) {
+            e.preventDefault();
+            alert('Vui lòng chọn ít nhất một món!');
+            return false;
+        }
+
+        if (!cashierName) {
+            e.preventDefault();
+            alert('Vui lòng nhập tên thu ngân!');
+            return false;
+        }
+
+        return true;
+    });
+</script>
+</body>
+</html>

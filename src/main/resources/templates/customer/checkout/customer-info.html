@@ -1,0 +1,823 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Thông tin đặt hàng - Luxury Resort</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">-->
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;primary-color: #c9a96e;-->
+<!--        }-->
+<!--        body {-->
+<!--            background: #f8f9fa;-->
+<!--            padding-top: 80px;-->
+<!--            font-family: 'Inter', sans-serif;-->
+<!--        }-->
+<!--        .checkout-container {-->
+<!--            max-width: 1200px;-->
+<!--            margin: 0 auto;-->
+<!--            padding: 40px 15px;-->
+<!--        }-->
+<!--        .checkout-steps {-->
+<!--            background: white;-->
+<!--            padding: 30px;-->
+<!--            margin-bottom: 30px;-->
+<!--            border-radius: 15px;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--        }-->
+<!--        .step {-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--            align-items: center;-->
+<!--            position: relative;-->
+<!--        }-->
+<!--        .step-number {-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--            border-radius: 50%;-->
+<!--            background: #e9ecef;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            font-weight: bold;-->
+<!--            margin-bottom: 10px;-->
+<!--            z-index: 2;-->
+<!--        }-->
+<!--        .step.active .step-number {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .step.completed .step-number {-->
+<!--            background: #28a745;-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .step-line {-->
+<!--            position: absolute;-->
+<!--            top: 25px;-->
+<!--            left: 50%;-->
+<!--            width: 100%;-->
+<!--            height: 2px;-->
+<!--            background: #e9ecef;-->
+<!--            z-index: 1;-->
+<!--        }-->
+<!--        .step.completed .step-line {-->
+<!--            background: #28a745;-->
+<!--        }-->
+<!--        .checkout-card {-->
+<!--            background: white;-->
+<!--            border-radius: 15px;-->
+<!--            padding: 30px;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .form-control:focus, .form-select:focus {-->
+<!--            border-color: var(&#45;&#45;primary-color);-->
+<!--            box-shadow: 0 0 0 0.2rem rgba(201, 169, 110, 0.25);-->
+<!--        }-->
+<!--        .btn-luxury {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--            padding: 12px 30px;-->
+<!--            border: none;-->
+<!--            border-radius: 50px;-->
+<!--            font-weight: 600;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        .btn-luxury:hover {-->
+<!--            background: #b8956b;-->
+<!--            color: white;-->
+<!--            transform: translateY(-2px);-->
+<!--        }-->
+<!--        .summary-row {-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            padding: 8px 0;-->
+<!--            border-bottom: 1px solid #eee;-->
+<!--        }-->
+<!--        .summary-row:last-child {-->
+<!--            border-bottom: none;-->
+<!--        }-->
+<!--        .summary-total {-->
+<!--            font-size: 1.3rem;-->
+<!--            font-weight: 700;-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--            padding-top: 15px;-->
+<!--            border-top: 2px solid var(&#45;&#45;primary-color);-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div th:replace="fragments/user_navbar :: user_navbar"></div>-->
+
+<!--<div class="checkout-container">-->
+<!--    &lt;!&ndash; Checkout Steps &ndash;&gt;-->
+<!--    <div class="checkout-steps">-->
+<!--        <div class="row position-relative">-->
+<!--            <div class="col-4">-->
+<!--                <div class="step completed">-->
+<!--                    <div class="step-number"><i class="fas fa-check"></i></div>-->
+<!--                    <div class="step-title">Giỏ hàng</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-4">-->
+<!--                <div class="step active">-->
+<!--                    <div class="step-number">2</div>-->
+<!--                    <div class="step-title">Thông tin</div>-->
+<!--                    <div class="step-line"></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-4">-->
+<!--                <div class="step">-->
+<!--                    <div class="step-number">3</div>-->
+<!--                    <div class="step-title">Thanh toán</div>-->
+<!--                    <div class="step-line"></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="row">-->
+<!--        <div class="col-lg-8">-->
+<!--            <div class="checkout-card">-->
+<!--                <h4><i class="fas fa-user me-2"></i>Thông tin người nhận</h4>-->
+<!--                <p class="text-muted">Vui lòng điền đầy đủ thông tin để hoàn tất đặt hàng</p>-->
+<!--                <hr>-->
+
+<!--                <form th:action="@{/checkout/customer-info}" method="post" id="customerForm">-->
+<!--                    <div class="row mb-3">-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label class="form-label">Họ và tên <span class="text-danger">*</span></label>-->
+<!--                            <input type="text" class="form-control" name="customerName"-->
+<!--                                   th:value="${user != null ? user.fullName : ''}" required-->
+<!--                                   placeholder="Nguyễn Văn A">-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>-->
+<!--                            <input type="tel" class="form-control" name="customerPhone"-->
+<!--                                   th:value="${user != null ? user.phoneNumber : ''}" required-->
+<!--                                   placeholder="0912345678">-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="mb-3">-->
+<!--                        <label class="form-label">Địa chỉ giao hàng <span class="text-danger">*</span></label>-->
+<!--                        <textarea class="form-control" name="customerAddress" rows="3" required-->
+<!--                                  placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"></textarea>-->
+<!--                        <small class="text-muted">Vui lòng nhập địa chỉ chi tiết để shipper dễ tìm</small>-->
+<!--                    </div>-->
+
+<!--                    <div class="mb-3">-->
+<!--                        <label class="form-label">Ghi chú đơn hàng</label>-->
+<!--                        <textarea class="form-control" name="orderNotes" rows="3"-->
+<!--                                  placeholder="Ghi chú thêm về đơn hàng (không bắt buộc)"></textarea>-->
+<!--                    </div>-->
+
+<!--                    <div class="alert alert-info">-->
+<!--                        <i class="fas fa-info-circle me-2"></i>-->
+<!--                        <strong>Lưu ý:</strong> Vui lòng kiểm tra kỹ thông tin trước khi tiếp tục.-->
+<!--                        Nhà hàng sẽ liên hệ với bạn để xác nhận đơn hàng.-->
+<!--                    </div>-->
+
+<!--                    <div class="d-flex gap-2">-->
+<!--                        <a href="/cart" class="btn btn-outline-secondary">-->
+<!--                            <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng-->
+<!--                        </a>-->
+<!--                        <button type="submit" class="btn btn-luxury flex-grow-1">-->
+<!--                            <i class="fas fa-arrow-right me-2"></i>Tiếp tục thanh toán-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Order Summary Sidebar &ndash;&gt;-->
+<!--        <div class="col-lg-4">-->
+<!--            <div class="checkout-card" style="position: sticky; top: 100px;">-->
+<!--                <h5><i class="fas fa-receipt me-2"></i>Tóm tắt đơn hàng</h5>-->
+<!--                <hr>-->
+
+<!--                <div class="mb-3" th:if="${cart.branchName}">-->
+<!--                    <small class="text-muted">Chi nhánh</small>-->
+<!--                    <h6 th:text="${cart.branchName}">Chi nhánh Phú Quốc</h6>-->
+<!--                </div>-->
+
+<!--                <div class="summary-row">-->
+<!--                    <span><i class="fas fa-utensils me-2"></i>Số món:</span>-->
+<!--                    <strong th:text="${cart.totalItems}">5</strong>-->
+<!--                </div>-->
+
+<!--                <hr>-->
+
+<!--                <div class="summary-row">-->
+<!--                    <span>Tạm tính:</span>-->
+<!--                    <span th:text="${cart.formattedSubtotal}">1,500,000 VNĐ</span>-->
+<!--                </div>-->
+<!--                <div class="summary-row">-->
+<!--                    <span>Phí phục vụ (10%):</span>-->
+<!--                    <span th:text="${cart.formattedServiceCharge}">150,000 VNĐ</span>-->
+<!--                </div>-->
+<!--                <div class="summary-row">-->
+<!--                    <span>VAT (8%):</span>-->
+<!--                    <span th:text="${cart.formattedVat}">132,000 VNĐ</span>-->
+<!--                </div>-->
+
+<!--                <div class="summary-row summary-total">-->
+<!--                    <span>Tổng cộng:</span>-->
+<!--                    <span th:text="${cart.formattedTotalAmount}">1,782,000 VNĐ</span>-->
+<!--                </div>-->
+
+<!--                <div class="alert alert-success mt-3 mb-0">-->
+<!--                    <small>-->
+<!--                        <i class="fas fa-shield-alt me-1"></i>-->
+<!--                        Thanh toán an toàn & bảo mật-->
+<!--                    </small>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script>-->
+<!--    // Validate form-->
+<!--    document.getElementById('customerForm').addEventListener('submit', function(e) {-->
+<!--        const name = document.querySelector('input[name="customerName"]').value.trim();-->
+<!--        const phone = document.querySelector('input[name="customerPhone"]').value.trim();-->
+<!--        const address = document.querySelector('textarea[name="customerAddress"]').value.trim();-->
+
+<!--        if (name.length < 2) {-->
+<!--            e.preventDefault();-->
+<!--            alert('Họ tên phải có ít nhất 2 ký tự');-->
+<!--            return false;-->
+<!--        }-->
+
+<!--        const phoneRegex = /^0\d{9,10}$/;-->
+<!--        if (!phoneRegex.test(phone)) {-->
+<!--            e.preventDefault();-->
+<!--            alert('Số điện thoại không hợp lệ. Vui lòng nhập 10-11 số bắt đầu bằng 0.');-->
+<!--            return false;-->
+<!--        }-->
+
+<!--        if (address.length < 10) {-->
+<!--            e.preventDefault();-->
+<!--            alert('Vui lòng nhập địa chỉ chi tiết');-->
+<!--            return false;-->
+<!--        }-->
+
+<!--        const submitBtn = e.target.querySelector('button[type="submit"]');-->
+<!--        submitBtn.disabled = true;-->
+<!--        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';-->
+<!--    });-->
+
+<!--    // Auto format phone number-->
+<!--    document.querySelector('input[name="customerPhone"]').addEventListener('input', function(e) {-->
+<!--        let value = e.target.value.replace(/\D/g, '');-->
+<!--        if (value.length > 11) {-->
+<!--            value = value.slice(0, 11);-->
+<!--        }-->
+<!--        e.target.value = value;-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin đặt hàng - Luxury Resort</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">
+    <style>
+        :root {
+            --primary-color: #c9a96e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f8f9fa;
+            padding-top: 60px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .checkout-container {
+            max-width: 990px;
+            margin: 0 auto;
+            padding: 30px 11.25px;
+        }
+
+        /* Checkout Steps */
+        .checkout-steps {
+            background: white;
+            padding: 22.5px;
+            margin-bottom: 22.5px;
+            border-radius: 11.25px;
+            box-shadow: 0 3.75px 11.25px rgba(0,0,0,0.08);
+        }
+
+        .checkout-steps .row {
+            margin-left: -7.5px;
+            margin-right: -7.5px;
+        }
+
+        .checkout-steps [class*="col-"] {
+            padding-left: 7.5px;
+            padding-right: 7.5px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 37.5px;
+            height: 37.5px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 7.5px;
+            z-index: 2;
+            font-size: 11px;
+        }
+
+        .step.active .step-number {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-line {
+            position: absolute;
+            top: 18.75px;
+            left: 50%;
+            width: 100%;
+            height: 1.5px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .step.completed .step-line {
+            background: #28a745;
+        }
+
+        .step-title {
+            font-size: 10.5px;
+            text-align: center;
+        }
+
+        /* Main row */
+        .row {
+            margin-left: -7.5px;
+            margin-right: -7.5px;
+        }
+
+        [class*="col-"] {
+            padding-left: 7.5px;
+            padding-right: 7.5px;
+        }
+
+        /* Checkout Card */
+        .checkout-card {
+            background: white;
+            border-radius: 11.25px;
+            padding: 22.5px;
+            box-shadow: 0 3.75px 11.25px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+        }
+
+        .checkout-card h4 {
+            font-size: 14px;
+            margin-bottom: 7.5px;
+            font-weight: 600;
+        }
+
+        .checkout-card h5 {
+            font-size: 13px;
+            margin-bottom: 9px;
+            font-weight: 600;
+        }
+
+        .checkout-card h6 {
+            font-size: 12px;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .checkout-card hr {
+            margin: 11.25px 0;
+            opacity: 0.1;
+        }
+
+        .checkout-card p {
+            font-size: 11px;
+            margin-bottom: 9px;
+            line-height: 1.4;
+        }
+
+        /* Form elements */
+        .form-label {
+            margin-bottom: 6px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .form-control, .form-select {
+            padding: 7.5px 9px;
+            font-size: 11px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.15rem rgba(201, 169, 110, 0.25);
+        }
+
+        textarea.form-control {
+            min-height: 60px;
+        }
+
+        .mb-3 {
+            margin-bottom: 11.25px !important;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 9px 12px;
+            font-size: 10.5px;
+            border-radius: 6px;
+            margin-bottom: 11.25px;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        /* Summary row */
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 10.5px;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-total {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-color);
+            padding-top: 11.25px;
+            border-top: 1.5px solid var(--primary-color);
+        }
+
+        /* Buttons */
+        .btn-luxury {
+            background: var(--primary-color);
+            color: white;
+            padding: 9px 22.5px;
+            border: none;
+            border-radius: 37.5px;
+            font-weight: 600;
+            font-size: 11.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-luxury:hover {
+            background: #b8956b;
+            color: white;
+            transform: translateY(-1.5px);
+        }
+
+        .btn-outline-secondary {
+            padding: 9px 22.5px;
+            font-size: 11.5px;
+            border-radius: 37.5px;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            background: white;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* Sticky sidebar */
+        .sticky-top {
+            position: sticky;
+            top: 75px;
+        }
+
+        /* Grid gap */
+        .d-flex.gap-2 {
+            gap: 7.5px !important;
+        }
+
+        /* Icons */
+        .fa, .fas {
+            font-size: 10px;
+        }
+
+        .me-1 {
+            margin-right: 3px !important;
+        }
+
+        .me-2 {
+            margin-right: 6px !important;
+        }
+
+        .mt-3 {
+            margin-top: 11.25px !important;
+        }
+
+        .mb-0 {
+            margin-bottom: 0 !important;
+        }
+
+        /* Text utilities */
+        .text-muted {
+            color: #6c757d !important;
+            font-size: 10px;
+        }
+
+        .text-danger {
+            color: #dc3545 !important;
+        }
+
+        small {
+            font-size: 9.5px;
+        }
+
+        /* Flex utilities */
+        .flex-grow-1 {
+            flex-grow: 1 !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .checkout-container {
+                max-width: 855px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            body {
+                font-size: 11px;
+            }
+
+            .checkout-card {
+                padding: 18px 20px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sticky-top {
+                position: static;
+                margin-top: 15px;
+            }
+
+            .checkout-container {
+                max-width: 540px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 52.5px;
+                font-size: 10px;
+            }
+
+            .checkout-container {
+                max-width: 405px;
+            }
+
+            .checkout-steps {
+                padding: 15px;
+            }
+
+            .step-number {
+                width: 33px;
+                height: 33px;
+                font-size: 10px;
+            }
+
+            .step-title {
+                font-size: 9px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .checkout-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/user_navbar :: user_navbar"></div>
+
+<div class="checkout-container">
+    <!-- Checkout Steps -->
+    <div class="checkout-steps">
+        <div class="row position-relative">
+            <div class="col-4">
+                <div class="step completed">
+                    <div class="step-number"><i class="fas fa-check"></i></div>
+                    <div class="step-title">Giỏ hàng</div>
+                    <div class="step-line"></div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="step active">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Thông tin</div>
+                    <div class="step-line"></div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Thanh toán</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="checkout-card">
+                <h4><i class="fas fa-user me-2"></i>Thông tin người nhận</h4>
+                <p class="text-muted">Vui lòng điền đầy đủ thông tin để hoàn tất đặt hàng</p>
+                <hr>
+
+                <form th:action="@{/checkout/customer-info}" method="post" id="customerForm">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="customerName"
+                                   th:value="${user != null ? user.fullName : ''}" required
+                                   placeholder="Nguyễn Văn A">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" name="customerPhone"
+                                   th:value="${user != null ? user.phoneNumber : ''}" required
+                                   placeholder="0912345678">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ giao hàng <span class="text-danger">*</span></label>
+                        <textarea class="form-control" name="customerAddress" rows="3" required
+                                  placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"></textarea>
+                        <small class="text-muted">Vui lòng nhập địa chỉ chi tiết để shipper dễ tìm</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Ghi chú đơn hàng</label>
+                        <textarea class="form-control" name="orderNotes" rows="3"
+                                  placeholder="Ghi chú thêm về đơn hàng (không bắt buộc)"></textarea>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Lưu ý:</strong> Vui lòng kiểm tra kỹ thông tin trước khi tiếp tục.
+                        Nhà hàng sẽ liên hệ với bạn để xác nhận đơn hàng.
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="/cart" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng
+                        </a>
+                        <button type="submit" class="btn btn-luxury flex-grow-1">
+                            <i class="fas fa-arrow-right me-2"></i>Tiếp tục thanh toán
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Order Summary Sidebar -->
+        <div class="col-lg-4">
+            <div class="checkout-card sticky-top">
+                <h5><i class="fas fa-receipt me-2"></i>Tóm tắt đơn hàng</h5>
+                <hr>
+
+                <div class="mb-3" th:if="${cart.branchName}">
+                    <small class="text-muted">Chi nhánh</small>
+                    <h6 th:text="${cart.branchName}">Chi nhánh Phú Quốc</h6>
+                </div>
+
+                <div class="summary-row">
+                    <span><i class="fas fa-utensils me-2"></i>Số món:</span>
+                    <strong th:text="${cart.totalItems}">5</strong>
+                </div>
+
+                <hr>
+
+                <div class="summary-row">
+                    <span>Tạm tính:</span>
+                    <span th:text="${cart.formattedSubtotal}">1,500,000 VNĐ</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí phục vụ (10%):</span>
+                    <span th:text="${cart.formattedServiceCharge}">150,000 VNĐ</span>
+                </div>
+                <div class="summary-row">
+                    <span>VAT (8%):</span>
+                    <span th:text="${cart.formattedVat}">132,000 VNĐ</span>
+                </div>
+
+                <div class="summary-row summary-total">
+                    <span>Tổng cộng:</span>
+                    <span th:text="${cart.formattedTotalAmount}">1,782,000 VNĐ</span>
+                </div>
+
+                <div class="alert alert-success mt-3 mb-0">
+                    <small>
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Thanh toán an toàn & bảo mật
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Validate form
+    document.getElementById('customerForm').addEventListener('submit', function(e) {
+        const name = document.querySelector('input[name="customerName"]').value.trim();
+        const phone = document.querySelector('input[name="customerPhone"]').value.trim();
+        const address = document.querySelector('textarea[name="customerAddress"]').value.trim();
+
+        if (name.length < 2) {
+            e.preventDefault();
+            alert('Họ tên phải có ít nhất 2 ký tự');
+            return false;
+        }
+
+        const phoneRegex = /^0\d{9,10}$/;
+        if (!phoneRegex.test(phone)) {
+            e.preventDefault();
+            alert('Số điện thoại không hợp lệ. Vui lòng nhập 10-11 số bắt đầu bằng 0.');
+            return false;
+        }
+
+        if (address.length < 10) {
+            e.preventDefault();
+            alert('Vui lòng nhập địa chỉ chi tiết');
+            return false;
+        }
+
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+    });
+
+    // Auto format phone number
+    document.querySelector('input[name="customerPhone"]').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 11) {
+            value = value.slice( 0, 11);
+        }
+        e.target.value = value;
+    });
+</script>
+</body>
+</html>

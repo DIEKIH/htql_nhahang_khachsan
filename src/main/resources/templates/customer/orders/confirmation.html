@@ -1,0 +1,867 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Đặt hàng thành công - Luxury Resort</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">-->
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;primary-color: #c9a96e;-->
+<!--        }-->
+<!--        body {-->
+<!--            background: #f8f9fa;-->
+<!--            padding-top: 80px;-->
+<!--            font-family: 'Inter', sans-serif;-->
+<!--        }-->
+<!--        .confirmation-container {-->
+<!--            max-width: 900px;-->
+<!--            margin: 0 auto;-->
+<!--            padding: 40px 15px;-->
+<!--        }-->
+<!--        .success-icon {-->
+<!--            width: 100px;-->
+<!--            height: 100px;-->
+<!--            background: #28a745;-->
+<!--            border-radius: 50%;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            margin: 0 auto 30px;-->
+<!--            animation: scaleIn 0.5s ease;-->
+<!--        }-->
+<!--        .success-icon i {-->
+<!--            font-size: 3rem;-->
+<!--            color: white;-->
+<!--        }-->
+<!--        @keyframes scaleIn {-->
+<!--            from {-->
+<!--                transform: scale(0);-->
+<!--            }-->
+<!--            to {-->
+<!--                transform: scale(1);-->
+<!--            }-->
+<!--        }-->
+<!--        .confirmation-card {-->
+<!--            background: white;-->
+<!--            border-radius: 15px;-->
+<!--            padding: 40px;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--            margin-bottom: 20px;-->
+<!--            text-align: center;-->
+<!--        }-->
+<!--        .order-info-card {-->
+<!--            background: white;-->
+<!--            border-radius: 15px;-->
+<!--            padding: 30px;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .info-row {-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            padding: 12px 0;-->
+<!--            border-bottom: 1px solid #eee;-->
+<!--        }-->
+<!--        .info-row:last-child {-->
+<!--            border-bottom: none;-->
+<!--        }-->
+<!--        .order-code {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--            padding: 15px 30px;-->
+<!--            border-radius: 50px;-->
+<!--            font-size: 1.5rem;-->
+<!--            font-weight: 700;-->
+<!--            display: inline-block;-->
+<!--            margin: 20px 0;-->
+<!--        }-->
+<!--        .btn-luxury {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--            padding: 12px 30px;-->
+<!--            border: none;-->
+<!--            border-radius: 50px;-->
+<!--            font-weight: 600;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        .btn-luxury:hover {-->
+<!--            background: #b8956b;-->
+<!--            color: white;-->
+<!--            transform: translateY(-2px);-->
+<!--        }-->
+<!--        .timeline {-->
+<!--            position: relative;-->
+<!--            padding: 20px 0;-->
+<!--        }-->
+<!--        .timeline-item {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .timeline-icon {-->
+<!--            width: 40px;-->
+<!--            height: 40px;-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            border-radius: 50%;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            color: white;-->
+<!--            margin-right: 15px;-->
+<!--        }-->
+<!--        .order-item {-->
+<!--            background: #f8f9fa;-->
+<!--            padding: 15px;-->
+<!--            border-radius: 10px;-->
+<!--            margin-bottom: 10px;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div th:replace="fragments/user_navbar :: user_navbar"></div>-->
+
+<!--<div class="confirmation-container">-->
+<!--    &lt;!&ndash; Success Message &ndash;&gt;-->
+<!--    <div class="confirmation-card">-->
+<!--        <div class="success-icon">-->
+<!--            <i class="fas fa-check"></i>-->
+<!--        </div>-->
+<!--        <h2 class="mb-3">Đặt hàng thành công!</h2>-->
+<!--        <p class="text-muted mb-4">Cảm ơn bạn đã đặt hàng tại Luxury Resort. Đơn hàng của bạn đang được xử lý.</p>-->
+
+<!--        <div class="order-code" th:text="${order.orderCode}">ORD1234567890</div>-->
+
+<!--        <p class="mb-4">-->
+<!--            <i class="fas fa-envelope me-2"></i>-->
+<!--            Thông tin chi tiết đã được gửi đến email của bạn-->
+<!--        </p>-->
+
+<!--        <div class="d-flex gap-3 justify-content-center flex-wrap">-->
+<!--            <a th:href="@{'/orders/' + ${order.id}}" class="btn btn-luxury">-->
+<!--                <i class="fas fa-receipt me-2"></i>Xem chi tiết đơn hàng-->
+<!--            </a>-->
+<!--            <a href="/" class="btn btn-outline-secondary">-->
+<!--                <i class="fas fa-home me-2"></i>Về trang chủ-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Order Information &ndash;&gt;-->
+<!--    <div class="order-info-card">-->
+<!--        <h5 class="mb-4"><i class="fas fa-info-circle me-2"></i>Thông tin đơn hàng</h5>-->
+
+<!--        <div class="info-row">-->
+<!--            <span><strong>Mã đơn hàng:</strong></span>-->
+<!--            <span th:text="${order.orderCode}">ORD1234567890</span>-->
+<!--        </div>-->
+<!--        <div class="info-row">-->
+<!--            <span><strong>Thời gian đặt:</strong></span>-->
+<!--            <span th:text="${#temporals.format(order.orderTime, 'dd/MM/yyyy HH:mm')}">10/10/2024 14:30</span>-->
+<!--        </div>-->
+<!--        <div class="info-row">-->
+<!--            <span><strong>Trạng thái:</strong></span>-->
+<!--            <span class="badge bg-warning text-dark">Đang chờ xác nhận</span>-->
+<!--        </div>-->
+<!--&lt;!&ndash;        <div class="info-row">&ndash;&gt;-->
+<!--&lt;!&ndash;            <span><strong>Phương thức thanh toán:</strong></span>&ndash;&gt;-->
+<!--&lt;!&ndash;            <span th:text="${order.paymentMethod == 'CASH_ON_DELIVERY' ? 'Thanh toán khi nhận hàng' :&ndash;&gt;-->
+<!--&lt;!&ndash;                               order.paymentMethod == 'VNPAY' ? 'VNPay' :&ndash;&gt;-->
+<!--&lt;!&ndash;                               order.paymentMethod == 'MOMO' ? 'MoMo' :&ndash;&gt;-->
+<!--&lt;!&ndash;                               order.paymentMethod == 'BANK_TRANSFER' ? 'Chuyển khoản ngân hàng' :&ndash;&gt;-->
+<!--&lt;!&ndash;                               order.paymentMethod}">COD</span>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--        <div class="info-row">-->
+<!--            <span><strong>Phương thức thanh toán:</strong></span>-->
+<!--            <span th:switch="${order.paymentMethod}">-->
+<!--                <span th:case="'CASH_ON_DELIVERY'">Thanh toán khi nhận hàng</span>-->
+<!--                <span th:case="'VNPAY'">VNPay</span>-->
+<!--                <span th:case="'MOMO'">MoMo</span>-->
+<!--                <span th:case="'BANK_TRANSFER'">Chuyển khoản ngân hàng</span>-->
+<!--                <span th:case="*"-->
+<!--                      th:text="${order.paymentMethod}">Khác</span>-->
+<!--            </span>-->
+<!--        </div>-->
+
+<!--        <div class="info-row">-->
+<!--            <span><strong>Tổng tiền:</strong></span>-->
+<!--            <span class="text-danger fw-bold"-->
+<!--                  th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">-->
+<!--                    1,782,000 VNĐ-->
+<!--                </span>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Delivery Information &ndash;&gt;-->
+<!--    <div class="order-info-card">-->
+<!--        <h5 class="mb-4"><i class="fas fa-shipping-fast me-2"></i>Thông tin giao hàng</h5>-->
+
+<!--        <div class="info-row">-->
+<!--            <span><strong>Người nhận:</strong></span>-->
+<!--            <span th:text="${order.customerName}">Nguyễn Văn A</span>-->
+<!--        </div>-->
+<!--        <div class="info-row">-->
+<!--            <span><strong>Số điện thoại:</strong></span>-->
+<!--            <span th:text="${order.customerPhone}">0912345678</span>-->
+<!--        </div>-->
+<!--        <div class="info-row">-->
+<!--            <span><strong>Địa chỉ:</strong></span>-->
+<!--            <span th:text="${order.customerAddress}">123 Đường ABC, Quận 1, TP.HCM</span>-->
+<!--        </div>-->
+<!--        <div class="info-row" th:if="${order.notes}">-->
+<!--            <span><strong>Ghi chú:</strong></span>-->
+<!--            <span th:text="${order.notes}">Không cay</span>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Order Items &ndash;&gt;-->
+<!--    <div class="order-info-card" th:if="${orderItems != null and !orderItems.isEmpty()}">-->
+<!--        <h5 class="mb-4"><i class="fas fa-utensils me-2"></i>Món đã đặt</h5>-->
+
+<!--        <div th:each="item : ${orderItems}" class="order-item">-->
+<!--            <div class="d-flex justify-content-between align-items-start">-->
+<!--                <div>-->
+<!--                    <h6 class="mb-1" th:text="${item.menuItem.name}">Tên món</h6>-->
+<!--                    <small class="text-muted">-->
+<!--                        Số lượng: <span th:text="${item.quantity}">1</span>-->
+<!--                    </small>-->
+<!--                    <div th:if="${item.notes}" class="mt-1">-->
+<!--                        <small class="text-warning">-->
+<!--                            <i class="fas fa-comment-dots me-1"></i>-->
+<!--                            <span th:text="${item.notes}">Ghi chú</span>-->
+<!--                        </small>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="text-end">-->
+<!--                    <div class="fw-bold"-->
+<!--                         th:text="${#numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">-->
+<!--                        150,000 VNĐ-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Next Steps &ndash;&gt;-->
+<!--    <div class="order-info-card">-->
+<!--        <h5 class="mb-4"><i class="fas fa-clock me-2"></i>Quy trình xử lý đơn hàng</h5>-->
+
+<!--        <div class="timeline">-->
+<!--            <div class="timeline-item">-->
+<!--                <div class="timeline-icon">-->
+<!--                    <i class="fas fa-check"></i>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <strong>Đơn hàng đã được tiếp nhận</strong>-->
+<!--                    <div class="text-muted small">Chúng tôi đã nhận được đơn hàng của bạn</div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="timeline-item">-->
+<!--                <div class="timeline-icon" style="background: #6c757d;">-->
+<!--                    <i class="fas fa-clock"></i>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <strong>Nhà hàng xác nhận</strong>-->
+<!--                    <div class="text-muted small">Chúng tôi sẽ xác nhận trong 5-10 phút</div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="timeline-item">-->
+<!--                <div class="timeline-icon" style="background: #6c757d;">-->
+<!--                    <i class="fas fa-utensils"></i>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <strong>Chuẩn bị món ăn</strong>-->
+<!--                    <div class="text-muted small">Thời gian chuẩn bị: 20-30 phút</div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="timeline-item">-->
+<!--                <div class="timeline-icon" style="background: #6c757d;">-->
+<!--                    <i class="fas fa-shipping-fast"></i>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <strong>Đang giao hàng</strong>-->
+<!--                    <div class="text-muted small">Shipper sẽ giao trong 30-45 phút</div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="timeline-item">-->
+<!--                <div class="timeline-icon" style="background: #6c757d;">-->
+<!--                    <i class="fas fa-check-double"></i>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <strong>Hoàn thành</strong>-->
+<!--                    <div class="text-muted small">Bạn đã nhận được đơn hàng</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Contact Support &ndash;&gt;-->
+<!--    <div class="order-info-card text-center">-->
+<!--        <h5 class="mb-3">Cần hỗ trợ?</h5>-->
+<!--        <p class="text-muted mb-4">Nếu có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng tôi</p>-->
+<!--        <div class="d-flex gap-3 justify-content-center flex-wrap">-->
+<!--            <a href="tel:+842971234567" class="btn btn-outline-primary">-->
+<!--                <i class="fas fa-phone me-2"></i>Gọi hotline-->
+<!--            </a>-->
+<!--            <a href="#" class="btn btn-outline-success">-->
+<!--                <i class="fab fa-facebook-messenger me-2"></i>Chat với chúng tôi-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt hàng thành công - Luxury Resort</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">
+    <style>
+        :root {
+            --primary-color: #c9a96e;
+            --scale: 0.75;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f8f9fa;
+            padding-top: 60px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .confirmation-container {
+            max-width: 675px; /* 900px * 0.75 */
+            margin: 0 auto;
+            padding: 30px 11.25px;
+        }
+
+        .success-icon {
+            width: 75px; /* 100px * 0.75 */
+            height: 75px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 22.5px;
+            animation: scaleIn 0.5s ease;
+        }
+
+        .success-icon i {
+            font-size: 2.25rem; /* 3rem * 0.75 */
+            color: white;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .confirmation-card {
+            background: white;
+            border-radius: 11.25px;
+            padding: 30px;
+            box-shadow: 0 3.75px 11.25px rgba(0,0,0,0.06);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .confirmation-card h2 {
+            font-size: 20px;
+            margin-bottom: 9px;
+            font-weight: 600;
+        }
+
+        .confirmation-card p {
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+
+        .order-info-card {
+            background: white;
+            border-radius: 11.25px;
+            padding: 22.5px;
+            box-shadow: 0 3.75px 11.25px rgba(0,0,0,0.06);
+            margin-bottom: 15px;
+        }
+
+        .order-info-card h5 {
+            font-size: 13px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .order-info-card h6 {
+            font-size: 11.5px;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 9px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 11px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .order-code {
+            background: var(--primary-color);
+            color: white;
+            padding: 11.25px 22.5px;
+            border-radius: 37.5px;
+            font-size: 16px; /* 1.5rem * 0.75 = ~18px, giảm xuống 16px cho hợp lý */
+            font-weight: 700;
+            display: inline-block;
+            margin: 15px 0;
+        }
+
+        .btn-luxury {
+            background: var(--primary-color);
+            color: white;
+            padding: 9px 22.5px;
+            border: none;
+            border-radius: 37.5px;
+            font-weight: 600;
+            font-size: 11.5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-luxury:hover {
+            background: #b8956b;
+            color: white;
+            transform: translateY(-1.5px);
+        }
+
+        .btn-outline-secondary,
+        .btn-outline-primary,
+        .btn-outline-success {
+            padding: 9px 22.5px;
+            font-size: 11.5px;
+            border-radius: 37.5px;
+            border: 1px solid;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline-secondary {
+            border-color: #6c757d;
+            color: #6c757d;
+            background: white;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-outline-primary {
+            border-color: #0d6efd;
+            color: #0d6efd;
+            background: white;
+        }
+
+        .btn-outline-primary:hover {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .btn-outline-success {
+            border-color: #198754;
+            color: #198754;
+            background: white;
+        }
+
+        .btn-outline-success:hover {
+            background: #198754;
+            color: white;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 15px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .timeline-icon {
+            width: 30px; /* 40px * 0.75 */
+            height: 30px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 11.25px;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .timeline-item strong {
+            font-size: 11.5px;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .order-item {
+            background: #f8f9fa;
+            padding: 11.25px;
+            border-radius: 7.5px;
+            margin-bottom: 7.5px;
+        }
+
+        .order-item h6 {
+            font-size: 11.5px;
+            margin-bottom: 3px;
+        }
+
+        /* Badge */
+        .badge {
+            padding: 4.5px 9px;
+            font-size: 10px;
+            border-radius: 6px;
+        }
+
+        .bg-warning {
+            background-color: #ffc107 !important;
+        }
+
+        .text-dark {
+            color: #212529 !important;
+        }
+
+        /* Utilities */
+        .mb-1 {
+            margin-bottom: 3px !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 9px !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 12px !important;
+        }
+
+        .mt-1 {
+            margin-bottom: 3px !important;
+        }
+
+        .me-1 {
+            margin-right: 3px !important;
+        }
+
+        .me-2 {
+            margin-right: 6px !important;
+        }
+
+        .text-muted {
+            color: #6c757d !important;
+        }
+
+        .text-danger {
+            color: #dc3545 !important;
+        }
+
+        .text-warning {
+            color: #ffc107 !important;
+        }
+
+        .fw-bold {
+            font-weight: 700 !important;
+        }
+
+        small, .small {
+            font-size: 10px;
+        }
+
+        .d-flex {
+            display: flex !important;
+        }
+
+        .gap-3 {
+            gap: 9px !important;
+        }
+
+        .justify-content-center {
+            justify-content: center !important;
+        }
+
+        .justify-content-between {
+            justify-content: space-between !important;
+        }
+
+        .align-items-start {
+            align-items: flex-start !important;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap !important;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .text-end {
+            text-align: right !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 52.5px;
+                font-size: 11px;
+            }
+
+            .confirmation-container {
+                max-width: 100%;
+                padding: 22.5px 11.25px;
+            }
+
+            .success-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .success-icon i {
+                font-size: 1.8rem;
+            }
+
+            .confirmation-card,
+            .order-info-card {
+                padding: 18px;
+            }
+
+            .order-code {
+                font-size: 14px;
+                padding: 9px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/user_navbar :: user_navbar"></div>
+
+<div class="confirmation-container">
+    <!-- Success Message -->
+    <div class="confirmation-card">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <h2 class="mb-3">Đặt hàng thành công!</h2>
+        <p class="text-muted mb-4">Cảm ơn bạn đã đặt hàng tại Luxury Resort. Đơn hàng của bạn đang được xử lý.</p>
+
+        <div class="order-code" th:text="${order.orderCode}">ORD1234567890</div>
+
+        <p class="mb-4">
+            <i class="fas fa-envelope me-2"></i>
+            Thông tin chi tiết đã được gửi đến email của bạn
+        </p>
+
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a th:href="@{'/orders/' + ${order.id}}" class="btn btn-luxury">
+                <i class="fas fa-receipt me-2"></i>Xem chi tiết đơn hàng
+            </a>
+            <a href="/" class="btn btn-outline-secondary">
+                <i class="fas fa-home me-2"></i>Về trang chủ
+            </a>
+        </div>
+    </div>
+
+    <!-- Order Information -->
+    <div class="order-info-card">
+        <h5 class="mb-4"><i class="fas fa-info-circle me-2"></i>Thông tin đơn hàng</h5>
+
+        <div class="info-row">
+            <span><strong>Mã đơn hàng:</strong></span>
+            <span th:text="${order.orderCode}">ORD1234567890</span>
+        </div>
+        <div class="info-row">
+            <span><strong>Thời gian đặt:</strong></span>
+            <span th:text="${#temporals.format(order.orderTime, 'dd/MM/yyyy HH:mm')}">10/10/2024 14:30</span>
+        </div>
+        <div class="info-row">
+            <span><strong>Trạng thái:</strong></span>
+            <span class="badge bg-warning text-dark">Đang chờ xác nhận</span>
+        </div>
+        <div class="info-row">
+            <span><strong>Phương thức thanh toán:</strong></span>
+            <span th:switch="${order.paymentMethod}">
+                <span th:case="'CASH_ON_DELIVERY'">Thanh toán khi nhận hàng</span>
+                <span th:case="'VNPAY'">VNPay</span>
+                <span th:case="'MOMO'">MoMo</span>
+                <span th:case="'BANK_TRANSFER'">Chuyển khoản ngân hàng</span>
+                <span th:case="*" th:text="${order.paymentMethod}">Khác</span>
+            </span>
+        </div>
+
+        <div class="info-row">
+            <span><strong>Tổng tiền:</strong></span>
+            <span class="text-danger fw-bold"
+                  th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">
+                    1,782,000 VNĐ
+                </span>
+        </div>
+    </div>
+
+    <!-- Delivery Information -->
+    <div class="order-info-card">
+        <h5 class="mb-4"><i class="fas fa-shipping-fast me-2"></i>Thông tin giao hàng</h5>
+
+        <div class="info-row">
+            <span><strong>Người nhận:</strong></span>
+            <span th:text="${order.customerName}">Nguyễn Văn A</span>
+        </div>
+        <div class="info-row">
+            <span><strong>Số điện thoại:</strong></span>
+            <span th:text="${order.customerPhone}">0912345678</span>
+        </div>
+        <div class="info-row">
+            <span><strong>Địa chỉ:</strong></span>
+            <span th:text="${order.customerAddress}">123 Đường ABC, Quận 1, TP.HCM</span>
+        </div>
+        <div class="info-row" th:if="${order.notes}">
+            <span><strong>Ghi chú:</strong></span>
+            <span th:text="${order.notes}">Không cay</span>
+        </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="order-info-card" th:if="${orderItems != null and !orderItems.isEmpty()}">
+        <h5 class="mb-4"><i class="fas fa-utensils me-2"></i>Món đã đặt</h5>
+
+        <div th:each="item : ${orderItems}" class="order-item">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="mb-1" th:text="${item.menuItem.name}">Tên món</h6>
+                    <small class="text-muted">
+                        Số lượng: <span th:text="${item.quantity}">1</span>
+                    </small>
+                    <div th:if="${item.notes}" class="mt-1">
+                        <small class="text-warning">
+                            <i class="fas fa-comment-dots me-1"></i>
+                            <span th:text="${item.notes}">Ghi chú</span>
+                        </small>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <div class="fw-bold"
+                         th:text="${#numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">
+                        150,000 VNĐ
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Next Steps -->
+    <div class="order-info-card">
+        <h5 class="mb-4"><i class="fas fa-clock me-2"></i>Quy trình xử lý đơn hàng</h5>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div>
+                    <strong>Đơn hàng đã được tiếp nhận</strong>
+                    <div class="text-muted small">Chúng tôi đã nhận được đơn hàng của bạn</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon" style="background: #6c757d;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                    <strong>Nhà hàng xác nhận</strong>
+                    <div class="text-muted small">Chúng tôi sẽ xác nhận trong 5-10 phút</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon" style="background: #6c757d;">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div>
+                    <strong>Chuẩn bị món ăn</strong>
+                    <div class="text-muted small">Thời gian chuẩn bị: 20-30 phút</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon" style="background: #6c757d;">
+                    <i class="fas fa-shipping-fast"></i>
+                </div>
+                <div>
+                    <strong>Đang giao hàng</strong>
+                    <div class="text-muted small">Shipper sẽ giao trong 30-45 phút</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon" style="background: #6c757d;">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <div>
+                    <strong>Hoàn thành</strong>
+                    <div class="text-muted small">Bạn đã nhận được đơn hàng</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Support -->
+    <div class="order-info-card text-center">
+        <h5 class="mb-3">Cần hỗ trợ?</h5>
+        <p class="text-muted mb-4">Nếu có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng tôi</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="tel:+842971234567" class="btn btn-outline-primary">
+                <i class="fas fa-phone me-2"></i>Gọi hotline
+            </a>
+            <a href="#" class="btn btn-outline-success">
+                <i class="fab fa-facebook-messenger me-2"></i>Chat với chúng tôi
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

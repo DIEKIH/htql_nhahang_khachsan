@@ -54,31 +54,7 @@ public class BranchDetailApiController {
         return ResponseEntity.ok(items);
     }
 
-//    // Table related APIs
-//    @GetMapping("/branches/{branchId}/tables/availability")
-//    public ResponseEntity<TableAvailabilityResponse> getTableAvailability(@PathVariable Long branchId,
-//                                                                          @RequestParam(required = false) Integer minCapacity) {
-//        TableAvailabilityResponse availability = tableService.getTableAvailability(branchId, minCapacity);
-//        return ResponseEntity.ok(availability);
-//    }
-//
-//    @PostMapping("/tables/{tableId}/reserve")
-//    public ResponseEntity<Map<String, Object>> reserveTable(@PathVariable Long tableId,
-//                                                            @RequestBody TableReservationRequest request) {
-//        try {
-//            TableReservationResponse reservation = tableService.reserveTable(tableId, request);
-//            return ResponseEntity.ok(Map.of(
-//                    "success", true,
-//                    "message", "Đặt bàn thành công",
-//                    "reservation", reservation
-//            ));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(Map.of(
-//                    "success", false,
-//                    "message", e.getMessage()
-//            ));
-//        }
-//    }
+
 
     // Promotion related APIs
     @GetMapping("/branches/{branchId}/promotions/active")
@@ -86,6 +62,9 @@ public class BranchDetailApiController {
         List<PromotionResponse> promotions = promotionService.getActivePromotionsByBranch(branchId);
         return ResponseEntity.ok(promotions);
     }
+
+
+
 
 //    @PostMapping("/promotions/{promotionId}/calculate")
 //    public ResponseEntity<PriceCalculationResponse> calculatePromotionDiscount(@PathVariable Long promotionId,

@@ -1,0 +1,878 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Đơn hàng của tôi - Luxury Resort</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">-->
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;primary-color: #c9a96e;-->
+<!--        }-->
+<!--        body {-->
+<!--            background: #f8f9fa;-->
+<!--            padding-top: 80px;-->
+<!--            font-family: 'Inter', sans-serif;-->
+<!--        }-->
+<!--        .orders-container {-->
+<!--            max-width: 1200px;-->
+<!--            margin: 0 auto;-->
+<!--            padding: 40px 15px;-->
+<!--        }-->
+<!--        .page-header {-->
+<!--            background: white;-->
+<!--            padding: 30px;-->
+<!--            border-radius: 15px;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--            margin-bottom: 30px;-->
+<!--        }-->
+<!--        .order-card {-->
+<!--            background: white;-->
+<!--            border-radius: 15px;-->
+<!--            padding: 25px;-->
+<!--            margin-bottom: 20px;-->
+<!--            box-shadow: 0 2px 10px rgba(0,0,0,0.05);-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        .order-card:hover {-->
+<!--            box-shadow: 0 5px 20px rgba(0,0,0,0.1);-->
+<!--            transform: translateY(-2px);-->
+<!--        }-->
+<!--        .order-header {-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            align-items: center;-->
+<!--            padding-bottom: 15px;-->
+<!--            border-bottom: 2px solid #f8f9fa;-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+<!--        .order-code {-->
+<!--            font-size: 1.2rem;-->
+<!--            font-weight: 700;-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--        }-->
+<!--        .status-badge {-->
+<!--            padding: 6px 15px;-->
+<!--            border-radius: 20px;-->
+<!--            font-size: 0.85rem;-->
+<!--            font-weight: 600;-->
+<!--        }-->
+<!--        .status-pending {-->
+<!--            background: #fff3cd;-->
+<!--            color: #856404;-->
+<!--        }-->
+<!--        .status-confirmed {-->
+<!--            background: #d1ecf1;-->
+<!--            color: #0c5460;-->
+<!--        }-->
+<!--        .status-preparing {-->
+<!--            background: #cce5ff;-->
+<!--            color: #004085;-->
+<!--        }-->
+<!--        .status-delivering {-->
+<!--            background: #d4edda;-->
+<!--            color: #155724;-->
+<!--        }-->
+<!--        .status-completed {-->
+<!--            background: #28a745;-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .status-cancelled {-->
+<!--            background: #f8d7da;-->
+<!--            color: #721c24;-->
+<!--        }-->
+<!--        .order-info {-->
+<!--            display: flex;-->
+<!--            gap: 30px;-->
+<!--            flex-wrap: wrap;-->
+<!--            margin: 15px 0;-->
+<!--        }-->
+<!--        .order-info-item {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            gap: 8px;-->
+<!--        }-->
+<!--        .order-info-item i {-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--            width: 20px;-->
+<!--        }-->
+<!--        .order-total {-->
+<!--            font-size: 1.3rem;-->
+<!--            font-weight: 700;-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--        }-->
+<!--        .btn-view-detail {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            padding: 8px 20px;-->
+<!--            border-radius: 25px;-->
+<!--            font-weight: 600;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        .btn-view-detail:hover {-->
+<!--            background: #b8956b;-->
+<!--            color: white;-->
+<!--            transform: translateY(-2px);-->
+<!--        }-->
+<!--        .empty-orders {-->
+<!--            text-align: center;-->
+<!--            padding: 80px 20px;-->
+<!--        }-->
+<!--        .empty-orders i {-->
+<!--            font-size: 5rem;-->
+<!--            color: #6c757d;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .filter-tabs {-->
+<!--            background: white;-->
+<!--            padding: 20px;-->
+<!--            border-radius: 15px;-->
+<!--            margin-bottom: 20px;-->
+<!--            box-shadow: 0 2px 10px rgba(0,0,0,0.05);-->
+<!--        }-->
+<!--        .filter-tabs .nav-link {-->
+<!--            color: #6c757d;-->
+<!--            font-weight: 600;-->
+<!--            padding: 10px 20px;-->
+<!--            border-radius: 25px;-->
+<!--            margin-right: 10px;-->
+<!--        }-->
+<!--        .filter-tabs .nav-link.active {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div th:replace="fragments/user_navbar :: user_navbar"></div>-->
+
+<!--<div class="orders-container">-->
+<!--    &lt;!&ndash; Page Header &ndash;&gt;-->
+<!--    <div class="page-header">-->
+<!--        <h2><i class="fas fa-receipt me-3"></i>Đơn hàng của tôi</h2>-->
+<!--        <p class="text-muted mb-0">Quản lý và theo dõi tất cả đơn hàng của bạn</p>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Filter Tabs &ndash;&gt;-->
+<!--    <div class="filter-tabs">-->
+<!--        <ul class="nav nav-pills">-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link active" href="#" data-filter="all">-->
+<!--                    <i class="fas fa-list me-2"></i>Tất cả-->
+<!--                </a>-->
+<!--            </li>-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" href="#" data-filter="pending">-->
+<!--                    <i class="fas fa-clock me-2"></i>Chờ xác nhận-->
+<!--                </a>-->
+<!--            </li>-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" href="#" data-filter="preparing">-->
+<!--                    <i class="fas fa-utensils me-2"></i>Đang chuẩn bị-->
+<!--                </a>-->
+<!--            </li>-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" href="#" data-filter="delivering">-->
+<!--                    <i class="fas fa-shipping-fast me-2"></i>Đang giao-->
+<!--                </a>-->
+<!--            </li>-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" href="#" data-filter="completed">-->
+<!--                    <i class="fas fa-check-circle me-2"></i>Hoàn thành-->
+<!--                </a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Empty State &ndash;&gt;-->
+<!--    <div th:if="${orders.isEmpty()}" class="empty-orders">-->
+<!--        <i class="fas fa-inbox"></i>-->
+<!--        <h3 class="mb-3">Chưa có đơn hàng nào</h3>-->
+<!--        <p class="text-muted mb-4">Hãy đặt món yêu thích của bạn ngay hôm nay!</p>-->
+<!--        <a href="/" class="btn btn-view-detail" style="padding: 12px 40px;">-->
+<!--            <i class="fas fa-utensils me-2"></i>Khám phá thực đơn-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Orders List &ndash;&gt;-->
+<!--    <div th:unless="${orders.isEmpty()}">-->
+<!--        <div th:each="order : ${orders}" class="order-card"-->
+<!--             th:data-status="${order.status.name().toLowerCase()}">-->
+<!--            &lt;!&ndash; Order Header &ndash;&gt;-->
+<!--            <div class="order-header">-->
+<!--                <div>-->
+<!--                    <div class="order-code" th:text="${order.orderCode}">ORD1234567890</div>-->
+<!--                    <small class="text-muted">-->
+<!--                        <i class="far fa-calendar me-1"></i>-->
+<!--                        <span th:text="${#temporals.format(order.orderTime, 'dd/MM/yyyy HH:mm')}">-->
+<!--                                10/10/2024 14:30-->
+<!--                            </span>-->
+<!--                    </small>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <span class="status-badge"-->
+<!--                          th:classappend="${order.status.name() == 'PENDING' ? 'status-pending' :-->
+<!--                                                (order.status.name() == 'CONFIRMED' ? 'status-confirmed' :-->
+<!--                                              (order.status.name() == 'PREPARING' ? 'status-preparing' :-->
+<!--                                              (order.status.name() == 'DELIVERING' ? 'status-delivering' :-->
+<!--                                              (order.status.name() == 'COMPLETED' ? 'status-completed' :-->
+<!--                                              'status-cancelled'))))}">-->
+<!--                        <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>-->
+<!--                        <span th:text="${order.status.name() == 'PENDING' ? 'Chờ xác nhận' :-->
+<!--                                            (order.status.name() == 'CONFIRMED' ? 'Đã xác nhận' :-->
+<!--                                            (order.status.name() == 'PREPARING' ? 'Đang chuẩn bị' :-->
+<!--                                            (order.status.name() == 'DELIVERING' ? 'Đang giao hàng' :-->
+<!--                                            (order.status.name() == 'COMPLETED' ? 'Hoàn thành' :-->
+<!--                                            'Đã hủy'))))}">-->
+<!--                                Chờ xác nhận-->
+<!--                        </span>-->
+<!--                    </span>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Order Info &ndash;&gt;-->
+<!--            <div class="order-info">-->
+<!--                <div class="order-info-item">-->
+<!--                    <i class="fas fa-store-alt"></i>-->
+<!--                    <span th:text="${order.branch.name}">Chi nhánh Phú Quốc</span>-->
+<!--                </div>-->
+<!--                <div class="order-info-item">-->
+<!--                    <i class="fas fa-credit-card"></i>-->
+<!--&lt;!&ndash;                    <span th:text="${order.paymentMethod == 'CASH_ON_DELIVERY' ? 'COD' :&ndash;&gt;-->
+<!--&lt;!&ndash;                                       order.paymentMethod == 'VNPAY' ? 'VNPay' :&ndash;&gt;-->
+<!--&lt;!&ndash;                                       order.paymentMethod == 'MOMO' ? 'MoMo' :&ndash;&gt;-->
+<!--&lt;!&ndash;                                       order.paymentMethod}">COD</span>&ndash;&gt;-->
+<!--                    <span th:switch="${order.paymentMethod}">-->
+<!--                        <span th:case="'CASH_ON_DELIVERY'">COD</span>-->
+<!--                        <span th:case="'VNPAY'">VNPay</span>-->
+<!--                        <span th:case="'MOMO'">MoMo</span>-->
+<!--                        <span th:case="*"-->
+<!--                              th:text="${order.paymentMethod}">Khác</span>-->
+<!--                    </span>-->
+<!--                </div>-->
+<!--                <div class="order-info-item" th:if="${order.paymentStatus}">-->
+<!--                    <i class="fas fa-money-check-alt"></i>-->
+<!--                    <span th:text="${order.paymentStatus.name() == 'PAID' ? 'Đã thanh toán' :-->
+<!--                                       'Chưa thanh toán'}">Chưa thanh toán</span>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Order Items Preview &ndash;&gt;-->
+<!--            <div class="mt-3 mb-3">-->
+<!--                <small class="text-muted">-->
+<!--                    <i class="fas fa-utensils me-1"></i>-->
+<!--                    <span th:text="${order.items.size()} + ' món'">5 món</span>-->
+<!--                </small>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Order Footer &ndash;&gt;-->
+<!--            <div class="d-flex justify-content-between align-items-center pt-3 border-top">-->
+<!--                <div class="order-total">-->
+<!--                        <span th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">-->
+<!--                            1,782,000 VNĐ-->
+<!--                        </span>-->
+<!--                </div>-->
+<!--                <div class="d-flex gap-2">-->
+<!--                    <a th:href="@{'/orders/' + ${order.id}}" class="btn btn-view-detail">-->
+<!--                        <i class="fas fa-eye me-2"></i>Xem chi tiết-->
+<!--                    </a>-->
+<!--                    <button class="btn btn-outline-secondary"-->
+<!--                            th:if="${order.status.name() == 'COMPLETED'}"-->
+<!--                            style="border-radius: 25px; padding: 8px 20px;">-->
+<!--                        <i class="fas fa-redo me-2"></i>Đặt lại-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script>-->
+<!--    // Filter functionality-->
+<!--    document.querySelectorAll('.filter-tabs .nav-link').forEach(link => {-->
+<!--        link.addEventListener('click', function(e) {-->
+<!--            e.preventDefault();-->
+
+<!--            // Update active tab-->
+<!--            document.querySelectorAll('.filter-tabs .nav-link').forEach(l => {-->
+<!--                l.classList.remove('active');-->
+<!--            });-->
+<!--            this.classList.add('active');-->
+
+<!--            // Filter orders-->
+<!--            const filter = this.dataset.filter;-->
+<!--            const orders = document.querySelectorAll('.order-card');-->
+
+<!--            orders.forEach(order => {-->
+<!--                if (filter === 'all') {-->
+<!--                    order.style.display = 'block';-->
+<!--                } else {-->
+<!--                    const status = order.dataset.status;-->
+<!--                    order.style.display = status === filter ? 'block' : 'none';-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng của tôi - Luxury Resort</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">
+    <style>
+        :root {
+            --primary-color: #c9a96e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f8f9fa;
+            padding-top: 60px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .orders-container {
+            max-width: 990px;
+            margin: 0 auto;
+            padding: 30px 11.25px;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: white;
+            padding: 22.5px;
+            border-radius: 11.25px;
+            box-shadow: 0 3.75px 11.25px rgba(0,0,0,0.08);
+            margin-bottom: 22.5px;
+        }
+
+        .page-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            font-size: 11px;
+            margin-bottom: 0;
+        }
+
+        /* Order Card */
+        .order-card {
+            background: white;
+            border-radius: 11.25px;
+            padding: 18.75px;
+            margin-bottom: 15px;
+            box-shadow: 0 1.5px 7.5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 3.75px 15px rgba(0,0,0,0.1);
+            transform: translateY(-1.5px);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 11.25px;
+            border-bottom: 1.5px solid #f8f9fa;
+            margin-bottom: 11.25px;
+        }
+
+        .order-code {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .status-badge {
+            padding: 4.5px 11.25px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-preparing {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-delivering {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .order-info {
+            display: flex;
+            gap: 22.5px;
+            flex-wrap: wrap;
+            margin: 11.25px 0;
+        }
+
+        .order-info-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+        }
+
+        .order-info-item i {
+            color: var(--primary-color);
+            width: 15px;
+            font-size: 10px;
+        }
+
+        .order-total {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Buttons */
+        .btn-view-detail {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 18.75px;
+            font-weight: 600;
+            font-size: 10.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view-detail:hover {
+            background: #b8956b;
+            color: white;
+            transform: translateY(-1.5px);
+        }
+
+        .btn-outline-secondary {
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            background: white;
+            border-radius: 18.75px;
+            padding: 6px 15px;
+            font-size: 10.5px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* Empty State */
+        .empty-orders {
+            text-align: center;
+            padding: 60px 15px;
+        }
+
+        .empty-orders i {
+            font-size: 50px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .empty-orders h3 {
+            font-size: 16px;
+            margin-bottom: 9px;
+        }
+
+        .empty-orders p {
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            background: white;
+            padding: 15px;
+            border-radius: 11.25px;
+            margin-bottom: 15px;
+            box-shadow: 0 1.5px 7.5px rgba(0,0,0,0.05);
+        }
+
+        .filter-tabs .nav {
+            margin: 0;
+            padding: 0;
+        }
+
+        .filter-tabs .nav-link {
+            color: #6c757d;
+            font-weight: 600;
+            padding: 7.5px 15px;
+            border-radius: 18.75px;
+            margin-right: 7.5px;
+            font-size: 10.5px;
+            transition: all 0.3s;
+        }
+
+        .filter-tabs .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .filter-tabs .nav-link:hover {
+            background: #f8f9fa;
+        }
+
+        .filter-tabs .nav-link.active:hover {
+            background: var(--primary-color);
+        }
+
+        /* Spacing utilities */
+        .mt-3 {
+            margin-top: 11.25px !important;
+        }
+
+        .mb-0 {
+            margin-bottom: 0 !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 11.25px !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 15px !important;
+        }
+
+        .pt-3 {
+            padding-top: 11.25px !important;
+        }
+
+        .border-top {
+            border-top: 1px solid #dee2e6 !important;
+        }
+
+        .gap-2 {
+            gap: 7.5px !important;
+        }
+
+        /* Icons */
+        .fa, .fas, .far {
+            font-size: 10px;
+        }
+
+        .me-1 {
+            margin-right: 3px !important;
+        }
+
+        .me-2 {
+            margin-right: 6px !important;
+        }
+
+        .me-3 {
+            margin-right: 9px !important;
+        }
+
+        /* Text utilities */
+        .text-muted {
+            color: #6c757d !important;
+            font-size: 10px;
+        }
+
+        small {
+            font-size: 9.5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .orders-container {
+                max-width: 855px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            body {
+                font-size: 11px;
+            }
+
+            .order-card {
+                padding: 16px;
+            }
+
+            .page-header {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .orders-container {
+                max-width: 540px;
+            }
+
+            .order-info {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 52.5px;
+                font-size: 10px;
+            }
+
+            .orders-container {
+                max-width: 405px;
+            }
+
+            .page-header h2 {
+                font-size: 16px;
+            }
+
+            .order-code {
+                font-size: 11px;
+            }
+
+            .filter-tabs .nav-link {
+                padding: 6px 12px;
+                font-size: 9.5px;
+                margin-right: 5px;
+                margin-bottom: 5px;
+            }
+
+            .empty-orders i {
+                font-size: 40px;
+            }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .orders-container {
+                max-width: 100%;
+            }
+
+            .order-info {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .d-flex.justify-content-between {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .d-flex.gap-2 {
+                width: 100%;
+            }
+
+            .btn-view-detail,
+            .btn-outline-secondary {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/user_navbar :: user_navbar"></div>
+
+<div class="orders-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2><i class="fas fa-receipt me-3"></i>Đơn hàng của tôi</h2>
+        <p class="text-muted mb-0">Quản lý và theo dõi tất cả đơn hàng của bạn</p>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" data-filter="all">
+                    <i class="fas fa-list me-2"></i>Tất cả
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-filter="pending">
+                    <i class="fas fa-clock me-2"></i>Chờ xác nhận
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-filter="preparing">
+                    <i class="fas fa-utensils me-2"></i>Đang chuẩn bị
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-filter="delivering">
+                    <i class="fas fa-shipping-fast me-2"></i>Đang giao
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-filter="completed">
+                    <i class="fas fa-check-circle me-2"></i>Hoàn thành
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${orders.isEmpty()}" class="empty-orders">
+        <i class="fas fa-inbox"></i>
+        <h3 class="mb-3">Chưa có đơn hàng nào</h3>
+        <p class="text-muted mb-4">Hãy đặt món yêu thích của bạn ngay hôm nay!</p>
+        <a href="/" class="btn btn-view-detail" style="padding: 9px 30px;">
+            <i class="fas fa-utensils me-2"></i>Khám phá thực đơn
+        </a>
+    </div>
+
+    <!-- Orders List -->
+    <div th:unless="${orders.isEmpty()}">
+        <div th:each="order : ${orders}" class="order-card"
+             th:data-status="${order.status.name().toLowerCase()}">
+            <!-- Order Header -->
+            <div class="order-header">
+                <div>
+                    <div class="order-code" th:text="${order.orderCode}">ORD1234567890</div>
+                    <small class="text-muted">
+                        <i class="far fa-calendar me-1"></i>
+                        <span th:text="${#temporals.format(order.orderTime, 'dd/MM/yyyy HH:mm')}">
+                                10/10/2024 14:30
+                            </span>
+                    </small>
+                </div>
+                <div>
+                    <span class="status-badge"
+                          th:classappend="${order.status.name() == 'PENDING' ? 'status-pending' :
+                                                (order.status.name() == 'CONFIRMED' ? 'status-confirmed' :
+                                              (order.status.name() == 'PREPARING' ? 'status-preparing' :
+                                              (order.status.name() == 'DELIVERING' ? 'status-delivering' :
+                                              (order.status.name() == 'COMPLETED' ? 'status-completed' :
+                                              'status-cancelled'))))}">
+                        <i class="fas fa-circle me-1" style="font-size: 0.4rem;"></i>
+                        <span th:text="${order.status.name() == 'PENDING' ? 'Chờ xác nhận' :
+                                            (order.status.name() == 'CONFIRMED' ? 'Đã xác nhận' :
+                                            (order.status.name() == 'PREPARING' ? 'Đang chuẩn bị' :
+                                            (order.status.name() == 'DELIVERING' ? 'Đang giao hàng' :
+                                            (order.status.name() == 'COMPLETED' ? 'Hoàn thành' :
+                                            'Đã hủy'))))}">
+                                Chờ xác nhận
+                        </span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Order Info -->
+            <div class="order-info">
+                <div class="order-info-item">
+                    <i class="fas fa-store-alt"></i>
+                    <span th:text="${order.branch.name}">Chi nhánh Phú Quốc</span>
+                </div>
+                <div class="order-info-item">
+                    <i class="fas fa-credit-card"></i>
+                    <span th:switch="${order.paymentMethod}">
+                        <span th:case="'CASH_ON_DELIVERY'">COD</span>
+                        <span th:case="'VNPAY'">VNPay</span>
+                        <span th:case="'MOMO'">MoMo</span>
+                        <span th:case="*"
+                              th:text="${order.paymentMethod}">Khác</span>
+                    </span>
+                </div>
+                <div class="order-info-item" th:if="${order.paymentStatus}">
+                    <i class="fas fa-money-check-alt"></i>
+                    <span th:text="${order.paymentStatus.name() == 'PAID' ? 'Đã thanh toán' :
+                                       'Chưa thanh toán'}">Chưa thanh toán</span>
+                </div>
+            </div>
+
+            <!-- Order Items Preview -->
+            <div class="mt-3 mb-3">
+                <small class="text-muted">
+                    <i class="fas fa-utensils me-1"></i>
+                    <span th:text="${order.items.size()} + ' món'">5 món</span>
+                </small>
+            </div>
+
+            <!-- Order Footer -->
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                <div class="order-total">
+                        <span th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                            1,782,000 VNĐ
+                        </span>
+                </div>
+                <div class="d-flex gap-2">
+                    <a th:href="@{'/orders/' + ${order.id}}" class="btn btn-view-detail">
+                        <i class="fas fa-eye me-2"></i>Xem chi tiết
+                    </a>
+                    <button class="btn btn-outline-secondary"
+                            th:if="${order.status.name() == 'COMPLETED'}">
+                        <i class="fas fa-redo me-2"></i>Đặt lại
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Filter functionality
+    document.querySelectorAll('.filter-tabs .nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Update active tab
+            document.querySelectorAll('.filter-tabs .nav-link').forEach(l => {
+                l.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            // Filter orders
+            const filter = this.dataset.filter;
+            const orders = document.querySelectorAll('.order-card');
+
+            orders.forEach(order => {
+                if (filter === 'all') {
+                    order.style.display = 'block';
+                } else {
+                    const status = order.dataset.status;
+                    order.style.display = status === filter ? 'block' : 'none';
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

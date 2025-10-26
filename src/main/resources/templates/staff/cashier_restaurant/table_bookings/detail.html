@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Đặt Bàn - Thu Ngân</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: #f5f6fa; font-family: 'Segoe UI', sans-serif; }
+        .layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 240px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; min-height: 100vh; position: fixed; left: 0; top: 0; overflow-y: auto; }
+        .sidebar-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .sidebar-header i { font-size: 2rem; margin-bottom: 8px; display: block; }
+        .sidebar-header h6 { font-size: 13px; margin: 5px 0; font-weight: 600; }
+        .nav-link { color: rgba(255,255,255,0.85); padding: 10px 12px; margin: 3px 0; border-radius: 6px; font-size: 13px; transition: all 0.3s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.2); color: white; }
+        .main-content { margin-left: 240px; padding: 20px; flex: 1; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: none; margin-bottom: 15px; }
+        .card-header { background: #f8f9fa; border-bottom: 1px solid #e9ecef; padding: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .info-row { display: flex; padding: 12px 0; border-bottom: 1px solid #e9ecef; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { font-weight: 600; width: 180px; color: #6c757d; font-size: 13px; }
+        .info-value { flex: 1; font-size: 13px; }
+        .badge { font-size: 11px; padding: 5px 10px; }
+        .status-confirmed { background: #0dcaf0; color: #000; }
+        .status-checked-in { background: #198754; }
+        .status-checked-out { background: #6c757d; }
+        .status-cancelled { background: #dc3545; }
+        .status-no-show { background: #fd7e14; }
+        .btn { font-size: 13px; padding: 8px 16px; }
+        .alert { font-size: 13px; padding: 10px 15px; }
+        .action-section { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .table-badge { background: #e7f3ff; color: #0066cc; padding: 8px 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 8px; margin: 5px; font-size: 13px; }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="bi bi-shop"></i>
+            <h6>Thu Ngân</h6>
+            <h6>Nhà Hàng</h6>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="/cashier-restaurant/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a class="nav-link" href="/cashier-restaurant/create-order"><i class="bi bi-plus-circle"></i> Đặt Món</a>
+            <a class="nav-link" href="/cashier-restaurant/orders"><i class="bi bi-list-check"></i> Danh sách Đơn</a>
+            <a class="nav-link active" href="/cashier-restaurant/table-bookings"><i class="bi bi-calendar-check"></i> Quản Lý Đặt Bàn</a>
+        </nav>
+        <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <a href="/cashier-restaurant/logout" class="nav-link"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h4><i class="bi bi-calendar-check me-2"></i> Chi Tiết Đặt Bàn</h4>
+                <p class="text-muted mb-0" style="font-size: 13px;">
+                    <a href="/cashier-restaurant/table-bookings" style="text-decoration: none;">
+                        <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- SUCCESS/ERROR MESSAGES -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row">
+            <!-- BOOKING INFO -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <i class="bi bi-info-circle me-2"></i> Thông Tin Đặt Bàn
+                        </div>
+                        <span th:switch="${booking.status.name()}" th:text="${booking.statusDisplay}">
+                            <span th:case="'CONFIRMED'" class="badge status-confirmed">Đã Xác Nhận</span>
+                            <span th:case="'CHECKED_IN'" class="badge status-checked-in">Đã Nhận Bàn</span>
+                            <span th:case="'CHECKED_OUT'" class="badge status-checked-out">Đã Trả Bàn</span>
+                            <span th:case="'NO_SHOW'" class="badge status-no-show">Không Đến</span>
+                            <span th:case="*" class="badge status-cancelled">Đã Hủy</span>
+                        </span>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="info-row">
+                            <div class="info-label">Mã Đặt Bàn:</div>
+                            <div class="info-value">
+                                <strong th:text="${booking.bookingCode}">TB001</strong>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Tên Khách Hàng:</div>
+                            <div class="info-value">
+                                <strong th:text="${booking.customerName}">Nguyễn Văn A</strong>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Email:</div>
+                            <div class="info-value" th:text="${booking.customerEmail}">email@example.com</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Số Điện Thoại:</div>
+                            <div class="info-value">
+                                <i class="bi bi-phone me-2"></i>
+                                <strong th:text="${booking.contactPhone}">0901234567</strong>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Ngày Đặt:</div>
+                            <div class="info-value">
+                                <i class="bi bi-calendar me-2"></i>
+                                <strong th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy')}">17/10/2025</strong>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Giờ Đặt:</div>
+                            <div class="info-value">
+                                <i class="bi bi-clock me-2"></i>
+                                <strong th:text="${#temporals.format(booking.bookingTime, 'HH:mm')}">18:00</strong>
+                            </div>
+                        </div>
+                        <div class="info-row" th:if="${booking.actualArrival}">
+                            <div class="info-label">Thời Gian Đến:</div>
+                            <div class="info-value">
+                                <i class="bi bi-door-open me-2 text-success"></i>
+                                <strong th:text="${#temporals.format(booking.actualArrival, 'HH:mm:ss dd/MM/yyyy')}">18:05:30 17/10/2025</strong>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Số Người:</div>
+                            <div class="info-value">
+                                <i class="bi bi-people me-2"></i>
+                                <strong th:text="${booking.partySize} + ' người'">4 người</strong>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Bàn Đã Đặt:</div>
+                            <div class="info-value">
+                                <div th:each="table : ${booking.assignedTables}" class="table-badge">
+                                    <i class="bi bi-grid-3x3-gap"></i>
+                                    <strong th:text="${table.tableNumber}">B01</strong>
+                                    <span class="text-muted" th:text="'(' + ${table.capacity} + ' chỗ)'">(4 chỗ)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-row" th:if="${booking.specialRequests}">
+                            <div class="info-label">Yêu Cầu Đặc Biệt:</div>
+                            <div class="info-value">
+                                <i class="bi bi-chat-left-text me-2"></i>
+                                <span th:text="${booking.specialRequests}">Cần ghế cao cho trẻ em</span>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Thời Gian Tạo:</div>
+                            <div class="info-value text-muted">
+                                <span th:text="${#temporals.format(booking.createdAt, 'HH:mm:ss dd/MM/yyyy')}">10:30:00 16/10/2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-lightning me-2"></i> Hành Động
+                    </div>
+                    <div class="card-body">
+                        <!-- CHECK-IN BUTTON -->
+                        <div th:if="${booking.status.name() == 'CONFIRMED'}" class="mb-3">
+                            <form th:action="'/cashier-restaurant/api/table-bookings/' + ${booking.id} + '/check-in'"
+                                  method="post"
+                                  onsubmit="return confirm('Xác nhận check-in cho khách hàng này?');">
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="bi bi-door-open me-2"></i> Check-in
+                                </button>
+                            </form>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Khách đã đến và sẵn sàng sử dụng bàn
+                            </small>
+                        </div>
+
+                        <!-- CHECK-OUT BUTTON -->
+                        <div th:if="${booking.status.name() == 'CHECKED_IN'}" class="mb-3">
+                            <form th:action="'/cashier-restaurant/api/table-bookings/' + ${booking.id} + '/check-out'"
+                                  method="post"
+                                  onsubmit="return confirm('Xác nhận check-out? Bàn sẽ được giải phóng.');">
+                                <button type="submit" class="btn btn-secondary w-100">
+                                    <i class="bi bi-door-closed me-2"></i> Check-out
+                                </button>
+                            </form>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Khách đã thanh toán và rời đi
+                            </small>
+                        </div>
+
+                        <!-- NO SHOW BUTTON -->
+                        <div th:if="${booking.status.name() == 'CONFIRMED'}" class="mb-3">
+                            <form th:action="'/cashier-restaurant/api/table-bookings/' + ${booking.id} + '/no-show'"
+                                  method="post"
+                                  onsubmit="return confirm('Đánh dấu khách không đến? Bàn sẽ được giải phóng.');">
+                                <button type="submit" class="btn btn-warning w-100">
+                                    <i class="bi bi-x-circle me-2"></i> Đánh Dấu No Show
+                                </button>
+                            </form>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Khách hàng không đến đúng giờ
+                            </small>
+                        </div>
+
+                        <!-- STATUS INFO -->
+                        <div class="action-section">
+                            <h6 class="mb-3">
+                                <i class="bi bi-info-circle me-2"></i> Trạng Thái
+                            </h6>
+                            <div class="mb-2">
+                                <strong>Hiện tại:</strong>
+                                <span th:switch="${booking.status.name()}" class="badge ms-2" th:text="${booking.statusDisplay}">
+                                    <span th:case="'CONFIRMED'" class="badge ms-2 status-confirmed">Đã Xác Nhận</span>
+                                    <span th:case="'CHECKED_IN'" class="badge ms-2 status-checked-in">Đã Nhận Bàn</span>
+                                    <span th:case="'CHECKED_OUT'" class="badge ms-2 status-checked-out">Đã Trả Bàn</span>
+                                    <span th:case="'NO_SHOW'" class="badge ms-2 status-no-show">Không Đến</span>
+                                    <span th:case="*" class="badge ms-2 status-cancelled">Đã Hủy</span>
+                                </span>
+                            </div>
+
+
+                            <div th:if="${booking.status.name() == 'CHECKED_OUT'}" class="alert alert-success mt-3 mb-0" style="font-size: 12px; padding: 8px;">
+                                <i class="bi bi-check-circle me-1"></i> Đã hoàn thành
+                            </div>
+
+                            <div th:if="${booking.status.name() == 'NO_SHOW'}" class="alert alert-warning mt-3 mb-0" style="font-size: 12px; padding: 8px;">
+                                <i class="bi bi-exclamation-triangle me-1"></i> Khách không đến
+                            </div>
+                        </div>
+
+                        <!-- BACK BUTTON -->
+                        <a href="/cashier-restaurant/table-bookings" class="btn btn-outline-primary w-100 mt-3">
+                            <i class="bi bi-arrow-left me-2"></i> Quay Lại Danh Sách
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

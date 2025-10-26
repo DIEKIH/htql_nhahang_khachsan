@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý đặt bàn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #c9a96e;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            background: #f8f9fa;
+        }
+
+        .manager-container {
+            width: 75%;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .filter-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .table-responsive {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .booking-table {
+            margin: 0;
+        }
+
+        .booking-table thead {
+            position: sticky;
+            top: 0;
+            background: #f8f9fa;
+            z-index: 10;
+        }
+
+        .booking-table th {
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            padding: 15px;
+        }
+
+        .booking-table td {
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+
+        .booking-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-seated {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-completed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .booking-code {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 1200px) {
+            .manager-container {
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .manager-container {
+                width: 100%;
+                padding: 0 15px;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+<div class="manager-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="mb-1">
+                    <i class="fas fa-calendar-check text-primary me-2"></i>
+                    Quản lý đặt bàn
+                </h2>
+                <p class="text-muted mb-0">Quản lý tất cả đơn đặt bàn của chi nhánh</p>
+            </div>
+            <div>
+                <a href="/manager/dashboard" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Stats Cards -->
+<!--    <div class="stats-cards">-->
+<!--        <div class="stat-card">-->
+<!--            <div class="stat-icon" style="background: #fff3cd;">-->
+<!--                <i class="fas fa-clock" style="color: #856404;"></i>-->
+<!--            </div>-->
+<!--            <h6 class="text-muted mb-1">Chờ xác nhận</h6>-->
+<!--            <h3 class="mb-0" th:text="${#lists.size(#lists.filter(bookings, b -> b.status.name() == 'PENDING'))}">0</h3>-->
+<!--        </div>-->
+
+<!--        <div class="stat-card">-->
+<!--            <div class="stat-icon" style="background: #d4edda;">-->
+<!--                <i class="fas fa-check-circle" style="color: #155724;"></i>-->
+<!--            </div>-->
+<!--            <h6 class="text-muted mb-1">Đã xác nhận</h6>-->
+<!--            <h3 class="mb-0" th:text="${#lists.size(#lists.filter(bookings, b -> b.status.name() == 'CONFIRMED'))}">0</h3>-->
+<!--        </div>-->
+
+<!--        <div class="stat-card">-->
+<!--            <div class="stat-icon" style="background: #cce5ff;">-->
+<!--                <i class="fas fa-users" style="color: #004085;"></i>-->
+<!--            </div>-->
+<!--            <h6 class="text-muted mb-1">Đang phục vụ</h6>-->
+<!--            <h3 class="mb-0" th:text="${#lists.size(#lists.filter(bookings, b -> b.status.name() == 'SEATED'))}">0</h3>-->
+<!--        </div>-->
+
+<!--        <div class="stat-card">-->
+<!--            <div class="stat-icon" style="background: #d1ecf1;">-->
+<!--                <i class="fas fa-check-double" style="color: #0c5460;"></i>-->
+<!--            </div>-->
+<!--            <h6 class="text-muted mb-1">Hoàn thành hôm nay</h6>-->
+<!--            <h3 class="mb-0" th:text="${#lists.size(#lists.filter(bookings, b -> b.status.name() == 'COMPLETED'))}">0</h3>-->
+<!--        </div>-->
+<!--    </div>-->
+    <!-- Stats Cards -->
+    <div class="stats-cards">
+
+        <!-- Chờ xác nhận -->
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fff3cd;">
+                <i class="fas fa-clock" style="color: #856404;"></i>
+            </div>
+            <h6 class="text-muted mb-1">Chờ xác nhận</h6>
+            <h3 class="mb-0" th:text="${pendingCount}">0</h3>
+        </div>
+
+        <!-- Đã xác nhận -->
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #d4edda;">
+                <i class="fas fa-check-circle" style="color: #155724;"></i>
+            </div>
+            <h6 class="text-muted mb-1">Đã xác nhận</h6>
+            <h3 class="mb-0" th:text="${confirmedCount}">0</h3>
+        </div>
+
+        <!-- Đang phục vụ -->
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #cce5ff;">
+                <i class="fas fa-users" style="color: #004085;"></i>
+            </div>
+            <h6 class="text-muted mb-1">Đang phục vụ</h6>
+            <h3 class="mb-0" th:text="${checkedInCount}">0</h3>
+        </div>
+
+        <!-- Hoàn thành -->
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #d1ecf1;">
+                <i class="fas fa-check-double" style="color: #0c5460;"></i>
+            </div>
+            <h6 class="text-muted mb-1">Hoàn thành hôm nay</h6>
+            <h3 class="mb-0" th:text="${checkedOutCount}">0</h3>
+        </div>
+
+    </div>
+
+
+
+
+    <!-- Filter -->
+    <div class="filter-card">
+        <form method="get" th:action="@{/manager/table-bookings}">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Trạng thái</label>
+                    <select class="form-select" name="status" th:value="${selectedStatus}">
+                        <option value="">Tất cả trạng thái</option>
+                        <option th:each="status : ${statuses}"
+                                th:value="${status}"
+                                th:text="${status.name()}"
+                                th:selected="${status == selectedStatus}"></option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Từ ngày</label>
+                    <input type="date" class="form-control" name="fromDate">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Đến ngày</label>
+                    <input type="date" class="form-control" name="toDate">
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-2"></i>Lọc
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table booking-table" th:if="${bookings != null and !bookings.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Mã đặt bàn</th>
+                    <th>Khách hàng</th>
+                    <th>Liên hệ</th>
+                    <th>Ngày & Giờ</th>
+                    <th>Số khách</th>
+                    <th>Bàn</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="booking : ${bookings}">
+                    <td>
+                        <span class="booking-code" th:text="${booking.bookingCode}">TB123</span>
+                    </td>
+                    <td>
+                        <div>
+                            <strong th:text="${booking.customerName}">Tên khách</strong><br>
+                            <small class="text-muted" th:text="${booking.customerEmail}">email@example.com</small>
+                        </div>
+                    </td>
+                    <td>
+                        <span th:text="${booking.contactPhone}">0912345678</span>
+                    </td>
+                    <td>
+                        <div>
+                            <i class="fas fa-calendar me-1"></i>
+                            <span th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy')}">01/01/2024</span>
+                            <br>
+                            <i class="fas fa-clock me-1"></i>
+                            <span th:text="${#temporals.format(booking.bookingTime, 'HH:mm')}">19:00</span>
+                        </div>
+                    </td>
+                    <td>
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-users me-1"></i>
+                                    <span th:text="${booking.partySize}">4</span>
+                                </span>
+                    </td>
+                    <td>
+                        <div th:if="${booking.assignedTables != null and !booking.assignedTables.isEmpty()}">
+                                    <span th:each="table, iterStat : ${booking.assignedTables}"
+                                          class="badge bg-light text-dark me-1">
+                                        Bàn <span th:text="${table.tableNumber}">1</span>
+                                    </span>
+                        </div>
+                        <span th:unless="${booking.assignedTables != null and !booking.assignedTables.isEmpty()}"
+                              class="text-muted">
+                                    Chưa gán
+                                </span>
+                    </td>
+                    <td>
+                                <span class="status-badge"
+                                      th:classappend="'status-' + ${#strings.toLowerCase(booking.status.name())}"
+                                      th:text="${booking.statusDisplay}">
+                                    Trạng thái
+                                </span>
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a th:href="@{'/manager/table-bookings/' + ${booking.id}}"
+                               class="btn btn-sm btn-outline-primary btn-action"
+                               title="Xem chi tiết">
+                                <i class="fas fa-eye"></i>
+                            </a>
+
+                            <button th:if="${booking.status.name() == 'PENDING'}"
+                                    type="button"
+                                    class="btn btn-sm btn-outline-success btn-action"
+                                    th:onclick="'confirmBooking(' + ${booking.id} + ')'"
+                                    title="Xác nhận">
+                                <i class="fas fa-check"></i>
+                            </button>
+
+                            <button th:if="${booking.status.name() != 'COMPLETED' and booking.status.name() != 'CANCELLED'}"
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger btn-action"
+                                    th:onclick="'showCancelModal(' + ${booking.id} + ')'"
+                                    title="Hủy">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div th:if="${bookings == null or bookings.isEmpty()}" class="empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <h5>Chưa có đơn đặt bàn nào</h5>
+                <p class="text-muted">Các đơn đặt bàn từ khách hàng sẽ hiển thị ở đây</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-times-circle text-danger me-2"></i>
+                    Hủy đặt bàn
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="cancelForm" method="post">
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn hủy đơn đặt bàn này?</p>
+                    <div class="mb-3">
+                        <label for="cancelReason" class="form-label">Lý do hủy *</label>
+                        <textarea class="form-control"
+                                  id="cancelReason"
+                                  name="reason"
+                                  rows="3"
+                                  required
+                                  placeholder="Nhập lý do hủy đơn..."></textarea>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Email thông báo hủy sẽ được gửi đến khách hàng
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Đóng
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times me-2"></i>Xác nhận hủy
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function confirmBooking(bookingId) {
+        if (confirm('Xác nhận đặt bàn này?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/manager/table-bookings/${bookingId}/confirm`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    function showCancelModal(bookingId) {
+        const modal = new bootstrap.Modal(document.getElementById('cancelModal'));
+        const form = document.getElementById('cancelForm');
+        form.action = `/manager/table-bookings/${bookingId}/cancel`;
+        modal.show();
+    }
+
+    // Auto dismiss alerts
+    setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+</script>
+</body>
+</html>

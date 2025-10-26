@@ -12,6 +12,8 @@ import jakarta.persistence.Id;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -54,4 +56,8 @@ public class RestaurantTableEntity {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+
+    // ✅ Bổ sung quan hệ ngược lại
+    @ManyToMany(mappedBy = "tables")
+    private List<TableBookingEntity> bookings = new ArrayList<>();
 }

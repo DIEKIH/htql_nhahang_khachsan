@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -34,9 +36,25 @@ public class TableBookingEntity {
     @JoinColumn(name = "customer_id", nullable = false)
     private UserEntity customer;
 
-    @ManyToOne
-    @JoinColumn(name = "table_id")
-    private RestaurantTableEntity table; // Có thể null nếu chưa assign
+
+    @Column(name = "customer_name", nullable = false)
+    private String customerName; // 👈 Thêm tên khách
+
+    @Column(name = "customer_email", nullable = false)
+    private String customerEmail; // 👈 Thêm email khách
+
+//    @ManyToOne
+//    @JoinColumn(name = "table_id")
+//    private RestaurantTableEntity table; // Có thể null nếu chưa assign
+
+    @ManyToMany
+    @JoinTable(
+            name = "booking_tables",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "table_id")
+    )
+    private List<RestaurantTableEntity> tables = new ArrayList<>();
+
 
     @ManyToOne
     @JoinColumn(name = "branch_id", nullable = false)

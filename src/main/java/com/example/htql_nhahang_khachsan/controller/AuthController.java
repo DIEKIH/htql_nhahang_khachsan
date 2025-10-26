@@ -174,7 +174,7 @@ public class AuthController {
 //            return "redirect:/cashier-restaurant/dashboard";
 //        }
 //        model.addAttribute("loginRequest", new LoginRequest());
-//        return "staff/cashier_hotel/login";
+//        return "staff/cashier_restaurant/login";
 //    }
 //
 //    @PostMapping("/cashier-restaurant/login")
@@ -183,7 +183,7 @@ public class AuthController {
 //                                         HttpSession session,
 //                                         RedirectAttributes redirectAttributes) {
 //        if (result.hasErrors()) {
-//            return "staff/cashier_hotel/login";
+//            return "staff/cashier_restaurant/login";
 //        }
 //
 //        try {
@@ -325,21 +325,21 @@ public class AuthController {
         return "staff/dashboard";
     }
 
-    @GetMapping("/cashier-restaurant/dashboard")
-    public String cashierRestaurantDashboard(HttpSession session, Model model) {
-        if (!authService.isLoggedIn(session) || !authService.isCashierRestaurant(session)) {
-            return "redirect:/cashier-restaurant/login";
-        }
-        model.addAttribute("user", authService.getCurrentUser(session));
-        return "cashier-restaurant/dashboard";
-    }
+//    @GetMapping("/cashier-restaurant/dashboard")
+//    public String cashierRestaurantDashboard(HttpSession session, Model model) {
+//        if (!authService.isLoggedIn(session) || !authService.isCashierRestaurant(session)) {
+//            return "redirect:/cashier-restaurant/login";
+//        }
+//        model.addAttribute("user", authService.getCurrentUser(session));
+//        return "cashier-restaurant/dashboard";
+//    }
 
-    @GetMapping("/cashier-hotel/dashboard")
-    public String cashierHotelDashboard(HttpSession session, Model model) {
-        if (!authService.isLoggedIn(session) || !authService.isCashierHotel(session)) {
-            return "redirect:/cashier-hotel/login";
-        }
-        model.addAttribute("user", authService.getCurrentUser(session));
-        return "staff/cashier_hotel/dashboard";
-    }
+//    @GetMapping("/cashier-hotel/dashboard")
+//    public String cashierHotelDashboard(HttpSession session, Model model) {
+//        if (!authService.isLoggedIn(session) || !authService.isCashierHotel(session)) {
+//            return "redirect:/cashier-hotel/login";
+//        }
+//        model.addAttribute("user", authService.getCurrentUser(session));
+//        return "staff/cashier_hotel/dashboard";
+//    }
 }

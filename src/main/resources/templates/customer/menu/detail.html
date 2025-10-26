@@ -1,3 +1,1159 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title th:text="|Chi Tiết Món - ${menuItem.name} - Luxury Resort|">Chi Tiết Món Ăn - Luxury Resort</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">-->
+<!--    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">-->
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;primary-color: #c9a96e;-->
+<!--            &#45;&#45;secondary-color: #2c3e50;-->
+<!--            &#45;&#45;accent-color: #f8f9fa;-->
+<!--            &#45;&#45;text-dark: #2c3e50;-->
+<!--            &#45;&#45;text-light: #6c757d;-->
+<!--            &#45;&#45;bg-overlay: rgba(44, 62, 80, 0.7);-->
+<!--            &#45;&#45;success-color: #28a745;-->
+<!--            &#45;&#45;warning-color: #ffc107;-->
+<!--            &#45;&#45;danger-color: #dc3545;-->
+<!--        }-->
+
+<!--        * {-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--            box-sizing: border-box;-->
+<!--        }-->
+
+<!--        body {-->
+<!--            font-family: 'Inter', sans-serif;-->
+<!--            line-height: 1.6;-->
+<!--            color: var(&#45;&#45;text-dark);-->
+<!--            padding-top: 80px;-->
+<!--        }-->
+
+<!--        .heading-font {-->
+<!--            font-family: 'Playfair Display', serif;-->
+<!--        }-->
+
+<!--        /* Navigation */-->
+<!--        .navbar {-->
+<!--            background: rgba(255, 255, 255, 0.98) !important;-->
+<!--            backdrop-filter: blur(10px);-->
+<!--            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);-->
+<!--        }-->
+
+<!--        .navbar-brand {-->
+<!--            font-family: 'Playfair Display', serif;-->
+<!--            font-size: 2rem;-->
+<!--            font-weight: 600;-->
+<!--            color: var(&#45;&#45;primary-color) !important;-->
+<!--        }-->
+
+<!--        .navbar-nav .nav-link {-->
+<!--            font-weight: 500;-->
+<!--            margin: 0 10px;-->
+<!--            color: var(&#45;&#45;text-dark) !important;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+
+<!--        .navbar-nav .nav-link:hover {-->
+<!--            color: var(&#45;&#45;primary-color) !important;-->
+<!--        }-->
+
+<!--        .btn-luxury {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--            padding: 12px 30px;-->
+<!--            border: none;-->
+<!--            font-weight: 600;-->
+<!--            text-transform: uppercase;-->
+<!--            letter-spacing: 1px;-->
+<!--            transition: all 0.3s ease;-->
+<!--            border-radius: 50px;-->
+<!--        }-->
+
+<!--        .btn-luxury:hover {-->
+<!--            background: #b8956b;-->
+<!--            transform: translateY(-3px);-->
+<!--            box-shadow: 0 10px 25px rgba(201, 169, 110, 0.4);-->
+<!--        }-->
+
+<!--        /* Food Gallery */-->
+<!--        .food-gallery {-->
+<!--            height: 500px; /* giống room-gallery */-->
+<!--            overflow: hidden;-->
+<!--            border-radius: 20px;-->
+<!--            margin-bottom: 30px;-->
+<!--            position: relative;-->
+<!--            background: #f9f9f9;-->
+<!--        }-->
+
+<!--        .food-gallery .main-image {-->
+<!--            height: 100%;-->
+<!--            position: relative;-->
+<!--            overflow: hidden;-->
+<!--        }-->
+
+<!--        .food-gallery .main-image img {-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--            object-fit: cover; /* nếu muốn ảnh che kín khung */-->
+<!--            transition: transform 0.5s ease;-->
+<!--        }-->
+
+<!--        .food-gallery .gallery-thumbnails {-->
+<!--            position: absolute;-->
+<!--            bottom: 20px;-->
+<!--            left: 20px;-->
+<!--            right: 20px;-->
+<!--            display: flex;-->
+<!--            gap: 10px;-->
+<!--            overflow-x: auto;-->
+<!--        }-->
+
+<!--        .food-gallery .thumbnail {-->
+<!--            width: 80px;-->
+<!--            height: 60px;-->
+<!--            border-radius: 8px;-->
+<!--            overflow: hidden;-->
+<!--            border: 3px solid transparent;-->
+<!--            cursor: pointer;-->
+<!--            transition: all 0.3s ease;-->
+<!--            flex-shrink: 0;-->
+<!--        }-->
+
+<!--        .food-gallery .thumbnail.active {-->
+<!--            border-color: var(&#45;&#45;primary-color);-->
+<!--        }-->
+
+<!--        .food-gallery .thumbnail img {-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--            object-fit: cover;-->
+<!--        }-->
+
+<!--        .food-gallery .gallery-overlay {-->
+<!--            position: absolute;-->
+<!--            top: 20px;-->
+<!--            right: 20px;-->
+<!--            background: rgba(0, 0, 0, 0.7);-->
+<!--            color: white;-->
+<!--            padding: 10px 20px;-->
+<!--            border-radius: 25px;-->
+<!--            font-weight: 600;-->
+<!--        }-->
+
+
+
+
+
+<!--        /*.main-image {*/-->
+<!--        /*    height: 100%;*/-->
+<!--        /*    position: relative;*/-->
+<!--        /*    overflow: hidden;*/-->
+<!--        /*}*/-->
+
+<!--        /*.main-image img {*/-->
+<!--        /*    width: 100%;*/-->
+<!--        /*    height: 100%;*/-->
+<!--        /*    object-fit: cover;*/-->
+<!--        /*    transition: transform 0.5s ease;*/-->
+<!--        /*}*/-->
+
+<!--        .gallery-thumbnails {-->
+<!--            position: absolute;-->
+<!--            bottom: 20px;-->
+<!--            left: 20px;-->
+<!--            right: 20px;-->
+<!--            display: flex;-->
+<!--            gap: 10px;-->
+<!--            overflow-x: auto;-->
+<!--        }-->
+
+<!--        .thumbnail {-->
+<!--            width: 80px;-->
+<!--            height: 60px;-->
+<!--            border-radius: 8px;-->
+<!--            overflow: hidden;-->
+<!--            border: 3px solid transparent;-->
+<!--            cursor: pointer;-->
+<!--            transition: all 0.3s ease;-->
+<!--            flex-shrink: 0;-->
+<!--        }-->
+
+<!--        .thumbnail.active {-->
+<!--            border-color: var(&#45;&#45;primary-color);-->
+<!--        }-->
+
+<!--        .thumbnail img {-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--            object-fit: cover;-->
+<!--        }-->
+
+<!--        .availability-badge {-->
+<!--            position: absolute;-->
+<!--            top: 20px;-->
+<!--            left: 20px;-->
+<!--            padding: 8px 15px;-->
+<!--            border-radius: 20px;-->
+<!--            font-weight: 600;-->
+<!--            font-size: 0.9rem;-->
+<!--        }-->
+
+<!--        .available {-->
+<!--            background: var(&#45;&#45;success-color);-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .unavailable {-->
+<!--            background: var(&#45;&#45;danger-color);-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .category-badge {-->
+<!--            position: absolute;-->
+<!--            top: 20px;-->
+<!--            right: 20px;-->
+<!--            background: rgba(0, 0, 0, 0.7);-->
+<!--            color: white;-->
+<!--            padding: 5px 12px;-->
+<!--            border-radius: 15px;-->
+<!--            font-size: 0.8rem;-->
+<!--        }-->
+
+<!--        /* Food Info */-->
+<!--        .food-header {-->
+<!--            border-bottom: 2px solid var(&#45;&#45;accent-color);-->
+<!--            padding-bottom: 30px;-->
+<!--            margin-bottom: 30px;-->
+<!--        }-->
+
+<!--        .food-title {-->
+<!--            color: var(&#45;&#45;text-dark);-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+
+<!--        .food-rating {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            gap: 15px;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        .stars {-->
+<!--            color: #ffc107;-->
+<!--        }-->
+
+<!--        .price-display {-->
+<!--            text-align: right;-->
+<!--        }-->
+
+<!--        .current-price {-->
+<!--            font-size: 2.5rem;-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--            font-weight: 700;-->
+<!--        }-->
+
+<!--        .original-price {-->
+<!--            text-decoration: line-through;-->
+<!--            color: var(&#45;&#45;text-light);-->
+<!--            font-size: 1.5rem;-->
+<!--            margin-right: 10px;-->
+<!--        }-->
+
+<!--        .price-note {-->
+<!--            color: var(&#45;&#45;text-light);-->
+<!--            font-size: 0.9rem;-->
+<!--        }-->
+
+<!--        /* Info Cards */-->
+<!--        .info-grid {-->
+<!--            display: grid;-->
+<!--            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));-->
+<!--            gap: 20px;-->
+<!--            margin: 30px 0;-->
+<!--        }-->
+
+<!--        .info-item {-->
+<!--            background: white;-->
+<!--            border: 2px solid var(&#45;&#45;accent-color);-->
+<!--            border-radius: 15px;-->
+<!--            padding: 20px;-->
+<!--            text-align: center;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+
+<!--        .info-item:hover {-->
+<!--            border-color: var(&#45;&#45;primary-color);-->
+<!--            transform: translateY(-5px);-->
+<!--        }-->
+
+<!--        .info-icon {-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            border-radius: 50%;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            margin: 0 auto 15px;-->
+<!--            color: white;-->
+<!--            font-size: 1.2rem;-->
+<!--        }-->
+
+<!--        /* Details Section */-->
+<!--        .details-section {-->
+<!--            background: var(&#45;&#45;accent-color);-->
+<!--            padding: 40px;-->
+<!--            border-radius: 20px;-->
+<!--            margin: 30px 0;-->
+<!--        }-->
+
+<!--        .detail-item {-->
+<!--            display: flex;-->
+<!--            align-items: flex-start;-->
+<!--            margin-bottom: 20px;-->
+<!--            padding-bottom: 15px;-->
+<!--            border-bottom: 1px solid #ddd;-->
+<!--        }-->
+
+<!--        .detail-item:last-child {-->
+<!--            border-bottom: none;-->
+<!--            margin-bottom: 0;-->
+<!--        }-->
+
+<!--        .detail-icon {-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--            width: 25px;-->
+<!--            margin-right: 15px;-->
+<!--            font-size: 1.1rem;-->
+<!--        }-->
+
+<!--        .detail-content h6 {-->
+<!--            color: var(&#45;&#45;text-dark);-->
+<!--            margin-bottom: 5px;-->
+<!--            font-weight: 600;-->
+<!--        }-->
+
+<!--        .detail-content p {-->
+<!--            color: var(&#45;&#45;text-light);-->
+<!--            margin-bottom: 0;-->
+<!--            line-height: 1.5;-->
+<!--        }-->
+
+<!--        /* Order Widget */-->
+<!--        .order-widget {-->
+<!--            position: sticky;-->
+<!--            top: 100px;-->
+<!--            background: white;-->
+<!--            border-radius: 20px;-->
+<!--            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);-->
+<!--            padding: 30px;-->
+<!--            border: 2px solid var(&#45;&#45;primary-color);-->
+<!--        }-->
+
+<!--        .order-widget h5 {-->
+<!--            color: var(&#45;&#45;text-dark);-->
+<!--            margin-bottom: 25px;-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        .quantity-selector {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            gap: 15px;-->
+<!--            margin: 20px 0;-->
+<!--        }-->
+
+<!--        .quantity-btn {-->
+<!--            width: 40px;-->
+<!--            height: 40px;-->
+<!--            border: 2px solid var(&#45;&#45;primary-color);-->
+<!--            background: white;-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--            border-radius: 50%;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            cursor: pointer;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+
+<!--        .quantity-btn:hover {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .quantity-display {-->
+<!--            font-size: 1.5rem;-->
+<!--            font-weight: 600;-->
+<!--            min-width: 50px;-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        .special-requests {-->
+<!--            margin: 20px 0;-->
+<!--        }-->
+
+<!--        .special-requests textarea {-->
+<!--            border: 2px solid #eee;-->
+<!--            border-radius: 10px;-->
+<!--            padding: 15px;-->
+<!--            resize: vertical;-->
+<!--        }-->
+
+<!--        .special-requests textarea:focus {-->
+<!--            border-color: var(&#45;&#45;primary-color);-->
+<!--            box-shadow: 0 0 0 0.2rem rgba(201, 169, 110, 0.25);-->
+<!--        }-->
+
+<!--        .order-total {-->
+<!--            background: var(&#45;&#45;accent-color);-->
+<!--            padding: 20px;-->
+<!--            border-radius: 15px;-->
+<!--            margin: 20px 0;-->
+<!--        }-->
+
+<!--        .total-row {-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            margin-bottom: 10px;-->
+<!--        }-->
+
+<!--        .total-row.final {-->
+<!--            font-weight: 700;-->
+<!--            font-size: 1.2rem;-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--            border-top: 1px solid #ddd;-->
+<!--            padding-top: 10px;-->
+<!--        }-->
+
+<!--        /* Tabs */-->
+<!--        .nav-tabs {-->
+<!--            border: none;-->
+<!--            margin-bottom: 30px;-->
+<!--        }-->
+
+<!--        .nav-tabs .nav-link {-->
+<!--            border: none;-->
+<!--            background: none;-->
+<!--            color: var(&#45;&#45;text-light);-->
+<!--            font-weight: 600;-->
+<!--            padding: 15px 25px;-->
+<!--            border-radius: 25px;-->
+<!--            margin-right: 10px;-->
+<!--        }-->
+
+<!--        .nav-tabs .nav-link.active {-->
+<!--            background: var(&#45;&#45;primary-color);-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        /* Allergen Badges */-->
+<!--        .allergen-badge {-->
+<!--            display: inline-block;-->
+<!--            background: var(&#45;&#45;warning-color);-->
+<!--            color: var(&#45;&#45;text-dark);-->
+<!--            padding: 4px 10px;-->
+<!--            border-radius: 12px;-->
+<!--            font-size: 0.8rem;-->
+<!--            font-weight: 600;-->
+<!--            margin: 2px;-->
+<!--        }-->
+
+<!--        /* Responsive */-->
+<!--        @media (max-width: 768px) {-->
+<!--            .food-gallery {-->
+<!--                height: 300px;-->
+<!--            }-->
+
+<!--            .info-grid {-->
+<!--                grid-template-columns: 1fr;-->
+<!--            }-->
+
+<!--            .order-widget {-->
+<!--                position: static;-->
+<!--                margin-top: 30px;-->
+<!--            }-->
+
+<!--            .price-display {-->
+<!--                text-align: left;-->
+<!--                margin-top: 20px;-->
+<!--            }-->
+
+<!--            .quantity-selector {-->
+<!--                gap: 10px;-->
+<!--            }-->
+<!--        }-->
+
+<!--        /* Animation */-->
+<!--        .fade-in {-->
+<!--            animation: fadeIn 0.8s ease-in;-->
+<!--        }-->
+
+<!--        @keyframes fadeIn {-->
+<!--            from { opacity: 0; transform: translateY(20px); }-->
+<!--            to { opacity: 1; transform: translateY(0); }-->
+<!--        }-->
+
+<!--        .nutrition-info {-->
+<!--            display: grid;-->
+<!--            grid-template-columns: repeat(2, 1fr);-->
+<!--            gap: 15px;-->
+<!--            margin-top: 15px;-->
+<!--        }-->
+
+<!--        .nutrition-item {-->
+<!--            text-align: center;-->
+<!--            padding: 10px;-->
+<!--            background: white;-->
+<!--            border-radius: 8px;-->
+<!--        }-->
+
+<!--        .nutrition-value {-->
+<!--            font-size: 1.2rem;-->
+<!--            font-weight: 600;-->
+<!--            color: var(&#45;&#45;primary-color);-->
+<!--        }-->
+
+<!--        .nutrition-label {-->
+<!--            font-size: 0.8rem;-->
+<!--            color: var(&#45;&#45;text-light);-->
+<!--        }-->
+
+<!--        .discount-badge {-->
+<!--            background: var(&#45;&#45;danger-color);-->
+<!--            color: white;-->
+<!--            padding: 5px 10px;-->
+<!--            border-radius: 12px;-->
+<!--            font-size: 0.8rem;-->
+<!--            font-weight: 600;-->
+<!--            position: absolute;-->
+<!--            top: 60px;-->
+<!--            left: 20px;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<div th:replace="fragments/user_navbar :: user_navbar"></div>-->
+<!--&lt;!&ndash; Main Content &ndash;&gt;-->
+<!--<div class="container my-5">-->
+<!--    <nav aria-label="breadcrumb" class="mb-4">-->
+<!--        <ol class="breadcrumb">-->
+<!--            <li class="breadcrumb-item"><a th:href="@{/}">Trang chủ</a></li>-->
+<!--            <li class="breadcrumb-item"><a href="#menu">Thực đơn</a></li>-->
+<!--            <li class="breadcrumb-item"><a th:href="@{'/menu-categories/' + ${menuItem.categoryId}}" th:text="${menuItem.categoryName}">Danh mục</a></li>-->
+<!--            <li class="breadcrumb-item active" th:text="${menuItem.name}">Tên món</li>-->
+<!--        </ol>-->
+<!--    </nav>-->
+<!--    <div class="row">-->
+<!--        <div class="col-lg-8">-->
+<!--            <div class="food-gallery fade-in">-->
+<!--                <div class="main-image">-->
+<!--                    &lt;!&ndash; Ảnh chính &ndash;&gt;-->
+<!--                    <img id="mainImage"-->
+<!--                         th:src="${mainImage != null ? mainImage : '/images/default-food.jpg'}"-->
+<!--                         th:alt="${menuItem.name}">-->
+<!--                    &lt;!&ndash; Badge trạng thái &ndash;&gt;-->
+<!--                    <div th:class="${menuItem.isAvailable ? 'availability-badge available' : 'availability-badge unavailable'}">-->
+<!--                        <i th:class="${menuItem.isAvailable ? 'fas fa-check-circle me-2' : 'fas fa-times-circle me-2'}"></i>-->
+<!--                        <span th:text="${menuItem.isAvailable ? 'Còn món' : 'Hết món'}">Còn món</span>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; Badge danh mục &ndash;&gt;-->
+<!--                    <div class="category-badge" th:text="${menuItem.categoryName}">Danh mục</div>-->
+<!--                    &lt;!&ndash; Badge giảm giá &ndash;&gt;-->
+<!--                    <div th:if="${hasDiscount}" class="discount-badge">-->
+<!--                        <i class="fas fa-tag me-1"></i>Giảm giá-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; Thumbnails (chỉ hiện nếu có nhiều ảnh) &ndash;&gt;-->
+<!--                    <div class="gallery-thumbnails"-->
+<!--                         th:if="${thumbnails != null and thumbnails.size() > 1}">-->
+<!--                        <div class="thumbnail"-->
+<!--                             th:each="image, stat : ${thumbnails}"-->
+<!--                             th:classappend="${stat.index == 0} ? 'active' : ''"-->
+<!--                             th:data-url="${image.imageUrl}"-->
+<!--                             onclick="changeImage(this.dataset.url, this)">-->
+<!--                            <img th:src="${image.imageUrl}" th:alt="${image.imageTitle}">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; Food Header &ndash;&gt;-->
+<!--            <div class="food-header fade-in">-->
+<!--                <div class="row align-items-end">-->
+<!--                    <div class="col-md-8">-->
+<!--                        <h1 class="food-title heading-font" th:text="${menuItem.name}">Tên món ăn</h1>-->
+<!--                        <div class="food-rating">-->
+<!--                            <div class="stars">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                            </div>-->
+<!--                            <span class="fw-semibold">4.8/5</span>-->
+<!--                            <span class="text-muted">(124 đánh giá)</span>-->
+<!--                        </div>-->
+<!--                        <p class="lead text-muted" th:text="${menuItem.description}">Mô tả món ăn</p>-->
+
+<!--                        <div th:if="${menuItem.allergens != null and !menuItem.allergens.isEmpty()}" class="mt-3">-->
+<!--                            <span class="fw-semibold me-2">Cảnh báo dị ứng:</span>-->
+<!--                            <th:block th:each="allergen : ${#strings.listSplit(menuItem.allergens, ',')}">-->
+<!--                                <span class="allergen-badge" th:text="${#strings.trim(allergen)}">Allergen</span>-->
+<!--                            </th:block>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-4 price-display">-->
+<!--                        <div>-->
+<!--                            <span th:if="${hasDiscount}"-->
+<!--                                  class="original-price"-->
+<!--                                  th:text="${formattedOriginalPrice}">Giá gốc</span>-->
+<!--                            <div class="current-price" th:text="${formattedDiscountedPrice}">Giá hiện tại</div>-->
+<!--                        </div>-->
+<!--                        <div class="price-note">/ phần (chưa bao gồm VAT)</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Info Grid &ndash;&gt;-->
+<!--            <div class="info-grid fade-in">-->
+<!--                <div class="info-item">-->
+<!--                    <div class="info-icon">-->
+<!--                        <i class="fas fa-fire"></i>-->
+<!--                    </div>-->
+<!--                    <h6>Calories</h6>-->
+<!--                    <p class="mb-0 text-muted" th:text="${menuItem.calories != null ? menuItem.calories + ' kcal' : 'Không có thông tin'}">580 kcal</p>-->
+<!--                </div>-->
+<!--                <div class="info-item">-->
+<!--                    <div class="info-icon">-->
+<!--                        <i class="fas fa-chef-hat"></i>-->
+<!--                    </div>-->
+<!--                    <h6>Đầu bếp</h6>-->
+<!--                    <p class="mb-0 text-muted">Master Chef</p>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Tabs Content &ndash;&gt;-->
+<!--            <div class="fade-in">-->
+<!--                <ul class="nav nav-tabs" id="foodTabs">-->
+<!--                    <li class="nav-item">-->
+<!--                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#ingredients">-->
+<!--                            <i class="fas fa-leaf me-2"></i>Nguyên liệu-->
+<!--                        </button>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#nutrition">-->
+<!--                            <i class="fas fa-heart me-2"></i>Dinh dưỡng-->
+<!--                        </button>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews">-->
+<!--                            <i class="fas fa-star me-2"></i>Đánh giá-->
+<!--                        </button>-->
+<!--                    </li>-->
+<!--                </ul>-->
+
+<!--                <div class="tab-content">-->
+<!--                    <div class="tab-pane fade show active" id="ingredients">-->
+<!--                        <div class="details-section">-->
+<!--                            <div class="detail-item" th:if="${menuItem.ingredients != null and !menuItem.ingredients.isEmpty()}">-->
+<!--                                <i class="fas fa-seedling detail-icon"></i>-->
+<!--                                <div class="detail-content">-->
+<!--                                    <h6>Nguyên liệu chính</h6>-->
+<!--                                    <p th:text="${menuItem.ingredients}">Danh sách nguyên liệu</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="detail-item" th:unless="${menuItem.ingredients != null and !menuItem.ingredients.isEmpty()}">-->
+<!--                                <i class="fas fa-info-circle detail-icon"></i>-->
+<!--                                <div class="detail-content">-->
+<!--                                    <h6>Thông tin nguyên liệu</h6>-->
+<!--                                    <p>Thông tin chi tiết về nguyên liệu sẽ được cập nhật sớm.</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="tab-pane fade" id="nutrition">-->
+<!--                        <div class="details-section">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <h6><i class="fas fa-chart-pie me-2 text-primary"></i>Thông tin dinh dưỡng</h6>-->
+<!--                                    <div class="nutrition-info">-->
+<!--                                        <div class="nutrition-item">-->
+<!--                                            <div class="nutrition-value" th:text="${menuItem.calories != null ? menuItem.calories : '0'}">0</div>-->
+<!--                                            <div class="nutrition-label">Calories</div>-->
+<!--                                        </div>-->
+<!--                                        <div class="nutrition-item">-->
+<!--                                            <div class="nutrition-value">45g</div>-->
+<!--                                            <div class="nutrition-label">Protein</div>-->
+<!--                                        </div>-->
+<!--                                        <div class="nutrition-item">-->
+<!--                                            <div class="nutrition-value">28g</div>-->
+<!--                                            <div class="nutrition-label">Chất béo</div>-->
+<!--                                        </div>-->
+<!--                                        <div class="nutrition-item">-->
+<!--                                            <div class="nutrition-value">15g</div>-->
+<!--                                            <div class="nutrition-label">Carbs</div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <h6 class="mt-4 mt-md-0"><i class="fas fa-heartbeat me-2 text-danger"></i>Lợi ích sức khỏe</h6>-->
+<!--                                    <ul class="list-unstyled">-->
+<!--                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Giàu protein chất lượng cao</li>-->
+<!--                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Cung cấp năng lượng</li>-->
+<!--                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Chế biến từ nguyên liệu tươi</li>-->
+<!--                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Đảm bảo vệ sinh an toàn thực phẩm</li>-->
+<!--                                    </ul>-->
+
+<!--                                    <h6 class="mt-4"><i class="fas fa-utensils me-2 text-warning"></i>Gợi ý kết hợp</h6>-->
+<!--                                    <p class="text-muted">Phù hợp với nước uống thanh mát hoặc đồ uống có ga. Có thể kết hợp với các món khai vị hoặc salad.</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="tab-pane fade" id="reviews">-->
+<!--                        <div class="review-card">-->
+<!--                            <div class="reviewer-info">-->
+<!--                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b605?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="reviewer-avatar">-->
+<!--                                <div>-->
+<!--                                    <div class="reviewer-name">Trần Minh Thu</div>-->
+<!--                                    <div class="review-date">20 tháng 8, 2024</div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="review-rating">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                            </div>-->
+<!--                            <p>"Món ăn rất ngon! Chất lượng tuyệt vời, cách trình bày đẹp mắt. Dịch vụ chu đáo, nhân viên thân thiện."</p>-->
+<!--                        </div>-->
+
+<!--                        <div class="review-card">-->
+<!--                            <div class="reviewer-info">-->
+<!--                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="reviewer-avatar">-->
+<!--                                <div>-->
+<!--                                    <div class="reviewer-name">Nguyễn Hoàng Nam</div>-->
+<!--                                    <div class="review-date">15 tháng 8, 2024</div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="review-rating">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                            </div>-->
+<!--                            <p>"Lần đầu ăn món này và cảm thấy rất hài lòng! Hương vị đậm đà, không quá nhiều gia vị. Sẽ order lại!"</p>-->
+<!--                        </div>-->
+
+<!--                        <div class="review-card">-->
+<!--                            <div class="reviewer-info">-->
+<!--                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="reviewer-avatar">-->
+<!--                                <div>-->
+<!--                                    <div class="reviewer-name">Phạm Thị Lan</div>-->
+<!--                                    <div class="review-date">10 tháng 8, 2024</div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="review-rating">-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="fas fa-star"></i>-->
+<!--                                <i class="far fa-star"></i>-->
+<!--                            </div>-->
+<!--                            <p>"Món ăn ngon, tuy nhiên thời gian chờ hơi lâu. Giá cả hợp lý cho chất lượng. Nhân viên thân thiện."</p>-->
+<!--                        </div>-->
+
+<!--                        <button class="btn btn-outline-primary">Xem thêm đánh giá</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Order Widget &ndash;&gt;-->
+<!--        <div class="col-lg-4">-->
+<!--&lt;!&ndash;            <div class="order-widget fade-in">&ndash;&gt;-->
+<!--&lt;!&ndash;                <h5><i class="fas fa-shopping-cart me-2"></i>Đặt món ngay</h5>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                <form class="order-form" th:action="@{'/cart/add'}" method="post">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <input type="hidden" name="menuItemId" th:value="${menuItem.id}">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <div class="quantity-selector">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <button type="button" class="quantity-btn" onclick="decreaseQuantity()">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fas fa-minus"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <span class="quantity-display" id="quantity">1</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <button type="button" class="quantity-btn" onclick="increaseQuantity()">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fas fa-plus"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <input type="hidden" name="quantity" id="quantityInput" value="1">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <div class="special-requests">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <label class="form-label fw-semibold">Yêu cầu đặc biệt</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <textarea class="form-control" name="specialRequests" rows="3" placeholder="VD: Không cay, ít dầu mỡ, thêm rau..."></textarea>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <div class="form-check mb-3">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <input class="form-check-input" type="checkbox" id="takeaway" name="takeaway">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <label class="form-check-label" for="takeaway">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fas fa-box me-2"></i>Đóng gói mang về&ndash;&gt;-->
+<!--&lt;!&ndash;                        </label>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <div class="order-total">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="total-row">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span th:text="${formattedDiscountedPrice} + ' x '" th:remove="tag"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span id="totalQuantity">1</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span id="subtotal" th:text="${formattedDiscountedPrice}" th:attr="data-unit-price=${discountedPrice}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="total-row">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span>Phí phục vụ (10%)</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span id="serviceCharge"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="total-row">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span>VAT (8%)</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span id="vat"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="total-row final">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span>Tổng cộng</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span id="finalTotal"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <button type="submit"&ndash;&gt;-->
+<!--&lt;!&ndash;                            class="btn btn-luxury w-100 mb-3"&ndash;&gt;-->
+<!--&lt;!&ndash;                            th:disabled="${!menuItem.isAvailable}">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="fas fa-cart-plus me-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <span th:if="${menuItem.isAvailable}">Thêm vào giỏ</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <span th:unless="${menuItem.isAvailable}">Hết món</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <button type="button" class="btn btn-outline-primary w-100 mb-3" th:disabled="${!menuItem.isAvailable}">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="fas fa-utensils me-2"></i>Đặt bàn kèm món&ndash;&gt;-->
+<!--&lt;!&ndash;                    </button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <div class="text-center">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <small class="text-muted">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fas fa-clock me-1"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span th:text="'Thời gian chuẩn bị: ' + (${menuItem.preparationTime != null ? menuItem.preparationTime + ' phút' : 'Liên hệ'})">&ndash;&gt;-->
+<!--&lt;!&ndash;                                Thời gian chuẩn bị: 25-30 phút&ndash;&gt;-->
+<!--&lt;!&ndash;                            </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </small>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </form>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+<!--            <div class="order-widget fade-in">-->
+<!--                <h5><i class="fas fa-shopping-cart me-2"></i>Đặt món ngay</h5>-->
+
+<!--                <form class="order-form" th:action="@{/cart/add}" method="post">-->
+<!--                    <input type="hidden" name="menuItemId" th:value="${menuItem.id}">-->
+
+<!--                    <div class="quantity-selector">-->
+<!--                        <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-->
+<!--                            <i class="fas fa-minus"></i>-->
+<!--                        </button>-->
+<!--                        <span class="quantity-display" id="quantity">1</span>-->
+<!--                        <button type="button" class="quantity-btn" onclick="increaseQuantity()">-->
+<!--                            <i class="fas fa-plus"></i>-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                    <input type="hidden" name="quantity" id="quantityInput" value="1">-->
+
+<!--                    <div class="special-requests">-->
+<!--                        <label class="form-label fw-semibold">Yêu cầu đặc biệt</label>-->
+<!--                        <textarea class="form-control" name="notes" rows="3"-->
+<!--                                  placeholder="VD: Không cay, ít dầu mỡ, thêm rau..."></textarea>-->
+<!--                    </div>-->
+
+<!--                    <div class="form-check mb-3">-->
+<!--                        <input class="form-check-input" type="checkbox" id="takeaway" name="isTakeaway" value="true">-->
+<!--                        <label class="form-check-label" for="takeaway">-->
+<!--                            <i class="fas fa-box me-2"></i>Đóng gói mang về-->
+<!--                        </label>-->
+<!--                    </div>-->
+
+<!--                    <div class="order-total">-->
+<!--                        <div class="total-row">-->
+<!--                            <span>Giá x <span id="totalQuantity">1</span></span>-->
+<!--                            <span id="subtotal"></span>-->
+<!--                        </div>-->
+<!--                        <div class="total-row">-->
+<!--                            <span>Phí phục vụ (10%)</span>-->
+<!--                            <span id="serviceCharge"></span>-->
+<!--                        </div>-->
+<!--                        <div class="total-row">-->
+<!--                            <span>VAT (8%)</span>-->
+<!--                            <span id="vat"></span>-->
+<!--                        </div>-->
+<!--                        <div class="total-row final">-->
+<!--                            <span>Tổng cộng</span>-->
+<!--                            <span id="finalTotal"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <button type="submit"-->
+<!--                            class="btn btn-luxury w-100 mb-3"-->
+<!--                            th:disabled="${!menuItem.isAvailable}">-->
+<!--                        <i class="fas fa-cart-plus me-2"></i>-->
+<!--                        <span th:if="${menuItem.isAvailable}">Thêm vào giỏ</span>-->
+<!--                        <span th:unless="${menuItem.isAvailable}">Hết món</span>-->
+<!--                    </button>-->
+
+<!--                    <a href="/cart" class="btn btn-outline-primary w-100 mb-3">-->
+<!--                        <i class="fas fa-shopping-bag me-2"></i>Xem giỏ hàng-->
+<!--                    </a>-->
+
+<!--                    <div class="text-center">-->
+<!--                        <small class="text-muted">-->
+<!--                            <i class="fas fa-clock me-1"></i>-->
+<!--                            <span th:text="'Thời gian chuẩn bị: ' + (${menuItem.preparationTime != null ? menuItem.preparationTime + ' phút' : 'Liên hệ'})">-->
+<!--                    Thời gian chuẩn bị: 25-30 phút-->
+<!--                </span>-->
+<!--                        </small>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Restaurant Info Widget &ndash;&gt;-->
+<!--            <div class="order-widget mt-4" style="background: linear-gradient(135deg, var(&#45;&#45;primary-color), #d4b079); color: white;">-->
+<!--                <h5 style="color: white;"><i class="fas fa-info-circle me-2"></i>Thông tin nhà hàng</h5>-->
+
+<!--                <div class="mb-3">-->
+<!--                    <div class="d-flex align-items-center mb-2">-->
+<!--                        <i class="fas fa-map-marker-alt me-3" style="width: 20px;"></i>-->
+<!--                        <span th:text="${branch != null ? branch.name + ' - ' + branch.address : 'Ocean Restaurant - Tầng 2'}">Ocean Restaurant - Tầng 2</span>-->
+<!--                    </div>-->
+<!--                    <div class="d-flex align-items-center mb-2">-->
+<!--                        <i class="fas fa-clock me-3" style="width: 20px;"></i>-->
+<!--                        <span>Mở cửa: 11:00 - 23:00</span>-->
+<!--                    </div>-->
+<!--                    <div class="d-flex align-items-center mb-2">-->
+<!--                        <i class="fas fa-phone me-3" style="width: 20px;"></i>-->
+<!--                        <span th:text="${branch != null ? branch.phoneNumber : '+84 297 123 4567'}">+84 297 123 4567</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="d-grid gap-2">-->
+<!--                    <a th:href="'tel:' + (${branch != null ? branch.phoneNumber : '+84297123456'})" class="btn btn-light">-->
+<!--                        <i class="fas fa-phone me-2"></i>Gọi đặt bàn-->
+<!--                    </a>-->
+<!--                    <a href="#menu" class="btn btn-outline-light">-->
+<!--                        <i class="fas fa-book-open me-2"></i>Xem thực đơn-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Similar Items Recommendation &ndash;&gt;-->
+<!--            <div class="order-widget mt-4" style="background: var(&#45;&#45;accent-color);" th:if="${similarItems != null and !similarItems.isEmpty()}">-->
+<!--                <h5><i class="fas fa-utensils me-2 text-primary"></i>Món tương tự</h5>-->
+<!--                <div class="row g-2">-->
+<!--                    <div class="col-12" th:each="item : ${similarItems}">-->
+<!--                        <div class="card border-0 shadow-sm">-->
+<!--                            <div class="row g-0">-->
+<!--                                <div class="col-4">-->
+<!--                                    <img th:src="${item.imageUrl != null ? item.imageUrl : '/images/default-food.jpg'}"-->
+<!--                                         class="img-fluid rounded-start"-->
+<!--                                         style="height: 80px; object-fit: cover;"-->
+<!--                                         th:alt="${item.name}">-->
+<!--                                </div>-->
+<!--                                <div class="col-8">-->
+<!--                                    <div class="card-body p-2">-->
+<!--                                        <h6 class="card-title small mb-1" th:text="${item.name}">Tên món</h6>-->
+<!--                                        <p class="card-text small text-muted mb-1" th:text="${item.formattedPrice}">Giá</p>-->
+<!--                                        <a th:href="@{'/menu-items/' + ${item.id}}" class="btn btn-outline-primary btn-sm small">Xem chi tiết</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Promotions Section &ndash;&gt;-->
+<!--    <section class="mt-5" th:if="${promotions != null and !promotions.isEmpty()}">-->
+<!--        <h3 class="heading-font mb-4">Khuyến mãi đang áp dụng</h3>-->
+<!--        <div class="row g-4">-->
+<!--            <div class="col-md-6 col-lg-4" th:each="promotion : ${promotions}">-->
+<!--                <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid var(&#45;&#45;primary-color) !important;">-->
+<!--                    <div class="card-body">-->
+<!--                        <div class="d-flex justify-content-between align-items-start mb-2">-->
+<!--                            <h6 class="card-title text-primary" th:text="${promotion.name}">Tên khuyến mãi</h6>-->
+<!--                            <span class="badge bg-success" th:if="${promotion.active}">Đang áp dụng</span>-->
+<!--                        </div>-->
+<!--                        <p class="card-text text-muted small" th:text="${promotion.description}">Mô tả khuyến mãi</p>-->
+<!--                        <div class="small">-->
+<!--                            <div><strong>Giảm:</strong>-->
+<!--                                <span th:if="${promotion.type.name() == 'PERCENTAGE'}"-->
+<!--                                      th:text="${promotion.discountValue} + '%'"></span>-->
+<!--                                <span th:if="${promotion.type.name() == 'FIXED_AMOUNT'}"-->
+<!--                                      th:text="${#numbers.formatDecimal(promotion.discountValue, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>-->
+<!--                            </div>-->
+<!--                            <div><strong>Áp dụng đến:</strong>-->
+<!--                                <span th:text="${#temporals.format(promotion.endDate, 'dd/MM/yyyy HH:mm')}"></span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </section>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Footer &ndash;&gt;-->
+<!--<footer class="bg-dark text-white py-5 mt-5">-->
+<!--    <div class="container">-->
+<!--        <div class="row g-4">-->
+<!--            <div class="col-lg-4">-->
+<!--                <h3 class="heading-font mb-4">-->
+<!--                    <i class="fas fa-crown me-2" style="color: var(&#45;&#45;primary-color);"></i>-->
+<!--                    Luxury Resort-->
+<!--                </h3>-->
+<!--                <p class="text-light mb-4">Trải nghiệm ẩm thực đẳng cấp quốc tế với các món ăn được chế biến từ nguyên liệu tươi ngon nhất.</p>-->
+<!--                <div class="d-flex gap-3">-->
+<!--                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">-->
+<!--                        <i class="fab fa-facebook-f"></i>-->
+<!--                    </a>-->
+<!--                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">-->
+<!--                        <i class="fab fa-instagram"></i>-->
+<!--                    </a>-->
+<!--                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">-->
+<!--                        <i class="fab fa-youtube"></i>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-lg-2 col-md-6">-->
+<!--                <h5 style="color: var(&#45;&#45;primary-color);">Nhà hàng</h5>-->
+<!--                <div class="footer-links">-->
+<!--                    <div><a href="#" class="text-light text-decoration-none">Thực đơn</a></div>-->
+<!--                    <div><a href="#" class="text-light text-decoration-none">Đặt bàn</a></div>-->
+<!--                    <div><a href="#" class="text-light text-decoration-none">Ẩm thực</a></div>-->
+<!--                    <div><a href="#" class="text-light text-decoration-none">Đầu bếp</a></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-lg-2 col-md-6">-->
+<!--                <h5 style="color: var(&#45;&#45;primary-color);">Dịch vụ</h5>-->
+<!--                <div class="footer-links">-->
+<!--                    <div><a href="#" class="text-light text-decoration-none">Giao hàng</a></div>-->
+<!--                    <div><a href="#" class="text-light text-decoration-none">Tiệc riêng</a></div>-->
+<!--                    <div><a href="#" class="text-light text-decoration-none">Hội nghị</a></div>-->
+<!--                    <div><a href="#" class="text-light text-decoration-none">Catering</a></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-lg-4">-->
+<!--                <h5 style="color: var(&#45;&#45;primary-color);">Liên hệ</h5>-->
+<!--                <div class="contact-info">-->
+<!--                    <div class="d-flex align-items-center mb-3">-->
+<!--                        <i class="fas fa-map-marker-alt me-3" style="color: var(&#45;&#45;primary-color); width: 20px;"></i>-->
+<!--                        <span>Ocean Restaurant - Tầng 2, Luxury Resort</span>-->
+<!--                    </div>-->
+<!--                    <div class="d-flex align-items-center mb-3">-->
+<!--                        <i class="fas fa-phone me-3" style="color: var(&#45;&#45;primary-color); width: 20px;"></i>-->
+<!--                        <span>+84 297 123 4567</span>-->
+<!--                    </div>-->
+<!--                    <div class="d-flex align-items-center">-->
+<!--                        <i class="fas fa-envelope me-3" style="color: var(&#45;&#45;primary-color); width: 20px;"></i>-->
+<!--                        <span>restaurant@luxuryresort.vn</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <hr class="my-4" style="border-color: #555;">-->
+<!--        <div class="text-center">-->
+<!--            <p class="mb-0">&copy; 2024 Luxury Resort Restaurant. All rights reserved.</p>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</footer>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+
+<!--<script th:inline="javascript">-->
+<!--    /*<![CDATA[*/-->
+<!--    // const UNIT_PRICE = /*[[${discountedPrice}]]*/ 450000;-->
+<!--    // const SERVICE_RATE = 0.1;-->
+<!--    // const VAT_RATE = 0.08;-->
+
+<!--    /*<![CDATA[*/-->
+<!--    const UNIT_PRICE = /*[[${discountedPrice}]]*/ 450000;-->
+<!--    const SERVICE_RATE = 0.1;-->
+<!--    const VAT_RATE = 0.08;-->
+
+<!--    function increaseQuantity() {-->
+<!--        const quantityElement = document.getElementById('quantity');-->
+<!--        const currentQuantity = parseInt(quantityElement.textContent);-->
+<!--        const newQuantity = currentQuantity + 1;-->
+
+<!--        if (newQuantity <= 10) {-->
+<!--            quantityElement.textContent = newQuantity;-->
+<!--            document.getElementById('quantityInput').value = newQuantity;-->
+<!--            updateTotal();-->
+<!--        }-->
+<!--    }-->
+
+<!--    function decreaseQuantity() {-->
+<!--        const quantityElement = document.getElementById('quantity');-->
+<!--        const currentQuantity = parseInt(quantityElement.textContent);-->
+<!--        const newQuantity = currentQuantity - 1;-->
+
+<!--        if (newQuantity >= 1) {-->
+<!--            quantityElement.textContent = newQuantity;-->
+<!--            document.getElementById('quantityInput').value = newQuantity;-->
+<!--            updateTotal();-->
+<!--        }-->
+<!--    }-->
+
+<!--    function updateTotal() {-->
+<!--        const quantity = parseInt(document.getElementById('quantity').textContent);-->
+<!--        const subtotal = UNIT_PRICE * quantity;-->
+<!--        const serviceCharge = subtotal * SERVICE_RATE;-->
+<!--        const vat = (subtotal + serviceCharge) * VAT_RATE;-->
+<!--        const finalTotal = subtotal + serviceCharge + vat;-->
+
+<!--        document.getElementById('totalQuantity').textContent = quantity;-->
+<!--        document.getElementById('subtotal').textContent = formatPrice(subtotal);-->
+<!--        document.getElementById('serviceCharge').textContent = formatPrice(serviceCharge);-->
+<!--        document.getElementById('vat').textContent = formatPrice(vat);-->
+<!--        document.getElementById('finalTotal').textContent = formatPrice(finalTotal);-->
+<!--    }-->
+
+<!--    function formatPrice(price) {-->
+<!--        return new Intl.NumberFormat('vi-VN').format(price) + ' VNĐ';-->
+<!--    }-->
+
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        updateTotal();-->
+<!--    });-->
+<!--    /*]]>*/-->
+
+<!--    // Image gallery functionality-->
+<!--    function changeImage(src, element) {-->
+<!--        document.getElementById('mainImage').src = src;-->
+
+<!--        // Remove active class from all thumbnails-->
+<!--        document.querySelectorAll('.thumbnail').forEach(thumb => {-->
+<!--            thumb.classList.remove('active');-->
+<!--        });-->
+
+<!--        // Add active class to clicked thumbnail-->
+<!--        element.classList.add('active');-->
+<!--    }-->
+
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -29,34 +1185,38 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            line-height: 1.6;
+            line-height: 1.5;
             color: var(--text-dark);
-            padding-top: 80px;
+            padding-top: 60px;
+            font-size: 12px;
         }
 
         .heading-font {
             font-family: 'Playfair Display', serif;
         }
 
-        /* Navigation */
+        /* Navigation - Scaled */
         .navbar {
             background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
         }
 
         .navbar-brand {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 600;
             color: var(--primary-color) !important;
         }
 
         .navbar-nav .nav-link {
             font-weight: 500;
-            margin: 0 10px;
+            margin: 0 8px;
+            font-size: 0.9rem;
             color: var(--text-dark) !important;
             transition: all 0.3s ease;
+            padding: 6px 10px;
         }
 
         .navbar-nav .nav-link:hover {
@@ -66,27 +1226,45 @@
         .btn-luxury {
             background: var(--primary-color);
             color: white;
-            padding: 12px 30px;
+            padding: 8px 20px;
             border: none;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             transition: all 0.3s ease;
-            border-radius: 50px;
+            border-radius: 40px;
+            font-size: 0.75rem;
         }
 
         .btn-luxury:hover {
             background: #b8956b;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(201, 169, 110, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(201, 169, 110, 0.4);
         }
 
-        /* Food Gallery */
+        /* Container adjustments */
+        .container {
+            max-width: 1140px;
+        }
+
+        .my-5 {
+            margin-top: 2rem !important;
+            margin-bottom: 2rem !important;
+        }
+
+        /* Breadcrumb - Scaled */
+        .breadcrumb {
+            font-size: 0.8rem;
+            padding: 8px 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Food Gallery - Scaled */
         .food-gallery {
-            height: 500px; /* giống room-gallery */
+            height: 375px;
             overflow: hidden;
-            border-radius: 20px;
-            margin-bottom: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
             position: relative;
             background: #f9f9f9;
         }
@@ -100,26 +1278,26 @@
         .food-gallery .main-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* nếu muốn ảnh che kín khung */
+            object-fit: cover;
             transition: transform 0.5s ease;
         }
 
         .food-gallery .gallery-thumbnails {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
             display: flex;
-            gap: 10px;
+            gap: 8px;
             overflow-x: auto;
         }
 
         .food-gallery .thumbnail {
-            width: 80px;
-            height: 60px;
-            border-radius: 8px;
+            width: 60px;
+            height: 45px;
+            border-radius: 6px;
             overflow: hidden;
-            border: 3px solid transparent;
+            border: 2px solid transparent;
             cursor: pointer;
             transition: all 0.3s ease;
             flex-shrink: 0;
@@ -135,73 +1313,14 @@
             object-fit: cover;
         }
 
-        .food-gallery .gallery-overlay {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 600;
-        }
-
-
-
-
-
-        /*.main-image {*/
-        /*    height: 100%;*/
-        /*    position: relative;*/
-        /*    overflow: hidden;*/
-        /*}*/
-
-        /*.main-image img {*/
-        /*    width: 100%;*/
-        /*    height: 100%;*/
-        /*    object-fit: cover;*/
-        /*    transition: transform 0.5s ease;*/
-        /*}*/
-
-        .gallery-thumbnails {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-        }
-
-        .thumbnail {
-            width: 80px;
-            height: 60px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 3px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .thumbnail.active {
-            border-color: var(--primary-color);
-        }
-
-        .thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         .availability-badge {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 15px;
-            border-radius: 20px;
+            top: 15px;
+            left: 15px;
+            padding: 5px 10px;
+            border-radius: 15px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.7rem;
         }
 
         .available {
@@ -216,36 +1335,56 @@
 
         .category-badge {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             background: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.65rem;
         }
 
-        /* Food Info */
+        .discount-badge {
+            background: var(--danger-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            position: absolute;
+            top: 45px;
+            left: 15px;
+        }
+
+        /* Food Header - Scaled */
         .food-header {
             border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 30px;
-            margin-bottom: 30px;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
         }
 
         .food-title {
             color: var(--text-dark);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            font-size: 1.75rem;
         }
 
         .food-rating {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
         }
 
         .stars {
             color: #ffc107;
+            font-size: 0.9rem;
+        }
+
+        .lead {
+            font-size: 1rem;
+            line-height: 1.5;
         }
 
         .price-display {
@@ -253,7 +1392,7 @@
         }
 
         .current-price {
-            font-size: 2.5rem;
+            font-size: 1.875rem;
             color: var(--primary-color);
             font-weight: 700;
         }
@@ -261,63 +1400,107 @@
         .original-price {
             text-decoration: line-through;
             color: var(--text-light);
-            font-size: 1.5rem;
-            margin-right: 10px;
+            font-size: 1.125rem;
+            margin-right: 8px;
         }
 
         .price-note {
             color: var(--text-light);
-            font-size: 0.9rem;
+            font-size: 0.7rem;
         }
 
-        /* Info Cards */
+        /* Info Grid - Scaled */
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
         }
 
         .info-item {
             background: white;
             border: 2px solid var(--accent-color);
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 15px;
             text-align: center;
             transition: all 0.3s ease;
         }
 
         .info-item:hover {
             border-color: var(--primary-color);
-            transform: translateY(-5px);
+            transform: translateY(-3px);
+        }
+
+        .info-item h6 {
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .info-item p {
+            font-size: 0.8rem;
         }
 
         .info-icon {
-            width: 50px;
-            height: 50px;
+            width: 38px;
+            height: 38px;
             background: var(--primary-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
+            margin: 0 auto 10px;
             color: white;
-            font-size: 1.2rem;
+            font-size: 0.9rem;
         }
 
-        /* Details Section */
+        /* Tabs - Scaled */
+        .nav-tabs {
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            background: none;
+            color: var(--text-light);
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 20px;
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-tabs .nav-link i {
+            font-size: 0.75rem;
+        }
+
+        /* Details Section - Scaled */
         .details-section {
             background: var(--accent-color);
-            padding: 40px;
-            border-radius: 20px;
-            margin: 30px 0;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .details-section h6 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .details-section p, .details-section ul {
+            font-size: 0.8rem;
         }
 
         .detail-item {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
             border-bottom: 1px solid #ddd;
         }
 
@@ -328,51 +1511,91 @@
 
         .detail-icon {
             color: var(--primary-color);
-            width: 25px;
-            margin-right: 15px;
-            font-size: 1.1rem;
+            width: 20px;
+            margin-right: 12px;
+            font-size: 0.85rem;
         }
 
         .detail-content h6 {
             color: var(--text-dark);
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             font-weight: 600;
         }
 
         .detail-content p {
             color: var(--text-light);
             margin-bottom: 0;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
-        /* Order Widget */
+        /* Nutrition Info - Scaled */
+        .nutrition-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .nutrition-item {
+            text-align: center;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .nutrition-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .nutrition-label {
+            font-size: 0.65rem;
+            color: var(--text-light);
+        }
+
+        /* Allergen Badges - Scaled */
+        .allergen-badge {
+            display: inline-block;
+            background: var(--warning-color);
+            color: var(--text-dark);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        /* Order Widget - Scaled */
         .order-widget {
             position: sticky;
-            top: 100px;
+            top: 75px;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             border: 2px solid var(--primary-color);
+            margin-bottom: 20px;
         }
 
         .order-widget h5 {
             color: var(--text-dark);
-            margin-bottom: 25px;
+            margin-bottom: 18px;
             text-align: center;
+            font-size: 1.1rem;
         }
 
         .quantity-selector {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
+            gap: 12px;
+            margin: 15px 0;
         }
 
         .quantity-btn {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             border: 2px solid var(--primary-color);
             background: white;
             color: var(--primary-color);
@@ -382,6 +1605,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 0.8rem;
         }
 
         .quantity-btn:hover {
@@ -390,21 +1614,27 @@
         }
 
         .quantity-display {
-            font-size: 1.5rem;
+            font-size: 1.125rem;
             font-weight: 600;
-            min-width: 50px;
+            min-width: 40px;
             text-align: center;
         }
 
         .special-requests {
-            margin: 20px 0;
+            margin: 15px 0;
+        }
+
+        .special-requests label {
+            font-size: 0.8rem;
+            margin-bottom: 6px;
         }
 
         .special-requests textarea {
             border: 2px solid #eee;
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 8px;
+            padding: 10px;
             resize: vertical;
+            font-size: 0.8rem;
         }
 
         .special-requests textarea:focus {
@@ -412,64 +1642,161 @@
             box-shadow: 0 0 0 0.2rem rgba(201, 169, 110, 0.25);
         }
 
+        .form-check {
+            font-size: 0.8rem;
+            padding-left: 1.8rem;
+        }
+
+        .form-check-input {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .form-check-label {
+            padding-top: 1px;
+        }
+
         .order-total {
             background: var(--accent-color);
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-size: 0.8rem;
         }
 
         .total-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .total-row.final {
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             color: var(--primary-color);
             border-top: 1px solid #ddd;
-            padding-top: 10px;
+            padding-top: 8px;
+            margin-top: 5px;
         }
 
-        /* Tabs */
-        .nav-tabs {
-            border: none;
-            margin-bottom: 30px;
-        }
-
-        .nav-tabs .nav-link {
-            border: none;
-            background: none;
-            color: var(--text-light);
-            font-weight: 600;
-            padding: 15px 25px;
-            border-radius: 25px;
-            margin-right: 10px;
-        }
-
-        .nav-tabs .nav-link.active {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        /* Allergen Badges */
-        .allergen-badge {
-            display: inline-block;
-            background: var(--warning-color);
-            color: var(--text-dark);
-            padding: 4px 10px;
-            border-radius: 12px;
+        .order-widget .btn {
+            padding: 10px 20px;
             font-size: 0.8rem;
-            font-weight: 600;
-            margin: 2px;
+            margin-bottom: 10px;
         }
 
-        /* Responsive */
+        .order-widget .text-center small {
+            font-size: 0.7rem;
+        }
+
+        /* Restaurant Info Widget - Scaled */
+        .order-widget .d-flex {
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        .order-widget .d-flex i {
+            font-size: 0.75rem;
+        }
+
+        /* Review Cards - Scaled */
+        .review-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .reviewer-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .review-date {
+            color: var(--text-light);
+            font-size: 0.7rem;
+        }
+
+        .review-rating {
+            color: #ffc107;
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+        }
+
+        .review-card p {
+            margin-bottom: 0;
+            line-height: 1.5;
+            font-size: 0.8rem;
+        }
+
+        /* Promotions - Scaled */
+        .card {
+            font-size: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+        }
+
+        /* Footer - Scaled */
+        footer {
+            font-size: 0.8rem;
+            padding: 3rem 0;
+        }
+
+        footer h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        footer h5 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        footer .btn {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            font-size: 0.8rem;
+        }
+
+        .footer-links div {
+            margin-bottom: 8px;
+        }
+
+        .contact-info > div {
+            margin-bottom: 10px;
+        }
+
+        /* Responsive - Scaled */
         @media (max-width: 768px) {
+            body {
+                font-size: 11px;
+            }
+
             .food-gallery {
-                height: 300px;
+                height: 225px;
             }
 
             .info-grid {
@@ -478,16 +1805,20 @@
 
             .order-widget {
                 position: static;
-                margin-top: 30px;
+                margin-top: 20px;
             }
 
             .price-display {
                 text-align: left;
-                margin-top: 20px;
+                margin-top: 15px;
             }
 
-            .quantity-selector {
-                gap: 10px;
+            .food-title {
+                font-size: 1.5rem;
+            }
+
+            .current-price {
+                font-size: 1.5rem;
             }
         }
 
@@ -497,71 +1828,44 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .nutrition-info {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .nutrition-item {
-            text-align: center;
-            padding: 10px;
-            background: white;
-            border-radius: 8px;
-        }
-
-        .nutrition-value {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .nutrition-label {
+        /* Button adjustments */
+        .btn-outline-primary {
             font-size: 0.8rem;
-            color: var(--text-light);
+            padding: 8px 16px;
         }
 
-        .discount-badge {
-            background: var(--danger-color);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            position: absolute;
-            top: 60px;
-            left: 20px;
+        /* Section headings */
+        section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Similar items - Scaled */
+        .order-widget .card-body {
+            padding: 8px;
+        }
+
+        .order-widget .card-title {
+            font-size: 0.75rem;
+        }
+
+        .order-widget .card-text {
+            font-size: 0.7rem;
+        }
+
+        .order-widget .btn-sm {
+            font-size: 0.7rem;
+            padding: 4px 8px;
         }
     </style>
 </head>
-
 <body>
 <!-- Navigation -->
 <div th:replace="fragments/user_navbar :: user_navbar"></div>
-
-<!--<nav class="navbar navbar-expand-lg fixed-top">-->
-<!--    <div class="container">-->
-<!--        <a class="navbar-brand" th:href="@{/}"><i class="fas fa-crown me-2"></i>Luxury Resort</a>-->
-<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">-->
-<!--            <span class="navbar-toggler-icon"></span>-->
-<!--        </button>-->
-<!--        <div class="collapse navbar-collapse" id="navbarNav">-->
-<!--            <ul class="navbar-nav ms-auto">-->
-<!--                <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang chủ</a></li>-->
-<!--                <li class="nav-item"><a class="nav-link" href="#phong">Phòng</a></li>-->
-<!--                <li class="nav-item"><a class="nav-link active" href="#nha-hang">Nhà hàng</a></li>-->
-<!--                <li class="nav-item"><a class="nav-link" href="#tien-ich">Tiện ích</a></li>-->
-<!--                <li class="nav-item"><a class="nav-link" href="#lien-he">Liên hệ</a></li>-->
-<!--                <li class="nav-item"><a class="nav-link btn btn-luxury ms-2 text-white" href="#dat-ban">Đặt bàn</a></li>-->
-<!--            </ul>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</nav>-->
 
 <!-- Main Content -->
 <div class="container my-5">
@@ -577,58 +1881,24 @@
     <div class="row">
         <div class="col-lg-8">
             <!-- Food Gallery -->
-<!--            <div class="food-gallery fade-in">-->
-<!--                <div class="main-image">-->
-<!--                    <img id="mainImage"-->
-<!--                         th:src="${menuItem.imageUrl != null ? menuItem.imageUrl : '/images/default-food.jpg'}"-->
-<!--                         th:alt="${menuItem.name}">-->
-
-<!--                    <div th:class="${menuItem.isAvailable ? 'availability-badge available' : 'availability-badge unavailable'}">-->
-<!--                        <i th:class="${menuItem.isAvailable ? 'fas fa-check-circle me-2' : 'fas fa-times-circle me-2'}"></i>-->
-<!--                        <span th:text="${menuItem.isAvailable ? 'Còn món' : 'Hết món'}">Còn món</span>-->
-<!--                    </div>-->
-
-<!--                    <div class="category-badge" th:text="${menuItem.categoryName}">Danh mục</div>-->
-
-<!--                    <div th:if="${hasDiscount}" class="discount-badge">-->
-<!--                        <i class="fas fa-tag me-1"></i>Giảm giá-->
-<!--                    </div>-->
-
-<!--                    <div th:each="image, stat : ${images}"-->
-<!--                         th:class="${stat.first ? 'thumbnail active' : 'thumbnail'}"-->
-<!--                         th:attr="data-url=${image.imageUrl}"-->
-<!--                         onclick="changeImage(this.dataset.url, this)">-->
-<!--                        <img th:src="${image.imageUrl}" th:alt="${image.imageTitle}">-->
-<!--                    </div>-->
-
-<!--                </div>-->
-<!--            </div>-->
-            <!-- Food Gallery -->
-            <!-- Food Gallery -->
             <div class="food-gallery fade-in">
                 <div class="main-image">
-                    <!-- Ảnh chính -->
                     <img id="mainImage"
                          th:src="${mainImage != null ? mainImage : '/images/default-food.jpg'}"
                          th:alt="${menuItem.name}">
 
-                    <!-- Badge trạng thái -->
                     <div th:class="${menuItem.isAvailable ? 'availability-badge available' : 'availability-badge unavailable'}">
-                        <i th:class="${menuItem.isAvailable ? 'fas fa-check-circle me-2' : 'fas fa-times-circle me-2'}"></i>
+                        <i th:class="${menuItem.isAvailable ? 'fas fa-check-circle me-1' : 'fas fa-times-circle me-1'}"></i>
                         <span th:text="${menuItem.isAvailable ? 'Còn món' : 'Hết món'}">Còn món</span>
                     </div>
 
-                    <!-- Badge danh mục -->
                     <div class="category-badge" th:text="${menuItem.categoryName}">Danh mục</div>
 
-                    <!-- Badge giảm giá -->
                     <div th:if="${hasDiscount}" class="discount-badge">
                         <i class="fas fa-tag me-1"></i>Giảm giá
                     </div>
 
-                    <!-- Thumbnails (chỉ hiện nếu có nhiều ảnh) -->
-                    <div class="gallery-thumbnails"
-                         th:if="${thumbnails != null and thumbnails.size() > 1}">
+                    <div class="gallery-thumbnails" th:if="${thumbnails != null and thumbnails.size() > 1}">
                         <div class="thumbnail"
                              th:each="image, stat : ${thumbnails}"
                              th:classappend="${stat.index == 0} ? 'active' : ''"
@@ -639,10 +1909,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
 
             <!-- Food Header -->
             <div class="food-header fade-in">
@@ -692,7 +1958,7 @@
                 </div>
                 <div class="info-item">
                     <div class="info-icon">
-                        <i class="fas fa-chef-hat"></i>
+                        <i class="fas fa-utensils"></i>
                     </div>
                     <h6>Đầu bếp</h6>
                     <p class="mb-0 text-muted">Master Chef</p>
@@ -845,7 +2111,7 @@
             <div class="order-widget fade-in">
                 <h5><i class="fas fa-shopping-cart me-2"></i>Đặt món ngay</h5>
 
-                <form class="order-form" th:action="@{'/cart/add'}" method="post">
+                <form class="order-form" th:action="@{/cart/add}" method="post">
                     <input type="hidden" name="menuItemId" th:value="${menuItem.id}">
 
                     <div class="quantity-selector">
@@ -861,11 +2127,12 @@
 
                     <div class="special-requests">
                         <label class="form-label fw-semibold">Yêu cầu đặc biệt</label>
-                        <textarea class="form-control" name="specialRequests" rows="3" placeholder="VD: Không cay, ít dầu mỡ, thêm rau..."></textarea>
+                        <textarea class="form-control" name="notes" rows="3"
+                                  placeholder="VD: Không cay, ít dầu mỡ, thêm rau..."></textarea>
                     </div>
 
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="takeaway" name="takeaway">
+                        <input class="form-check-input" type="checkbox" id="takeaway" name="isTakeaway" value="true">
                         <label class="form-check-label" for="takeaway">
                             <i class="fas fa-box me-2"></i>Đóng gói mang về
                         </label>
@@ -873,9 +2140,8 @@
 
                     <div class="order-total">
                         <div class="total-row">
-                            <span th:text="${formattedDiscountedPrice} + ' x '" th:remove="tag"></span>
-                            <span id="totalQuantity">1</span>
-                            <span id="subtotal" th:text="${formattedDiscountedPrice}" th:attr="data-unit-price=${discountedPrice}"></span>
+                            <span>Giá x <span id="totalQuantity">1</span></span>
+                            <span id="subtotal"></span>
                         </div>
                         <div class="total-row">
                             <span>Phí phục vụ (10%)</span>
@@ -899,9 +2165,9 @@
                         <span th:unless="${menuItem.isAvailable}">Hết món</span>
                     </button>
 
-                    <button type="button" class="btn btn-outline-primary w-100 mb-3" th:disabled="${!menuItem.isAvailable}">
-                        <i class="fas fa-utensils me-2"></i>Đặt bàn kèm món
-                    </button>
+                    <a href="/cart" class="btn btn-outline-primary w-100 mb-3">
+                        <i class="fas fa-shopping-bag me-2"></i>Xem giỏ hàng
+                    </a>
 
                     <div class="text-center">
                         <small class="text-muted">
@@ -915,7 +2181,7 @@
             </div>
 
             <!-- Restaurant Info Widget -->
-            <div class="order-widget mt-4" style="background: linear-gradient(135deg, var(--primary-color), #d4b079); color: white;">
+            <div class="order-widget" style="background: linear-gradient(135deg, var(--primary-color), #d4b079); color: white;">
                 <h5 style="color: white;"><i class="fas fa-info-circle me-2"></i>Thông tin nhà hàng</h5>
 
                 <div class="mb-3">
@@ -944,7 +2210,7 @@
             </div>
 
             <!-- Similar Items Recommendation -->
-            <div class="order-widget mt-4" style="background: var(--accent-color);" th:if="${similarItems != null and !similarItems.isEmpty()}">
+            <div class="order-widget" style="background: var(--accent-color);" th:if="${similarItems != null and !similarItems.isEmpty()}">
                 <h5><i class="fas fa-utensils me-2 text-primary"></i>Món tương tự</h5>
                 <div class="row g-2">
                     <div class="col-12" th:each="item : ${similarItems}">
@@ -953,7 +2219,7 @@
                                 <div class="col-4">
                                     <img th:src="${item.imageUrl != null ? item.imageUrl : '/images/default-food.jpg'}"
                                          class="img-fluid rounded-start"
-                                         style="height: 80px; object-fit: cover;"
+                                         style="height: 60px; object-fit: cover;"
                                          th:alt="${item.name}">
                                 </div>
                                 <div class="col-8">
@@ -1012,13 +2278,13 @@
                 </h3>
                 <p class="text-light mb-4">Trải nghiệm ẩm thực đẳng cấp quốc tế với các món ăn được chế biến từ nguyên liệu tươi ngon nhất.</p>
                 <div class="d-flex gap-3">
-                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
                         <i class="fab fa-youtube"></i>
                     </a>
                 </div>
@@ -1074,6 +2340,52 @@
     const SERVICE_RATE = 0.1;
     const VAT_RATE = 0.08;
 
+    function increaseQuantity() {
+        const quantityElement = document.getElementById('quantity');
+        const currentQuantity = parseInt(quantityElement.textContent);
+        const newQuantity = currentQuantity + 1;
+
+        if (newQuantity <= 10) {
+            quantityElement.textContent = newQuantity;
+            document.getElementById('quantityInput').value = newQuantity;
+            updateTotal();
+        }
+    }
+
+    function decreaseQuantity() {
+        const quantityElement = document.getElementById('quantity');
+        const currentQuantity = parseInt(quantityElement.textContent);
+        const newQuantity = currentQuantity - 1;
+
+        if (newQuantity >= 1) {
+            quantityElement.textContent = newQuantity;
+            document.getElementById('quantityInput').value = newQuantity;
+            updateTotal();
+        }
+    }
+
+    function updateTotal() {
+        const quantity = parseInt(document.getElementById('quantity').textContent);
+        const subtotal = UNIT_PRICE * quantity;
+        const serviceCharge = subtotal * SERVICE_RATE;
+        const vat = (subtotal + serviceCharge) * VAT_RATE;
+        const finalTotal = subtotal + serviceCharge + vat;
+
+        document.getElementById('totalQuantity').textContent = quantity;
+        document.getElementById('subtotal').textContent = formatPrice(subtotal);
+        document.getElementById('serviceCharge').textContent = formatPrice(serviceCharge);
+        document.getElementById('vat').textContent = formatPrice(vat);
+        document.getElementById('finalTotal').textContent = formatPrice(finalTotal);
+    }
+
+    function formatPrice(price) {
+        return new Intl.NumberFormat('vi-VN').format(price) + ' VNĐ';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        updateTotal();
+    });
+
     // Image gallery functionality
     function changeImage(src, element) {
         document.getElementById('mainImage').src = src;
@@ -1086,122 +2398,6 @@
         // Add active class to clicked thumbnail
         element.classList.add('active');
     }
-
-    // Quantity management
-    function increaseQuantity() {
-        const quantityElement = document.getElementById('quantity');
-        const currentQuantity = parseInt(quantityElement.textContent);
-        const newQuantity = currentQuantity + 1;
-
-        if (newQuantity <= 10) { // Max quantity limit
-            quantityElement.textContent = newQuantity;
-            document.getElementById('quantityInput').value = newQuantity;
-            updateTotal();
-        }
-    }
-
-    function decreaseQuantity() {
-        const quantityElement = document.getElementById('quantity');
-        const currentQuantity = parseInt(quantityElement.textContent);
-        const newQuantity = currentQuantity - 1;
-
-        if (newQuantity >= 1) { // Min quantity limit
-            quantityElement.textContent = newQuantity;
-            document.getElementById('quantityInput').value = newQuantity;
-            updateTotal();
-        }
-    }
-
-    // Update order total
-    function updateTotal() {
-        const quantity = parseInt(document.getElementById('quantity').textContent);
-        const subtotal = UNIT_PRICE * quantity;
-        const serviceCharge = subtotal * SERVICE_RATE;
-        const vat = (subtotal + serviceCharge) * VAT_RATE;
-        const finalTotal = subtotal + serviceCharge + vat;
-
-        // Update display
-        document.getElementById('totalQuantity').textContent = quantity;
-        document.getElementById('subtotal').textContent = formatPrice(subtotal);
-        document.getElementById('serviceCharge').textContent = formatPrice(serviceCharge);
-        document.getElementById('vat').textContent = formatPrice(vat);
-        document.getElementById('finalTotal').textContent = formatPrice(finalTotal);
-    }
-
-    // Format price display
-    function formatPrice(price) {
-        return new Intl.NumberFormat('vi-VN').format(price) + ' VNĐ';
-    }
-
-    // Initialize page
-    document.addEventListener('DOMContentLoaded', function() {
-        updateTotal();
-
-        // Form submission
-        document.querySelector('.order-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const quantity = parseInt(document.getElementById('quantity').textContent);
-            const specialRequests = this.querySelector('textarea').value;
-            const takeaway = document.getElementById('takeaway').checked;
-            const finalTotal = document.getElementById('finalTotal').textContent;
-
-            // Simulate adding to cart
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang thêm...';
-
-            setTimeout(() => {
-                alert(`Đã thêm ${quantity} phần "${/*[[${menuItem.name}]]*/ 'Món ăn'}" vào giỏ hàng!\nTổng: ${finalTotal}\n${takeaway ? 'Đóng gói mang về' : 'Dùng tại nhà hàng'}`);
-
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-
-                // Reset form
-                this.querySelector('textarea').value = '';
-                document.getElementById('takeaway').checked = false;
-            }, 1500);
-        });
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Add fade-in animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe fade-in elements
-        document.querySelectorAll('.fade-in').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-    });
     /*]]>*/
 </script>
 </body>

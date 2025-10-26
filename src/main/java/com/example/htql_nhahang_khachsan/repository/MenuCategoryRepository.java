@@ -58,4 +58,7 @@ public interface MenuCategoryRepository extends JpaRepository<MenuCategoryEntity
     @Query("SELECT mc FROM MenuCategoryEntity mc WHERE mc.branch.id = :branchId AND mc.status = 'ACTIVE' ORDER BY mc.displayOrder")
     List<MenuCategoryEntity> findActiveCategoriesByBranch(@Param("branchId") Long branchId);
 
+    List<MenuCategoryEntity> findByBranchIdAndStatus(Long branchId, Status status);
+
+
 }

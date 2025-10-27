@@ -80,6 +80,73 @@ public class BookingService {
     /**
      * Tạo booking session
      */
+//    public BookingSessionDTO createBookingSession(
+//            Long roomTypeId,
+//            String checkInDate,
+//            String checkOutDate,
+//            Integer numberOfRooms,
+//            Integer adults,
+//            Integer children) {
+//
+//        RoomTypeEntity roomType = roomTypeRepository.findById(roomTypeId)
+//                .orElseThrow(() -> new EntityNotFoundException("Room type not found"));
+//
+//        LocalDate checkIn = LocalDate.parse(checkInDate);
+//        LocalDate checkOut = LocalDate.parse(checkOutDate);
+//        int nights = (int) ChronoUnit.DAYS.between(checkIn, checkOut);
+//
+//        // ✅ Lấy giá sau giảm
+//        BigDecimal currentPrice = promotionService.calculateDiscountedPrice(
+//                roomType.getPrice(),
+//                roomType.getBranch().getId(),
+//                PromotionApplicability.ROOM
+//        );
+//
+//        BigDecimal roomPrice = roomType.getPrice();
+////        BigDecimal totalRoomPrice = roomPrice
+////                .multiply(BigDecimal.valueOf(nights))
+////                .multiply(BigDecimal.valueOf(numberOfRooms));
+//
+//        // ✅ DÙNG currentPrice thay vì roomType.getPrice()
+//        BigDecimal totalRoomPrice = currentPrice
+//                .multiply(BigDecimal.valueOf(nights))
+//                .multiply(BigDecimal.valueOf(numberOfRooms));
+//
+//        BigDecimal serviceFee = totalRoomPrice.multiply(SERVICE_FEE_RATE);
+//        BigDecimal subtotal = totalRoomPrice.add(serviceFee);
+//        BigDecimal vat = subtotal.multiply(VAT_RATE);
+//        BigDecimal totalAmount = subtotal.add(vat);
+//        BigDecimal depositAmount = totalAmount.multiply(new BigDecimal("0.5"));
+//        BigDecimal remainingAmount = totalAmount.subtract(depositAmount);
+//
+//        String sessionId = UUID.randomUUID().toString();
+//
+//        return BookingSessionDTO.builder()
+//                .sessionId(sessionId)
+//                .roomTypeId(roomTypeId)
+//                .checkInDate(checkIn)
+//                .checkOutDate(checkOut)
+//                .numberOfNights(nights)
+//                .numberOfRooms(numberOfRooms)
+//                .adults(adults)
+//                .children(children)
+//                .roomPrice(currentPrice)
+//                .totalRoomPrice(totalRoomPrice)
+//                .serviceFee(serviceFee)
+//                .vat(vat)
+//                .totalAmount(totalAmount)
+//                .depositAmount(depositAmount)
+//                .remainingAmount(remainingAmount)
+//                // QUAN TRỌNG: Khởi tạo các boolean service với giá trị false
+//                .includeBreakfast(false)
+//                .breakfastFee(BigDecimal.ZERO)
+//                .includeSpa(false)
+//                .spaFee(BigDecimal.ZERO)
+//                .includeAirportTransfer(false)
+//                .airportTransferFee(BigDecimal.ZERO)
+//                .build();
+//    }
+
     public BookingSessionDTO createBookingSession(
             Long roomTypeId,
             String checkInDate,
@@ -102,22 +169,35 @@ public class BookingService {
                 PromotionApplicability.ROOM
         );
 
-        BigDecimal roomPrice = roomType.getPrice();
-//        BigDecimal totalRoomPrice = roomPrice
-//                .multiply(BigDecimal.valueOf(nights))
-//                .multiply(BigDecimal.valueOf(numberOfRooms));
+        // ✅ THÊM log để debug
+        System.out.println(">>> Creating booking session:");
+        System.out.println(">>> - Room type: " + roomType.getName());
+        System.out.println(">>> - Original price: " + roomType.getPrice());
+        System.out.println(">>> - Discounted price: " + currentPrice);
+        System.out.println(">>> - Nights: " + nights);
+        System.out.println(">>> - Number of rooms: " + numberOfRooms);
 
-        // ✅ DÙNG currentPrice thay vì roomType.getPrice()
+        // ✅ Tính tổng tiền phòng
         BigDecimal totalRoomPrice = currentPrice
                 .multiply(BigDecimal.valueOf(nights))
                 .multiply(BigDecimal.valueOf(numberOfRooms));
+
+        System.out.println(">>> - Total room price: " + totalRoomPrice);
 
         BigDecimal serviceFee = totalRoomPrice.multiply(SERVICE_FEE_RATE);
         BigDecimal subtotal = totalRoomPrice.add(serviceFee);
         BigDecimal vat = subtotal.multiply(VAT_RATE);
         BigDecimal totalAmount = subtotal.add(vat);
+
+        System.out.println(">>> - Service fee: " + serviceFee);
+        System.out.println(">>> - VAT: " + vat);
+        System.out.println(">>> - Total amount: " + totalAmount);
+
         BigDecimal depositAmount = totalAmount.multiply(new BigDecimal("0.5"));
         BigDecimal remainingAmount = totalAmount.subtract(depositAmount);
+
+        System.out.println(">>> - Deposit amount (50%): " + depositAmount);
+        System.out.println(">>> - Remaining amount: " + remainingAmount);
 
         String sessionId = UUID.randomUUID().toString();
 
@@ -137,7 +217,6 @@ public class BookingService {
                 .totalAmount(totalAmount)
                 .depositAmount(depositAmount)
                 .remainingAmount(remainingAmount)
-                // QUAN TRỌNG: Khởi tạo các boolean service với giá trị false
                 .includeBreakfast(false)
                 .breakfastFee(BigDecimal.ZERO)
                 .includeSpa(false)
@@ -213,13 +292,6 @@ public class BookingService {
         RoomTypeEntity roomType = roomTypeRepository.findById(session.getRoomTypeId())
                 .orElseThrow(() -> new EntityNotFoundException("Room type not found"));
 
-        // 🔹 Tìm danh sách phòng trống
-//        List<RoomEntity> availableRooms = roomRepository.findAvailableRoomsByTypeAndDateRange(
-//                session.getRoomTypeId(),
-//                session.getCheckInDate(),
-//                session.getCheckOutDate()
-//        );
-
         List<RoomEntity> availableRooms = roomRepository.findAvailableRoomsByTypeAndDateRange(
                 session.getRoomTypeId(),
                 session.getCheckInDate(),
@@ -228,12 +300,10 @@ public class BookingService {
                 List.of(BookingStatus.CANCELLED, BookingStatus.NO_SHOW)
         );
 
-
         if (availableRooms.size() < session.getNumberOfRooms()) {
             throw new RuntimeException("Không đủ phòng trống để đặt.");
         }
 
-        // 🔹 Chọn phòng đầu tiên (hoặc chọn list nếu đặt nhiều)
         RoomEntity assignedRoom = availableRooms.get(0);
         assignedRoom.setStatus(RoomStatus.AVAILABLE);
         roomRepository.save(assignedRoom);
@@ -241,7 +311,7 @@ public class BookingService {
         // 🔹 Tạo booking entity
         RoomBookingEntity booking = RoomBookingEntity.builder()
                 .roomType(roomType)
-                .room(assignedRoom) // ✅ GÁN PHÒNG THẬT
+                .room(assignedRoom)
                 .branch(roomType.getBranch())
                 .checkInDate(session.getCheckInDate())
                 .checkOutDate(session.getCheckOutDate())
@@ -272,9 +342,14 @@ public class BookingService {
                 .paymentMethod(paymentMethod)
                 .build();
 
-        booking.setPaymentStatus(isDepositOnly
-                ? PaymentStatus.PARTIALLY_PAID
-                : PaymentStatus.PAID);
+        // ✅ SỬA: Set paymentStatus và remainingAmount dựa vào isDepositOnly
+        if (isDepositOnly) {
+            booking.setPaymentStatus(PaymentStatus.PARTIALLY_PAID);
+            booking.setRemainingAmount(session.getRemainingAmount());  // Giữ nguyên remaining
+        } else {
+            booking.setPaymentStatus(PaymentStatus.PAID);
+            booking.setRemainingAmount(BigDecimal.ZERO);  // ✅ Set về 0 khi thanh toán full
+        }
 
         booking = bookingRepository.save(booking);
 
@@ -288,29 +363,150 @@ public class BookingService {
             System.err.println("Failed to send confirmation email: " + e.getMessage());
         }
 
+        // ✅ THÊM log để debug
+        System.out.println(">>> Created booking:");
+        System.out.println(">>> - Booking code: " + booking.getBookingCode());
+        System.out.println(">>> - isDepositOnly: " + isDepositOnly);
+        System.out.println(">>> - Total amount: " + booking.getTotalAmount());
+        System.out.println(">>> - Remaining amount: " + booking.getRemainingAmount());
+        System.out.println(">>> - Payment status: " + booking.getPaymentStatus());
+
         return booking;
     }
+
+//    public RoomBookingEntity createBooking(
+//            BookingSessionDTO session,
+//            Boolean isDepositOnly,
+//            PaymentMethod paymentMethod) {
+//
+//        RoomTypeEntity roomType = roomTypeRepository.findById(session.getRoomTypeId())
+//                .orElseThrow(() -> new EntityNotFoundException("Room type not found"));
+//
+//        // 🔹 Tìm danh sách phòng trống
+////        List<RoomEntity> availableRooms = roomRepository.findAvailableRoomsByTypeAndDateRange(
+////                session.getRoomTypeId(),
+////                session.getCheckInDate(),
+////                session.getCheckOutDate()
+////        );
+//
+//        List<RoomEntity> availableRooms = roomRepository.findAvailableRoomsByTypeAndDateRange(
+//                session.getRoomTypeId(),
+//                session.getCheckInDate(),
+//                session.getCheckOutDate(),
+//                RoomStatus.AVAILABLE,
+//                List.of(BookingStatus.CANCELLED, BookingStatus.NO_SHOW)
+//        );
+//
+//
+//        if (availableRooms.size() < session.getNumberOfRooms()) {
+//            throw new RuntimeException("Không đủ phòng trống để đặt.");
+//        }
+//
+//        // 🔹 Chọn phòng đầu tiên (hoặc chọn list nếu đặt nhiều)
+//        RoomEntity assignedRoom = availableRooms.get(0);
+//        assignedRoom.setStatus(RoomStatus.AVAILABLE);
+//        roomRepository.save(assignedRoom);
+//
+//        // 🔹 Tạo booking entity
+//        RoomBookingEntity booking = RoomBookingEntity.builder()
+//                .roomType(roomType)
+//                .room(assignedRoom) // ✅ GÁN PHÒNG THẬT
+//                .branch(roomType.getBranch())
+//                .checkInDate(session.getCheckInDate())
+//                .checkOutDate(session.getCheckOutDate())
+//                .numberOfRooms(session.getNumberOfRooms())
+//                .adults(session.getAdults())
+//                .children(session.getChildren())
+//                .guestName(session.getGuestName())
+//                .guestEmail(session.getGuestEmail())
+//                .guestPhone(session.getGuestPhone())
+//                .guestIdNumber(session.getGuestIdNumber())
+//                .roomPrice(session.getRoomPrice())
+//                .basePrice(session.getRoomPrice())
+//                .numberOfNights(session.getNumberOfNights())
+//                .totalRoomPrice(session.getTotalRoomPrice())
+//                .serviceFee(session.getServiceFee())
+//                .vat(session.getVat())
+//                .totalAmount(session.getTotalAmount())
+//                .depositAmount(session.getDepositAmount())
+//                .remainingAmount(session.getRemainingAmount())
+//                .includeBreakfast(session.getIncludeBreakfast())
+//                .breakfastFee(session.getBreakfastFee())
+//                .includeSpa(session.getIncludeSpa())
+//                .spaFee(session.getSpaFee())
+//                .includeAirportTransfer(session.getIncludeAirportTransfer())
+//                .airportTransferFee(session.getAirportTransferFee())
+//                .specialRequests(session.getSpecialRequests())
+//                .status(BookingStatus.PENDING)
+//                .paymentMethod(paymentMethod)
+//                .build();
+//
+//        booking.setPaymentStatus(isDepositOnly
+//                ? PaymentStatus.PARTIALLY_PAID
+//                : PaymentStatus.PAID);
+//
+//        booking = bookingRepository.save(booking);
+//
+//        // 🔹 Tạo payment record
+//        createPaymentRecord(booking, isDepositOnly);
+//
+//        // 🔹 Gửi email xác nhận
+//        try {
+//            emailService.sendBookingConfirmation(booking);
+//        } catch (Exception e) {
+//            System.err.println("Failed to send confirmation email: " + e.getMessage());
+//        }
+//
+//        return booking;
+//    }
+
+    /**
+     * Tạo payment record
+     */
 
     /**
      * Tạo payment record
      */
     private void createPaymentRecord(RoomBookingEntity booking, Boolean isDepositOnly) {
+        // ✅ SỬA: Tính đúng payment amount dựa vào isDepositOnly
         BigDecimal paymentAmount = isDepositOnly
                 ? booking.getDepositAmount()
                 : booking.getTotalAmount();
 
         PaymentEntity payment = PaymentEntity.builder()
                 .roomBooking(booking)
-                .amount(paymentAmount)
+                .amount(paymentAmount)  // ✅ SỬA: Dùng paymentAmount thay vì depositAmount
                 .method(booking.getPaymentMethod())
-//                .status(PaymentStatus.PAID)
-                .status(isDepositOnly ? PaymentStatus.PARTIALLY_PAID : PaymentStatus.PAID)
-
+                .status(isDepositOnly ? PaymentStatus.PARTIALLY_PAID : PaymentStatus.PAID)  // ✅ SỬA: Status theo isDepositOnly
                 .processedAt(LocalDateTime.now())
                 .build();
 
         paymentRepository.save(payment);
+
+        // ✅ THÊM log để debug
+        System.out.println(">>> Created payment record:");
+        System.out.println(">>> - isDepositOnly: " + isDepositOnly);
+        System.out.println(">>> - Payment amount: " + paymentAmount);
+        System.out.println(">>> - Status: " + payment.getStatus());
     }
+
+//    private void createPaymentRecord(RoomBookingEntity booking, Boolean isDepositOnly) {
+//        BigDecimal paymentAmount = isDepositOnly
+//                ? booking.getDepositAmount()
+//                : booking.getTotalAmount();
+//
+//        PaymentEntity payment = PaymentEntity.builder()
+//                .roomBooking(booking)
+//                .amount(paymentAmount)
+//                .method(booking.getPaymentMethod())
+////                .status(PaymentStatus.PAID)
+//                .status(isDepositOnly ? PaymentStatus.PARTIALLY_PAID : PaymentStatus.PAID)
+//
+//                .processedAt(LocalDateTime.now())
+//                .build();
+//
+//        paymentRepository.save(payment);
+//    }
 
     public RoomBookingEntity getBookingByCode(String bookingCode) {
         return bookingRepository.findByBookingCode(bookingCode)
@@ -366,7 +562,8 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy booking với mã: " + bookingCode));
 
         if (success) {
-            if (booking.getDepositAmount().compareTo(booking.getTotalAmount()) < 0) {
+            // ✅ SỬA: Kiểm tra remainingAmount thay vì depositAmount
+            if (booking.getRemainingAmount().compareTo(BigDecimal.ZERO) > 0) {
                 booking.setPaymentStatus(PaymentStatus.PARTIALLY_PAID);
             } else {
                 booking.setPaymentStatus(PaymentStatus.PAID);
@@ -376,6 +573,13 @@ public class BookingService {
         }
 
         bookingRepository.save(booking);
+
+        // ✅ THÊM log để debug
+        System.out.println(">>> updatePaymentStatus called:");
+        System.out.println(">>> - Booking code: " + bookingCode);
+        System.out.println(">>> - Success: " + success);
+        System.out.println(">>> - Remaining amount: " + booking.getRemainingAmount());
+        System.out.println(">>> - Payment status set to: " + booking.getPaymentStatus());
     }
 
 

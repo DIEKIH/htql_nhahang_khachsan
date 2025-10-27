@@ -54,6 +54,53 @@ public class RoomBookingController {
         }
     }
 
+//    @PostMapping("/room-type/{id}/select")
+//    public String selectRoomType(
+//            @PathVariable Long id,
+//            @RequestParam String checkInDate,
+//            @RequestParam String checkOutDate,
+//            @RequestParam Integer numberOfRooms,
+//            @RequestParam Integer adults,
+//            @RequestParam Integer children,
+//            HttpSession session) {
+//
+//        try {
+//            LocalDate checkIn = LocalDate.parse(checkInDate);
+//            LocalDate checkOut = LocalDate.parse(checkOutDate);
+//
+//            if (checkIn.isBefore(LocalDate.now())) {
+//                return "redirect:/room-types/" + id + "?error=invalid_checkin";
+//            }
+//
+//            if (checkOut.isBefore(checkIn.plusDays(1))) {
+//                return "redirect:/room-types/" + id + "?error=invalid_checkout";
+//            }
+//
+//            AvailabilityResponse availability = bookingService.checkRoomAvailability(
+//                    id, checkInDate, checkOutDate, numberOfRooms
+//            );
+//
+//            if (!availability.isAvailable()) {
+//                return "redirect:/room-types/" + id + "?error=not_available";
+//            }
+//
+//            BookingSessionDTO bookingSession = bookingService.createBookingSession(
+//                    id, checkInDate, checkOutDate, numberOfRooms, adults, children
+//            );
+//
+//            // ===== FIX: Set RoomType =====
+//            RoomTypeResponse roomType = roomService.getRoomTypeById(id);
+//            bookingSession.setRoomType(roomType);
+//
+//            session.setAttribute("bookingSession", bookingSession);
+//
+//            return "redirect:/bookings/services/" + bookingSession.getSessionId();
+//
+//        } catch (Exception e) {
+//            return "redirect:/room-types/" + id + "?error=booking_failed";
+//        }
+//    }
+
     @PostMapping("/room-type/{id}/select")
     public String selectRoomType(
             @PathVariable Long id,
@@ -88,7 +135,13 @@ public class RoomBookingController {
                     id, checkInDate, checkOutDate, numberOfRooms, adults, children
             );
 
-            // ===== FIX: Set RoomType =====
+            // ✅ THÊM log để kiểm tra session sau khi tạo
+            System.out.println("=== BOOKING SESSION CREATED ===");
+            System.out.println("Session ID: " + bookingSession.getSessionId());
+            System.out.println("Total Amount: " + bookingSession.getTotalAmount());
+            System.out.println("Deposit Amount: " + bookingSession.getDepositAmount());
+            System.out.println("Remaining Amount: " + bookingSession.getRemainingAmount());
+
             RoomTypeResponse roomType = roomService.getRoomTypeById(id);
             bookingSession.setRoomType(roomType);
 
@@ -97,6 +150,7 @@ public class RoomBookingController {
             return "redirect:/bookings/services/" + bookingSession.getSessionId();
 
         } catch (Exception e) {
+            e.printStackTrace(); // ✅ THÊM để xem lỗi chi tiết
             return "redirect:/room-types/" + id + "?error=booking_failed";
         }
     }
@@ -262,6 +316,54 @@ public class RoomBookingController {
     }
 
     // Xử lý hoàn tất đặt phòng
+//    @PostMapping("/complete")
+//    public String completeBooking(@RequestParam String sessionId,
+//                                  @RequestParam Boolean isDepositOnly,
+//                                  @RequestParam PaymentMethod paymentMethod,
+//                                  HttpSession httpSession,
+//                                  RedirectAttributes redirectAttributes,
+//                                  HttpServletRequest request) {
+//        System.out.println(">>> PaymentMethod: " + paymentMethod);
+//        System.out.println(">>> PaymentMethod received: " + paymentMethod);
+//
+//        BookingSessionDTO session = (BookingSessionDTO) httpSession.getAttribute("bookingSession");
+//
+//        if (session == null || !session.getSessionId().equals(sessionId)) {
+//            return "redirect:/";
+//        }
+//
+//        try {
+//            RoomBookingEntity booking = bookingService.createBooking(session, isDepositOnly, paymentMethod);
+//
+//            System.out.println(">>> PaymentMethod: " + paymentMethod);
+//
+//            if (paymentMethod == PaymentMethod.VNPAY) {
+//                long amount = booking.getTotalAmount().longValue() * 100; // VNPay cần *100
+//                String orderInfo = "Thanh toan don hang " + booking.getBookingCode();
+//
+//                String paymentUrl = vnPayService.createPaymentUrl(
+//                        amount,
+//                        orderInfo,
+//                        booking.getBookingCode(),
+//                        request
+//                );
+//
+//                System.out.println(">>> VNPay amount: " + amount);
+//                System.out.println(">>> VNPay URL: " + paymentUrl);
+//
+//                return "redirect:" + paymentUrl;
+//            }
+//
+//            httpSession.removeAttribute("bookingSession");
+//            return "redirect:/bookings/confirmation/" + booking.getBookingCode();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi đặt phòng: " + e.getMessage());
+//            return "redirect:/bookings/payment/" + sessionId;
+//        }
+//    }
+
     @PostMapping("/complete")
     public String completeBooking(@RequestParam String sessionId,
                                   @RequestParam Boolean isDepositOnly,
@@ -270,7 +372,6 @@ public class RoomBookingController {
                                   RedirectAttributes redirectAttributes,
                                   HttpServletRequest request) {
         System.out.println(">>> PaymentMethod: " + paymentMethod);
-        System.out.println(">>> PaymentMethod received: " + paymentMethod);
         System.out.println(">>> isDepositOnly = " + isDepositOnly);
 
         BookingSessionDTO session = (BookingSessionDTO) httpSession.getAttribute("bookingSession");
@@ -285,7 +386,10 @@ public class RoomBookingController {
             System.out.println(">>> PaymentMethod: " + paymentMethod);
 
             if (paymentMethod == PaymentMethod.VNPAY) {
-                long amount = booking.getTotalAmount().longValue() * 100; // VNPay cần *100
+                // ✅ SỬA: Tính đúng amount dựa vào isDepositOnly
+                BigDecimal paymentAmount = isDepositOnly ? booking.getDepositAmount() : booking.getTotalAmount();
+                long amount = paymentAmount.longValue() * 100; // VNPay cần *100
+
                 String orderInfo = "Thanh toan don hang " + booking.getBookingCode();
 
                 String paymentUrl = vnPayService.createPaymentUrl(
@@ -295,7 +399,9 @@ public class RoomBookingController {
                         request
                 );
 
-                System.out.println(">>> VNPay amount: " + amount);
+                System.out.println(">>> isDepositOnly: " + isDepositOnly);
+                System.out.println(">>> Payment amount: " + paymentAmount);
+                System.out.println(">>> VNPay amount (*100): " + amount);
                 System.out.println(">>> VNPay URL: " + paymentUrl);
 
                 return "redirect:" + paymentUrl;

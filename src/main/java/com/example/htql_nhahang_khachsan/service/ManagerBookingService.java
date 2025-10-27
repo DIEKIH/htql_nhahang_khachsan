@@ -338,50 +338,95 @@ public class ManagerBookingService {
 //        log.info("Confirmed remaining payment {} for booking {} by staff {}", remainingAmount, bookingId, staffId);
 //    }
 // ✅ SỬA lại method confirmRemainingPayment
-@Transactional
-public void confirmRemainingPayment(Long bookingId, Long staffId, Long branchId) {
-    RoomBookingEntity booking = bookingRepository.findById(bookingId)
-            .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
+//@Transactional
+//public void confirmRemainingPayment(Long bookingId, Long staffId, Long branchId) {
+//    RoomBookingEntity booking = bookingRepository.findById(bookingId)
+//            .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
+//
+//    if (!booking.getBranch().getId().equals(branchId)) {
+//        throw new SecurityException("Access denied");
+//    }
+//
+//    // Kiểm tra trạng thái thanh toán
+//    if (booking.getPaymentStatus() == PaymentStatus.PAID) {
+//        throw new IllegalStateException("Booking đã được thanh toán đầy đủ");
+//    }
+//
+//    // Tính số tiền đã thanh toán
+//    BigDecimal totalPaid = paymentRepository.findByRoomBookingId(bookingId).stream()
+//            .filter(p -> p.getStatus() == PaymentStatus.PAID)
+//            .map(PaymentEntity::getAmount)
+//            .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//    // Tính số tiền còn lại
+//    BigDecimal remainingAmount = booking.getTotalAmount().subtract(totalPaid);
+//
+//    if (remainingAmount.compareTo(BigDecimal.ZERO) <= 0) {
+//        throw new IllegalStateException("Không còn số tiền cần thanh toán");
+//    }
+//
+//    // Tạo payment cho phần còn lại
+//    PaymentEntity payment = new PaymentEntity();
+//    payment.setRoomBooking(booking);
+//    payment.setTransactionId("PAY" + System.currentTimeMillis());
+//    payment.setAmount(remainingAmount);
+//    payment.setMethod(booking.getPaymentMethod() != null ? booking.getPaymentMethod() : PaymentMethod.CASH);
+//    payment.setStatus(PaymentStatus.PAID);
+//    payment.setProcessedBy(staffId);
+//    payment.setProcessedAt(LocalDateTime.now());
+//    paymentRepository.save(payment);
+//
+//    // ✅ Cập nhật trạng thái booking (sẽ tự động set remaining = 0)
+//    updateBookingPaymentStatus(booking);
+//
+//    log.info("Confirmed remaining payment {} VND for booking {} by staff {}",
+//            remainingAmount, bookingId, staffId);
+//}
 
-    if (!booking.getBranch().getId().equals(branchId)) {
-        throw new SecurityException("Access denied");
+    @Transactional
+    public void confirmRemainingPayment(Long bookingId, Long staffId, Long branchId) {
+        RoomBookingEntity booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
+
+        if (!booking.getBranch().getId().equals(branchId)) {
+            throw new SecurityException("Access denied");
+        }
+
+        // ✅ SỬA: Kiểm tra remaining amount trước
+        if (booking.getRemainingAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalStateException("Không còn số tiền cần thanh toán");
+        }
+
+        // Tính số tiền đã thanh toán
+        BigDecimal totalPaid = paymentRepository.findByRoomBookingId(bookingId).stream()
+                .filter(p -> p.getStatus() == PaymentStatus.PAID)
+                .map(PaymentEntity::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Tính số tiền còn lại (double check)
+        BigDecimal remainingAmount = booking.getTotalAmount().subtract(totalPaid);
+
+        if (remainingAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalStateException("Không còn số tiền cần thanh toán");
+        }
+
+        // Tạo payment cho phần còn lại
+        PaymentEntity payment = new PaymentEntity();
+        payment.setRoomBooking(booking);
+        payment.setTransactionId("PAY" + System.currentTimeMillis());
+        payment.setAmount(remainingAmount);
+        payment.setMethod(booking.getPaymentMethod() != null ? booking.getPaymentMethod() : PaymentMethod.CASH);
+        payment.setStatus(PaymentStatus.PAID);
+        payment.setProcessedBy(staffId);
+        payment.setProcessedAt(LocalDateTime.now());
+        paymentRepository.save(payment);
+
+        // ✅ Cập nhật trạng thái booking (sẽ tự động set remaining = 0)
+        updateBookingPaymentStatus(booking);
+
+        log.info("Confirmed remaining payment {} VND for booking {} by staff {}",
+                remainingAmount, bookingId, staffId);
     }
-
-    // Kiểm tra trạng thái thanh toán
-    if (booking.getPaymentStatus() == PaymentStatus.PAID) {
-        throw new IllegalStateException("Booking đã được thanh toán đầy đủ");
-    }
-
-    // Tính số tiền đã thanh toán
-    BigDecimal totalPaid = paymentRepository.findByRoomBookingId(bookingId).stream()
-            .filter(p -> p.getStatus() == PaymentStatus.PAID)
-            .map(PaymentEntity::getAmount)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    // Tính số tiền còn lại
-    BigDecimal remainingAmount = booking.getTotalAmount().subtract(totalPaid);
-
-    if (remainingAmount.compareTo(BigDecimal.ZERO) <= 0) {
-        throw new IllegalStateException("Không còn số tiền cần thanh toán");
-    }
-
-    // Tạo payment cho phần còn lại
-    PaymentEntity payment = new PaymentEntity();
-    payment.setRoomBooking(booking);
-    payment.setTransactionId("PAY" + System.currentTimeMillis());
-    payment.setAmount(remainingAmount);
-    payment.setMethod(booking.getPaymentMethod() != null ? booking.getPaymentMethod() : PaymentMethod.CASH);
-    payment.setStatus(PaymentStatus.PAID);
-    payment.setProcessedBy(staffId);
-    payment.setProcessedAt(LocalDateTime.now());
-    paymentRepository.save(payment);
-
-    // ✅ Cập nhật trạng thái booking (sẽ tự động set remaining = 0)
-    updateBookingPaymentStatus(booking);
-
-    log.info("Confirmed remaining payment {} VND for booking {} by staff {}",
-            remainingAmount, bookingId, staffId);
-}
 
     private BookingListDTO convertToListDTO(RoomBookingEntity entity) {
         return BookingListDTO.builder()

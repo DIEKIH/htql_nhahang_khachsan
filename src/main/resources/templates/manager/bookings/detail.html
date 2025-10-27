@@ -621,6 +621,46 @@
                                         <span class="small" th:text="${booking.getFormattedAmount(booking.vat)}"></span>
                                     </div>
 
+<!--                                    <hr class="my-2">-->
+
+<!--                                    <div class="d-flex justify-content-between mb-2">-->
+<!--                                        <strong class="text-success">TỔNG CỘNG:</strong>-->
+<!--                                        <strong class="text-success" th:text="${booking.getFormattedAmount(booking.totalAmount)}"></strong>-->
+<!--                                    </div>-->
+
+<!--                                    <div class="d-flex justify-content-between mb-1">-->
+<!--                                        <span class="small">Đã thanh toán:</span>-->
+<!--                                        <span class="small text-success fw-bold" th:text="${booking.getFormattedAmount(booking.totalAmount.subtract(booking.getRemainingAmount()))}"></span>-->
+<!--                                    </div>-->
+<!--                                    <div class="d-flex justify-content-between">-->
+<!--                                        <span class="small">Còn lại:</span>-->
+<!--                                        <span class="small fw-bold"-->
+<!--                                              th:classappend="${booking.getRemainingAmount().compareTo(T(java.math.BigDecimal).ZERO) > 0 ? 'text-warning' : 'text-success'}"-->
+<!--                                              th:text="${booking.getFormattedAmount(booking.getRemainingAmount())}"></span>-->
+<!--                                    </div>-->
+
+<!--                                    <hr class="my-2">-->
+
+<!--                                    <div class="d-flex justify-content-between mb-2">-->
+<!--                                        <span class="small">Phương thức:</span>-->
+<!--                                        <span class="badge bg-primary" th:text="${booking.paymentMethod}"></span>-->
+<!--                                    </div>-->
+
+<!--                                    &lt;!&ndash; Nút xác nhận thanh toán phần còn lại &ndash;&gt;-->
+<!--                                    <div th:if="${booking.paymentStatus != T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PAID}">-->
+<!--                                        <button type="button" class="btn btn-success w-100 btn-sm"-->
+<!--                                                data-bs-toggle="modal"-->
+<!--                                                data-bs-target="#confirmRemainingModal">-->
+<!--                                            <i class="bi bi-cash-coin"></i> Xác nhận TT phần còn lại-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+
+<!--                                    <div th:if="${booking.paymentStatus == T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PAID}">-->
+<!--                                        <div class="alert alert-success mb-0 py-2 text-center">-->
+<!--                                            <i class="bi bi-check-circle"></i> Đã thanh toán đủ-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+                                    <!-- ✅ SỬA HOÀN CHỈNH - Dùng totalPaid từ controller -->
                                     <hr class="my-2">
 
                                     <div class="d-flex justify-content-between mb-2">
@@ -628,9 +668,11 @@
                                         <strong class="text-success" th:text="${booking.getFormattedAmount(booking.totalAmount)}"></strong>
                                     </div>
 
+                                    <!-- ✅ SỬA LẠI - Dùng cú pháp Thymeleaf đúng -->
                                     <div class="d-flex justify-content-between mb-1">
                                         <span class="small">Đã thanh toán:</span>
-                                        <span class="small text-success fw-bold" th:text="${booking.getFormattedAmount(booking.totalAmount.subtract(booking.getRemainingAmount()))}"></span>
+                                        <span class="small text-success fw-bold"
+                                              th:text="${totalPaid != null} ? ${booking.getFormattedAmount(totalPaid)} : ${booking.getFormattedAmount(booking.totalAmount.subtract(booking.remainingAmount))}"></span>
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <span class="small">Còn lại:</span>
@@ -646,8 +688,8 @@
                                         <span class="badge bg-primary" th:text="${booking.paymentMethod}"></span>
                                     </div>
 
-                                    <!-- Nút xác nhận thanh toán phần còn lại -->
-                                    <div th:if="${booking.paymentStatus != T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PAID}">
+                                    <!-- ✅ SỬA - Kiểm tra remaining amount thay vì paymentStatus -->
+                                    <div th:if="${booking.getRemainingAmount().compareTo(T(java.math.BigDecimal).ZERO) > 0}">
                                         <button type="button" class="btn btn-success w-100 btn-sm"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#confirmRemainingModal">
@@ -655,7 +697,7 @@
                                         </button>
                                     </div>
 
-                                    <div th:if="${booking.paymentStatus == T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PAID}">
+                                    <div th:if="${booking.getRemainingAmount().compareTo(T(java.math.BigDecimal).ZERO) <= 0}">
                                         <div class="alert alert-success mb-0 py-2 text-center">
                                             <i class="bi bi-check-circle"></i> Đã thanh toán đủ
                                         </div>

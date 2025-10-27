@@ -1214,11 +1214,48 @@
 <!--            </div>-->
 <!--          </div>-->
 
-          <div class="payment-option" onclick="selectPaymentType('full', event)">
+<!--          <div class="payment-option" onclick="selectPaymentType('full', event)">-->
+<!--            <div class="form-check">-->
+<!--              <input class="form-check-input" type="radio" name="isDepositOnly"-->
+<!--                     id="fullPayment" value="false" checked>-->
+<!--              <label class="form-check-label" for="fullPayment">-->
+<!--                <strong>Thanh toán toàn bộ</strong>-->
+<!--                <div class="text-muted mt-1">-->
+<!--                  Thanh toán-->
+<!--                  <span th:text="${#numbers.formatDecimal(bookingSession.totalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">7,900,000đ</span>-->
+<!--                </div>-->
+<!--                <div class="text-success mt-1">-->
+<!--                  <i class="fas fa-gift me-1"></i>Giảm thêm 2% khi thanh toán full-->
+<!--                </div>-->
+<!--              </label>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="payment-option" onclick="selectPaymentType('deposit', event)">-->
+<!--            <div class="form-check">-->
+<!--              <input class="form-check-input" type="radio" name="isDepositOnly"-->
+<!--                     id="depositPayment" value="true">-->
+<!--              <label class="form-check-label" for="depositPayment">-->
+<!--                <strong>Đặt cọc 50%</strong>-->
+<!--                <div class="text-muted mt-1">-->
+<!--                  Thanh toán-->
+<!--                  <span th:text="${#numbers.formatDecimal(bookingSession.depositAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">3,950,000đ</span>-->
+<!--                  ngay, phần còn lại thanh toán khi check-in-->
+<!--                </div>-->
+<!--                <div class="text-info mt-1">-->
+<!--                  <i class="fas fa-info-circle me-1"></i>Số tiền còn lại:-->
+<!--                  <span th:text="${#numbers.formatDecimal(bookingSession.remainingAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">3,950,000đ</span>-->
+<!--                </div>-->
+<!--              </label>-->
+<!--            </div>-->
+<!--          </div>-->
+
+          <div class="payment-option">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="isDepositOnly"
-                     id="fullPayment" value="false" checked>
-              <label class="form-check-label" for="fullPayment">
+                     id="fullPayment" value="false" checked
+                     onchange="updatePaymentType('full')">
+              <label class="form-check-label" for="fullPayment" style="cursor: pointer;">
                 <strong>Thanh toán toàn bộ</strong>
                 <div class="text-muted mt-1">
                   Thanh toán
@@ -1231,11 +1268,12 @@
             </div>
           </div>
 
-          <div class="payment-option" onclick="selectPaymentType('deposit', event)">
+          <div class="payment-option">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="isDepositOnly"
-                     id="depositPayment" value="true">
-              <label class="form-check-label" for="depositPayment">
+                     id="depositPayment" value="true"
+                     onchange="updatePaymentType('deposit')">
+              <label class="form-check-label" for="depositPayment" style="cursor: pointer;">
                 <strong>Đặt cọc 50%</strong>
                 <div class="text-muted mt-1">
                   Thanh toán
@@ -1401,32 +1439,19 @@
     });
   });
 
-  // Hàm chọn kiểu thanh toán (full / deposit)
-  // function selectPaymentType(type) {
-  //   const fullRadio = document.getElementById('fullPayment');
-  //   const depositRadio = document.getElementById('depositPayment');
-  //
-  //   if (type === 'full') {
-  //     fullRadio.checked = true;
-  //     updateDisplayAmount(totalAmount, 'Thanh toán toàn bộ');
-  //   } else {
-  //     depositRadio.checked = true;
-  //     updateDisplayAmount(depositAmount, 'Đặt cọc 50% - Còn lại thanh toán khi check-in');
-  //   }
-  // }
-
-  function selectPaymentType(type, event) {
-    event.stopPropagation(); // tránh click trùng radio
-    const fullRadio = document.getElementById('fullPayment');
-    const depositRadio = document.getElementById('depositPayment');
-    const summary = document.getElementById('payment-summary');
+  // ✅ HÀM MỚI - Cập nhật khi chọn full/deposit
+  function updatePaymentType(type) {
+    // Cập nhật visual cho payment-option
+    document.querySelectorAll('.payment-option').forEach(opt => {
+      opt.classList.remove('selected');
+    });
 
     if (type === 'full') {
-      fullRadio.checked = true;
-      summary.innerText = `Thanh toán toàn bộ: ${totalAmount.toLocaleString()}đ (Giảm thêm 2%)`;
+      document.getElementById('fullPayment').closest('.payment-option').classList.add('selected');
+      updateDisplayAmount(totalAmount, 'Thanh toán toàn bộ');
     } else {
-      depositRadio.checked = true;
-      summary.innerText = `Đặt cọc 50%: ${depositAmount.toLocaleString()}đ – Còn lại khi check-in`;
+      document.getElementById('depositPayment').closest('.payment-option').classList.add('selected');
+      updateDisplayAmount(depositAmount, 'Đặt cọc 50% - Còn lại thanh toán khi check-in');
     }
   }
 
@@ -1451,19 +1476,6 @@
   function formatCurrency(amount) {
     return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
   }
-
-  // Event listener khi đổi loại thanh toán
-  document.getElementById('fullPayment').addEventListener('change', function() {
-    if (this.checked) {
-      updateDisplayAmount(totalAmount, 'Thanh toán toàn bộ');
-    }
-  });
-
-  document.getElementById('depositPayment').addEventListener('change', function() {
-    if (this.checked) {
-      updateDisplayAmount(depositAmount, 'Đặt cọc 50% - Còn lại thanh toán khi check-in');
-    }
-  });
 
   // Form submission
   document.getElementById('paymentForm').addEventListener('submit', function(e) {
@@ -1492,10 +1504,16 @@
 
   // Initialize
   document.addEventListener('DOMContentLoaded', function() {
-    // Set default selected payment method theo radio đang check
+    // Set default selected payment method
     const checkedMethod = document.querySelector('input[name="paymentMethod"]:checked');
     if (checkedMethod) {
       checkedMethod.closest('.payment-method').classList.add('selected');
+    }
+
+    // Set default selected payment option
+    const checkedPaymentType = document.querySelector('input[name="isDepositOnly"]:checked');
+    if (checkedPaymentType) {
+      checkedPaymentType.closest('.payment-option').classList.add('selected');
     }
   });
 </script>

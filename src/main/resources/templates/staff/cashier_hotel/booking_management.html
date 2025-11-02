@@ -11,7 +11,9 @@
         .layout-container { display: flex; min-height: 100vh; }
 
         .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+            background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+
             width: 280px;
             min-width: 280px;
             color: white;
@@ -312,7 +314,7 @@
                         <td>
                             <span th:if="${booking.paymentStatus.name() == 'PAID'}" class="badge bg-success">Đã thanh toán</span>
                             <span th:if="${booking.paymentStatus.name() == 'PENDING'}" class="badge bg-warning text-dark">Chưa thanh toán</span>
-                            <span th:if="${booking.paymentStatus.name() == 'PARTIALLY_PAID'}" class="badge bg-secondary">Thanh toán một phần</span>
+                            <span th:if="${booking.paymentStatus.name() == 'PARTIALLY_PAID'}" class="badge bg-warning">Đã cọc</span>
                             <span th:if="${booking.paymentStatus.name() == 'REFUNDED'}" class="badge bg-info text-dark">Hoàn tiền</span>
                             <span th:if="${booking.paymentStatus.name() == 'FAILED'}" class="badge bg-danger">Thất bại</span>
                         </td>

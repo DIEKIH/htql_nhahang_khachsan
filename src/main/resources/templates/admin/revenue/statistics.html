@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống kê Doanh thu - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body { font-size: 0.9rem; background-color: #f8f9fa; }
+        .stat-card {
+            border-left: 4px solid;
+            transition: transform 0.2s;
+            height: 100%;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .stat-card.hotel { border-color: #0d6efd; }
+        .stat-card.restaurant { border-color: #198754; }
+        .stat-card.total { border-color: #6f42c1; }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+        .growth-badge {
+            font-size: 0.85rem;
+            padding: 0.35em 0.75em;
+        }
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        .sidebar .nav-link {
+            color: #adb5bd;
+            border-radius: 0.375rem;
+            margin: 0.125rem 0.5rem;
+            padding: 0.7rem 1rem;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #2c3034;
+            color: #fff;
+            transform: translateX(5px);
+        }
+        .sidebar .nav-link.active {
+            background-color: #0d6efd;
+            color: #fff;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div th:replace="fragments/admin_sidebar :: admin_sidebar"></div>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h2><i class="fas fa-chart-line me-2"></i>Thống kê Doanh thu</h2>
+            </div>
+
+            <!-- Bộ lọc -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0"><i class="fas fa-filter me-2"></i>Bộ lọc thống kê</h6>
+                </div>
+                <div class="card-body">
+                    <form method="get" th:action="@{/admin/revenue}">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Chi nhánh</label>
+                                <select class="form-select" name="branchId" id="branchSelect">
+                                    <option value="">Tất cả chi nhánh</option>
+                                    <option th:each="branch : ${branches}"
+                                            th:value="${branch.id}"
+                                            th:text="${branch.name}"
+                                            th:selected="${branch.id == selectedBranchId}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold">Khoảng thời gian</label>
+                                <select class="form-select" name="period" id="periodSelect">
+                                    <option value="WEEK" th:selected="${selectedPeriod == 'WEEK'}">Theo tuần</option>
+                                    <option value="MONTH" th:selected="${selectedPeriod == 'MONTH'}">Theo tháng</option>
+                                    <option value="QUARTER" th:selected="${selectedPeriod == 'QUARTER'}">Theo quý</option>
+                                    <option value="YEAR" th:selected="${selectedPeriod == 'YEAR'}">Theo năm</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold">Từ ngày</label>
+                                <input type="date" class="form-control" name="fromDate" th:value="${fromDate}">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold">Đến ngày</label>
+                                <input type="date" class="form-control" name="toDate" th:value="${toDate}">
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search me-2"></i>Xem thống kê
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Thống kê tổng quan -->
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3">
+                    <div class="card stat-card hotel shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1">Doanh thu Khách sạn</p>
+                                    <h3 class="stat-value text-primary"
+                                        th:text="${#numbers.formatDecimal(statistics.hotelRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                    </h3>
+                                    <small class="text-muted">
+                                        <i class="fas fa-bed me-1"></i>
+                                        <span th:text="${statistics.totalBookings} + ' bookings'"></span>
+                                    </small>
+                                </div>
+                                <div class="fs-1 text-primary">
+                                    <i class="fas fa-hotel"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card stat-card restaurant shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1">Doanh thu Nhà hàng</p>
+                                    <h3 class="stat-value text-success"
+                                        th:text="${#numbers.formatDecimal(statistics.restaurantRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                    </h3>
+                                    <small class="text-muted">
+                                        <i class="fas fa-receipt me-1"></i>
+                                        <span th:text="${statistics.totalOrders} + ' orders'"></span>
+                                    </small>
+                                </div>
+                                <div class="fs-1 text-success">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card stat-card total shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1">Tổng Doanh thu</p>
+                                    <h3 class="stat-value text-purple"
+                                        th:text="${#numbers.formatDecimal(statistics.totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                    </h3>
+                                    <span th:if="${statistics.growthRate != null && statistics.growthRate.compareTo(0) >= 0}"
+                                          class="badge growth-badge bg-success">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span th:text="${#numbers.formatDecimal(statistics.growthRate, 1, 'COMMA', 2, 'POINT')} + '%'"></span>
+                                    </span>
+                                    <span th:if="${statistics.growthRate != null && statistics.growthRate.compareTo(0) < 0}"
+                                          class="badge growth-badge bg-danger">
+                                        <i class="fas fa-arrow-down"></i>
+                                        <span th:text="${#numbers.formatDecimal(statistics.growthRate, 1, 'COMMA', 2, 'POINT')} + '%'"></span>
+                                    </span>
+                                </div>
+                                <div class="fs-1" style="color: #6f42c1;">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ -->
+            <div class="row mb-4">
+                <!-- Biểu đồ cột -->
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Biểu đồ Cột - So sánh Doanh thu</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biểu đồ tròn -->
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Biểu đồ Tròn - Tỷ lệ Doanh thu</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biểu đồ đường -->
+                <div class="col-12 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Biểu đồ Đường - Xu hướng Tăng trưởng</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="height: 400px;">
+                                <canvas id="lineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng chi tiết -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"><i class="fas fa-table me-2"></i>Chi tiết Doanh thu theo Khoảng thời gian</h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped mb-0">
+                            <thead class="table-dark">
+                            <tr>
+                                <th>Khoảng thời gian</th>
+                                <th class="text-end">Khách sạn</th>
+                                <th class="text-end">Nhà hàng</th>
+                                <th class="text-end">Tổng doanh thu</th>
+                                <th class="text-center">Bookings</th>
+                                <th class="text-center">Orders</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${#lists.isEmpty(statistics.chartData)}">
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox fa-3x d-block mb-2"></i>
+                                    Không có dữ liệu trong khoảng thời gian này
+                                </td>
+                            </tr>
+                            <tr th:each="data : ${statistics.chartData}">
+                                <td><strong th:text="${data.label}"></strong></td>
+                                <td class="text-end text-primary fw-bold"
+                                    th:text="${#numbers.formatDecimal(data.hotelRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                </td>
+                                <td class="text-end text-success fw-bold"
+                                    th:text="${#numbers.formatDecimal(data.restaurantRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                </td>
+                                <td class="text-end fw-bold"
+                                    th:text="${#numbers.formatDecimal(data.totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary" th:text="${data.bookingCount}"></span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success" th:text="${data.orderCount}"></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot class="table-light">
+                            <tr class="fw-bold">
+                                <td>TỔNG CỘNG</td>
+                                <td class="text-end text-primary"
+                                    th:text="${#numbers.formatDecimal(statistics.hotelRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                </td>
+                                <td class="text-end text-success"
+                                    th:text="${#numbers.formatDecimal(statistics.restaurantRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                </td>
+                                <td class="text-end"
+                                    th:text="${#numbers.formatDecimal(statistics.totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary" th:text="${statistics.totalBookings}"></span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success" th:text="${statistics.totalOrders}"></span>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const chartData = /*[[${statistics.chartData}]]*/ [];
+
+    // Chuẩn bị dữ liệu cho biểu đồ
+    const labels = chartData.map(d => d.label);
+    const hotelData = chartData.map(d => d.hotelRevenue);
+    const restaurantData = chartData.map(d => d.restaurantRevenue);
+    const totalData = chartData.map(d => d.totalRevenue);
+
+    // Biểu đồ cột
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Khách sạn',
+                    data: hotelData,
+                    backgroundColor: 'rgba(13, 110, 253, 0.8)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Nhà hàng',
+                    data: restaurantData,
+                    backgroundColor: 'rgba(25, 135, 84, 0.8)',
+                    borderColor: 'rgba(25, 135, 84, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += new Intl.NumberFormat('vi-VN').format(context.parsed.y) + ' ₫';
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return new Intl.NumberFormat('vi-VN', {
+                                notation: 'compact',
+                                compactDisplay: 'short'
+                            }).format(value) + ' ₫';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Biểu đồ tròn
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    const totalHotel = hotelData.reduce((a, b) => a + b, 0);
+    const totalRestaurant = restaurantData.reduce((a, b) => a + b, 0);
+
+    new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Khách sạn', 'Nhà hàng'],
+            datasets: [{
+                data: [totalHotel, totalRestaurant],
+                backgroundColor: [
+                    'rgba(13, 110, 253, 0.8)',
+                    'rgba(25, 135, 84, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(13, 110, 253, 1)',
+                    'rgba(25, 135, 84, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return label + ': ' + new Intl.NumberFormat('vi-VN').format(value) + ' ₫ (' + percentage + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Biểu đồ đường
+    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    new Chart(lineCtx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Tổng doanh thu',
+                    data: totalData,
+                    borderColor: 'rgba(111, 66, 193, 1)',
+                    backgroundColor: 'rgba(111, 66, 193, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: 'rgba(111, 66, 193, 1)',
+                },
+                {
+                    label: 'Khách sạn',
+                    data: hotelData,
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: false,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                },
+                {
+                    label: 'Nhà hàng',
+                    data: restaurantData,
+                    borderColor: 'rgba(25, 135, 84, 1)',
+                    backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: false,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += new Intl.NumberFormat('vi-VN').format(context.parsed.y) + ' ₫';
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return new Intl.NumberFormat('vi-VN', {
+                                notation: 'compact',
+                                compactDisplay: 'short'
+                            }).format(value) + ' ₫';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Auto submit khi chọn chi nhánh
+    document.getElementById('branchSelect').addEventListener('change', function() {
+        this.form.submit();
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

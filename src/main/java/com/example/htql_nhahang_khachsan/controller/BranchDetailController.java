@@ -96,14 +96,20 @@ public class BranchDetailController {
 //        }
 //    }
 
+    // Thêm vào BranchDetailController.java
+    private final BranchViewHistoryService viewHistoryService;
+
     @GetMapping("/branches/{id}")
-    public String showBranchDetail(@PathVariable Long id, Model model) {
+    public String showBranchDetail(@PathVariable Long id, Model model, HttpSession session) {
         try {
             BranchResponse branch = branchService.getBranchById(id);
 
             if (branch.getStatus() != BranchStatus.ACTIVE) {
                 return "redirect:/";
             }
+
+            // **MỚI: Ghi nhận lượt xem**
+            viewHistoryService.recordBranchView(id, session);
 
             model.addAttribute("branch", branch);
             BranchType branchType = branch.getType();
@@ -129,18 +135,67 @@ public class BranchDetailController {
                 List<TableResponse> tables = tableService.getTablesByBranch(id);
                 model.addAttribute("tables", tables);
 
-                // Thêm form đặt bàn rỗng
                 model.addAttribute("bookingRequest", new TableBookingRequest());
             }
 
             List<PromotionResponse> activePromotions = promotionService.getActivePromotionsByBranch(id);
             model.addAttribute("promotions", activePromotions);
 
+            // **MỚI: Thêm gợi ý chi nhánh liên quan**
+            List<BranchResponse> suggestedBranches = viewHistoryService.getSuggestedBranches(session, 3);
+            model.addAttribute("suggestedBranches", suggestedBranches);
+
             return "customer/branches/detail";
         } catch (Exception e) {
             return "redirect:/";
         }
     }
+
+//    @GetMapping("/branches/{id}")
+//    public String showBranchDetail(@PathVariable Long id, Model model) {
+//        try {
+//            BranchResponse branch = branchService.getBranchById(id);
+//
+//            if (branch.getStatus() != BranchStatus.ACTIVE) {
+//                return "redirect:/";
+//            }
+//
+//            model.addAttribute("branch", branch);
+//            BranchType branchType = branch.getType();
+//
+//            if (branchType == BranchType.HOTEL || branchType == BranchType.BOTH) {
+//                List<RoomTypeResponse> roomTypes = roomService.getRoomTypesByBranchWithPromotions(id);
+//                model.addAttribute("roomTypes", roomTypes != null ? roomTypes : new ArrayList<>());
+//
+//                List<RoomResponse> rooms = roomService.getRoomsByBranchWithDetails(id);
+//                model.addAttribute("rooms", rooms != null ? rooms : new ArrayList<>());
+//            } else {
+//                model.addAttribute("roomTypes", new ArrayList<>());
+//                model.addAttribute("rooms", new ArrayList<>());
+//            }
+//
+//            if (branchType == BranchType.RESTAURANT || branchType == BranchType.BOTH) {
+//                List<MenuCategoryResponse> menuCategories = menuService.getCategoriesByBranch(id);
+//                model.addAttribute("menuCategories", menuCategories);
+//
+//                List<MenuItemResponse> menuItems = menuService.getMenuItemsByBranchWithPromotions(id);
+//                model.addAttribute("menuItems", menuItems);
+//
+//                List<TableResponse> tables = tableService.getTablesByBranch(id);
+//                model.addAttribute("tables", tables);
+//
+//                // Thêm form đặt bàn rỗng
+//                model.addAttribute("bookingRequest", new TableBookingRequest());
+//            }
+//
+//            List<PromotionResponse> activePromotions = promotionService.getActivePromotionsByBranch(id);
+//            model.addAttribute("promotions", activePromotions);
+//
+//            return "customer/branches/detail";
+//        } catch (Exception e) {
+//            return "redirect:/";
+//        }
+//    }
 
     // API endpoint để lấy dữ liệu động qua AJAX
     @GetMapping("/api/branches/{id}/rooms")

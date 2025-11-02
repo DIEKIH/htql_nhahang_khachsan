@@ -188,6 +188,12 @@ public class ManagerMenuCategoryController {
 
         return "redirect:/manager/menu-categories";
     }
+
+    @PostMapping("/manager/logout")
+    public String logout(HttpSession session) {
+        authService.logout(session);
+        return "redirect:/manager/login";
+    }
 }
 
 

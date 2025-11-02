@@ -1,3 +1,537 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Trạng thái phòng - Realtime</title>-->
+<!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">-->
+<!--  <style>-->
+<!--    body { background: #f8f9fa; }-->
+<!--    .header-card {-->
+<!--      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
+<!--      color: white;-->
+<!--      border-radius: 12px;-->
+<!--      padding: 20px;-->
+<!--      margin-bottom: 20px;-->
+<!--    }-->
+
+<!--    .room-card {-->
+<!--      background: white;-->
+<!--      border-radius: 10px;-->
+<!--      padding: 15px;-->
+<!--      margin-bottom: 15px;-->
+<!--      box-shadow: 0 2px 8px rgba(0,0,0,0.08);-->
+<!--      transition: all 0.3s;-->
+<!--      cursor: pointer;-->
+<!--      border-left: 4px solid;-->
+<!--    }-->
+
+<!--    .room-card:hover {-->
+<!--      transform: translateY(-2px);-->
+<!--      box-shadow: 0 4px 12px rgba(0,0,0,0.15);-->
+<!--    }-->
+
+<!--    .room-card.available {-->
+<!--      border-left-color: #28a745;-->
+<!--    }-->
+
+<!--    .room-card.occupied {-->
+<!--      border-left-color: #dc3545;-->
+<!--    }-->
+
+<!--    .room-card.cleaning {-->
+<!--      border-left-color: #ffc107;-->
+<!--    }-->
+
+<!--    .room-card.maintenance {-->
+<!--      border-left-color: #6c757d;-->
+<!--    }-->
+
+<!--    .room-number {-->
+<!--      font-size: 1.5rem;-->
+<!--      font-weight: bold;-->
+<!--      color: #212529;-->
+<!--    }-->
+
+<!--    .room-status-badge {-->
+<!--      padding: 6px 12px;-->
+<!--      border-radius: 20px;-->
+<!--      font-size: 0.85rem;-->
+<!--      font-weight: 500;-->
+<!--    }-->
+
+<!--    .legend {-->
+<!--      background: white;-->
+<!--      border-radius: 10px;-->
+<!--      padding: 15px;-->
+<!--      margin-bottom: 20px;-->
+<!--      box-shadow: 0 2px 8px rgba(0,0,0,0.08);-->
+<!--    }-->
+
+<!--    .legend-item {-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      gap: 10px;-->
+<!--      margin-bottom: 10px;-->
+<!--    }-->
+
+<!--    .legend-color {-->
+<!--      width: 20px;-->
+<!--      height: 20px;-->
+<!--      border-radius: 4px;-->
+<!--    }-->
+
+<!--    .filter-section {-->
+<!--      background: white;-->
+<!--      border-radius: 10px;-->
+<!--      padding: 20px;-->
+<!--      margin-bottom: 20px;-->
+<!--      box-shadow: 0 2px 8px rgba(0,0,0,0.08);-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container-fluid py-4">-->
+<!--  &lt;!&ndash; Header &ndash;&gt;-->
+<!--  <div class="header-card">-->
+<!--    <div class="d-flex justify-content-between align-items-center">-->
+<!--      <div>-->
+<!--        <h3 class="mb-1"><i class="bi bi-house-gear me-2"></i>Trạng thái phòng - Realtime</h3>-->
+<!--        <p class="mb-0 opacity-75">Xem trạng thái phòng trong ngày hôm nay</p>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <button class="btn btn-light me-2" onclick="window.location.reload()">-->
+<!--          <i class="bi bi-arrow-clockwise me-2"></i>Làm mới-->
+<!--        </button>-->
+<!--        <a href="/cashier-hotel/booking-management" class="btn btn-light">-->
+<!--          <i class="bi bi-arrow-left me-2"></i>Quay lại-->
+<!--        </a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div class="row">-->
+<!--    &lt;!&ndash; Filters & Legend &ndash;&gt;-->
+<!--    <div class="col-md-3">-->
+<!--      <div class="legend">-->
+<!--        <h6 class="mb-3"><strong>Chú thích:</strong></h6>-->
+<!--        <div class="legend-item">-->
+<!--          <div class="legend-color" style="background: #28a745;"></div>-->
+<!--          <span>Trống (Available)</span>-->
+<!--        </div>-->
+<!--        <div class="legend-item">-->
+<!--          <div class="legend-color" style="background: #dc3545;"></div>-->
+<!--          <span>Đang ở (Occupied)</span>-->
+<!--        </div>-->
+<!--        <div class="legend-item">-->
+<!--          <div class="legend-color" style="background: #ffc107;"></div>-->
+<!--          <span>Đang dọn (Cleaning)</span>-->
+<!--        </div>-->
+<!--        <div class="legend-item">-->
+<!--          <div class="legend-color" style="background: #6c757d;"></div>-->
+<!--          <span>Bảo trì (Maintenance)</span>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Stats &ndash;&gt;-->
+<!--      <div class="filter-section">-->
+<!--        <h6 class="mb-3"><strong>Thống kê:</strong></h6>-->
+<!--        <div class="d-flex justify-content-between mb-2">-->
+<!--          <span>Tổng phòng:</span>-->
+<!--          <strong id="totalRooms" th:text="${#lists.size(rooms)}">0</strong>-->
+<!--        </div>-->
+<!--        <div class="d-flex justify-content-between mb-2">-->
+<!--          <span>Trống:</span>-->
+<!--          <strong class="text-success" id="availableCount">0</strong>-->
+<!--        </div>-->
+<!--        <div class="d-flex justify-content-between mb-2">-->
+<!--          <span>Đang ở:</span>-->
+<!--          <strong class="text-danger" id="occupiedCount">0</strong>-->
+<!--        </div>-->
+<!--        <div class="d-flex justify-content-between mb-2">-->
+<!--          <span>Đang dọn:</span>-->
+<!--          <strong class="text-warning" id="cleaningCount">0</strong>-->
+<!--        </div>-->
+<!--        <div class="d-flex justify-content-between">-->
+<!--          <span>Bảo trì:</span>-->
+<!--          <strong class="text-secondary" id="maintenanceCount">0</strong>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Filter &ndash;&gt;-->
+<!--      <div class="filter-section">-->
+<!--        <h6 class="mb-3"><strong>Lọc phòng:</strong></h6>-->
+<!--        <div class="mb-3">-->
+<!--          <label class="form-label">Trạng thái</label>-->
+<!--          <select class="form-select" id="statusFilter" onchange="filterRooms()">-->
+<!--            <option value="">Tất cả</option>-->
+<!--            <option value="AVAILABLE">Trống</option>-->
+<!--            <option value="OCCUPIED">Đang ở</option>-->
+<!--            <option value="CLEANING">Đang dọn</option>-->
+<!--            <option value="MAINTENANCE">Bảo trì</option>-->
+<!--          </select>-->
+<!--        </div>-->
+<!--        <div class="mb-3">-->
+<!--          <label class="form-label">Tầng</label>-->
+<!--          <select class="form-select" id="floorFilter" onchange="filterRooms()">-->
+<!--            <option value="">Tất cả tầng</option>-->
+<!--            &lt;!&ndash; Will be populated by JS &ndash;&gt;-->
+<!--          </select>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Room Grid &ndash;&gt;-->
+<!--    <div class="col-md-9">-->
+<!--      <div class="row" id="roomGrid">-->
+<!--        <div th:each="room : ${rooms}"-->
+<!--             class="col-md-4 col-sm-6 room-item"-->
+<!--             th:classappend="${room.status.toString().toLowerCase()}"-->
+<!--             th:attr="data-status=${room.status}, data-floor=${room.floor}">-->
+<!--          <div class="room-card"-->
+<!--               th:classappend="${room.status.toString().toLowerCase()}"-->
+<!--               onclick="showRoomDetail(this)"-->
+<!--               th:attr="data-room-id=${room.roomId},-->
+<!--                                  data-room-number=${room.roomNumber},-->
+<!--                                  data-room-type=${room.roomType},-->
+<!--                                  data-status=${room.status},-->
+<!--                                  data-booking-code=${room.bookingCode},-->
+<!--                                  data-guest-name=${room.guestName},-->
+<!--                                  data-check-in=${room.checkInDate},-->
+<!--                                  data-check-out=${room.checkOutDate}">-->
+
+<!--            <div class="d-flex justify-content-between align-items-start mb-2">-->
+<!--              <div class="room-number" th:text="${room.roomNumber}">101</div>-->
+<!--              <span th:if="${room.status.name() == 'AVAILABLE'}"-->
+<!--                    class="room-status-badge bg-success text-white">Trống</span>-->
+<!--              <span th:if="${room.status.name() == 'OCCUPIED'}"-->
+<!--                    class="room-status-badge bg-danger text-white">Đang ở</span>-->
+<!--              <span th:if="${room.status.name() == 'CLEANING'}"-->
+<!--                    class="room-status-badge bg-warning text-dark">Đang dọn</span>-->
+<!--              <span th:if="${room.status.name() == 'MAINTENANCE'}"-->
+<!--                    class="room-status-badge bg-secondary text-white">Bảo trì</span>-->
+<!--            </div>-->
+
+<!--            <div class="small text-muted mb-2" th:text="${room.roomType}"></div>-->
+
+<!--            <div th:if="${room.guestName != null and !#strings.isEmpty(room.guestName)}">-->
+<!--              <div class="small">-->
+<!--                <i class="bi bi-person me-1"></i>-->
+<!--                <span th:text="${room.guestName}"></span>-->
+<!--              </div>-->
+<!--              <div class="small text-muted">-->
+<!--                <i class="bi bi-calendar me-1"></i>-->
+<!--                <span th:text="${#temporals.format(room.checkInDate, 'dd/MM')} + ' - ' + ${#temporals.format(room.checkOutDate, 'dd/MM')}">-->
+<!--                </span>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div th:if="${room.guestName == null or #strings.isEmpty(room.guestName)}" class="text-muted small">-->
+<!--              <i class="bi bi-check-circle me-1"></i>Sẵn sàng cho khách mới-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Room Detail Modal &ndash;&gt;-->
+<!--<div class="modal fade" id="roomDetailModal" tabindex="-1">-->
+<!--  <div class="modal-dialog modal-lg">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h5 class="modal-title">-->
+<!--          <i class="bi bi-door-open me-2"></i>Chi tiết phòng <span id="modalRoomNumber"></span>-->
+<!--        </h5>-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <div class="row">-->
+<!--          <div class="col-md-6">-->
+<!--            <div class="mb-3">-->
+<!--              <label class="text-muted small">Số phòng</label>-->
+<!--              <div class="fw-bold fs-5" id="detailRoomNumber"></div>-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--              <label class="text-muted small">Loại phòng</label>-->
+<!--              <div id="detailRoomType"></div>-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--              <label class="text-muted small">Trạng thái</label>-->
+<!--              <div id="detailStatus"></div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="col-md-6">-->
+<!--            <div class="mb-3">-->
+<!--              <label class="text-muted small">Mã booking</label>-->
+<!--              <div id="detailBookingCode">-</div>-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--              <label class="text-muted small">Tên khách</label>-->
+<!--              <div id="detailGuestName">-</div>-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--              <label class="text-muted small">Thời gian lưu trú</label>-->
+<!--              <div id="detailStayPeriod">-</div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>-->
+<!--        <button type="button" class="btn btn-primary" id="viewBookingBtn" style="display: none;">-->
+<!--          <i class="bi bi-eye me-2"></i>Xem booking-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script>-->
+<!--  // Calculate statistics-->
+<!--  function calculateStats() {-->
+<!--    const rooms = document.querySelectorAll('.room-item');-->
+<!--    let available = 0, occupied = 0, cleaning = 0, maintenance = 0;-->
+<!--    const floors = new Set();-->
+
+<!--    rooms.forEach(room => {-->
+<!--      const status = room.dataset.status;-->
+<!--      const floor = room.dataset.floor;-->
+
+<!--      floors.add(floor);-->
+
+<!--      switch(status) {-->
+<!--        case 'AVAILABLE': available++; break;-->
+<!--        case 'OCCUPIED': occupied++; break;-->
+<!--        case 'CLEANING': cleaning++; break;-->
+<!--        case 'MAINTENANCE': maintenance++; break;-->
+<!--      }-->
+<!--    });-->
+
+<!--    document.getElementById('availableCount').textContent = available;-->
+<!--    document.getElementById('occupiedCount').textContent = occupied;-->
+<!--    document.getElementById('cleaningCount').textContent = cleaning;-->
+<!--    document.getElementById('maintenanceCount').textContent = maintenance;-->
+
+<!--    // Populate floor filter-->
+<!--    const floorFilter = document.getElementById('floorFilter');-->
+<!--    floorFilter.innerHTML = '<option value="">Tất cả tầng</option>';-->
+<!--    Array.from(floors).sort().forEach(floor => {-->
+<!--      const option = document.createElement('option');-->
+<!--      option.value = floor;-->
+<!--      option.textContent = 'Tầng ' + floor;-->
+<!--      floorFilter.appendChild(option);-->
+<!--    });-->
+<!--  }-->
+
+<!--  // Filter rooms-->
+<!--  function filterRooms() {-->
+<!--    const statusFilter = document.getElementById('statusFilter').value;-->
+<!--    const floorFilter = document.getElementById('floorFilter').value;-->
+
+<!--    document.querySelectorAll('.room-item').forEach(room => {-->
+<!--      const status = room.dataset.status;-->
+<!--      const floor = room.dataset.floor;-->
+
+<!--      const statusMatch = !statusFilter || status === statusFilter;-->
+<!--      const floorMatch = !floorFilter || floor === floorFilter;-->
+
+<!--      room.style.display = (statusMatch && floorMatch) ? 'block' : 'none';-->
+<!--    });-->
+<!--  }-->
+
+<!--  // Show room detail-->
+<!--  function showRoomDetail(card) {-->
+<!--    const roomNumber = card.dataset.roomNumber;-->
+<!--    const roomType = card.dataset.roomType;-->
+<!--    const status = card.dataset.status;-->
+<!--    const bookingCode = card.dataset.bookingCode;-->
+<!--    const guestName = card.dataset.guestName;-->
+<!--    const checkIn = card.dataset.checkIn;-->
+<!--    const checkOut = card.dataset.checkOut;-->
+
+<!--    document.getElementById('modalRoomNumber').textContent = roomNumber;-->
+<!--    document.getElementById('detailRoomNumber').textContent = roomNumber;-->
+<!--    document.getElementById('detailRoomType').textContent = roomType;-->
+
+<!--    // Status badge-->
+<!--    let statusHtml = '';-->
+<!--    switch(status) {-->
+<!--      case 'AVAILABLE':-->
+<!--        statusHtml = '<span class="badge bg-success">Trống</span>';-->
+<!--        break;-->
+<!--      case 'OCCUPIED':-->
+<!--        statusHtml = '<span class="badge bg-danger">Đang ở</span>';-->
+<!--        break;-->
+<!--      case 'CLEANING':-->
+<!--        statusHtml = '<span class="badge bg-warning text-dark">Đang dọn</span>';-->
+<!--        break;-->
+<!--      case 'MAINTENANCE':-->
+<!--        statusHtml = '<span class="badge bg-secondary">Bảo trì</span>';-->
+<!--        break;-->
+<!--    }-->
+<!--    document.getElementById('detailStatus').innerHTML = statusHtml;-->
+
+<!--    // Booking info-->
+<!--    if (bookingCode && bookingCode !== 'null' && bookingCode !== 'undefined') {-->
+<!--      document.getElementById('detailBookingCode').innerHTML = `<code>${bookingCode}</code>`;-->
+<!--      document.getElementById('detailGuestName').textContent = guestName || '-';-->
+<!--      document.getElementById('detailStayPeriod').textContent = `${checkIn} → ${checkOut}`;-->
+
+<!--      const viewBtn = document.getElementById('viewBookingBtn');-->
+<!--      viewBtn.style.display = 'block';-->
+<!--      viewBtn.onclick = () => {-->
+<!--        window.location.href = '/cashier-hotel/booking-management?search=' + bookingCode;-->
+<!--      };-->
+<!--    } else {-->
+<!--      document.getElementById('detailBookingCode').textContent = '-';-->
+<!--      document.getElementById('detailGuestName').textContent = '-';-->
+<!--      document.getElementById('detailStayPeriod').textContent = '-';-->
+<!--      document.getElementById('viewBookingBtn').style.display = 'none';-->
+<!--    }-->
+
+<!--    new bootstrap.Modal(document.getElementById('roomDetailModal')).show();-->
+<!--  }-->
+
+<!--  // Initialize-->
+<!--  calculateStats();-->
+
+<!--  // Auto refresh every 30 seconds-->
+<!--  setInterval(() => {-->
+<!--    console.log('Auto refreshing room status...');-->
+<!--    refreshRoomStatus();-->
+<!--  }, 30000);-->
+
+<!--  // Function to refresh room status via API-->
+<!--  async function refreshRoomStatus() {-->
+<!--    try {-->
+<!--      const response = await fetch('/cashier-hotel/api/room-status');-->
+<!--      if (!response.ok) throw new Error('Failed to fetch');-->
+
+<!--      const rooms = await response.json();-->
+<!--      updateRoomGrid(rooms);-->
+
+<!--      // Show refresh notification-->
+<!--      showNotification('Đã cập nhật trạng thái phòng', 'success');-->
+<!--    } catch (error) {-->
+<!--      console.error('Error refreshing room status:', error);-->
+<!--      showNotification('Không thể cập nhật trạng thái', 'danger');-->
+<!--    }-->
+<!--  }-->
+
+<!--  // Update room grid with new data-->
+<!--  function updateRoomGrid(rooms) {-->
+<!--    const roomGrid = document.getElementById('roomGrid');-->
+<!--    roomGrid.innerHTML = '';-->
+
+<!--    rooms.forEach(room => {-->
+<!--      const roomItem = document.createElement('div');-->
+<!--      roomItem.className = 'col-md-4 col-sm-6 room-item';-->
+<!--      roomItem.setAttribute('data-status', room.status);-->
+<!--      roomItem.setAttribute('data-floor', room.floor);-->
+
+<!--      let statusClass = room.status.toLowerCase();-->
+<!--      let statusBadge = '';-->
+<!--      let statusText = '';-->
+
+<!--      switch(room.status) {-->
+<!--        case 'AVAILABLE':-->
+<!--          statusBadge = 'bg-success';-->
+<!--          statusText = 'Trống';-->
+<!--          break;-->
+<!--        case 'OCCUPIED':-->
+<!--          statusBadge = 'bg-danger';-->
+<!--          statusText = 'Đang ở';-->
+<!--          break;-->
+<!--        case 'CLEANING':-->
+<!--          statusBadge = 'bg-warning text-dark';-->
+<!--          statusText = 'Đang dọn';-->
+<!--          break;-->
+<!--        case 'MAINTENANCE':-->
+<!--          statusBadge = 'bg-secondary';-->
+<!--          statusText = 'Bảo trì';-->
+<!--          break;-->
+<!--      }-->
+
+<!--      let guestInfo = '';-->
+<!--      if (room.guestName) {-->
+<!--        guestInfo = `-->
+<!--                <div>-->
+<!--                    <div class="small">-->
+<!--                        <i class="bi bi-person me-1"></i>-->
+<!--                        <span>${room.guestName}</span>-->
+<!--                    </div>-->
+<!--                    <div class="small text-muted">-->
+<!--                        <i class="bi bi-calendar me-1"></i>-->
+<!--                        <span>${formatDate(room.checkInDate)} - ${formatDate(room.checkOutDate)}</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            `;-->
+<!--      } else {-->
+<!--        guestInfo = `-->
+<!--                <div class="text-muted small">-->
+<!--                    <i class="bi bi-check-circle me-1"></i>Sẵn sàng cho khách mới-->
+<!--                </div>-->
+<!--            `;-->
+<!--      }-->
+
+<!--      roomItem.innerHTML = `-->
+<!--            <div class="room-card ${statusClass}" onclick="showRoomDetail(this)"-->
+<!--                 data-room-id="${room.roomId}"-->
+<!--                 data-room-number="${room.roomNumber}"-->
+<!--                 data-room-type="${room.roomType}"-->
+<!--                 data-status="${room.status}"-->
+<!--                 data-booking-code="${room.bookingCode || ''}"-->
+<!--                 data-guest-name="${room.guestName || ''}"-->
+<!--                 data-check-in="${room.checkInDate || ''}"-->
+<!--                 data-check-out="${room.checkOutDate || ''}">-->
+
+<!--                <div class="d-flex justify-content-between align-items-start mb-2">-->
+<!--                    <div class="room-number">${room.roomNumber}</div>-->
+<!--                    <span class="room-status-badge ${statusBadge}">${statusText}</span>-->
+<!--                </div>-->
+
+<!--                <div class="small text-muted mb-2">${room.roomType}</div>-->
+<!--                ${guestInfo}-->
+<!--            </div>-->
+<!--        `;-->
+
+<!--      roomGrid.appendChild(roomItem);-->
+<!--    });-->
+
+<!--    calculateStats();-->
+<!--  }-->
+
+<!--  // Format date helper-->
+<!--  function formatDate(dateStr) {-->
+<!--    if (!dateStr) return '';-->
+<!--    const date = new Date(dateStr);-->
+<!--    return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });-->
+<!--  }-->
+
+<!--  // Show notification-->
+<!--  function showNotification(message, type) {-->
+<!--    const toast = document.createElement('div');-->
+<!--    toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;-->
+<!--    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';-->
+<!--    toast.innerHTML = `-->
+<!--        ${message}-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
+<!--    `;-->
+
+<!--    document.body.appendChild(toast);-->
+
+<!--    setTimeout(() => {-->
+<!--      toast.remove();-->
+<!--    }, 3000);-->
+<!--  }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -8,6 +542,47 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body { background: #f8f9fa; }
+
+    .layout-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+      background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+
+      width: 280px;
+      min-width: 280px;
+      color: white;
+      padding: 20px;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar .nav-link {
+      color: rgba(255,255,255,0.9);
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin: 3px 0;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+    }
+
+    .sidebar .nav-link:hover,
+    .sidebar .nav-link.active {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      margin-left: 280px;
+    }
+
     .header-card {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
@@ -89,110 +664,161 @@
       margin-bottom: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+    }
   </style>
 </head>
 <body>
-<div class="container-fluid py-4">
-  <!-- Header -->
-  <div class="header-card">
-    <div class="d-flex justify-content-between align-items-center">
-      <div>
-        <h3 class="mb-1"><i class="bi bi-house-gear me-2"></i>Trạng thái phòng - Realtime</h3>
-        <p class="mb-0 opacity-75">Xem trạng thái phòng trong ngày hôm nay</p>
+<div class="layout-container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="text-center mb-4">
+      <i class="bi bi-building fs-1"></i>
+      <h5 class="mt-2 mb-0">Lễ Tân</h5>
+      <small class="opacity-75">Hệ thống quản lý</small>
+    </div>
+
+    <nav class="nav flex-column">
+      <a class="nav-link" href="/cashier-hotel/dashboard">
+        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+      </a>
+      <a class="nav-link" href="/cashier-hotel/booking-management">
+        <i class="bi bi-calendar-check me-2"></i>Quản lý Booking
+      </a>
+      <a class="nav-link" href="/cashier-hotel/walkin-booking">
+        <i class="bi bi-person-plus me-2"></i>Đặt phòng tại quầy
+      </a>
+      <a class="nav-link active" href="/cashier-hotel/room-status">
+        <i class="bi bi-house-gear me-2"></i>Trạng thái phòng
+      </a>
+    </nav>
+
+    <div class="mt-auto pt-4 border-top border-light border-opacity-25">
+      <div class="d-flex align-items-center mb-3">
+        <i class="bi bi-person-circle fs-4 me-2"></i>
+        <div>
+          <div class="fw-bold small">Nhân viên</div>
+          <small class="opacity-75">Đang trực</small>
+        </div>
       </div>
-      <div>
-        <button class="btn btn-light me-2" onclick="window.location.reload()">
-          <i class="bi bi-arrow-clockwise me-2"></i>Làm mới
-        </button>
-        <a href="/cashier-hotel/booking-management" class="btn btn-light">
-          <i class="bi bi-arrow-left me-2"></i>Quay lại
-        </a>
-      </div>
+      <a href="/cashier-hotel/logout" class="btn btn-outline-light btn-sm w-100">
+        <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+      </a>
     </div>
   </div>
 
-  <div class="row">
-    <!-- Filters & Legend -->
-    <div class="col-md-3">
-      <div class="legend">
-        <h6 class="mb-3"><strong>Chú thích:</strong></h6>
-        <div class="legend-item">
-          <div class="legend-color" style="background: #28a745;"></div>
-          <span>Trống (Available)</span>
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Header -->
+    <div class="header-card">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h3 class="mb-1"><i class="bi bi-house-gear me-2"></i>Trạng thái phòng - Realtime</h3>
+          <p class="mb-0 opacity-75">Xem trạng thái phòng trong ngày hôm nay</p>
         </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background: #dc3545;"></div>
-          <span>Đang ở (Occupied)</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background: #ffc107;"></div>
-          <span>Đang dọn (Cleaning)</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background: #6c757d;"></div>
-          <span>Bảo trì (Maintenance)</span>
-        </div>
-      </div>
-
-      <!-- Stats -->
-      <div class="filter-section">
-        <h6 class="mb-3"><strong>Thống kê:</strong></h6>
-        <div class="d-flex justify-content-between mb-2">
-          <span>Tổng phòng:</span>
-          <strong id="totalRooms" th:text="${#lists.size(rooms)}">0</strong>
-        </div>
-        <div class="d-flex justify-content-between mb-2">
-          <span>Trống:</span>
-          <strong class="text-success" id="availableCount">0</strong>
-        </div>
-        <div class="d-flex justify-content-between mb-2">
-          <span>Đang ở:</span>
-          <strong class="text-danger" id="occupiedCount">0</strong>
-        </div>
-        <div class="d-flex justify-content-between mb-2">
-          <span>Đang dọn:</span>
-          <strong class="text-warning" id="cleaningCount">0</strong>
-        </div>
-        <div class="d-flex justify-content-between">
-          <span>Bảo trì:</span>
-          <strong class="text-secondary" id="maintenanceCount">0</strong>
-        </div>
-      </div>
-
-      <!-- Filter -->
-      <div class="filter-section">
-        <h6 class="mb-3"><strong>Lọc phòng:</strong></h6>
-        <div class="mb-3">
-          <label class="form-label">Trạng thái</label>
-          <select class="form-select" id="statusFilter" onchange="filterRooms()">
-            <option value="">Tất cả</option>
-            <option value="AVAILABLE">Trống</option>
-            <option value="OCCUPIED">Đang ở</option>
-            <option value="CLEANING">Đang dọn</option>
-            <option value="MAINTENANCE">Bảo trì</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Tầng</label>
-          <select class="form-select" id="floorFilter" onchange="filterRooms()">
-            <option value="">Tất cả tầng</option>
-            <!-- Will be populated by JS -->
-          </select>
+        <div>
+          <button class="btn btn-light me-2" onclick="window.location.reload()">
+            <i class="bi bi-arrow-clockwise me-2"></i>Làm mới
+          </button>
+          <a href="/cashier-hotel/booking-management" class="btn btn-light">
+            <i class="bi bi-arrow-left me-2"></i>Quay lại
+          </a>
         </div>
       </div>
     </div>
 
-    <!-- Room Grid -->
-    <div class="col-md-9">
-      <div class="row" id="roomGrid">
-        <div th:each="room : ${rooms}"
-             class="col-md-4 col-sm-6 room-item"
-             th:classappend="${room.status.toString().toLowerCase()}"
-             th:attr="data-status=${room.status}, data-floor=${room.floor}">
-          <div class="room-card"
+    <div class="row">
+      <!-- Filters & Legend -->
+      <div class="col-md-3">
+        <div class="legend">
+          <h6 class="mb-3"><strong>Chú thích:</strong></h6>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #28a745;"></div>
+            <span>Trống (Available)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #dc3545;"></div>
+            <span>Đang ở (Occupied)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #ffc107;"></div>
+            <span>Đang dọn (Cleaning)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #6c757d;"></div>
+            <span>Bảo trì (Maintenance)</span>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="filter-section">
+          <h6 class="mb-3"><strong>Thống kê:</strong></h6>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Tổng phòng:</span>
+            <strong id="totalRooms" th:text="${#lists.size(rooms)}">0</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Trống:</span>
+            <strong class="text-success" id="availableCount">0</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Đang ở:</span>
+            <strong class="text-danger" id="occupiedCount">0</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Đang dọn:</span>
+            <strong class="text-warning" id="cleaningCount">0</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Bảo trì:</span>
+            <strong class="text-secondary" id="maintenanceCount">0</strong>
+          </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="filter-section">
+          <h6 class="mb-3"><strong>Lọc phòng:</strong></h6>
+          <div class="mb-3">
+            <label class="form-label">Trạng thái</label>
+            <select class="form-select" id="statusFilter" onchange="filterRooms()">
+              <option value="">Tất cả</option>
+              <option value="AVAILABLE">Trống</option>
+              <option value="OCCUPIED">Đang ở</option>
+              <option value="CLEANING">Đang dọn</option>
+              <option value="MAINTENANCE">Bảo trì</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tầng</label>
+            <select class="form-select" id="floorFilter" onchange="filterRooms()">
+              <option value="">Tất cả tầng</option>
+              <!-- Will be populated by JS -->
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room Grid -->
+      <div class="col-md-9">
+        <div class="row" id="roomGrid">
+          <div th:each="room : ${rooms}"
+               class="col-md-4 col-sm-6 room-item"
                th:classappend="${room.status.toString().toLowerCase()}"
-               onclick="showRoomDetail(this)"
-               th:attr="data-room-id=${room.roomId},
+               th:attr="data-status=${room.status}, data-floor=${room.floor}">
+            <div class="room-card"
+                 th:classappend="${room.status.toString().toLowerCase()}"
+                 onclick="showRoomDetail(this)"
+                 th:attr="data-room-id=${room.roomId},
                                   data-room-number=${room.roomNumber},
                                   data-room-type=${room.roomType},
                                   data-status=${room.status},
@@ -201,34 +827,35 @@
                                   data-check-in=${room.checkInDate},
                                   data-check-out=${room.checkOutDate}">
 
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <div class="room-number" th:text="${room.roomNumber}">101</div>
-              <span th:if="${room.status.name() == 'AVAILABLE'}"
-                    class="room-status-badge bg-success text-white">Trống</span>
-              <span th:if="${room.status.name() == 'OCCUPIED'}"
-                    class="room-status-badge bg-danger text-white">Đang ở</span>
-              <span th:if="${room.status.name() == 'CLEANING'}"
-                    class="room-status-badge bg-warning text-dark">Đang dọn</span>
-              <span th:if="${room.status.name() == 'MAINTENANCE'}"
-                    class="room-status-badge bg-secondary text-white">Bảo trì</span>
-            </div>
-
-            <div class="small text-muted mb-2" th:text="${room.roomType}"></div>
-
-            <div th:if="${room.guestName != null and !#strings.isEmpty(room.guestName)}">
-              <div class="small">
-                <i class="bi bi-person me-1"></i>
-                <span th:text="${room.guestName}"></span>
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="room-number" th:text="${room.roomNumber}">101</div>
+                <span th:if="${room.status.name() == 'AVAILABLE'}"
+                      class="room-status-badge bg-success text-white">Trống</span>
+                <span th:if="${room.status.name() == 'OCCUPIED'}"
+                      class="room-status-badge bg-danger text-white">Đang ở</span>
+                <span th:if="${room.status.name() == 'CLEANING'}"
+                      class="room-status-badge bg-warning text-dark">Đang dọn</span>
+                <span th:if="${room.status.name() == 'MAINTENANCE'}"
+                      class="room-status-badge bg-secondary text-white">Bảo trì</span>
               </div>
-              <div class="small text-muted">
-                <i class="bi bi-calendar me-1"></i>
-                <span th:text="${#temporals.format(room.checkInDate, 'dd/MM')} + ' - ' + ${#temporals.format(room.checkOutDate, 'dd/MM')}">
-                </span>
-              </div>
-            </div>
 
-            <div th:if="${room.guestName == null or #strings.isEmpty(room.guestName)}" class="text-muted small">
-              <i class="bi bi-check-circle me-1"></i>Sẵn sàng cho khách mới
+              <div class="small text-muted mb-2" th:text="${room.roomType}"></div>
+
+              <div th:if="${room.guestName != null and !#strings.isEmpty(room.guestName)}">
+                <div class="small">
+                  <i class="bi bi-person me-1"></i>
+                  <span th:text="${room.guestName}"></span>
+                </div>
+                <div class="small text-muted">
+                  <i class="bi bi-calendar me-1"></i>
+                  <span th:text="${#temporals.format(room.checkInDate, 'dd/MM')} + ' - ' + ${#temporals.format(room.checkOutDate, 'dd/MM')}">
+                  </span>
+                </div>
+              </div>
+
+              <div th:if="${room.guestName == null or #strings.isEmpty(room.guestName)}" class="text-muted small">
+                <i class="bi bi-check-circle me-1"></i>Sẵn sàng cho khách mới
+              </div>
             </div>
           </div>
         </div>

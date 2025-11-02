@@ -1,6 +1,12 @@
 .sidebar {
     min-height: 100vh;
     background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
 }
 .sidebar .nav-link {
     color: rgba(255,255,255,0.8);

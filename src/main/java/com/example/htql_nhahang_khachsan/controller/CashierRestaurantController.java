@@ -57,6 +57,19 @@ public class CashierRestaurantController {
         }
     }
 
+//    @GetMapping("/dashboard")
+//    public String dashboard(Model model, HttpSession session) {
+//        if (!authService.isLoggedIn(session) || !authService.isCashierRestaurant(session)) {
+//            return "redirect:/cashier-restaurant/login";
+//        }
+//
+//        Long branchId = authService.getCurrentUserBranchId(session);
+//        Map<String, Object> stats = cashierService.getDashboardStats(branchId);
+//
+//        model.addAllAttributes(stats);
+//        return "staff/cashier_restaurant/dashboard";
+//    }
+
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpSession session) {
         if (!authService.isLoggedIn(session) || !authService.isCashierRestaurant(session)) {
@@ -65,6 +78,10 @@ public class CashierRestaurantController {
 
         Long branchId = authService.getCurrentUserBranchId(session);
         Map<String, Object> stats = cashierService.getDashboardStats(branchId);
+
+        // Lấy danh sách đơn chờ xác nhận
+        List<OrderDTO> pendingOrdersList = cashierService.getOrdersByBranch(branchId, OrderStatus.PENDING);
+        model.addAttribute("pendingOrdersList", pendingOrdersList);
 
         model.addAllAttributes(stats);
         return "staff/cashier_restaurant/dashboard";

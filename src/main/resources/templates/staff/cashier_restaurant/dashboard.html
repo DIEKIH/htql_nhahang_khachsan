@@ -14,7 +14,9 @@
 
         .sidebar {
             width: 240px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+            background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+
             color: white;
             padding: 15px;
             min-height: 100vh;
@@ -151,30 +153,31 @@
             <i class="bi bi-shop"></i>
             <h6>Thu Ngân</h6>
             <h6>Nhà Hàng</h6>
-            <small>Hệ thống quản lý</small>
         </div>
-
         <nav class="nav flex-column">
-            <a class="nav-link active" href="/cashier-restaurant/dashboard">
-                <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-            <a class="nav-link" href="/cashier-restaurant/create-order">
-                <i class="bi bi-plus-circle"></i> Đặt Món
-            </a>
-            <a class="nav-link" href="/cashier-restaurant/orders">
-                <i class="bi bi-list-check"></i> Danh sách Đơn
-            </a>
+            <a class="nav-link active" href="/cashier-restaurant/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a class="nav-link" href="/cashier-restaurant/create-order"><i class="bi bi-plus-circle"></i> Đặt Món</a>
+            <a class="nav-link" href="/cashier-restaurant/orders"><i class="bi bi-list-check"></i> Danh sách Đơn</a>
+            <a class="nav-link " href="/cashier-restaurant/table-bookings"><i class="bi bi-calendar-check"></i> Quản Lý Đặt Bàn</a>
         </nav>
-
         <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
-            <a href="/cashier-restaurant/logout" class="nav-link" style="margin-top: 10px;">
-                <i class="bi bi-box-arrow-right"></i> Đăng xuất
-            </a>
+            <a href="/cashier-restaurant/logout" class="nav-link"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
         </div>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
+        <!-- ALERTS -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle me-2"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
         <!-- WELCOME -->
         <div class="welcome-card">
             <div>
@@ -211,6 +214,46 @@
 
         <!-- CONTENT -->
         <div class="content-row">
+<!--            <div class="card">-->
+<!--                <div class="card-header">-->
+<!--                    <i class="bi bi-list-check me-2"></i> Đơn Chờ Xác Nhận-->
+<!--                </div>-->
+<!--                <div class="card-body">-->
+<!--                    <div style="overflow-x: auto;">-->
+<!--                        <table class="table table-sm">-->
+<!--                            <thead>-->
+<!--                            <tr>-->
+<!--                                <th>Mã đơn</th>-->
+<!--                                <th>Bàn</th>-->
+<!--                                <th>Số tiền</th>-->
+<!--                                <th>Trạng thái</th>-->
+<!--                                <th>Hành động</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody th:if="${pendingOrders > 0}">-->
+<!--                            <tr>-->
+<!--                                <td>ORD001</td>-->
+<!--                                <td>Bàn 5</td>-->
+<!--                                <td>250.000đ</td>-->
+<!--                                <td><span class="badge bg-warning">Chờ</span></td>-->
+<!--                                <td>-->
+<!--                                    <div class="action-btn">-->
+<!--                                        <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-check"></i></a>-->
+<!--                                        <a href="#" class="btn btn-sm btn-danger"><i class="bi bi-x"></i></a>-->
+<!--                                    </div>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                            <tbody th:if="${pendingOrders == 0}">-->
+<!--                            <tr>-->
+<!--                                <td colspan="5" class="text-center text-muted py-3">Không có đơn nào</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
             <div class="card">
                 <div class="card-header">
                     <i class="bi bi-list-check me-2"></i> Đơn Chờ Xác Nhận
@@ -227,23 +270,30 @@
                                 <th>Hành động</th>
                             </tr>
                             </thead>
-                            <tbody th:if="${pendingOrders > 0}">
-                            <tr>
-                                <td>ORD001</td>
-                                <td>Bàn 5</td>
-                                <td>250.000đ</td>
+                            <tbody th:if="${pendingOrdersList != null and !pendingOrdersList.isEmpty()}">
+                            <tr th:each="order : ${pendingOrdersList}">
+                                <td th:text="${order.orderCode}">ORD001</td>
+                                <td th:text="${order.tableName}">Bàn 5</td>
+                                <td th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">250.000đ</td>
                                 <td><span class="badge bg-warning">Chờ</span></td>
                                 <td>
                                     <div class="action-btn">
-                                        <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-check"></i></a>
-                                        <a href="#" class="btn btn-sm btn-danger"><i class="bi bi-x"></i></a>
+                                        <form th:action="@{/cashier-restaurant/api/orders/{id}/confirm(id=${order.id})}" method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-sm btn-success" title="Xác nhận">
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
+                                        </form>
+                                        <button type="button" class="btn btn-sm btn-danger" title="Hủy"
+                                                th:onclick="'cancelOrder(' + ${order.id} + ')'">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
                             </tbody>
-                            <tbody th:if="${pendingOrders == 0}">
+                            <tbody th:if="${pendingOrdersList == null or pendingOrdersList.isEmpty()}">
                             <tr>
-                                <td colspan="5" class="text-center text-muted py-3">Không có đơn nào</td>
+                                <td colspan="5" class="text-center text-muted py-3">Không có đơn chờ xác nhận</td>
                             </tr>
                             </tbody>
                         </table>
@@ -282,6 +332,29 @@
     }
     updateTime();
     setInterval(updateTime, 1000);
+
+
+    function cancelOrder(orderId) {
+        if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
+            const reason = prompt('Nhập lý do hủy đơn hàng:');
+            if (reason !== null && reason.trim() !== '') {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/cashier-restaurant/api/orders/' + orderId + '/cancel';
+
+                const reasonInput = document.createElement('input');
+                reasonInput.type = 'hidden';
+                reasonInput.name = 'reason';
+                reasonInput.value = reason.trim();
+
+                form.appendChild(reasonInput);
+                document.body.appendChild(form);
+                form.submit();
+            } else if (reason !== null) {
+                alert('Vui lòng nhập lý do hủy đơn hàng!');
+            }
+        }
+    }
 </script>
 </body>
 </html>

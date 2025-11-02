@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doanh thu Nhà hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/manager_sidebar.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body { font-size: 0.85rem; }
+        .stat-card {
+            border-left: 4px solid #198754;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #198754;
+        }
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/manager_sidebar :: manager_sidebar"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <!-- Navbar -->
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="/manager">
+                            <i class="bi bi-building"></i> Manager Dashboard
+                        </a>
+                        <div class="navbar-nav ms-auto">
+                            <a class="nav-link" href="/manager/logout">
+                                <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2><i class="bi bi-cup-hot"></i> Thống kê Doanh thu Nhà hàng</h2>
+                <div class="btn-group">
+                    <a th:href="@{/manager/revenue}" class="btn btn-outline-primary">
+                        <i class="bi bi-grid-3x3-gap"></i> Tổng quan
+                    </a>
+                    <a th:href="@{/manager/revenue/hotel}" class="btn btn-outline-primary">
+                        <i class="bi bi-building"></i> Khách sạn
+                    </a>
+                    <a th:href="@{/manager/revenue/restaurant}" class="btn btn-primary active">
+                        <i class="bi bi-cup-hot"></i> Nhà hàng
+                    </a>
+                </div>
+            </div>
+
+            <!-- Bộ lọc -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form method="get" th:action="@{/manager/revenue/restaurant}">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-md-3">
+                                <label class="form-label">Khoảng thời gian</label>
+                                <select class="form-select" name="period">
+                                    <option value="WEEK" th:selected="${selectedPeriod == 'WEEK'}">Theo tuần</option>
+                                    <option value="MONTH" th:selected="${selectedPeriod == 'MONTH'}">Theo tháng</option>
+                                    <option value="YEAR" th:selected="${selectedPeriod == 'YEAR'}">Theo năm</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Từ ngày</label>
+                                <input type="date" class="form-control" name="fromDate" th:value="${fromDate}">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Đến ngày</label>
+                                <input type="date" class="form-control" name="toDate" th:value="${toDate}">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="bi bi-funnel"></i> Lọc dữ liệu
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Thống kê tổng quan -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1">Tổng Doanh thu</p>
+                                    <h3 class="stat-value mb-0"
+                                        th:text="${#numbers.formatDecimal(statistics.restaurantRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                    </h3>
+                                </div>
+                                <div class="text-success fs-1">
+                                    <i class="bi bi-cash-stack"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1">Tổng Orders</p>
+                                    <h3 class="stat-value mb-0" th:text="${statistics.totalOrders}"></h3>
+                                </div>
+                                <div class="text-success fs-1">
+                                    <i class="bi bi-cart-check"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1">Doanh thu TB/Order</p>
+                                    <h3 class="stat-value mb-0"
+                                        th:text="${statistics.totalOrders > 0 ? #numbers.formatDecimal(statistics.restaurantRevenue / statistics.totalOrders, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">
+                                    </h3>
+                                </div>
+                                <div class="text-success fs-1">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ -->
+            <div class="row mb-4">
+                <!-- Biểu đồ cột -->
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Biểu đồ Cột - Doanh thu</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biểu đồ đường -->
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-graph-up"></i> Biểu đồ Đường - Xu hướng</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="lineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biểu đồ combo -->
+                <div class="col-12 mb-3">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-graph-up-arrow"></i> Biểu đồ Kết hợp - Doanh thu & Số lượng Orders</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="height: 400px;">
+                                <canvas id="comboChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng chi tiết -->
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-table"></i> Chi tiết Doanh thu Nhà hàng</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Khoảng thời gian</th>
+                                <th class="text-end">Doanh thu</th>
+                                <th class="text-center">Số Orders</th>
+                                <th class="text-end">Doanh thu TB</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${#lists.isEmpty(statistics.chartData)}">
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox display-6 d-block mb-2"></i>
+                                    Không có dữ liệu
+                                </td>
+                            </tr>
+                            <tr th:each="data : ${statistics.chartData}">
+                                <td><strong th:text="${data.label}"></strong></td>
+                                <td class="text-end text-success fw-bold"
+                                    th:text="${#numbers.formatDecimal(data.restaurantRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success" th:text="${data.orderCount}"></span>
+                                </td>
+                                <td class="text-end"
+                                    th:text="${data.orderCount > 0 ? #numbers.formatDecimal(data.restaurantRevenue / data.orderCount, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot class="table-light">
+                            <tr class="fw-bold">
+                                <td>TỔNG CỘNG</td>
+                                <td class="text-end text-success"
+                                    th:text="${#numbers.formatDecimal(statistics.restaurantRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success" th:text="${statistics.totalOrders}"></span>
+                                </td>
+                                <td class="text-end"
+                                    th:text="${statistics.totalOrders > 0 ? #numbers.formatDecimal(statistics.restaurantRevenue / statistics.totalOrders, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const chartData = /*[[${statistics.chartData}]]*/ [];
+
+    const labels = chartData.map(d => d.label);
+    const revenueData = chartData.map(d => d.restaurantRevenue);
+    const orderData = chartData.map(d => d.orderCount);
+
+    // Biểu đồ cột
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu',
+                data: revenueData,
+                backgroundColor: 'rgba(25, 135, 84, 0.8)',
+                borderColor: 'rgba(25, 135, 84, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Doanh thu: ' + new Intl.NumberFormat('vi-VN').format(context.parsed.y) + ' ₫';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return new Intl.NumberFormat('vi-VN', {
+                                notation: 'compact',
+                                compactDisplay: 'short'
+                            }).format(value) + ' ₫';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Biểu đồ đường
+    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    new Chart(lineCtx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu',
+                data: revenueData,
+                borderColor: 'rgba(25, 135, 84, 1)',
+                backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                pointBackgroundColor: 'rgba(25, 135, 84, 1)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Doanh thu: ' + new Intl.NumberFormat('vi-VN').format(context.parsed.y) + ' ₫';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return new Intl.NumberFormat('vi-VN', {
+                                notation: 'compact',
+                                compactDisplay: 'short'
+                            }).format(value) + ' ₫';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Biểu đồ kết hợp (Combo Chart)
+    const comboCtx = document.getElementById('comboChart').getContext('2d');
+    new Chart(comboCtx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Doanh thu',
+                    data: revenueData,
+                    backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                    borderColor: 'rgba(25, 135, 84, 1)',
+                    borderWidth: 2,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'line',
+                    label: 'Số Orders',
+                    data: orderData,
+                    borderColor: 'rgba(255, 193, 7, 1)',
+                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: 'rgba(255, 193, 7, 1)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.datasetIndex === 0) {
+                                label += new Intl.NumberFormat('vi-VN').format(context.parsed.y) + ' ₫';
+                            } else {
+                                label += context.parsed.y + ' orders';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return new Intl.NumberFormat('vi-VN', {
+                                notation: 'compact',
+                                compactDisplay: 'short'
+                            }).format(value) + ' ₫';
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Doanh thu (₫)'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    beginAtZero: true,
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                    title: {
+                        display: true,
+                        text: 'Số Orders'
+                    }
+                }
+            }
+        }
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

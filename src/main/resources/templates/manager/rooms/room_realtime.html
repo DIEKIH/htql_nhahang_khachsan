@@ -1,3 +1,606 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Room Timeline - Gantt View</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" th:href="@{/css/manager_sidebar.css}">-->
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;row-height: 50px;-->
+<!--            &#45;&#45;day-width: 100px;-->
+<!--            &#45;&#45;gap: 4px;-->
+<!--        }-->
+
+<!--        body { margin: 0; background: #f5f7fa; font-family: system-ui, -apple-system, sans-serif; }-->
+
+<!--        .header {-->
+<!--            background: #fff;-->
+<!--            padding: 12px 20px;-->
+<!--            box-shadow: 0 2px 8px rgba(0,0,0,0.08);-->
+<!--            position: sticky;-->
+<!--            top: 0;-->
+<!--            z-index: 100;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            gap: 16px;-->
+<!--        }-->
+
+<!--        .header h1 { font-size: 20px; margin: 0; font-weight: 600; }-->
+
+<!--        .controls {-->
+<!--            display: flex;-->
+<!--            gap: 10px;-->
+<!--            margin-left: auto;-->
+<!--            align-items: center;-->
+<!--        }-->
+
+<!--        .btn-nav { padding: 6px 12px; border: 1px solid #ddd; background: #fff; border-radius: 6px; cursor: pointer; }-->
+<!--        .btn-nav:hover { background: #f8f9fa; }-->
+
+<!--        .main-container {-->
+<!--            display: flex;-->
+<!--            height: calc(100vh - 60px);-->
+<!--            padding: 16px;-->
+<!--            gap: 16px;-->
+<!--        }-->
+
+<!--        .sidebar {-->
+<!--            width: 280px;-->
+<!--            background: #fff;-->
+<!--            border-radius: 10px;-->
+<!--            padding: 16px;-->
+<!--            box-shadow: 0 2px 12px rgba(0,0,0,0.06);-->
+<!--            overflow-y: auto;-->
+<!--        }-->
+
+<!--        .timeline-wrapper {-->
+<!--            flex: 1;-->
+<!--            background: #fff;-->
+<!--            border-radius: 10px;-->
+<!--            box-shadow: 0 2px 12px rgba(0,0,0,0.06);-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--            overflow: hidden;-->
+<!--        }-->
+
+<!--        .timeline-header {-->
+<!--            display: flex;-->
+<!--            border-bottom: 2px solid #e9ecef;-->
+<!--            background: #f8f9fa;-->
+<!--        }-->
+
+<!--        .room-header {-->
+<!--            width: 200px;-->
+<!--            padding: 12px;-->
+<!--            font-weight: 600;-->
+<!--            border-right: 2px solid #e9ecef;-->
+<!--        }-->
+
+<!--        .days-header {-->
+<!--            display: flex;-->
+<!--            flex: 1;-->
+<!--            overflow-x: auto;-->
+<!--        }-->
+
+<!--        .day-cell {-->
+<!--            min-width: var(&#45;&#45;day-width);-->
+<!--            padding: 12px 8px;-->
+<!--            text-align: center;-->
+<!--            border-right: 1px solid #e9ecef;-->
+<!--            font-size: 13px;-->
+<!--        }-->
+
+<!--        .day-cell.today { background: #e7f3ff; font-weight: 600; }-->
+
+<!--        .timeline-body {-->
+<!--            display: flex;-->
+<!--            flex: 1;-->
+<!--            overflow: auto;-->
+<!--        }-->
+
+<!--        .rooms-column {-->
+<!--            width: 200px;-->
+<!--            border-right: 2px solid #e9ecef;-->
+<!--            background: #fafbfc;-->
+<!--        }-->
+
+<!--        .room-row {-->
+<!--            height: var(&#45;&#45;row-height);-->
+<!--            padding: 12px;-->
+<!--            border-bottom: 1px solid #e9ecef;-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--            justify-content: center;-->
+<!--        }-->
+
+<!--        .room-number { font-weight: 600; font-size: 15px; }-->
+<!--        .room-type { font-size: 12px; color: #6c757d; margin-top: 2px; }-->
+
+<!--        .grid-container {-->
+<!--            position: relative;-->
+<!--            flex: 1;-->
+<!--        }-->
+
+<!--        .grid-rows {-->
+<!--            position: relative;-->
+<!--        }-->
+
+<!--        .grid-row {-->
+<!--            height: var(&#45;&#45;row-height);-->
+<!--            position: relative;-->
+<!--            border-bottom: 1px solid #e9ecef;-->
+<!--            display: flex;-->
+<!--        }-->
+
+<!--        .grid-cell {-->
+<!--            min-width: var(&#45;&#45;day-width);-->
+<!--            border-right: 1px solid #f0f0f0;-->
+<!--        }-->
+
+<!--        .grid-cell.today { background: #f0f8ff; }-->
+
+<!--        .booking-block {-->
+<!--            position: absolute;-->
+<!--            height: 40px;-->
+<!--            top: 5px;-->
+<!--            border-radius: 6px;-->
+<!--            color: #fff;-->
+<!--            padding: 6px 10px;-->
+<!--            font-size: 12px;-->
+<!--            font-weight: 600;-->
+<!--            cursor: pointer;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            gap: 6px;-->
+<!--            box-shadow: 0 2px 6px rgba(0,0,0,0.15);-->
+<!--            transition: transform 0.2s, box-shadow 0.2s;-->
+<!--            z-index: 10;-->
+<!--        }-->
+
+<!--        .booking-block:hover {-->
+<!--            transform: translateY(-2px);-->
+<!--            box-shadow: 0 4px 12px rgba(0,0,0,0.25);-->
+<!--            z-index: 20;-->
+<!--        }-->
+
+<!--        .booking-block.status-PENDING { background: linear-gradient(135deg, #ffc107, #ff9800); }-->
+<!--        .booking-block.status-CONFIRMED { background: linear-gradient(135deg, #17a2b8, #138496); }-->
+<!--        .booking-block.status-CHECKED_IN { background: linear-gradient(135deg, #28a745, #218838); }-->
+<!--        .booking-block.status-CHECKED_OUT { background: linear-gradient(135deg, #6c757d, #545b62); }-->
+<!--        .booking-block.status-CANCELLED { background: linear-gradient(135deg, #dc3545, #c82333); opacity: 0.6; }-->
+
+<!--        .legend {-->
+<!--            display: flex;-->
+<!--            gap: 12px;-->
+<!--            flex-wrap: wrap;-->
+<!--            margin-bottom: 16px;-->
+<!--        }-->
+
+<!--        .legend-item {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            gap: 6px;-->
+<!--            font-size: 13px;-->
+<!--        }-->
+
+<!--        .legend-color {-->
+<!--            width: 20px;-->
+<!--            height: 20px;-->
+<!--            border-radius: 4px;-->
+<!--        }-->
+
+<!--        .stats {-->
+<!--            background: #f8f9fa;-->
+<!--            padding: 12px;-->
+<!--            border-radius: 8px;-->
+<!--            margin-bottom: 16px;-->
+<!--        }-->
+
+<!--        .stat-item {-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            padding: 6px 0;-->
+<!--            font-size: 14px;-->
+<!--        }-->
+
+<!--        .filter-group {-->
+<!--            margin-bottom: 16px;-->
+<!--        }-->
+
+<!--        .filter-group label {-->
+<!--            display: block;-->
+<!--            font-size: 13px;-->
+<!--            font-weight: 600;-->
+<!--            margin-bottom: 6px;-->
+<!--            color: #495057;-->
+<!--        }-->
+
+<!--        .tooltip-custom {-->
+<!--            position: fixed;-->
+<!--            background: #222;-->
+<!--            color: #fff;-->
+<!--            padding: 8px 12px;-->
+<!--            border-radius: 6px;-->
+<!--            font-size: 12px;-->
+<!--            z-index: 1000;-->
+<!--            pointer-events: none;-->
+<!--            display: none;-->
+<!--            white-space: nowrap;-->
+<!--        }-->
+
+<!--        @media (max-width: 768px) {-->
+<!--            .sidebar { display: none; }-->
+<!--            .room-header, .rooms-column { width: 120px; }-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="header">-->
+
+<!--    <h1><i class="bi bi-calendar3-range"></i> Room Timeline - Gantt View</h1>-->
+
+<!--    <div class="controls">-->
+<!--        <button class="btn-nav" id="prevBtn"><i class="bi bi-chevron-left"></i> Trước</button>-->
+<!--        <button class="btn-nav" id="todayBtn">Hôm nay</button>-->
+<!--        <button class="btn-nav" id="nextBtn">Sau <i class="bi bi-chevron-right"></i></button>-->
+
+<!--        <select id="daysRange" class="form-select form-select-sm" style="width: 120px;">-->
+<!--            <option value="7">7 ngày</option>-->
+<!--            <option value="14" selected>14 ngày</option>-->
+<!--            <option value="30">30 ngày</option>-->
+<!--        </select>-->
+
+<!--        <button class="btn-nav" onclick="refreshData()">-->
+<!--            <i class="bi bi-arrow-clockwise"></i> Refresh-->
+<!--        </button>-->
+
+<!--        <a href="/manager" class="btn-nav">-->
+<!--            <i class="bi bi-house"></i> Dashboard-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<div class="main-container">-->
+<!--    <aside class="sidebar">-->
+<!--        <h5 style="margin-bottom: 12px;">Bộ lọc</h5>-->
+
+<!--        <div class="filter-group">-->
+<!--            <label>Loại phòng</label>-->
+<!--            <select id="roomTypeFilter" class="form-select form-select-sm">-->
+<!--                <option value="">Tất cả</option>-->
+<!--                <option th:each="type : ${roomTypes}" th:value="${type}" th:text="${type}"></option>-->
+<!--            </select>-->
+<!--        </div>-->
+
+<!--        <div class="filter-group">-->
+<!--            <label>Trạng thái phòng</label>-->
+<!--            <select id="roomStatusFilter" class="form-select form-select-sm">-->
+<!--                <option value="">Tất cả</option>-->
+<!--                <option value="AVAILABLE">Trống</option>-->
+<!--                <option value="OCCUPIED">Đang ở</option>-->
+<!--                <option value="CLEANING">Đang dọn</option>-->
+<!--                <option value="MAINTENANCE">Bảo trì</option>-->
+<!--            </select>-->
+<!--        </div>-->
+
+<!--        <div class="stats">-->
+<!--            <h6 style="margin-bottom: 10px;">Thống kê</h6>-->
+<!--            <div class="stat-item">-->
+<!--                <span>Tổng phòng:</span>-->
+<!--                <strong id="totalRooms">0</strong>-->
+<!--            </div>-->
+<!--            <div class="stat-item">-->
+<!--                <span>Đã đặt hôm nay:</span>-->
+<!--                <strong id="bookedToday">0</strong>-->
+<!--            </div>-->
+<!--            <div class="stat-item">-->
+<!--                <span>Check-in hôm nay:</span>-->
+<!--                <strong id="checkinToday">0</strong>-->
+<!--            </div>-->
+<!--            <div class="stat-item">-->
+<!--                <span>Check-out hôm nay:</span>-->
+<!--                <strong id="checkoutToday">0</strong>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="legend">-->
+<!--            <div style="font-weight: 600; margin-bottom: 8px; width: 100%;">Chú thích:</div>-->
+<!--            <div class="legend-item">-->
+<!--                <div class="legend-color" style="background: linear-gradient(135deg, #ffc107, #ff9800);"></div>-->
+<!--                <span>Chờ xác nhận</span>-->
+<!--            </div>-->
+<!--            <div class="legend-item">-->
+<!--                <div class="legend-color" style="background: linear-gradient(135deg, #17a2b8, #138496);"></div>-->
+<!--                <span>Đã xác nhận</span>-->
+<!--            </div>-->
+<!--            <div class="legend-item">-->
+<!--                <div class="legend-color" style="background: linear-gradient(135deg, #28a745, #218838);"></div>-->
+<!--                <span>Đang ở</span>-->
+<!--            </div>-->
+<!--            <div class="legend-item">-->
+<!--                <div class="legend-color" style="background: linear-gradient(135deg, #6c757d, #545b62);"></div>-->
+<!--                <span>Đã trả</span>-->
+<!--            </div>-->
+<!--            <div class="legend-item">-->
+<!--                <div class="legend-color" style="background: linear-gradient(135deg, #dc3545, #c82333);"></div>-->
+<!--                <span>Đã hủy</span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </aside>-->
+
+<!--    <div class="timeline-wrapper">-->
+<!--        <div class="timeline-header">-->
+<!--            <div class="room-header">Phòng</div>-->
+<!--            <div class="days-header" id="daysHeader"></div>-->
+<!--        </div>-->
+
+<!--        <div class="timeline-body">-->
+<!--            <div class="rooms-column" id="roomsColumn"></div>-->
+<!--            <div class="grid-container" id="gridContainer">-->
+<!--                <div class="grid-rows" id="gridRows"></div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<div class="tooltip-custom" id="tooltip"></div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script>-->
+<!--    const state = {-->
+<!--        startDate: new Date(),-->
+<!--        days: 14,-->
+<!--        rooms: [],-->
+<!--        bookings: [],-->
+<!--        roomTypeFilter: '',-->
+<!--        roomStatusFilter: ''-->
+<!--    };-->
+
+<!--    // Utility functions-->
+<!--    function formatDate(date) {-->
+<!--        return date.toISOString().split('T')[0];-->
+<!--    }-->
+
+<!--    function addDays(date, days) {-->
+<!--        const result = new Date(date);-->
+<!--        result.setDate(result.getDate() + days);-->
+<!--        return result;-->
+<!--    }-->
+
+<!--    function daysBetween(date1, date2) {-->
+<!--        const d1 = new Date(date1);-->
+<!--        const d2 = new Date(date2);-->
+<!--        return Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));-->
+<!--    }-->
+
+<!--    // Load data-->
+<!--    async function loadData() {-->
+<!--        try {-->
+<!--            const startDate = formatDate(state.startDate);-->
+<!--            const endDate = formatDate(addDays(state.startDate, state.days));-->
+
+<!--            const [roomsRes, bookingsRes] = await Promise.all([-->
+<!--                fetch(`/manager/rooms-timeline/api/rooms?roomTypeId=${state.roomTypeFilter || ''}`),-->
+<!--                fetch(`/manager/rooms-timeline/api/bookings?startDate=${startDate}&endDate=${endDate}&roomTypeId=${state.roomTypeFilter || ''}`)-->
+<!--            ]);-->
+
+<!--            state.rooms = await roomsRes.json();-->
+<!--            state.bookings = await bookingsRes.json();-->
+
+<!--            render();-->
+<!--        } catch (error) {-->
+<!--            console.error('Error loading data:', error);-->
+<!--            alert('Không thể tải dữ liệu');-->
+<!--        }-->
+<!--    }-->
+
+<!--    // Render functions-->
+<!--    function render() {-->
+<!--        renderDaysHeader();-->
+<!--        renderRoomsAndGrid();-->
+<!--        renderBookings();-->
+<!--        updateStats();-->
+<!--    }-->
+
+<!--    function renderDaysHeader() {-->
+<!--        const header = document.getElementById('daysHeader');-->
+<!--        header.innerHTML = '';-->
+<!--        const today = formatDate(new Date());-->
+
+<!--        for (let i = 0; i < state.days; i++) {-->
+<!--            const date = addDays(state.startDate, i);-->
+<!--            const dateStr = formatDate(date);-->
+<!--            const day = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });-->
+<!--            const weekday = date.toLocaleDateString('vi-VN', { weekday: 'short' });-->
+
+<!--            const cell = document.createElement('div');-->
+<!--            cell.className = 'day-cell' + (dateStr === today ? ' today' : '');-->
+<!--            cell.innerHTML = `<div>${weekday}</div><div>${day}</div>`;-->
+<!--            header.appendChild(cell);-->
+<!--        }-->
+<!--    }-->
+
+<!--    function renderRoomsAndGrid() {-->
+<!--        const roomsCol = document.getElementById('roomsColumn');-->
+<!--        const gridRows = document.getElementById('gridRows');-->
+
+<!--        roomsCol.innerHTML = '';-->
+<!--        gridRows.innerHTML = '';-->
+
+<!--        const filteredRooms = state.rooms.filter(r => {-->
+<!--            if (state.roomStatusFilter && r.status !== state.roomStatusFilter) return false;-->
+<!--            return true;-->
+<!--        });-->
+
+<!--        filteredRooms.forEach(room => {-->
+<!--            // Room name cell-->
+<!--            const roomDiv = document.createElement('div');-->
+<!--            roomDiv.className = 'room-row';-->
+<!--            roomDiv.innerHTML = `-->
+<!--            <div class="room-number">${room.roomNumber}</div>-->
+<!--            <div class="room-type">${room.roomTypeName}</div>-->
+<!--        `;-->
+<!--            roomsCol.appendChild(roomDiv);-->
+
+<!--            // Grid row-->
+<!--            const gridRow = document.createElement('div');-->
+<!--            gridRow.className = 'grid-row';-->
+<!--            gridRow.dataset.roomId = room.id;-->
+
+<!--            const today = formatDate(new Date());-->
+<!--            for (let i = 0; i < state.days; i++) {-->
+<!--                const date = formatDate(addDays(state.startDate, i));-->
+<!--                const cell = document.createElement('div');-->
+<!--                cell.className = 'grid-cell' + (date === today ? ' today' : '');-->
+<!--                cell.dataset.date = date;-->
+<!--                gridRow.appendChild(cell);-->
+<!--            }-->
+
+<!--            gridRows.appendChild(gridRow);-->
+<!--        });-->
+<!--    }-->
+
+<!--    function renderBookings() {-->
+<!--        const gridRows = document.getElementById('gridRows');-->
+<!--        const today = formatDate(new Date());-->
+
+<!--        state.bookings.forEach(booking => {-->
+<!--            if (!booking.roomId) return; // Skip unassigned bookings-->
+
+<!--            const row = gridRows.querySelector(`[data-room-id="${booking.roomId}"]`);-->
+<!--            if (!row) return;-->
+
+<!--            const startDate = new Date(booking.checkInDate);-->
+<!--            const endDate = new Date(booking.checkOutDate);-->
+<!--            const dayWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('&#45;&#45;day-width')) || 100;-->
+
+<!--            // Calculate position-->
+<!--            const startOffset = daysBetween(formatDate(state.startDate), booking.checkInDate);-->
+<!--            const duration = daysBetween(booking.checkInDate, booking.checkOutDate);-->
+
+<!--            if (startOffset + duration < 0 || startOffset >= state.days) return; // Outside view range-->
+
+<!--            const leftPx = Math.max(0, startOffset) * dayWidth;-->
+<!--            const widthPx = Math.min(duration, state.days - Math.max(0, startOffset)) * dayWidth - 4;-->
+
+<!--            const block = document.createElement('div');-->
+<!--            block.className = `booking-block status-${booking.status}`;-->
+<!--            block.style.left = leftPx + 'px';-->
+<!--            block.style.width = Math.max(widthPx, 60) + 'px';-->
+<!--            block.dataset.bookingId = booking.id;-->
+
+<!--            block.innerHTML = `-->
+<!--            <span><i class="bi bi-bookmark-fill"></i> ${booking.bookingCode}</span>-->
+<!--            <span style="font-size: 11px; opacity: 0.9;">${booking.guestName}</span>-->
+<!--        `;-->
+
+<!--            block.addEventListener('mouseenter', (e) => showTooltip(e, booking));-->
+<!--            block.addEventListener('mouseleave', hideTooltip);-->
+<!--            block.addEventListener('click', () => showBookingDetail(booking));-->
+
+<!--            row.appendChild(block);-->
+<!--        });-->
+<!--    }-->
+
+<!--    function showTooltip(e, booking) {-->
+<!--        const tooltip = document.getElementById('tooltip');-->
+<!--        tooltip.style.display = 'block';-->
+<!--        tooltip.style.left = e.pageX + 'px';-->
+<!--        tooltip.style.top = (e.pageY - 40) + 'px';-->
+<!--        tooltip.innerHTML = `-->
+<!--        <strong>${booking.bookingCode}</strong><br>-->
+<!--        Khách: ${booking.guestName}<br>-->
+<!--        Phòng: ${booking.roomNumber}<br>-->
+<!--        ${booking.checkInDate} → ${booking.checkOutDate}<br>-->
+<!--        Trạng thái: ${getStatusText(booking.status)}-->
+<!--    `;-->
+<!--    }-->
+
+<!--    function hideTooltip() {-->
+<!--        document.getElementById('tooltip').style.display = 'none';-->
+<!--    }-->
+
+<!--    function getStatusText(status) {-->
+<!--        const map = {-->
+<!--            'PENDING': 'Chờ xác nhận',-->
+<!--            'CONFIRMED': 'Đã xác nhận',-->
+<!--            'CHECKED_IN': 'Đang ở',-->
+<!--            'CHECKED_OUT': 'Đã trả',-->
+<!--            'CANCELLED': 'Đã hủy'-->
+<!--        };-->
+<!--        return map[status] || status;-->
+<!--    }-->
+
+<!--    function showBookingDetail(booking) {-->
+<!--        window.location.href = `/manager/bookings/${booking.id}`;-->
+<!--    }-->
+
+<!--    function updateStats() {-->
+<!--        const today = formatDate(new Date());-->
+<!--        document.getElementById('totalRooms').textContent = state.rooms.length;-->
+
+<!--        const bookedToday = state.bookings.filter(b =>-->
+<!--            b.checkInDate <= today && b.checkOutDate > today-->
+<!--        ).length;-->
+<!--        document.getElementById('bookedToday').textContent = bookedToday;-->
+
+<!--        const checkinToday = state.bookings.filter(b => b.checkInDate === today).length;-->
+<!--        document.getElementById('checkinToday').textContent = checkinToday;-->
+
+<!--        const checkoutToday = state.bookings.filter(b => b.checkOutDate === today).length;-->
+<!--        document.getElementById('checkoutToday').textContent = checkoutToday;-->
+<!--    }-->
+
+<!--    function refreshData() {-->
+<!--        loadData();-->
+<!--    }-->
+
+<!--    // Event listeners-->
+<!--    document.getElementById('prevBtn').addEventListener('click', () => {-->
+<!--        state.startDate = addDays(state.startDate, -state.days);-->
+<!--        loadData();-->
+<!--    });-->
+
+<!--    document.getElementById('nextBtn').addEventListener('click', () => {-->
+<!--        state.startDate = addDays(state.startDate, state.days);-->
+<!--        loadData();-->
+<!--    });-->
+
+<!--    document.getElementById('todayBtn').addEventListener('click', () => {-->
+<!--        state.startDate = new Date();-->
+<!--        loadData();-->
+<!--    });-->
+
+<!--    document.getElementById('daysRange').addEventListener('change', (e) => {-->
+<!--        state.days = parseInt(e.target.value);-->
+<!--        loadData();-->
+<!--    });-->
+
+<!--    document.getElementById('roomTypeFilter').addEventListener('change', (e) => {-->
+<!--        state.roomTypeFilter = e.target.value;-->
+<!--        loadData();-->
+<!--    });-->
+
+<!--    document.getElementById('roomStatusFilter').addEventListener('change', (e) => {-->
+<!--        state.roomStatusFilter = e.target.value;-->
+<!--        render();-->
+<!--    });-->
+
+<!--    // Initialize-->
+<!--    loadData();-->
+
+<!--    // Auto refresh every 60 seconds-->
+<!--    setInterval(() => {-->
+<!--        console.log('Auto refreshing...');-->
+<!--        loadData();-->
+<!--    }, 60000);-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -14,56 +617,174 @@
             --gap: 4px;
         }
 
-        body { margin: 0; background: #f5f7fa; font-family: system-ui, -apple-system, sans-serif; }
-
-        .header {
-            background: #fff;
-            padding: 12px 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 16px;
+        body {
+            margin: 0;
+            background: #f5f7fa;
+            font-family: system-ui, -apple-system, sans-serif;
         }
 
-        .header h1 { font-size: 20px; margin: 0; font-weight: 600; }
+        /* Sidebar styling to match */
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 100;
+        }
 
-        .controls {
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        /* Card styling to match */
+        .card {
+            border: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Header section - matching the management page style */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .controls-wrapper {
             display: flex;
             gap: 10px;
-            margin-left: auto;
+            flex-wrap: wrap;
             align-items: center;
+            margin-top: 15px;
         }
 
-        .btn-nav { padding: 6px 12px; border: 1px solid #ddd; background: #fff; border-radius: 6px; cursor: pointer; }
-        .btn-nav:hover { background: #f8f9fa; }
-
-        .main-container {
-            display: flex;
-            height: calc(100vh - 60px);
-            padding: 16px;
-            gap: 16px;
+        .btn-nav {
+            padding: 8px 16px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
         }
 
-        .sidebar {
-            width: 280px;
-            background: #fff;
-            border-radius: 10px;
-            padding: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            overflow-y: auto;
+        .btn-nav:hover {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-nav i {
+            margin-right: 4px;
+        }
+
+        /* Filters card */
+        .filters-card {
+            margin-bottom: 20px;
+        }
+
+        .filters-card .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 15px 20px;
+        }
+
+        .filters-card .card-header h5 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            border: 2px solid black;
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card.primary {
+            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+            color: black;
+        }
+
+        .stat-card.success {
+            /*background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);*/
+            color: black;
+        }
+
+        .stat-card.warning {
+            /*background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);*/
+            color: black;
+        }
+
+        .stat-card.info {
+            /*background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);*/
+            color: black;
+        }
+
+        .stat-card .stat-label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* Timeline container */
+        .timeline-card {
+            border-radius: 15px;
+            overflow: hidden;
         }
 
         .timeline-wrapper {
-            flex: 1;
             background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
         .timeline-header {
@@ -74,9 +795,10 @@
 
         .room-header {
             width: 200px;
-            padding: 12px;
+            padding: 15px;
             font-weight: 600;
             border-right: 2px solid #e9ecef;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
         }
 
         .days-header {
@@ -87,18 +809,28 @@
 
         .day-cell {
             min-width: var(--day-width);
-            padding: 12px 8px;
+            padding: 15px 8px;
             text-align: center;
             border-right: 1px solid #e9ecef;
             font-size: 13px;
+            transition: background 0.2s;
         }
 
-        .day-cell.today { background: #e7f3ff; font-weight: 600; }
+        .day-cell:hover {
+            background: #f0f0f0;
+        }
+
+        .day-cell.today {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            font-weight: 600;
+            color: #667eea;
+        }
 
         .timeline-body {
             display: flex;
             flex: 1;
             overflow: auto;
+            max-height: 600px;
         }
 
         .rooms-column {
@@ -114,10 +846,24 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            transition: background 0.2s;
         }
 
-        .room-number { font-weight: 600; font-size: 15px; }
-        .room-type { font-size: 12px; color: #6c757d; margin-top: 2px; }
+        .room-row:hover {
+            background: #f0f0f0;
+        }
+
+        .room-number {
+            font-weight: 600;
+            font-size: 15px;
+            color: #212529;
+        }
+
+        .room-type {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 2px;
+        }
 
         .grid-container {
             position: relative;
@@ -138,31 +884,38 @@
         .grid-cell {
             min-width: var(--day-width);
             border-right: 1px solid #f0f0f0;
+            transition: background 0.2s;
         }
 
-        .grid-cell.today { background: #f0f8ff; }
+        .grid-cell:hover {
+            background: #f8f9fa;
+        }
+
+        .grid-cell.today {
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+        }
 
         .booking-block {
             position: absolute;
             height: 40px;
             top: 5px;
-            border-radius: 6px;
+            border-radius: 8px;
             color: #fff;
-            padding: 6px 10px;
+            padding: 6px 12px;
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
             z-index: 10;
         }
 
         .booking-block:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
             z-index: 20;
         }
 
@@ -172,11 +925,14 @@
         .booking-block.status-CHECKED_OUT { background: linear-gradient(135deg, #6c757d, #545b62); }
         .booking-block.status-CANCELLED { background: linear-gradient(135deg, #dc3545, #c82333); opacity: 0.6; }
 
+        /* Legend */
         .legend {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             flex-wrap: wrap;
-            margin-bottom: 16px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
         }
 
         .legend-item {
@@ -187,166 +943,169 @@
         }
 
         .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-        }
-
-        .stats {
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            font-size: 14px;
-        }
-
-        .filter-group {
-            margin-bottom: 16px;
-        }
-
-        .filter-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #495057;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .tooltip-custom {
             position: fixed;
             background: #222;
             color: #fff;
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border-radius: 8px;
             font-size: 12px;
             z-index: 1000;
             pointer-events: none;
             display: none;
             white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         @media (max-width: 768px) {
-            .sidebar { display: none; }
             .room-header, .rooms-column { width: 120px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
-<body>
-<div class="header">
+<body class="bg-light">
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div th:replace="fragments/manager_sidebar :: manager_sidebar"></div>
 
-    <h1><i class="bi bi-calendar3-range"></i> Room Timeline - Gantt View</h1>
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <!-- Page Header -->
+            <div class="page-header d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                <div>
+                    <h1><i class="bi bi-calendar3-range"></i> Room Timeline - Gantt View</h1>
+                    <p class="mb-0" style="opacity: 0.9; font-size: 14px;">Quản lý lịch đặt phòng trực quan</p>
+                </div>
+                <div class="controls-wrapper">
+                    <button class="btn-nav" id="prevBtn"><i class="bi bi-chevron-left"></i> Trước</button>
+                    <button class="btn-nav" id="todayBtn"><i class="bi bi-calendar-check"></i> Hôm nay</button>
+                    <button class="btn-nav" id="nextBtn">Sau <i class="bi bi-chevron-right"></i></button>
 
-    <div class="controls">
-        <button class="btn-nav" id="prevBtn"><i class="bi bi-chevron-left"></i> Trước</button>
-        <button class="btn-nav" id="todayBtn">Hôm nay</button>
-        <button class="btn-nav" id="nextBtn">Sau <i class="bi bi-chevron-right"></i></button>
+                    <select id="daysRange" class="form-select form-select-sm" style="width: 130px; background: rgba(255,255,255,0.95);">
+                        <option value="7">7 ngày</option>
+                        <option value="14" selected>14 ngày</option>
+                        <option value="30">30 ngày</option>
+                    </select>
 
-        <select id="daysRange" class="form-select form-select-sm" style="width: 120px;">
-            <option value="7">7 ngày</option>
-            <option value="14" selected>14 ngày</option>
-            <option value="30">30 ngày</option>
-        </select>
+                    <button class="btn-nav" onclick="refreshData()">
+                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                    </button>
 
-        <button class="btn-nav" onclick="refreshData()">
-            <i class="bi bi-arrow-clockwise"></i> Refresh
-        </button>
+                    <a href="/manager" class="btn-nav">
+                        <i class="bi bi-house"></i> Dashboard
+                    </a>
+                </div>
+            </div>
 
-        <a href="/manager" class="btn-nav">
-            <i class="bi bi-house"></i> Dashboard
-        </a>
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card primary">
+                    <div class="stat-label">Tổng số phòng</div>
+                    <div class="stat-value" id="totalRooms">0</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-label">Đã đặt hôm nay</div>
+                    <div class="stat-value" id="bookedToday">0</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-label">Check-in hôm nay</div>
+                    <div class="stat-value" id="checkinToday">0</div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-label">Check-out hôm nay</div>
+                    <div class="stat-value" id="checkoutToday">0</div>
+                </div>
+            </div>
+
+            <!-- Filters Card -->
+            <div class="card filters-card">
+                <div class="card-header">
+                    <h5><i class="bi bi-funnel"></i> Bộ lọc và chú thích</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <label for="roomTypeFilter" class="form-label">Loại phòng</label>
+                            <select id="roomTypeFilter" class="form-select">
+                                <option value="">Tất cả loại phòng</option>
+                                <option th:each="type : ${roomTypes}" th:value="${type}" th:text="${type}"></option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="roomStatusFilter" class="form-label">Trạng thái phòng</label>
+                            <select id="roomStatusFilter" class="form-select">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="AVAILABLE">Trống</option>
+                                <option value="OCCUPIED">Đang ở</option>
+                                <option value="CLEANING">Đang dọn</option>
+                                <option value="MAINTENANCE">Bảo trì</option>
+                            </select>
+                        </div>
+
+                        <!-- Legend inline -->
+                        <div class="col-md-6">
+                            <label class="form-label">Chú thích trạng thái:</label>
+                            <div class="legend">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: linear-gradient(135deg, #ffc107, #ff9800);"></div>
+                                    <span>Chờ xác nhận</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: linear-gradient(135deg, #17a2b8, #138496);"></div>
+                                    <span>Đã xác nhận</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: linear-gradient(135deg, #28a745, #218838);"></div>
+                                    <span>Đang ở</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: linear-gradient(135deg, #6c757d, #545b62);"></div>
+                                    <span>Đã trả</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: linear-gradient(135deg, #dc3545, #c82333);"></div>
+                                    <span>Đã hủy</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Card -->
+            <div class="card timeline-card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart-line"></i> Sơ đồ Gantt</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="timeline-wrapper">
+                        <div class="timeline-header">
+                            <div class="room-header">Phòng</div>
+                            <div class="days-header" id="daysHeader"></div>
+                        </div>
+
+                        <div class="timeline-body">
+                            <div class="rooms-column" id="roomsColumn"></div>
+                            <div class="grid-container" id="gridContainer">
+                                <div class="grid-rows" id="gridRows"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tooltip-custom" id="tooltip"></div>
+        </main>
     </div>
 </div>
-
-<div class="main-container">
-    <aside class="sidebar">
-        <h5 style="margin-bottom: 12px;">Bộ lọc</h5>
-
-        <div class="filter-group">
-            <label>Loại phòng</label>
-            <select id="roomTypeFilter" class="form-select form-select-sm">
-                <option value="">Tất cả</option>
-                <option th:each="type : ${roomTypes}" th:value="${type}" th:text="${type}"></option>
-            </select>
-        </div>
-
-        <div class="filter-group">
-            <label>Trạng thái phòng</label>
-            <select id="roomStatusFilter" class="form-select form-select-sm">
-                <option value="">Tất cả</option>
-                <option value="AVAILABLE">Trống</option>
-                <option value="OCCUPIED">Đang ở</option>
-                <option value="CLEANING">Đang dọn</option>
-                <option value="MAINTENANCE">Bảo trì</option>
-            </select>
-        </div>
-
-        <div class="stats">
-            <h6 style="margin-bottom: 10px;">Thống kê</h6>
-            <div class="stat-item">
-                <span>Tổng phòng:</span>
-                <strong id="totalRooms">0</strong>
-            </div>
-            <div class="stat-item">
-                <span>Đã đặt hôm nay:</span>
-                <strong id="bookedToday">0</strong>
-            </div>
-            <div class="stat-item">
-                <span>Check-in hôm nay:</span>
-                <strong id="checkinToday">0</strong>
-            </div>
-            <div class="stat-item">
-                <span>Check-out hôm nay:</span>
-                <strong id="checkoutToday">0</strong>
-            </div>
-        </div>
-
-        <div class="legend">
-            <div style="font-weight: 600; margin-bottom: 8px; width: 100%;">Chú thích:</div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #ffc107, #ff9800);"></div>
-                <span>Chờ xác nhận</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #17a2b8, #138496);"></div>
-                <span>Đã xác nhận</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #28a745, #218838);"></div>
-                <span>Đang ở</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #6c757d, #545b62);"></div>
-                <span>Đã trả</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #dc3545, #c82333);"></div>
-                <span>Đã hủy</span>
-            </div>
-        </div>
-    </aside>
-
-    <div class="timeline-wrapper">
-        <div class="timeline-header">
-            <div class="room-header">Phòng</div>
-            <div class="days-header" id="daysHeader"></div>
-        </div>
-
-        <div class="timeline-body">
-            <div class="rooms-column" id="roomsColumn"></div>
-            <div class="grid-container" id="gridContainer">
-                <div class="grid-rows" id="gridRows"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="tooltip-custom" id="tooltip"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -418,7 +1177,7 @@
 
             const cell = document.createElement('div');
             cell.className = 'day-cell' + (dateStr === today ? ' today' : '');
-            cell.innerHTML = `<div>${weekday}</div><div>${day}</div>`;
+            cell.innerHTML = `<div style="font-weight: 600;">${weekday}</div><div style="font-size: 12px; margin-top: 2px;">${day}</div>`;
             header.appendChild(cell);
         }
     }
@@ -440,9 +1199,9 @@
             const roomDiv = document.createElement('div');
             roomDiv.className = 'room-row';
             roomDiv.innerHTML = `
-            <div class="room-number">${room.roomNumber}</div>
-            <div class="room-type">${room.roomTypeName}</div>
-        `;
+                <div class="room-number">${room.roomNumber}</div>
+                <div class="room-type">${room.roomTypeName}</div>
+            `;
             roomsCol.appendChild(roomDiv);
 
             // Grid row
@@ -468,7 +1227,7 @@
         const today = formatDate(new Date());
 
         state.bookings.forEach(booking => {
-            if (!booking.roomId) return; // Skip unassigned bookings
+            if (!booking.roomId) return;
 
             const row = gridRows.querySelector(`[data-room-id="${booking.roomId}"]`);
             if (!row) return;
@@ -477,11 +1236,10 @@
             const endDate = new Date(booking.checkOutDate);
             const dayWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--day-width')) || 100;
 
-            // Calculate position
             const startOffset = daysBetween(formatDate(state.startDate), booking.checkInDate);
             const duration = daysBetween(booking.checkInDate, booking.checkOutDate);
 
-            if (startOffset + duration < 0 || startOffset >= state.days) return; // Outside view range
+            if (startOffset + duration < 0 || startOffset >= state.days) return;
 
             const leftPx = Math.max(0, startOffset) * dayWidth;
             const widthPx = Math.min(duration, state.days - Math.max(0, startOffset)) * dayWidth - 4;
@@ -493,9 +1251,9 @@
             block.dataset.bookingId = booking.id;
 
             block.innerHTML = `
-            <span><i class="bi bi-bookmark-fill"></i> ${booking.bookingCode}</span>
-            <span style="font-size: 11px; opacity: 0.9;">${booking.guestName}</span>
-        `;
+                <span><i class="bi bi-bookmark-fill"></i> ${booking.bookingCode}</span>
+                <span style="font-size: 11px; opacity: 0.9;">${booking.guestName}</span>
+            `;
 
             block.addEventListener('mouseenter', (e) => showTooltip(e, booking));
             block.addEventListener('mouseleave', hideTooltip);
@@ -509,14 +1267,14 @@
         const tooltip = document.getElementById('tooltip');
         tooltip.style.display = 'block';
         tooltip.style.left = e.pageX + 'px';
-        tooltip.style.top = (e.pageY - 40) + 'px';
+        tooltip.style.top = (e.pageY - 50) + 'px';
         tooltip.innerHTML = `
-        <strong>${booking.bookingCode}</strong><br>
-        Khách: ${booking.guestName}<br>
-        Phòng: ${booking.roomNumber}<br>
-        ${booking.checkInDate} → ${booking.checkOutDate}<br>
-        Trạng thái: ${getStatusText(booking.status)}
-    `;
+            <strong>${booking.bookingCode}</strong><br>
+            Khách: ${booking.guestName}<br>
+            Phòng: ${booking.roomNumber}<br>
+            ${booking.checkInDate} → ${booking.checkOutDate}<br>
+            Trạng thái: ${getStatusText(booking.status)}
+        `;
     }
 
     function hideTooltip() {

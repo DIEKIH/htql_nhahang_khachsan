@@ -2607,6 +2607,38 @@
         padding: calc(1.5rem * var(--scale));
       }
     }
+
+    /* Recently Viewed Section */
+    .recently-viewed-section {
+      padding: calc(60px * var(--scale)) 0 calc(40px * var(--scale));
+      background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+    }
+
+    .recently-viewed-section .branch-card {
+      transition: all 0.3s ease;
+    }
+
+    .recently-viewed-section .branch-card:hover {
+      transform: translateY(calc(-5px * var(--scale)));
+    }
+
+    .recently-viewed-section h3 {
+      font-size: calc(1.75rem * var(--scale));
+    }
+
+    .recently-viewed-section .card-title {
+      font-size: calc(1rem * var(--scale));
+      margin-bottom: calc(0.5rem * var(--scale));
+    }
+
+    .recently-viewed-section .branch-image {
+      height: calc(180px * var(--scale));
+    }
+
+    /* Badge cho gợi ý */
+    .badge.bg-warning {
+      font-size: calc(0.7rem * var(--scale));
+    }
   </style>
 </head>
 
@@ -2701,6 +2733,85 @@
         </div>
       </div>
     </form>
+  </div>
+</section>
+
+<!-- Recently Viewed Branches Section -->
+<section class="recently-viewed-section" th:if="${hasViewHistory}">
+  <div class="container">
+    <!-- Chi nhánh vừa xem -->
+    <div class="row mb-5" th:if="${not #lists.isEmpty(recentlyViewedBranches)}">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="heading-font mb-0">
+            <i class="fas fa-history text-primary me-2"></i>
+            Chi nhánh bạn vừa xem
+          </h3>
+          <a href="#" class="text-muted">
+            <small>Xem tất cả <i class="fas fa-arrow-right"></i></small>
+          </a>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-3 col-md-6" th:each="branch : ${recentlyViewedBranches}">
+            <div class="branch-card animate-on-scroll">
+              <div class="branch-image" th:style="'background-image: url(' + ${branch.defaultImage} + ')'">
+                <div class="branch-status" th:text="${branch.statusDisplayName}">Đang mở cửa</div>
+                <div class="branch-rating"><i class="fas fa-star"></i> 4.8</div>
+              </div>
+              <div class="card-body p-3">
+                <h6 class="card-title heading-font" th:text="${branch.name}">Branch Name</h6>
+                <p class="text-muted mb-2 small">
+                  <i class="fas fa-map-marker-alt me-1"></i>
+                  <span th:text="${branch.district + ', ' + branch.province}">Location</span>
+                </p>
+                <div class="services mb-2" th:utext="${#strings.listJoin(branch.serviceBadges, '')}"></div>
+                <a th:href="@{/branches/{id}(id=${branch.id})}" class="btn btn-primary btn-sm w-100">
+                  Xem lại
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gợi ý cho bạn -->
+    <div class="row" th:if="${not #lists.isEmpty(suggestedBranches)}">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="heading-font mb-0">
+            <i class="fas fa-magic text-warning me-2"></i>
+            Gợi ý cho bạn
+          </h3>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-3 col-md-6" th:each="branch : ${suggestedBranches}">
+            <div class="branch-card animate-on-scroll">
+              <div class="branch-image" th:style="'background-image: url(' + ${branch.defaultImage} + ')'">
+                <div class="branch-status" th:text="${branch.statusDisplayName}">Đang mở cửa</div>
+                <div class="branch-rating"><i class="fas fa-star"></i> 4.8</div>
+                <span class="badge bg-warning position-absolute top-0 end-0 m-2">
+                  <i class="fas fa-sparkles"></i> Đề xuất
+                </span>
+              </div>
+              <div class="card-body p-3">
+                <h6 class="card-title heading-font" th:text="${branch.name}">Branch Name</h6>
+                <p class="text-muted mb-2 small">
+                  <i class="fas fa-map-marker-alt me-1"></i>
+                  <span th:text="${branch.district + ', ' + branch.province}">Location</span>
+                </p>
+                <div class="services mb-2" th:utext="${#strings.listJoin(branch.serviceBadges, '')}"></div>
+                <a th:href="@{/branches/{id}(id=${branch.id})}" class="btn btn-outline-primary btn-sm w-100">
+                  Khám phá
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

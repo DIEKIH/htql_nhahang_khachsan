@@ -2,6 +2,7 @@ package com.example.htql_nhahang_khachsan.repository;
 
 import com.example.htql_nhahang_khachsan.entity.RoomBookingEntity;
 import com.example.htql_nhahang_khachsan.enums.BookingStatus;
+import com.example.htql_nhahang_khachsan.enums.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,6 +83,28 @@ public interface RoomBookingRepository extends JpaRepository<RoomBookingEntity, 
     List<RoomBookingEntity> findByCheckOutDateAndStatus(
             LocalDate checkOutDate, BookingStatus status);
 
+
+    List<RoomBookingEntity> findByBranchIdAndBookingDateBetweenAndPaymentStatus(
+            Long branchId,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            PaymentStatus paymentStatus
+    );
+
+    // Tìm bookings theo chi nhánh và khoảng thời gian
+    List<RoomBookingEntity> findByBranchIdAndCreatedAtBetweenAndPaymentStatus(
+            Long branchId,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            PaymentStatus paymentStatus
+    );
+
+    // Tìm tất cả bookings trong khoảng thời gian (tất cả chi nhánh)
+    List<RoomBookingEntity> findByCreatedAtBetweenAndPaymentStatus(
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            PaymentStatus paymentStatus
+    );
 
 }
 

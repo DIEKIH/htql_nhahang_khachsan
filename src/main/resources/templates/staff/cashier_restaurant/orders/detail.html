@@ -11,7 +11,9 @@
         .layout { display: flex; min-height: 100vh; }
         .sidebar {
             width: 240px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+            background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+
             color: white;
             padding: 15px;
             min-height: 100vh;
@@ -102,20 +104,13 @@
             <h6>Nhà Hàng</h6>
         </div>
         <nav class="nav flex-column">
-            <a class="nav-link" href="/cashier-restaurant/dashboard">
-                <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-            <a class="nav-link" href="/cashier-restaurant/create-order">
-                <i class="bi bi-plus-circle"></i> Đặt Món
-            </a>
-            <a class="nav-link active" href="/cashier-restaurant/orders">
-                <i class="bi bi-list-check"></i> Danh sách Đơn
-            </a>
+            <a class="nav-link" href="/cashier-restaurant/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a class="nav-link" href="/cashier-restaurant/create-order"><i class="bi bi-plus-circle"></i> Đặt Món</a>
+            <a class="nav-link" href="/cashier-restaurant/orders"><i class="bi bi-list-check"></i> Danh sách Đơn</a>
+            <a class="nav-link active" href="/cashier-restaurant/table-bookings"><i class="bi bi-calendar-check"></i> Quản Lý Đặt Bàn</a>
         </nav>
         <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
-            <a href="/cashier-restaurant/logout" class="nav-link">
-                <i class="bi bi-box-arrow-right"></i> Đăng xuất
-            </a>
+            <a href="/cashier-restaurant/logout" class="nav-link"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
         </div>
     </div>
 

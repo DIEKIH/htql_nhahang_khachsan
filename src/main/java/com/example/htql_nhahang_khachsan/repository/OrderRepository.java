@@ -68,4 +68,26 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     BigDecimal sumRevenueByBranchAndDate(@Param("branchId") Long branchId,
                                          @Param("startDate") LocalDateTime startDate,
                                          @Param("endDate") LocalDateTime endDate);
+
+    List<OrderEntity> findByBranchIdAndOrderTimeBetweenAndStatus(
+            Long branchId,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            OrderStatus status
+    );
+
+    // Tìm orders theo chi nhánh, khoảng thời gian và trạng thái
+    List<OrderEntity> findByBranchIdAndCreatedAtBetweenAndStatusIn(
+            Long branchId,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            List<OrderStatus> statuses
+    );
+
+    // Tìm tất cả orders trong khoảng thời gian (tất cả chi nhánh)
+    List<OrderEntity> findByCreatedAtBetweenAndStatusIn(
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            List<OrderStatus> statuses
+    );
 }

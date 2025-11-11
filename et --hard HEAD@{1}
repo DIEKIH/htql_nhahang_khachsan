@@ -1,0 +1,21 @@
+[33m8757f13[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mroom_booking[m[33m, [m[1;31morigin/sua_giaodien[m[33m, [m[1;32msua_giaodien[m[33m)[m HEAD@{0}: reset: moving to 0b652ca743dff6717034504e55fb046cd5c8aaf2~1
+[33m305dcae[m HEAD@{1}: commit: xong giao booking nguoi dung
+[33m0b652ca[m HEAD@{2}: commit: xong giao booking nguoi dung
+[33m8757f13[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mroom_booking[m[33m, [m[1;31morigin/sua_giaodien[m[33m, [m[1;32msua_giaodien[m[33m)[m HEAD@{3}: checkout: moving from sua_giaodien to room_booking
+[33m8757f13[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mroom_booking[m[33m, [m[1;31morigin/sua_giaodien[m[33m, [m[1;32msua_giaodien[m[33m)[m HEAD@{4}: commit: xong giao diện
+[33m7a72513[m HEAD@{5}: commit: xong giao diện
+[33mc3a17db[m[33m ([m[1;31morigin/giam-gia[m[33m, [m[1;32mgiam-gia[m[33m)[m HEAD@{6}: checkout: moving from giam-gia to sua_giaodien
+[33mc3a17db[m[33m ([m[1;31morigin/giam-gia[m[33m, [m[1;32mgiam-gia[m[33m)[m HEAD@{7}: commit: xong promotion
+[33m72f7f6a[m[33m ([m[1;31morigin/menuItem[m[33m, [m[1;32mmenuItem[m[33m)[m HEAD@{8}: checkout: moving from menuItem to giam-gia
+[33m72f7f6a[m[33m ([m[1;31morigin/menuItem[m[33m, [m[1;32mmenuItem[m[33m)[m HEAD@{9}: commit: xong menuItem
+[33m079c9c8[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{10}: checkout: moving from main to menuItem
+[33m079c9c8[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{11}: commit (amend): Clean project without secrets
+[33m1d4ce15[m HEAD@{12}: Branch: renamed refs/heads/clean-main to refs/heads/main
+[33m1d4ce15[m HEAD@{14}: commit (initial): Clean project without secrets
+[33m0066cda[m HEAD@{15}: Branch: renamed refs/heads/latest_branch to refs/heads/main
+[33m0066cda[m HEAD@{17}: commit (initial): Initial clean commit without secrets
+[33m0cfd170[m HEAD@{18}: commit: Remove secrets from properties file
+[33ma580610[m HEAD@{19}: Branch: renamed refs/heads/main to refs/heads/main
+[33ma580610[m HEAD@{21}: Branch: renamed refs/heads/main to refs/heads/main
+[33ma580610[m HEAD@{23}: Branch: renamed refs/heads/main to refs/heads/main
+[33ma580610[m HEAD@{25}: commit (initial): First commit

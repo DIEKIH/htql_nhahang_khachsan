@@ -106,6 +106,64 @@ public interface RoomBookingRepository extends JpaRepository<RoomBookingEntity, 
             PaymentStatus paymentStatus
     );
 
+    // Thêm vào RoomBookingRepository.java hiện tại
+
+
+    /**
+     * ✅ FIXED: So sánh guestEmail và guestPhone (không phải customer.email)
+     * Kiểm tra có booking COMPLETED với email/phone đã checkout
+     */
+    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM RoomBookingEntity b " +
+            "WHERE b.branch.id = :branchId " +
+            "AND b.status = 'COMPLETED' " +
+            "AND b.checkOutDate < CURRENT_DATE " +
+            "AND (LOWER(b.guestEmail) = LOWER(:email) OR b.guestPhone = :phone)")
+    boolean hasCompletedBookingByEmailOrPhoneForBranch(
+            @Param("email") String email,
+            @Param("phone") String phone,
+            @Param("branchId") Long branchId);
+
+    /**
+     * ✅ NEW: Lấy tất cả booking COMPLETED của branch
+     */
+    @Query("SELECT b FROM RoomBookingEntity b " +
+            "WHERE b.branch.id = :branchId " +
+            "AND b.status = :status " +
+            "ORDER BY b.checkOutDate DESC")
+    List<RoomBookingEntity> findCompletedBookingsByBranchAndStatus(
+            @Param("branchId") Long branchId,
+            @Param("status") BookingStatus status);
+
+    /**
+     * Lấy danh sách booking đã hoàn thành qua email/phone
+     */
+    @Query("SELECT b FROM RoomBookingEntity b " +
+            "WHERE (LOWER(b.guestEmail) = LOWER(:email) OR b.guestPhone = :phone) " +
+            "AND b.status = 'COMPLETED' " +
+            "ORDER BY b.checkOutDate DESC")
+    List<RoomBookingEntity> findCompletedBookingsByEmailOrPhone(
+            @Param("email") String email,
+            @Param("phone") String phone);
+
+    /**
+     * Kiểm tra booking đã được review chưa
+     */
+    @Query("SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END FROM ReviewEntity r " +
+            "WHERE r.roomBooking.id = :bookingId")
+    boolean isBookingReviewed(@Param("bookingId") Long bookingId);
+
+
+    @Query("SELECT b FROM RoomBookingEntity b " +
+            "WHERE b.checkInDate <= :date AND b.checkOutDate >= :date")
+    List<RoomBookingEntity> findActiveBookingsOnDate(@Param("date") LocalDate date);
+
+    // Tìm booking theo guest email/phone
+    List<RoomBookingEntity> findByGuestEmailOrGuestPhone(String email, String phone);
+
+
+
+
+
 }
 
 

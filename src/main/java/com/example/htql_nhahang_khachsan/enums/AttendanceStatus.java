@@ -1,16 +1,15 @@
 package com.example.htql_nhahang_khachsan.enums;
 
-public enum ShiftStatus {
-    SCHEDULED("Đã lên lịch", "bg-info"),
-    STARTED("Đang làm", "bg-primary"),
-    COMPLETED("Hoàn thành", "bg-success"),
-    CANCELLED("Đã hủy", "bg-secondary"),
-    ABSENT("Vắng mặt", "bg-danger");
+public enum AttendanceStatus {
+    PRESENT("Có mặt", "bg-success"),
+    LATE("Đi muộn", "bg-warning"),
+    ABSENT("Vắng mặt", "bg-danger"),
+    LEFT_EARLY("Về sớm", "bg-info");
 
     private final String displayName;
     private final String badgeClass;
 
-    ShiftStatus(String displayName, String badgeClass) {
+    AttendanceStatus(String displayName, String badgeClass) {
         this.displayName = displayName;
         this.badgeClass = badgeClass;
     }

@@ -41,4 +41,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
                                         @Param("branchId") Long branchId,
                                         @Param("status") UserStatus status,
                                         @Param("search") String search);
+
+    // ✨ Method mới thêm vào
+    List<UserEntity> findByBranchIdAndRole(Long branchId, UserRole role);
+
 }

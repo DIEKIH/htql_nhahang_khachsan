@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Nhân Viên</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: #f5f6fa; font-family: 'Segoe UI', sans-serif; }
+        .layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 240px; background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+            color: white; padding: 15px; min-height: 100vh; position: fixed; left: 0; top: 0; overflow-y: auto; }
+        .sidebar-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .sidebar-header i { font-size: 2rem; margin-bottom: 8px; display: block; }
+        .sidebar-header h6 { font-size: 13px; margin: 5px 0; font-weight: 600; }
+        .nav-link { color: rgba(255,255,255,0.85); padding: 10px 12px; margin: 3px 0; border-radius: 6px;
+            font-size: 13px; transition: all 0.3s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.2); color: white; }
+        .main-content { margin-left: 240px; padding: 20px; flex: 1; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: none; margin-bottom: 15px; }
+        .card-header { background: #f8f9fa; border-bottom: 1px solid #e9ecef; padding: 15px; font-weight: 600; }
+        .stat-card { padding: 15px; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: space-between; }
+        .stat-card i { font-size: 2rem; opacity: 0.8; }
+        .stat-card .stat-value { font-size: 24px; font-weight: bold; }
+        .stat-card .stat-label { font-size: 13px; opacity: 0.9; }
+        .bg-total { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .bg-completed { background: linear-gradient(135deg, #198754 0%, #146c43 100%); }
+        .bg-upcoming { background: linear-gradient(135deg, #0dcaf0 0%, #0aa1c7 100%); }
+        .bg-late { background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%); }
+        .shift-card { border-left: 4px solid; padding: 15px; background: white; border-radius: 8px; margin-bottom: 10px; }
+        .shift-card.morning { border-color: #17a2b8; }
+        .shift-card.afternoon { border-color: #ffc107; }
+        .shift-card.evening { border-color: #007bff; }
+        .shift-card.night { border-color: #343a40; }
+        .shift-card.full { border-color: #28a745; }
+        .btn-checkin { background: #28a745; color: white; border: none; }
+        .btn-checkout { background: #dc3545; color: white; border: none; }
+        .badge { font-size: 11px; padding: 5px 10px; }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="bi bi-person-circle"></i>
+            <h6 th:text="${user.fullName}">Nhân Viên</h6>
+            <small th:text="${user.branch?.name}" style="font-size: 11px; opacity: 0.8;">Chi nhánh</small>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="/staff/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a class="nav-link" href="/staff/work-schedule"><i class="bi bi-calendar-week"></i> Lịch Làm Việc</a>
+            <a class="nav-link" href="/staff/attendance-history"><i class="bi bi-clock-history"></i> Lịch Sử Chấm Công</a>
+            <a class="nav-link" href="/staff/profile"><i class="bi bi-person"></i> Thông Tin Cá Nhân</a>
+        </nav>
+        <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <a href="/staff/logout" class="nav-link"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div style="margin-bottom: 20px;">
+            <h4><i class="bi bi-speedometer2 me-2"></i> Dashboard Nhân Viên</h4>
+            <p class="text-muted mb-0" style="font-size: 13px;"
+               th:text="'Hôm nay: ' + ${#temporals.format(today, 'EEEE, dd/MM/yyyy')}"></p>
+
+        </div>
+
+        <!-- STATISTICS -->
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="stat-card bg-total">
+                    <div>
+                        <div class="stat-value" th:text="${stats.totalShifts}">0</div>
+                        <div class="stat-label">Tổng ca tuần này</div>
+                    </div>
+                    <i class="bi bi-calendar-week"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card bg-completed">
+                    <div>
+                        <div class="stat-value" th:text="${stats.completedShifts}">0</div>
+                        <div class="stat-label">Ca đã hoàn thành</div>
+                    </div>
+                    <i class="bi bi-check-circle"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card bg-upcoming">
+                    <div>
+                        <div class="stat-value" th:text="${stats.upcomingShifts}">0</div>
+                        <div class="stat-label">Ca sắp tới</div>
+                    </div>
+                    <i class="bi bi-clock"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card bg-late">
+                    <div>
+                        <div class="stat-value" th:text="${stats.lateCount}">0</div>
+                        <div class="stat-label">Số lần đi muộn</div>
+                    </div>
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- TODAY'S SHIFTS -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-calendar-day me-2"></i> Ca Làm Hôm Nay
+                <small class="text-muted float-end" th:text="'(' + ${#temporals.format(today, 'dd/MM/yyyy')} + ')'"></small>
+            </div>
+            <div class="card-body">
+                <div th:if="${#lists.isEmpty(todayShifts)}" class="text-center py-5 text-muted">
+                    <i class="bi bi-calendar-x" style="font-size: 48px; opacity: 0.3; display: block; margin-bottom: 15px;"></i>
+                    <div>Không có ca làm việc hôm nay</div>
+                </div>
+
+                <div th:each="shift : ${todayShifts}"
+                     th:class="'shift-card ' + ${shift.type.name().toLowerCase()}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-2">
+                                <span class="badge" th:classappend="${shift.typeBadgeClass}"
+                                      th:text="${shift.typeDisplayName}">Ca sáng</span>
+                                <span class="badge" th:classappend="${shift.statusBadgeClass}"
+                                      th:text="${shift.statusDisplayName}">Đã lên lịch</span>
+                            </h6>
+                            <div style="font-size: 13px;">
+                                <i class="bi bi-clock"></i>
+                                <strong th:text="${shift.formattedTime}">08:00 - 16:00</strong>
+                            </div>
+
+                            <!-- ✅ THÊM: Thông báo giới hạn thời gian -->
+                            <div class="mt-2" style="font-size: 11px; color: #6c757d;">
+                                <i class="bi bi-info-circle"></i> Check-in: trước giờ ca 30 phút | Check-out: sau giờ ca 2 tiếng
+                            </div>
+
+                            <div th:if="${shift.attendance != null}" class="mt-2" style="font-size: 12px;">
+                                <div th:if="${shift.attendance.checkIn != null}">
+                                    <i class="bi bi-box-arrow-in-right text-success"></i>
+                                    Check-in: <strong th:text="${shift.attendance.formattedCheckIn}"></strong>
+                                    <span th:if="${shift.attendance.isLate}" class="badge bg-warning ms-1">Muộn</span>
+                                </div>
+                                <div th:if="${shift.attendance.checkOut != null}">
+                                    <i class="bi bi-box-arrow-right text-secondary"></i>
+                                    Check-out: <strong th:text="${shift.attendance.formattedCheckOut}"></strong>
+                                    <span th:if="${shift.attendance.isLeftEarly}" class="badge bg-info ms-1">Về sớm</span>
+                                </div>
+                                <div th:if="${shift.attendance.notes != null}" class="mt-1 text-muted">
+                                    <i class="bi bi-chat-left-text"></i> <small th:text="${shift.attendance.notes}"></small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button th:if="${shift.attendance == null}"
+                                    class="btn btn-sm btn-checkin"
+                                    th:onclick="'checkIn(' + ${shift.id} + ')'">
+                                <i class="bi bi-box-arrow-in-right"></i> Check-in
+                            </button>
+
+                            <button th:if="${shift.attendance != null && shift.attendance.checkOut == null}"
+                                    class="btn btn-sm btn-checkout"
+                                    th:onclick="'checkOut(' + ${shift.id} + ')'">
+                                <i class="bi bi-box-arrow-right"></i> Check-out
+                            </button>
+
+                            <span th:if="${shift.attendance != null && shift.attendance.checkOut != null}"
+                                  class="badge bg-secondary">
+                                <i class="bi bi-check-all"></i> Đã hoàn thành
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUICK INFO -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-info-circle me-2"></i> Thông Tin Cá Nhân
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm mb-0" style="font-size: 13px;">
+                            <tr>
+                                <td width="40%"><i class="bi bi-person"></i> Họ tên:</td>
+                                <td><strong th:text="${user.fullName}">Nguyễn Văn A</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-envelope"></i> Email:</td>
+                                <td th:text="${user.email}">email@example.com</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-phone"></i> Điện thoại:</td>
+                                <td th:text="${user.phoneNumber}">0901234567</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-building"></i> Chi nhánh:</td>
+                                <td th:text="${user.branch?.name}">Chi nhánh 1</td>
+                            </tr>
+                        </table>
+                        <div class="text-end mt-3">
+                            <a href="/staff/profile" class="btn btn-sm btn-primary">
+                                <i class="bi bi-pencil"></i> Cập nhật
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-calendar-range me-2"></i> Tuần Này
+                    </div>
+                    <div class="card-body">
+                        <div style="font-size: 13px;">
+                            <div class="mb-2">
+                                <i class="bi bi-calendar-check"></i>
+                                <strong>Khoảng thời gian:</strong>
+                                <span th:text="${stats.weekStart} + ' - ' + ${stats.weekEnd}"></span>
+                            </div>
+                            <div class="mb-2">
+                                <i class="bi bi-list-check"></i>
+                                <strong>Tổng ca:</strong>
+                                <span th:text="${stats.totalShifts}">0</span> ca
+                            </div>
+                            <div class="mb-2">
+                                <i class="bi bi-check-circle text-success"></i>
+                                <strong>Đã hoàn thành:</strong>
+                                <span th:text="${stats.completedShifts}">0</span> ca
+                            </div>
+                            <div class="mb-2">
+                                <i class="bi bi-clock text-info"></i>
+                                <strong>Sắp tới:</strong>
+                                <span th:text="${stats.upcomingShifts}">0</span> ca
+                            </div>
+                        </div>
+                        <div class="text-end mt-3">
+                            <a href="/staff/work-schedule" class="btn btn-sm btn-primary">
+                                <i class="bi bi-calendar-week"></i> Xem lịch đầy đủ
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    async function checkIn(shiftId) {
+        if (!confirm('Xác nhận check-in ca làm việc này?')) return;
+
+        try {
+            const res = await fetch('/staff/api/attendance/check-in', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ shiftId: shiftId, notes: null })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Lỗi: ' + data.error);
+            }
+        } catch (error) {
+            alert('Không thể check-in. Vui lòng thử lại!');
+        }
+    }
+
+    async function checkOut(shiftId) {
+        if (!confirm('Xác nhận check-out ca làm việc này?')) return;
+
+        try {
+            const res = await fetch('/staff/api/attendance/check-out', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ shiftId: shiftId, notes: null })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Lỗi: ' + data.error);
+            }
+        } catch (error) {
+            alert('Không thể check-out. Vui lòng thử lại!');
+        }
+    }
+</script>
+</body>
+</html>

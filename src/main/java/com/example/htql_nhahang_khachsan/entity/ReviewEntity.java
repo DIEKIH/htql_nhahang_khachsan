@@ -41,8 +41,16 @@ public class ReviewEntity {
     private RoomBookingEntity roomBooking; // Đánh giá phòng
 
     @ManyToOne
+    @JoinColumn(name = "room_type_id")
+    private RoomTypeEntity roomType; // Đánh giá loại phòng
+
+    @ManyToOne
     @JoinColumn(name = "order_id")
     private OrderEntity order; // Đánh giá nhà hàng
+
+    @ManyToOne
+    @JoinColumn(name = "menu_item_id")
+    private MenuItemEntity menuItem; // Đánh giá món ăn
 
     @Enumerated(EnumType.STRING)
     private ReviewType type; // ROOM, RESTAURANT, SERVICE

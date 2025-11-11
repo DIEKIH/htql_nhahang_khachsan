@@ -142,7 +142,7 @@ public class AuthController {
             return "redirect:/staff/dashboard";
         }
         model.addAttribute("loginRequest", new LoginRequest());
-        return "staff/login";
+        return "staff/staff/login";
     }
 
     @PostMapping("/staff/login")
@@ -151,7 +151,7 @@ public class AuthController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            return "staff/login";
+            return "staff/staff/login";
         }
 
         try {
@@ -316,14 +316,14 @@ public class AuthController {
         return "manager/dashboard";
     }
 
-    @GetMapping("/staff/dashboard")
-    public String staffDashboard(HttpSession session, Model model) {
-        if (!authService.isLoggedIn(session) || !authService.isStaff(session)) {
-            return "redirect:/staff/login";
-        }
-        model.addAttribute("user", authService.getCurrentUser(session));
-        return "staff/dashboard";
-    }
+//    @GetMapping("/staff/dashboard")
+//    public String staffDashboard(HttpSession session, Model model) {
+//        if (!authService.isLoggedIn(session) || !authService.isStaff(session)) {
+//            return "redirect:/staff/login";
+//        }
+//        model.addAttribute("user", authService.getCurrentUser(session));
+//        return "staff/dashboard";
+//    }
 
 //    @GetMapping("/cashier-restaurant/dashboard")
 //    public String cashierRestaurantDashboard(HttpSession session, Model model) {

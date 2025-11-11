@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -29,6 +30,10 @@ public class MenuItemEntity {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private MenuCategoryEntity category;
+
+    @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MenuItemImageEntity> menuItemImages;
+
 
     @Column(nullable = false)
     private String name;

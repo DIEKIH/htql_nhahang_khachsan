@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "room_types")
@@ -27,6 +28,10 @@ public class RoomTypeEntity {
     @ManyToOne
     @JoinColumn(name = "branch_id", nullable = false)
     private BranchEntity branch;
+
+    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RoomImageEntity> roomImages;
+
 
     @Column(nullable = false)
     private String name;

@@ -1464,6 +1464,325 @@
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+
+        /* Rating Statistics */
+        .rating-overview {
+            background: var(--accent-color);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .rating-score {
+            text-align: center;
+            border-right: 1px solid #ddd;
+            padding-right: 25px;
+        }
+
+        .rating-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            font-size: 1.2rem;
+            margin: 8px 0;
+        }
+
+        .rating-count {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .rating-bars {
+            padding-left: 25px;
+        }
+
+        .rating-bar-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .rating-bar-label {
+            width: 60px;
+            color: var(--text-dark);
+        }
+
+        .rating-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+
+        .rating-bar-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .rating-bar-count {
+            width: 40px;
+            text-align: right;
+            color: var(--text-light);
+        }
+
+        /* Review Card */
+        .review-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .reviewer-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .review-date {
+            color: var(--text-light);
+            font-size: 11px;
+        }
+
+        .review-rating {
+            color: #ffc107;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .review-actions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .review-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 5px 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .review-action-btn:hover {
+            color: var(--primary-color);
+        }
+
+        /* Review Modal */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), #d4b079);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 20px 25px;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .star-rating i {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .star-rating i:hover,
+        .star-rating i.active {
+            color: #ffc107;
+            transform: scale(1.1);
+        }
+
+        .review-textarea {
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 13px;
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .review-textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.15rem rgba(201, 169, 110, 0.25);
+        }
+
+        .btn-luxury {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+            font-size: 13px;
+        }
+
+        .btn-luxury:hover {
+            background: #b8956b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(201, 169, 110, 0.4);
+            color: white;
+        }
+
+        .empty-reviews {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .empty-reviews i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+
+        rating-score .rating-number {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .review-card {
+            transition: all 0.3s ease;
+        }
+
+        .review-card:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        .star-rating i {
+            transition: all 0.2s ease;
+        }
+
+        .star-rating i:hover,
+        .star-rating i.active {
+            transform: scale(1.2);
+        }
+
+        .staff-response {
+            border-left: 4px solid #0d6efd;
+        }
+
+        /* Pagination */
+        .pagination {
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .page-link {
+            color: var(--primary-color);
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .page-link:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .page-item.active .page-link {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* Alert styling */
+        .alert {
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .alert-info {
+            background: #e7f3ff;
+            border-color: #b3d9ff;
+            color: #004085;
+        }
+
+        /* Staff response */
+        .staff-response {
+            background: #f8f9fa;
+            border-left: 3px solid var(--primary-color);
+            padding: 12px 15px;
+            margin-top: 12px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .staff-response-header {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .rating-score {
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+                padding-right: 0;
+                padding-bottom: 20px;
+                margin-bottom: 20px;
+            }
+
+            .rating-bars {
+                padding-left: 0;
+            }
+
+            .review-actions {
+                position: static;
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
 
@@ -1804,6 +2123,255 @@
         </div>
     </div>
 
+    <!-- ✅ SECTION ĐÁNH GIÁ - Copy thay thế phần cũ trong detail.html -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="heading-font mb-4">
+                        <i class="fas fa-star text-warning me-2"></i>Đánh giá từ khách hàng
+                    </h3>
+
+                    <!-- ✅ DEBUG INFO - XÓA SAU KHI TEST XONG -->
+                    <div class="alert alert-info">
+                        <strong>🔍 DEBUG INFO:</strong><br>
+                        Total Reviews: <span th:text="${reviewStats.totalReviews}">0</span><br>
+                        Average Rating: <span th:text="${reviewStats.averageRating}">0.0</span><br>
+                        Has Content: <span th:text="${reviews != null ? reviews.hasContent() : false}">false</span><br>
+                        Number of Elements: <span th:text="${reviews != null ? reviews.numberOfElements : 0}">0</span><br>
+                        Total Pages: <span th:text="${reviews != null ? reviews.totalPages : 0}">0</span>
+                    </div>
+
+                    <!-- Rating Overview -->
+                    <div class="rating-overview mb-4">
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <div class="rating-score">
+                                    <div class="rating-number display-4 fw-bold text-warning"
+                                         th:text="${#numbers.formatDecimal(reviewStats.averageRating, 1, 1)}">0.0</div>
+                                    <div class="rating-stars mb-2">
+                                        <i class="fas fa-star text-warning" th:each="i : ${#numbers.sequence(1, 5)}"></i>
+                                    </div>
+                                    <div class="text-muted">
+                                        <span th:text="${reviewStats.totalReviews}">0</span> đánh giá
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="rating-bars">
+                                    <!-- 5 stars -->
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="rating-bar-label" style="width: 60px;">
+                                            5 <i class="fas fa-star text-warning"></i>
+                                        </div>
+                                        <div class="progress flex-grow-1 mx-2" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                 th:style="'width: ' + ${reviewStats.totalReviews > 0 ? (reviewStats.rating5Count * 100.0 / reviewStats.totalReviews) : 0} + '%'">
+                                            </div>
+                                        </div>
+                                        <div class="rating-bar-count" style="width: 40px; text-align: right;"
+                                             th:text="${reviewStats.rating5Count}">0</div>
+                                    </div>
+
+                                    <!-- 4 stars -->
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="rating-bar-label" style="width: 60px;">
+                                            4 <i class="fas fa-star text-warning"></i>
+                                        </div>
+                                        <div class="progress flex-grow-1 mx-2" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                 th:style="'width: ' + ${reviewStats.totalReviews > 0 ? (reviewStats.rating4Count * 100.0 / reviewStats.totalReviews) : 0} + '%'">
+                                            </div>
+                                        </div>
+                                        <div class="rating-bar-count" style="width: 40px; text-align: right;"
+                                             th:text="${reviewStats.rating4Count}">0</div>
+                                    </div>
+
+                                    <!-- 3 stars -->
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="rating-bar-label" style="width: 60px;">
+                                            3 <i class="fas fa-star text-warning"></i>
+                                        </div>
+                                        <div class="progress flex-grow-1 mx-2" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                 th:style="'width: ' + ${reviewStats.totalReviews > 0 ? (reviewStats.rating3Count * 100.0 / reviewStats.totalReviews) : 0} + '%'">
+                                            </div>
+                                        </div>
+                                        <div class="rating-bar-count" style="width: 40px; text-align: right;"
+                                             th:text="${reviewStats.rating3Count}">0</div>
+                                    </div>
+
+                                    <!-- 2 stars -->
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="rating-bar-label" style="width: 60px;">
+                                            2 <i class="fas fa-star text-warning"></i>
+                                        </div>
+                                        <div class="progress flex-grow-1 mx-2" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                 th:style="'width: ' + ${reviewStats.totalReviews > 0 ? (reviewStats.rating2Count * 100.0 / reviewStats.totalReviews) : 0} + '%'">
+                                            </div>
+                                        </div>
+                                        <div class="rating-bar-count" style="width: 40px; text-align: right;"
+                                             th:text="${reviewStats.rating2Count}">0</div>
+                                    </div>
+
+                                    <!-- 1 star -->
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="rating-bar-label" style="width: 60px;">
+                                            1 <i class="fas fa-star text-warning"></i>
+                                        </div>
+                                        <div class="progress flex-grow-1 mx-2" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                 th:style="'width: ' + ${reviewStats.totalReviews > 0 ? (reviewStats.rating1Count * 100.0 / reviewStats.totalReviews) : 0} + '%'">
+                                            </div>
+                                        </div>
+                                        <div class="rating-bar-count" style="width: 40px; text-align: right;"
+                                             th:text="${reviewStats.rating1Count}">0</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Write Review Button -->
+                    <div class="text-center mb-4 p-3 bg-light rounded">
+                        <button th:if="${isLoggedIn and isCustomer and canReview and userReview == null}"
+                                class="btn btn-lg btn-warning"
+                                data-bs-toggle="modal"
+                                data-bs-target="#reviewModal">
+                            <i class="fas fa-pen me-2"></i>Viết đánh giá của bạn
+                        </button>
+
+                        <div th:if="${isLoggedIn and isCustomer and userReview != null}"
+                             class="alert alert-success d-inline-block mb-0">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Bạn đã đánh giá loại phòng này
+                        </div>
+
+                        <div th:if="${!isLoggedIn}" class="alert alert-info d-inline-block mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Vui lòng <a th:href="@{/customer/login}" class="fw-bold text-decoration-underline">đăng nhập</a> để viết đánh giá
+                        </div>
+
+                        <div th:if="${isLoggedIn and !isCustomer}"
+                             class="alert alert-warning d-inline-block mb-0">
+                            <i class="fas fa-user-shield me-2"></i>
+                            Chỉ khách hàng mới có thể đánh giá
+                        </div>
+
+                        <div th:if="${isLoggedIn and isCustomer and !canReview and userReview == null}"
+                             class="alert alert-warning d-inline-block mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Bạn cần trải nghiệm dịch vụ để có thể đánh giá
+                        </div>
+                    </div>
+
+                    <!-- ✅ DANH SÁCH ĐÁNH GIÁ - KIỂM TRA KỸ ĐIỀU KIỆN -->
+                    <div th:if="${reviews != null and reviews.hasContent()}" class="reviews-list">
+                        <h5 class="mb-3">
+                            Tất cả đánh giá (<span th:text="${reviews.totalElements}">0</span>)
+                        </h5>
+
+                        <!-- Loop qua từng review -->
+                        <div class="review-card border rounded p-3 mb-3" th:each="review : ${reviews.content}">
+                            <div class="d-flex align-items-start">
+                                <!-- Avatar -->
+                                <img th:src="${review.avatarUrl != null and review.avatarUrl != '' ? review.avatarUrl : 'https://ui-avatars.com/api/?name=' + review.customerName + '&background=c9a96e&color=fff&size=80&bold=true'}"
+                                     alt="Avatar"
+                                     class="rounded-circle me-3"
+                                     style="width: 50px; height: 50px; object-fit: cover;">
+
+                                <div class="flex-grow-1">
+                                    <!-- Header -->
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <div class="fw-bold" th:text="${review.customerName}">Tên khách hàng</div>
+                                            <small class="text-muted" th:text="${review.formattedDate}">01/01/2024 10:00</small>
+                                        </div>
+
+                                        <!-- Action buttons - chỉ hiển thị cho chủ nhân -->
+                                        <div th:if="${isLoggedIn and isCustomer and currentUser != null and currentUser.id == review.customerId}"
+                                             class="btn-group">
+                                            <button class="btn btn-sm btn-outline-primary"
+                                                    onclick="editReview(this)"
+                                                    th:attr="data-review-id=${review.id},data-rating=${review.rating},data-comment=${review.comment}"
+                                                    title="Sửa đánh giá">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                    onclick="deleteReview(this)"
+                                                    th:attr="data-review-id=${review.id}"
+                                                    title="Xóa đánh giá">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Rating -->
+                                    <div class="review-rating mb-2">
+                                        <th:block th:each="i : ${#numbers.sequence(1, review.rating)}">
+                                            <i class="fas fa-star text-warning"></i>
+                                        </th:block>
+                                        <th:block th:each="i : ${#numbers.sequence(review.rating + 1, 5)}">
+                                            <i class="far fa-star text-warning"></i>
+                                        </th:block>
+                                    </div>
+
+                                    <!-- Comment -->
+                                    <p class="mb-2" th:text="${review.comment}">Nội dung đánh giá...</p>
+
+                                    <!-- Staff Response -->
+                                    <div class="staff-response bg-light p-3 rounded mt-2"
+                                         th:if="${review.staffResponse != null and review.staffResponse != ''}">
+                                        <div class="fw-bold text-primary mb-1">
+                                            <i class="fas fa-reply me-1"></i>Phản hồi từ khách sạn
+                                        </div>
+                                        <p class="mb-0" th:text="${review.staffResponse}">Phản hồi...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav th:if="${reviews.totalPages > 1}" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${reviews.first} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/room-types/{id}(id=${roomType.id}, page=${reviews.number - 1})}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, reviews.totalPages - 1)}"
+                                    th:classappend="${i == reviews.number} ? 'active'">
+                                    <a class="page-link"
+                                       th:href="@{/room-types/{id}(id=${roomType.id}, page=${i})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+
+                                <li class="page-item" th:classappend="${reviews.last} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/room-types/{id}(id=${roomType.id}, page=${reviews.number + 1})}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <!-- ✅ EMPTY STATE - Hiện khi không có review -->
+                    <div class="text-center py-5" th:if="${reviews == null or !reviews.hasContent()}">
+                        <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Chưa có đánh giá nào</h5>
+                        <p class="text-muted">Hãy là người đầu tiên đánh giá loại phòng này!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Similar Rooms -->
     <section class="mt-5" th:if="${!#lists.isEmpty(similarRoomTypes)}">
         <h3 class="heading-font mb-4">Phòng tương tự</h3>
@@ -1840,11 +2408,237 @@
     </section>
 </div>
 
+<!-- Review Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-star text-warning me-2"></i>
+                    <span id="modalTitle">Viết đánh giá</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="reviewForm">
+                    <input type="hidden" id="reviewId" name="reviewId">
+
+                    <div class="mb-4">
+                        <label class="form-label text-center w-100 fw-bold">Đánh giá của bạn</label>
+                        <div class="star-rating text-center" id="starRating" style="font-size: 2rem; cursor: pointer;">
+                            <i class="far fa-star text-warning" data-rating="1"></i>
+                            <i class="far fa-star text-warning" data-rating="2"></i>
+                            <i class="far fa-star text-warning" data-rating="3"></i>
+                            <i class="far fa-star text-warning" data-rating="4"></i>
+                            <i class="far fa-star text-warning" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="rating" name="rating" required>
+                        <div class="invalid-feedback text-center">Vui lòng chọn số sao đánh giá</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="comment" class="form-label fw-bold">Chia sẻ trải nghiệm của bạn</label>
+                        <textarea class="form-control"
+                                  id="comment"
+                                  name="comment"
+                                  rows="5"
+                                  placeholder="Hãy chia sẻ chi tiết về trải nghiệm của bạn tại đây..."
+                                  required
+                                  minlength="10"
+                                  maxlength="1000"></textarea>
+                        <small class="text-muted">Tối thiểu 10 ký tự, tối đa 1000 ký tự</small>
+                        <div class="invalid-feedback">Vui lòng nhập ít nhất 10 ký tự</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>Gửi đánh giá
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Hủy
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script th:inline="javascript">
     const roomTypeId = /*[[${roomType.id}]]*/ 0;
     const basePrice = /*[[${roomType.price}]]*/ 0;
+    // Lấy thông tin từ Thymeleaf
+    const branchId = /*[[${branch.id}]]*/ 0;
+
+    let selectedRating = 0;
+    let isEditMode = false;
+    let currentReviewId = null;
+
+    // Star rating functionality
+    const starRating = document.getElementById('starRating');
+    const ratingInput = document.getElementById('rating');
+    const stars = starRating.querySelectorAll('i');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            selectedRating = parseInt(this.dataset.rating);
+            ratingInput.value = selectedRating;
+            updateStars(selectedRating);
+        });
+
+        star.addEventListener('mouseenter', function() {
+            const rating = parseInt(this.dataset.rating);
+            updateStars(rating);
+        });
+    });
+
+    starRating.addEventListener('mouseleave', function() {
+        updateStars(selectedRating);
+    });
+
+    function updateStars(rating) {
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.classList.remove('far');
+                star.classList.add('fas', 'active');
+            } else {
+                star.classList.remove('fas', 'active');
+                star.classList.add('far');
+            }
+        });
+    }
+
+    // Reset modal when closed
+    document.getElementById('reviewModal').addEventListener('hidden.bs.modal', function() {
+        resetForm();
+    });
+
+    function resetForm() {
+        document.getElementById('reviewForm').reset();
+        document.getElementById('reviewId').value = '';
+        document.getElementById('modalTitle').textContent = 'Viết đánh giá';
+        selectedRating = 0;
+        updateStars(0);
+        isEditMode = false;
+        currentReviewId = null;
+    }
+
+    // Submit review
+    document.getElementById('reviewForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const rating = parseInt(ratingInput.value);
+        const comment = document.getElementById('comment').value.trim();
+
+        // Validation
+        if (!rating || rating < 1 || rating > 5) {
+            alert('Vui lòng chọn số sao đánh giá');
+            return;
+        }
+
+        if (comment.length < 10) {
+            alert('Vui lòng nhập ít nhất 10 ký tự');
+            return;
+        }
+
+        if (comment.length > 1000) {
+            alert('Nội dung đánh giá không được quá 1000 ký tự');
+            return;
+        }
+
+        const reviewData = {
+            branchId: branchId,
+            roomTypeId: roomTypeId,  // ✅ Thêm field này
+            type: 'ROOM',
+            rating: rating,
+            comment: comment
+        };
+
+        try {
+            let response;
+            if (isEditMode && currentReviewId) {
+                // Update existing review
+                response = await fetch(`/api/reviews/${currentReviewId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+            } else {
+                // Create new review
+                response = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+            }
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(isEditMode ? 'Cập nhật đánh giá thành công!' : 'Gửi đánh giá thành công!');
+                location.reload();
+            } else {
+                alert(result.message || 'Có lỗi xảy ra');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi gửi đánh giá');
+        }
+    });
+
+    // Edit review
+    function editReview(button) {
+        const reviewId = button.dataset.reviewId;
+        const rating = parseInt(button.dataset.rating);
+        const comment = button.dataset.comment;
+
+        isEditMode = true;
+        currentReviewId = reviewId;
+
+        document.getElementById('modalTitle').textContent = 'Chỉnh sửa đánh giá';
+        document.getElementById('reviewId').value = reviewId;
+        document.getElementById('rating').value = rating;
+        document.getElementById('comment').value = comment;
+
+        selectedRating = rating;
+        updateStars(rating);
+
+        const modal = new bootstrap.Modal(document.getElementById('reviewModal'));
+        modal.show();
+    }
+
+    // Delete review
+    async function deleteReview(button) {
+        if (!confirm('Bạn có chắc chắn muốn xóa đánh giá này?')) {
+            return;
+        }
+
+        const reviewId = button.dataset.reviewId;
+
+        try {
+            const response = await fetch(`/api/reviews/${reviewId}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Xóa đánh giá thành công!');
+                location.reload();
+            } else {
+                alert(result.message || 'Có lỗi xảy ra');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi xóa đánh giá');
+        }
+    }
 
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('checkInDate').setAttribute('min', today);

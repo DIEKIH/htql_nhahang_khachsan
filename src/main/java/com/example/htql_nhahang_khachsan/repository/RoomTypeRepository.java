@@ -72,4 +72,12 @@ public interface RoomTypeRepository extends JpaRepository<RoomTypeEntity, Long> 
      * Tìm các loại phòng theo loại giường
      */
     List<RoomTypeEntity> findByBedTypeContainingIgnoreCaseOrderByPriceAsc(String bedType);
+
+
+    // ✅ THÊM method này (nếu chưa có)
+    List<RoomTypeEntity> findByStatus(Status status);
+
+    // ✅ HOẶC query trực tiếp
+    @Query("SELECT rt FROM RoomTypeEntity rt WHERE rt.status = 'ACTIVE'")
+    List<RoomTypeEntity> findActiveRoomTypes();
 }

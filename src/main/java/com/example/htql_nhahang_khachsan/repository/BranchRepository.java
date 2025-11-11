@@ -3,6 +3,7 @@ package com.example.htql_nhahang_khachsan.repository;
 import com.example.htql_nhahang_khachsan.entity.BranchEntity;
 import com.example.htql_nhahang_khachsan.enums.BranchStatus;
 import com.example.htql_nhahang_khachsan.enums.BranchType;
+import com.example.htql_nhahang_khachsan.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -39,6 +40,12 @@ public interface BranchRepository extends JpaRepository<BranchEntity, Long> {
 
     long countByStatus(BranchStatus status);
 
+
+    // ✅ THÊM method này
+
+    // ✅ HOẶC nếu không có enum Status, dùng String
+    @Query("SELECT b FROM BranchEntity b WHERE b.status = 'ACTIVE'")
+    List<BranchEntity> findActiveBranches();
     @Query("SELECT DISTINCT b.province FROM BranchEntity b WHERE b.status = :status ORDER BY b.province")
     List<String> findDistinctProvincesByStatus(@Param("status") BranchStatus status);
 

@@ -2237,6 +2237,8 @@
         </div>
     </div>
 
+
+
     <!-- Promotions Section -->
     <section class="mt-5" th:if="${promotions != null and !promotions.isEmpty()}">
         <h3 class="heading-font mb-4">Khuyến mãi đang áp dụng</h3>
@@ -2265,6 +2267,62 @@
             </div>
         </div>
     </section>
+</div>
+
+<!-- Review Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-star text-warning me-2"></i>
+                    <span id="modalTitle">Viết đánh giá</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="reviewForm">
+                    <input type="hidden" id="reviewId" name="reviewId">
+
+                    <div class="mb-4">
+                        <label class="form-label text-center w-100 fw-bold">Đánh giá của bạn</label>
+                        <div class="star-rating text-center" id="starRating" style="font-size: 2rem; cursor: pointer;">
+                            <i class="far fa-star text-warning" data-rating="1"></i>
+                            <i class="far fa-star text-warning" data-rating="2"></i>
+                            <i class="far fa-star text-warning" data-rating="3"></i>
+                            <i class="far fa-star text-warning" data-rating="4"></i>
+                            <i class="far fa-star text-warning" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="rating" name="rating" required>
+                        <div class="invalid-feedback text-center">Vui lòng chọn số sao đánh giá</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="comment" class="form-label fw-bold">Chia sẻ trải nghiệm của bạn</label>
+                        <textarea class="form-control"
+                                  id="comment"
+                                  name="comment"
+                                  rows="5"
+                                  placeholder="Hãy chia sẻ chi tiết về trải nghiệm của bạn tại đây..."
+                                  required
+                                  minlength="10"
+                                  maxlength="1000"></textarea>
+                        <small class="text-muted">Tối thiểu 10 ký tự, tối đa 1000 ký tự</small>
+                        <div class="invalid-feedback">Vui lòng nhập ít nhất 10 ký tự</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>Gửi đánh giá
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Hủy
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Footer -->
@@ -2335,6 +2393,180 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script th:inline="javascript">
+
+    // ✅ File này dùng cho trang chi tiết món ăn
+    const menuItemId = /*[[${menuItem.id}]]*/ 0;
+    const branchId = /*[[${branch.id}]]*/ 0;
+
+    let selectedRating = 0;
+    let isEditMode = false;
+    let currentReviewId = null;
+
+    // Star rating functionality
+    const starRating = document.getElementById('starRating');
+    const ratingInput = document.getElementById('rating');
+    const stars = starRating.querySelectorAll('i');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            selectedRating = parseInt(this.dataset.rating);
+            ratingInput.value = selectedRating;
+            updateStars(selectedRating);
+        });
+
+        star.addEventListener('mouseenter', function() {
+            const rating = parseInt(this.dataset.rating);
+            updateStars(rating);
+        });
+    });
+
+    starRating.addEventListener('mouseleave', function() {
+        updateStars(selectedRating);
+    });
+
+    function updateStars(rating) {
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.classList.remove('far');
+                star.classList.add('fas', 'active');
+            } else {
+                star.classList.remove('fas', 'active');
+                star.classList.add('far');
+            }
+        });
+    }
+
+    // Reset modal when closed
+    document.getElementById('reviewModal').addEventListener('hidden.bs.modal', function() {
+        resetForm();
+    });
+
+    function resetForm() {
+        document.getElementById('reviewForm').reset();
+        document.getElementById('reviewId').value = '';
+        document.getElementById('modalTitle').textContent = 'Viết đánh giá món ăn';
+        selectedRating = 0;
+        updateStars(0);
+        isEditMode = false;
+        currentReviewId = null;
+    }
+
+    // Submit review
+    document.getElementById('reviewForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const rating = parseInt(ratingInput.value);
+        const comment = document.getElementById('comment').value.trim();
+
+        // Validation
+        if (!rating || rating < 1 || rating > 5) {
+            alert('Vui lòng chọn số sao đánh giá');
+            return;
+        }
+
+        if (comment.length < 10) {
+            alert('Vui lòng nhập ít nhất 10 ký tự');
+            return;
+        }
+
+        if (comment.length > 1000) {
+            alert('Nội dung đánh giá không được quá 1000 ký tự');
+            return;
+        }
+
+        // ✅ FIXED: Gửi menuItemId để đánh giá món ăn cụ thể
+        const reviewData = {
+            branchId: branchId,
+            menuItemId: menuItemId,  // ✅ Thêm field này
+            type: 'RESTAURANT',      // ✅ Type là RESTAURANT cho món ăn
+            rating: rating,
+            comment: comment
+        };
+
+        try {
+            let response;
+            if (isEditMode && currentReviewId) {
+                // Update existing review
+                response = await fetch(`/api/reviews/${currentReviewId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+            } else {
+                // Create new review
+                response = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+            }
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(isEditMode ? 'Cập nhật đánh giá thành công!' : 'Gửi đánh giá thành công!');
+                location.reload();
+            } else {
+                alert(result.message || 'Có lỗi xảy ra');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi gửi đánh giá');
+        }
+    });
+
+    // Edit review
+    function editReview(button) {
+        const reviewId = button.dataset.reviewId;
+        const rating = parseInt(button.dataset.rating);
+        const comment = button.dataset.comment;
+
+        isEditMode = true;
+        currentReviewId = reviewId;
+
+        document.getElementById('modalTitle').textContent = 'Chỉnh sửa đánh giá';
+        document.getElementById('reviewId').value = reviewId;
+        document.getElementById('rating').value = rating;
+        document.getElementById('comment').value = comment;
+
+        selectedRating = rating;
+        updateStars(rating);
+
+        const modal = new bootstrap.Modal(document.getElementById('reviewModal'));
+        modal.show();
+    }
+
+    // Delete review
+    async function deleteReview(button) {
+        if (!confirm('Bạn có chắc chắn muốn xóa đánh giá này?')) {
+            return;
+        }
+
+        const reviewId = button.dataset.reviewId;
+
+        try {
+            const response = await fetch(`/api/reviews/${reviewId}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Xóa đánh giá thành công!');
+                location.reload();
+            } else {
+                alert(result.message || 'Có lỗi xảy ra');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi xóa đánh giá');
+        }
+    }
+
     /*<![CDATA[*/
     const UNIT_PRICE = /*[[${discountedPrice}]]*/ 450000;
     const SERVICE_RATE = 0.1;

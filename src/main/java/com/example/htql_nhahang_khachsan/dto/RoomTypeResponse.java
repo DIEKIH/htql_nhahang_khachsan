@@ -1,6 +1,7 @@
 package com.example.htql_nhahang_khachsan.dto;
 
 import com.example.htql_nhahang_khachsan.entity.RoomImageEntity;
+import com.example.htql_nhahang_khachsan.entity.RoomTypeEntity;
 import lombok.Builder;
 import com.example.htql_nhahang_khachsan.enums.Status;
 
@@ -100,4 +101,37 @@ public class RoomTypeResponse {
         BigDecimal percent = discount.multiply(BigDecimal.valueOf(100)).divide(originalPrice, 0, BigDecimal.ROUND_HALF_UP);
         return percent + "%";
     }
+
+    public static RoomTypeResponse from(RoomTypeEntity entity) {
+        List<RoomImageEntity> images = entity.getRoomImages();
+
+        // Ảnh chính
+        String primaryImageUrl = null;
+        if (images != null && !images.isEmpty()) {
+            primaryImageUrl = images.stream()
+                    .filter(RoomImageEntity::getIsPrimary)
+                    .map(RoomImageEntity::getImageUrl)
+                    .findFirst()
+                    .orElse(images.get(0).getImageUrl());
+        }
+
+        return RoomTypeResponse.builder()
+                .id(entity.getId())
+                .branchId(entity.getBranch().getId())
+                .branchName(entity.getBranch().getName())
+                .name(entity.getName())
+                .description(entity.getDescription())
+                .maxOccupancy(entity.getMaxOccupancy())
+                .bedType(entity.getBedType())
+                .roomSize(entity.getRoomSize())
+                .price(entity.getPrice())
+                .status(entity.getStatus())
+                .roomImages(images)
+                .imageUrlsList(images != null ? images.stream()
+                        .map(RoomImageEntity::getImageUrl)
+                        .toList() : List.of())
+                .createdAt(entity.getCreatedAt())
+                .build();
+    }
+
 }

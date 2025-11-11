@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thêm lịch làm việc tuần</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/manager_sidebar.css}">
+  <style>
+    body { font-size: 0.8rem; }
+    h2 { font-size: 1.5rem; }
+    h5 { font-size: 1rem; }
+    .btn { font-size: 0.75rem; padding: 0.3rem 0.6rem; }
+    .form-label { font-size: 0.75rem; margin-bottom: 0.3rem; font-weight: 600; }
+    .form-control, .form-select { font-size: 0.75rem; padding: 0.3rem 0.5rem; }
+    .card-header { padding: 0.6rem 0.8rem; background: #f8f9fa; }
+    .card-body { padding: 0.8rem; }
+    .day-card {
+      border: 2px solid #e9ecef;
+      border-radius: 0.5rem;
+      padding: 0.8rem;
+      margin-bottom: 0.8rem;
+      transition: all 0.3s;
+    }
+    .day-card:hover { border-color: #0d6efd; }
+    .day-card.selected { border-color: #0d6efd; background: #f0f8ff; }
+    .day-header {
+      font-weight: 700;
+      color: #0d6efd;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e9ecef;
+    }
+    .shift-type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+    .shift-type-btn {
+      padding: 0.5rem;
+      border: 2px solid #dee2e6;
+      border-radius: 0.375rem;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .shift-type-btn:hover { border-color: #0d6efd; transform: translateY(-2px); }
+    .shift-type-btn.active {
+      background: #0d6efd;
+      color: white;
+      border-color: #0d6efd;
+    }
+    .shift-type-btn input[type="radio"] { display: none; }
+    .shift-type-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .shift-time-text {
+      font-size: 0.7rem;
+      color: #6c757d;
+    }
+    .shift-type-btn.active .shift-time-text { color: white; }
+    .time-input-group {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: #f8f9fa;
+      border-radius: 0.375rem;
+    }
+    .preset-times {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .preset-btn {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+    }
+    .quick-fill-section {
+      background: #fff3cd;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .week-info {
+      background: #d1ecf1;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body class="bg-light">
+<div class="container-fluid">
+  <div class="row">
+    <div th:replace="fragments/manager_sidebar :: manager_sidebar"></div>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <!-- Header -->
+      <div class="col-12">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="/manager">
+              <i class="bi bi-building"></i> Manager Dashboard
+            </a>
+            <div class="navbar-nav ms-auto">
+              <a class="nav-link" href="/manager/logout">
+                <i class="bi bi-box-arrow-right"></i> Đăng xuất
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <!-- Page Header -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>
+              <i class="bi bi-calendar-week"></i> Thêm lịch làm việc theo tuần
+            </h2>
+            <a href="/manager/work-schedules" class="btn btn-outline-secondary">
+              <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+          </div>
+
+          <!-- Form -->
+          <form id="weekScheduleForm">
+            <!-- Thông tin cơ bản -->
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="bi bi-info-circle"></i> Thông tin cơ bản
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <!-- Nhân viên -->
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Nhân viên <span class="text-danger">*</span></label>
+                    <select class="form-select" id="staffId" required>
+                      <option value="">-- Chọn nhân viên --</option>
+                      <option th:each="staff : ${staffList}"
+                              th:value="${staff.id}"
+                              th:text="${staff.fullName} + ' (' + ${staff.phoneNumber} + ')'">
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- Tuần làm việc -->
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Ngày bắt đầu tuần (Thứ 2) <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" id="weekStart" required>
+                    <small class="text-muted">Chọn thứ 2 của tuần muốn xếp lịch</small>
+                  </div>
+                </div>
+
+                <!-- Hiển thị thông tin tuần -->
+                <div class="week-info d-none" id="weekInfo">
+                  <i class="bi bi-info-circle"></i>
+                  <strong>Tuần làm việc:</strong>
+                  <span id="weekRange"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Fill -->
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="bi bi-lightning"></i> Điền nhanh
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="quick-fill-section">
+                  <p class="mb-2"><strong>Áp dụng nhanh cho các ngày đã chọn:</strong></p>
+                  <div class="row">
+                    <div class="col-md-12 mb-2">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="selectAll" onclick="toggleSelectAll()">
+                        <label class="form-check-label" for="selectAll">
+                          <strong>Chọn tất cả các ngày</strong>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="preset-times">
+                    <button type="button" class="btn btn-sm btn-info preset-btn" onclick="applyQuickFill('MORNING')">
+                      <i class="bi bi-sunrise"></i> Ca sáng (06:00-14:00)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-warning preset-btn" onclick="applyQuickFill('AFTERNOON')">
+                      <i class="bi bi-sun"></i> Ca chiều (14:00-22:00)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary preset-btn" onclick="applyQuickFill('EVENING')">
+                      <i class="bi bi-moon"></i> Ca tối (18:00-02:00)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-dark preset-btn" onclick="applyQuickFill('NIGHT')">
+                      <i class="bi bi-moon-stars"></i> Ca đêm (22:00-06:00)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-success preset-btn" onclick="applyQuickFill('FULL_DAY')">
+                      <i class="bi bi-clock"></i> Ca full (08:00-20:00)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-secondary preset-btn" onclick="applyQuickFill('OFF')">
+                      <i class="bi bi-x-circle"></i> Nghỉ
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lịch theo ngày -->
+            <div class="card mb-3">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="bi bi-calendar3"></i> Lịch làm việc từng ngày
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <!-- Thứ 2 -->
+                  <div class="col-md-6 mb-3">
+                    <div class="day-card" id="day-MONDAY">
+                      <div class="day-header">
+                        <input type="checkbox" class="form-check-input me-2 day-checkbox" id="check-MONDAY">
+                        <i class="bi bi-calendar-day"></i> Thứ 2
+                      </div>
+                      <div class="shift-type-grid">
+                        <label class="shift-type-btn" onclick="selectShift('MONDAY', 'MORNING')">
+                          <input type="radio" name="shift-MONDAY" value="MORNING">
+                          <span class="shift-type-label"><i class="bi bi-sunrise"></i> Ca sáng</span>
+                          <span class="shift-time-text">06:00 - 14:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('MONDAY', 'AFTERNOON')">
+                          <input type="radio" name="shift-MONDAY" value="AFTERNOON">
+                          <span class="shift-type-label"><i class="bi bi-sun"></i> Ca chiều</span>
+                          <span class="shift-time-text">14:00 - 22:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('MONDAY', 'EVENING')">
+                          <input type="radio" name="shift-MONDAY" value="EVENING">
+                          <span class="shift-type-label"><i class="bi bi-moon"></i> Ca tối</span>
+                          <span class="shift-time-text">18:00 - 02:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('MONDAY', 'NIGHT')">
+                          <input type="radio" name="shift-MONDAY" value="NIGHT">
+                          <span class="shift-type-label"><i class="bi bi-moon-stars"></i> Ca đêm</span>
+                          <span class="shift-time-text">22:00 - 06:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('MONDAY', 'FULL_DAY')">
+                          <input type="radio" name="shift-MONDAY" value="FULL_DAY">
+                          <span class="shift-type-label"><i class="bi bi-clock"></i> Ca full</span>
+                          <span class="shift-time-text">08:00 - 20:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('MONDAY', 'OFF')">
+                          <input type="radio" name="shift-MONDAY" value="OFF">
+                          <span class="shift-type-label"><i class="bi bi-x-circle"></i> Nghỉ</span>
+                          <span class="shift-time-text">-</span>
+                        </label>
+                      </div>
+                      <div class="time-input-group d-none" id="time-FRIDAY">
+                        <div class="row g-2">
+                          <div class="col-6">
+                            <label class="form-label">Giờ bắt đầu</label>
+                            <input type="time" class="form-control form-control-sm" id="start-FRIDAY">
+                          </div>
+                          <div class="col-6">
+                            <label class="form-label">Giờ kết thúc</label>
+                            <input type="time" class="form-control form-control-sm" id="end-FRIDAY">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Thứ 3 -->
+                  <div class="col-md-6 mb-3">
+                    <div class="day-card" id="day-TUESDAY">
+                      <div class="day-header">
+                        <input type="checkbox" class="form-check-input me-2 day-checkbox" id="check-TUESDAY">
+                        <i class="bi bi-calendar-day"></i> Thứ 3
+                      </div>
+                      <div class="shift-type-grid">
+                        <label class="shift-type-btn" onclick="selectShift('TUESDAY', 'MORNING')">
+                          <input type="radio" name="shift-TUESDAY" value="MORNING">
+                          <span class="shift-type-label"><i class="bi bi-sunrise"></i> Ca sáng</span>
+                          <span class="shift-time-text">06:00 - 14:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('TUESDAY', 'AFTERNOON')">
+                          <input type="radio" name="shift-TUESDAY" value="AFTERNOON">
+                          <span class="shift-type-label"><i class="bi bi-sun"></i> Ca chiều</span>
+                          <span class="shift-time-text">14:00 - 22:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('TUESDAY', 'EVENING')">
+                          <input type="radio" name="shift-TUESDAY" value="EVENING">
+                          <span class="shift-type-label"><i class="bi bi-moon"></i> Ca tối</span>
+                          <span class="shift-time-text">18:00 - 02:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('TUESDAY', 'NIGHT')">
+                          <input type="radio" name="shift-TUESDAY" value="NIGHT">
+                          <span class="shift-type-label"><i class="bi bi-moon-stars"></i> Ca đêm</span>
+                          <span class="shift-time-text">22:00 - 06:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('TUESDAY', 'FULL_DAY')">
+                          <input type="radio" name="shift-TUESDAY" value="FULL_DAY">
+                          <span class="shift-type-label"><i class="bi bi-clock"></i> Ca full</span>
+                          <span class="shift-time-text">08:00 - 20:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('TUESDAY', 'OFF')">
+                          <input type="radio" name="shift-TUESDAY" value="OFF">
+                          <span class="shift-type-label"><i class="bi bi-x-circle"></i> Nghỉ</span>
+                          <span class="shift-time-text">-</span>
+                        </label>
+                      </div>
+                      <div class="time-input-group d-none" id="time-TUESDAY">
+                        <div class="row g-2">
+                          <div class="col-6">
+                            <label class="form-label">Giờ bắt đầu</label>
+                            <input type="time" class="form-control form-control-sm" id="start-TUESDAY">
+                          </div>
+                          <div class="col-6">
+                            <label class="form-label">Giờ kết thúc</label>
+                            <input type="time" class="form-control form-control-sm" id="end-TUESDAY">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Thứ 4 -->
+                  <div class="col-md-6 mb-3">
+                    <div class="day-card" id="day-WEDNESDAY">
+                      <div class="day-header">
+                        <input type="checkbox" class="form-check-input me-2 day-checkbox" id="check-WEDNESDAY">
+                        <i class="bi bi-calendar-day"></i> Thứ 4
+                      </div>
+                      <div class="shift-type-grid">
+                        <label class="shift-type-btn" onclick="selectShift('WEDNESDAY', 'MORNING')">
+                          <input type="radio" name="shift-WEDNESDAY" value="MORNING">
+                          <span class="shift-type-label"><i class="bi bi-sunrise"></i> Ca sáng</span>
+                          <span class="shift-time-text">06:00 - 14:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('WEDNESDAY', 'AFTERNOON')">
+                          <input type="radio" name="shift-WEDNESDAY" value="AFTERNOON">
+                          <span class="shift-type-label"><i class="bi bi-sun"></i> Ca chiều</span>
+                          <span class="shift-time-text">14:00 - 22:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('WEDNESDAY', 'EVENING')">
+                          <input type="radio" name="shift-WEDNESDAY" value="EVENING">
+                          <span class="shift-type-label"><i class="bi bi-moon"></i> Ca tối</span>
+                          <span class="shift-time-text">18:00 - 02:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('WEDNESDAY', 'NIGHT')">
+                          <input type="radio" name="shift-WEDNESDAY" value="NIGHT">
+                          <span class="shift-type-label"><i class="bi bi-moon-stars"></i> Ca đêm</span>
+                          <span class="shift-time-text">22:00 - 06:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('WEDNESDAY', 'FULL_DAY')">
+                          <input type="radio" name="shift-WEDNESDAY" value="FULL_DAY">
+                          <span class="shift-type-label"><i class="bi bi-clock"></i> Ca full</span>
+                          <span class="shift-time-text">08:00 - 20:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('WEDNESDAY', 'OFF')">
+                          <input type="radio" name="shift-WEDNESDAY" value="OFF">
+                          <span class="shift-type-label"><i class="bi bi-x-circle"></i> Nghỉ</span>
+                          <span class="shift-time-text">-</span>
+                        </label>
+                      </div>
+                      <div class="time-input-group d-none" id="time-WEDNESDAY">
+                        <div class="row g-2">
+                          <div class="col-6">
+                            <label class="form-label">Giờ bắt đầu</label>
+                            <input type="time" class="form-control form-control-sm" id="start-WEDNESDAY">
+                          </div>
+                          <div class="col-6">
+                            <label class="form-label">Giờ kết thúc</label>
+                            <input type="time" class="form-control form-control-sm" id="end-WEDNESDAY">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Thứ 5 -->
+                  <div class="col-md-6 mb-3">
+                    <div class="day-card" id="day-THURSDAY">
+                      <div class="day-header">
+                        <input type="checkbox" class="form-check-input me-2 day-checkbox" id="check-THURSDAY">
+                        <i class="bi bi-calendar-day"></i> Thứ 5
+                      </div>
+                      <div class="shift-type-grid">
+                        <label class="shift-type-btn" onclick="selectShift('THURSDAY', 'MORNING')">
+                          <input type="radio" name="shift-THURSDAY" value="MORNING">
+                          <span class="shift-type-label"><i class="bi bi-sunrise"></i> Ca sáng</span>
+                          <span class="shift-time-text">06:00 - 14:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('THURSDAY', 'AFTERNOON')">
+                          <input type="radio" name="shift-THURSDAY" value="AFTERNOON">
+                          <span class="shift-type-label"><i class="bi bi-sun"></i> Ca chiều</span>
+                          <span class="shift-time-text">14:00 - 22:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('THURSDAY', 'EVENING')">
+                          <input type="radio" name="shift-THURSDAY" value="EVENING">
+                          <span class="shift-type-label"><i class="bi bi-moon"></i> Ca tối</span>
+                          <span class="shift-time-text">18:00 - 02:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('THURSDAY', 'NIGHT')">
+                          <input type="radio" name="shift-THURSDAY" value="NIGHT">
+                          <span class="shift-type-label"><i class="bi bi-moon-stars"></i> Ca đêm</span>
+                          <span class="shift-time-text">22:00 - 06:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('THURSDAY', 'FULL_DAY')">
+                          <input type="radio" name="shift-THURSDAY" value="FULL_DAY">
+                          <span class="shift-type-label"><i class="bi bi-clock"></i> Ca full</span>
+                          <span class="shift-time-text">08:00 - 20:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('THURSDAY', 'OFF')">
+                          <input type="radio" name="shift-THURSDAY" value="OFF">
+                          <span class="shift-type-label"><i class="bi bi-x-circle"></i> Nghỉ</span>
+                          <span class="shift-time-text">-</span>
+                        </label>
+                      </div>
+                      <div class="time-input-group d-none" id="time-THURSDAY">
+                        <div class="row g-2">
+                          <div class="col-6">
+                            <label class="form-label">Giờ bắt đầu</label>
+                            <input type="time" class="form-control form-control-sm" id="start-THURSDAY">
+                          </div>
+                          <div class="col-6">
+                            <label class="form-label">Giờ kết thúc</label>
+                            <input type="time" class="form-control form-control-sm" id="end-THURSDAY">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Thứ 6 -->
+                  <div class="col-md-6 mb-3">
+                    <div class="day-card" id="day-FRIDAY">
+                      <div class="day-header">
+                        <input type="checkbox" class="form-check-input me-2 day-checkbox" id="check-FRIDAY">
+                        <i class="bi bi-calendar-day"></i> Thứ 6
+                      </div>
+                      <div class="shift-type-grid">
+                        <label class="shift-type-btn" onclick="selectShift('FRIDAY', 'MORNING')">
+                          <input type="radio" name="shift-FRIDAY" value="MORNING">
+                          <span class="shift-type-label"><i class="bi bi-sunrise"></i> Ca sáng</span>
+                          <span class="shift-time-text">06:00 - 14:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('FRIDAY', 'AFTERNOON')">
+                          <input type="radio" name="shift-FRIDAY" value="AFTERNOON">
+                          <span class="shift-type-label"><i class="bi bi-sun"></i> Ca chiều</span>
+                          <span class="shift-time-text">14:00 - 22:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('FRIDAY', 'EVENING')">
+                          <input type="radio" name="shift-FRIDAY" value="EVENING">
+                          <span class="shift-type-label"><i class="bi bi-moon"></i> Ca tối</span>
+                          <span class="shift-time-text">18:00 - 02:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('FRIDAY', 'NIGHT')">
+                          <input type="radio" name="shift-FRIDAY" value="NIGHT">
+                          <span class="shift-type-label"><i class="bi bi-moon-stars"></i> Ca đêm</span>
+                          <span class="shift-time-text">22:00 - 06:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('FRIDAY', 'FULL_DAY')">
+                          <input type="radio" name="shift-FRIDAY" value="FULL_DAY">
+                          <span class="shift-type-label"><i class="bi bi-clock"></i> Ca full</span>
+                          <span class="shift-time-text">08:00 - 20:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('FRIDAY', 'OFF')">
+                          <input type="radio" name="shift-FRIDAY" value="OFF">
+                          <span class="shift-type-label"><i class="bi bi-x-circle"></i> Nghỉ</span>
+                          <span class="shift-time-text">-</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!-- Thứ 7 -->
+                  <div class="col-md-6 mb-3">
+                    <div class="day-card" id="day-SATURDAY">
+                      <div class="day-header">
+                        <input type="checkbox" class="form-check-input me-2 day-checkbox" id="check-SATURDAY">
+                        <i class="bi bi-calendar-day"></i> Thứ 7
+                      </div>
+                      <div class="shift-type-grid">
+                        <label class="shift-type-btn" onclick="selectShift('SATURDAY', 'MORNING')">
+                          <input type="radio" name="shift-SATURDAY" value="MORNING">
+                          <span class="shift-type-label"><i class="bi bi-sunrise"></i> Ca sáng</span>
+                          <span class="shift-time-text">06:00 - 14:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('SATURDAY', 'AFTERNOON')">
+                          <input type="radio" name="shift-SATURDAY" value="AFTERNOON">
+                          <span class="shift-type-label"><i class="bi bi-sun"></i> Ca chiều</span>
+                          <span class="shift-time-text">14:00 - 22:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('SATURDAY', 'EVENING')">
+                          <input type="radio" name="shift-SATURDAY" value="EVENING">
+                          <span class="shift-type-label"><i class="bi bi-moon"></i> Ca tối</span>
+                          <span class="shift-time-text">18:00 - 02:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('SATURDAY', 'NIGHT')">
+                          <input type="radio" name="shift-SATURDAY" value="NIGHT">
+                          <span class="shift-type-label"><i class="bi bi-moon-stars"></i> Ca đêm</span>
+                          <span class="shift-time-text">22:00 - 06:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('SATURDAY', 'FULL_DAY')">
+                          <input type="radio" name="shift-SATURDAY" value="FULL_DAY">
+                          <span class="shift-type-label"><i class="bi bi-clock"></i> Ca full</span>
+                          <span class="shift-time-text">08:00 - 20:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('SATURDAY', 'OFF')">
+                          <input type="radio" name="shift-SATURDAY" value="OFF">
+                          <span class="shift-type-label"><i class="bi bi-x-circle"></i> Nghỉ</span>
+                          <span class="shift-time-text">-</span>
+                        </label>
+                      </div>
+                      <div class="time-input-group d-none" id="time-SATURDAY">
+                        <div class="row g-2">
+                          <div class="col-6">
+                            <label class="form-label">Giờ bắt đầu</label>
+                            <input type="time" class="form-control form-control-sm" id="start-SATURDAY">
+                          </div>
+                          <div class="col-6">
+                            <label class="form-label">Giờ kết thúc</label>
+                            <input type="time" class="form-control form-control-sm" id="end-SATURDAY">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Chủ nhật -->
+                  <div class="col-md-6 mb-3">
+                    <div class="day-card" id="day-SUNDAY">
+                      <div class="day-header">
+                        <input type="checkbox" class="form-check-input me-2 day-checkbox" id="check-SUNDAY">
+                        <i class="bi bi-calendar-day"></i> Chủ nhật
+                      </div>
+                      <div class="shift-type-grid">
+                        <label class="shift-type-btn" onclick="selectShift('SUNDAY', 'MORNING')">
+                          <input type="radio" name="shift-SUNDAY" value="MORNING">
+                          <span class="shift-type-label"><i class="bi bi-sunrise"></i> Ca sáng</span>
+                          <span class="shift-time-text">06:00 - 14:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('SUNDAY', 'AFTERNOON')">
+                          <input type="radio" name="shift-SUNDAY" value="AFTERNOON">
+                          <span class="shift-type-label"><i class="bi bi-sun"></i> Ca chiều</span>
+                          <span class="shift-time-text">14:00 - 22:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('SUNDAY', 'EVENING')">
+                          <input type="radio" name="shift-SUNDAY" value="EVENING">
+                          <span class="shift-type-label"><i class="bi bi-moon"></i> Ca tối</span>
+                          <span class="shift-time-text">18:00 - 02:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('SUNDAY', 'NIGHT')">
+                          <input type="radio" name="shift-SUNDAY" value="NIGHT">
+                          <span class="shift-type-label"><i class="bi bi-moon-stars"></i> Ca đêm</span>
+                          <span class="shift-time-text">22:00 - 06:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('SUNDAY', 'FULL_DAY')">
+                          <input type="radio" name="shift-SUNDAY" value="FULL_DAY">
+                          <span class="shift-type-label"><i class="bi bi-clock"></i> Ca full</span>
+                          <span class="shift-time-text">08:00 - 20:00</span>
+                        </label>
+                        <label class="shift-type-btn" onclick="selectShift('SUNDAY', 'OFF')">
+                          <input type="radio" name="shift-SUNDAY" value="OFF">
+                          <span class="shift-type-label"><i class="bi bi-x-circle"></i> Nghỉ</span>
+                          <span class="shift-time-text">-</span>
+                        </label>
+                      </div>
+                      <div class="time-input-group d-none" id="time-SUNDAY">
+                        <div class="row g-2">
+                          <div class="col-6">
+                            <label class="form-label">Giờ bắt đầu</label>
+                            <input type="time" class="form-control form-control-sm" id="start-SUNDAY">
+                          </div>
+                          <div class="col-6">
+                            <label class="form-label">Giờ kết thúc</label>
+                            <input type="time" class="form-control form-control-sm" id="end-SUNDAY">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <button type="button" class="btn btn-outline-danger" onclick="resetForm()">
+                      <i class="bi bi-arrow-clockwise"></i> Đặt lại
+                    </button>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <a href="/manager/work-schedules" class="btn btn-secondary">
+                      <i class="bi bi-x-circle"></i> Hủy
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-save"></i> Lưu lịch làm việc
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const shiftTimes = {
+    MORNING: { start: '06:00', end: '14:00' },
+    AFTERNOON: { start: '14:00', end: '22:00' },
+    EVENING: { start: '18:00', end: '02:00' },
+    NIGHT: { start: '22:00', end: '06:00' },
+    FULL_DAY: { start: '08:00', end: '20:00' },
+    OFF: { start: '', end: '' }
+  };
+
+  const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+
+  // Select shift type
+  function selectShift(day, type) {
+    // Remove active class from all buttons in this day
+    const dayCard = document.getElementById(`day-${day}`);
+    dayCard.querySelectorAll('.shift-type-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    // Add active class to selected button
+    event.currentTarget.classList.add('active');
+
+    // Show/hide time inputs
+    const timeInputs = document.getElementById(`time-${day}`);
+    if (type !== 'OFF') {
+      timeInputs.classList.remove('d-none');
+      document.getElementById(`start-${day}`).value = shiftTimes[type].start;
+      document.getElementById(`end-${day}`).value = shiftTimes[type].end;
+    } else {
+      timeInputs.classList.add('d-none');
+    }
+  }
+
+  // Toggle select all
+  function toggleSelectAll() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.day-checkbox');
+    checkboxes.forEach(cb => {
+      cb.checked = selectAll.checked;
+    });
+  }
+
+  // Apply quick fill
+  function applyQuickFill(shiftType) {
+    const checkboxes = document.querySelectorAll('.day-checkbox:checked');
+    if (checkboxes.length === 0) {
+      alert('Vui lòng chọn ít nhất một ngày để áp dụng!');
+      return;
+    }
+
+    checkboxes.forEach(checkbox => {
+      const day = checkbox.id.replace('check-', '');
+      const radioBtn = document.querySelector(`input[name="shift-${day}"][value="${shiftType}"]`);
+      if (radioBtn) {
+        radioBtn.click();
+        radioBtn.parentElement.click();
+      }
+    });
+  }
+
+  // Calculate week range
+  document.getElementById('weekStart').addEventListener('change', function() {
+    const startDate = new Date(this.value);
+
+    // Check if it's Monday
+    if (startDate.getDay() !== 1) {
+      alert('Vui lòng chọn ngày thứ 2!');
+      this.value = '';
+      document.getElementById('weekInfo').classList.add('d-none');
+      return;
+    }
+
+    // Calculate Sunday (6 days later)
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 6);
+
+    const formatDate = (date) => {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+
+    document.getElementById('weekRange').textContent =
+            `${formatDate(startDate)} - ${formatDate(endDate)}`;
+    document.getElementById('weekInfo').classList.remove('d-none');
+  });
+
+  // Reset form
+  function resetForm() {
+    if (confirm('Bạn có chắc muốn đặt lại form?')) {
+      document.getElementById('weekScheduleForm').reset();
+      document.querySelectorAll('.shift-type-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelectorAll('.time-input-group').forEach(group => {
+        group.classList.add('d-none');
+      });
+      document.getElementById('weekInfo').classList.add('d-none');
+    }
+  }
+
+  // Submit form
+  document.getElementById('weekScheduleForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const staffId = document.getElementById('staffId').value;
+    const weekStart = document.getElementById('weekStart').value;
+
+    if (!staffId || !weekStart) {
+      alert('Vui lòng chọn nhân viên và ngày bắt đầu tuần!');
+      return;
+    }
+
+    const shifts = [];
+    days.forEach(day => {
+      const selectedShift = document.querySelector(`input[name="shift-${day}"]:checked`);
+      if (selectedShift) {
+        const shiftType = selectedShift.value;
+        const startTime = document.getElementById(`start-${day}`).value;
+        const endTime = document.getElementById(`end-${day}`).value;
+
+        shifts.push({
+          dayOfWeek: day,
+          type: shiftType,
+          startTime: shiftType !== 'OFF' ? startTime : null,
+          endTime: shiftType !== 'OFF' ? endTime : null
+        });
+      }
+    });
+
+    if (shifts.length === 0) {
+      alert('Vui lòng chọn ít nhất một ca làm việc!');
+      return;
+    }
+
+    const data = {
+      staffId: parseInt(staffId),
+      weekStart: weekStart,
+      shifts: shifts
+    };
+
+    // Submit to server
+    fetch('/manager/work-schedules/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+            .then(response => response.json())
+            .then(result => {
+              if (result.error) {
+                alert('Lỗi: ' + result.error);
+              } else {
+                alert('Thêm lịch làm việc thành công!');
+                window.location.href = '/manager/work-schedules';
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Có lỗi xảy ra. Vui lòng thử lại!');
+            });
+  });
+</script>
+</body>
+</html>

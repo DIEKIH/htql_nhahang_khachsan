@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Sử Chấm Công - Nhân Viên</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: #f5f6fa; font-family: 'Segoe UI', sans-serif; font-size: 13px; }
+        .layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 240px; background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+            color: white; padding: 15px; min-height: 100vh; position: fixed; left: 0; top: 0; overflow-y: auto; }
+        .sidebar-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .sidebar-header i { font-size: 2rem; margin-bottom: 8px; display: block; }
+        .sidebar-header h6 { font-size: 13px; margin: 5px 0; font-weight: 600; }
+        .nav-link { color: rgba(255,255,255,0.85); padding: 10px 12px; margin: 3px 0; border-radius: 6px;
+            font-size: 13px; transition: all 0.3s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.2); color: white; }
+        .main-content { margin-left: 240px; padding: 20px; flex: 1; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: none; margin-bottom: 15px; }
+        .card-header { background: #f8f9fa; border-bottom: 1px solid #e9ecef; padding: 15px; font-weight: 600; }
+        table { font-size: 13px; }
+        table th { background: #f8f9fa; font-weight: 600; border: none; padding: 12px; }
+        table td { padding: 12px; border-color: #e9ecef; vertical-align: middle; }
+        table tbody tr:hover { background: #f8f9fa; }
+        .badge { font-size: 11px; padding: 5px 10px; }
+        .btn { font-size: 13px; }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="bi bi-person-circle"></i>
+            <h6 th:text="${user.fullName}">Nhân Viên</h6>
+            <small th:text="${user.branch?.name}" style="font-size: 11px; opacity: 0.8;">Chi nhánh</small>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="/staff/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a class="nav-link" href="/staff/work-schedule"><i class="bi bi-calendar-week"></i> Lịch Làm Việc</a>
+            <a class="nav-link active" href="/staff/attendance-history"><i class="bi bi-clock-history"></i> Lịch Sử Chấm Công</a>
+            <a class="nav-link" href="/staff/profile"><i class="bi bi-person"></i> Thông Tin Cá Nhân</a>
+        </nav>
+        <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <a href="/staff/logout" class="nav-link"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4><i class="bi bi-clock-history me-2"></i> Lịch Sử Chấm Công</h4>
+                <p class="text-muted mb-0" style="font-size: 13px;">
+                    Từ <span th:text="${#temporals.format(startDate, 'dd/MM/yyyy')}"></span>
+                    đến <span th:text="${#temporals.format(endDate, 'dd/MM/yyyy')}"></span>
+                </p>
+            </div>
+            <div>
+                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
+                    <i class="bi bi-funnel"></i> Lọc
+                </button>
+            </div>
+        </div>
+
+        <!-- ATTENDANCE TABLE -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-list me-2"></i> Danh Sách Chấm Công
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="table table-sm mb-0">
+                    <thead>
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Ca Làm</th>
+                        <th>Giờ Quy Định</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Trạng Thái</th>
+                        <th>Ghi Chú</th>
+                    </tr>
+                    </thead>
+                    <tbody th:if="${!#lists.isEmpty(attendances)}">
+                    <tr th:each="att : ${attendances}">
+                        <td>
+                            <strong th:text="${#temporals.format(att.checkIn, 'dd/MM/yyyy')}">01/11/2025</strong>
+                        </td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${att.typeBadgeClass}"
+                                  th:text="${att.typeDisplayName}">Ca sáng</span>
+
+                        </td>
+                        <td>
+                            <small th:text="${att.scheduledTime}">08:00 - 16:00</small>
+                        </td>
+                        <td>
+                            <i class="bi bi-box-arrow-in-right text-success"></i>
+                            <strong th:text="${#temporals.format(att.checkIn, 'HH:mm')}">08:00</strong>
+                            <span th:if="${att.isLate}" class="badge bg-warning ms-1">Muộn</span>
+                        </td>
+                        <td>
+                            <span th:if="${att.checkOut}">
+                                <i class="bi bi-box-arrow-right text-secondary"></i>
+                                <strong th:text="${#temporals.format(att.checkOut, 'HH:mm')}">16:00</strong>
+                                <span th:if="${att.isLeftEarly}" class="badge bg-info ms-1">Về sớm</span>
+                            </span>
+                            <span th:unless="${att.checkOut}" class="text-muted">Chưa check-out</span>
+                        </td>
+                        <td>
+                            <span class="badge" th:classappend="${att.attendanceStatusBadge}"
+                                  th:text="${att.attendanceStatusDisplay}">Có mặt</span>
+                        </td>
+                        <td>
+                            <small th:text="${att.notes ?: '-'}">-</small>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tbody th:if="${#lists.isEmpty(attendances)}">
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox" style="font-size: 48px; opacity: 0.3; display: block; margin-bottom: 15px;"></i>
+                            <div>Không có dữ liệu chấm công</div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FILTER MODAL -->
+<div class="modal fade" id="filterModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title"><i class="bi bi-funnel me-2"></i> Lọc Lịch Sử Chấm Công</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/staff/attendance-history" method="get">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Từ ngày</label>
+                        <input type="date" class="form-control" name="startDate"
+                               th:value="${startDate}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Đến ngày</label>
+                        <input type="date" class="form-control" name="endDate"
+                               th:value="${endDate}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-search"></i> Lọc
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

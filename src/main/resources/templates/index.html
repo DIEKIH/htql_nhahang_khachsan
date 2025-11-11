@@ -2139,6 +2139,8 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" th:href="@{/css/chatbot.css}">
   <style>
     :root {
       --primary-color: #c9a96e;
@@ -2639,6 +2641,424 @@
     .badge.bg-warning {
       font-size: calc(0.7rem * var(--scale));
     }
+
+  /*  css mới cảu cái gới ý*/
+    .recommendation-section {
+      padding: 60px 0;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .recommendation-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .recommendation-header h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 15px;
+    }
+
+    .recommendation-header .badge-new {
+      background: linear-gradient(135deg, var(--primary-color), #d4b079);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: inline-block;
+    }
+
+    .recommendation-header p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .recommendation-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.4s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .recommendation-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    .recommendation-image {
+      position: relative;
+      height: 280px;
+      overflow: hidden;
+    }
+
+    .recommendation-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .recommendation-card:hover .recommendation-image img {
+      transform: scale(1.15);
+    }
+
+    .rating-overlay {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 193, 7, 0.95);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+      z-index: 2;
+    }
+
+    .rating-overlay i {
+      font-size: 1.1rem;
+    }
+
+    .type-badge-overlay {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(52, 152, 219, 0.95);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 2;
+    }
+
+    .rank-badge {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rank-badge i {
+      font-size: 1.2rem;
+    }
+
+    .recommendation-content {
+      padding: 30px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .recommendation-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .recommendation-subtitle {
+      color: var(--text-light);
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .recommendation-subtitle i {
+      color: var(--primary-color);
+    }
+
+    .recommendation-description {
+      color: var(--text-light);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .rating-stars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 15px;
+    }
+
+    .rating-stars i {
+      color: #ffc107;
+      font-size: 1.1rem;
+    }
+
+    .review-count {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-left: 8px;
+    }
+
+    .recommendation-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-top: 15px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .meta-badge {
+      background: #f8f9fa;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--text-dark);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-badge i {
+      color: var(--primary-color);
+      font-size: 0.9rem;
+    }
+
+    .recommendation-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-recommend-action {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn-view-detail {
+      background: white;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+    }
+
+    .btn-view-detail:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(201, 169, 110, 0.3);
+    }
+
+    .btn-book-now {
+      background: linear-gradient(135deg, var(--primary-color), #d4b079);
+      color: white;
+      border: none;
+      box-shadow: 0 6px 20px rgba(201, 169, 110, 0.3);
+    }
+
+    .btn-book-now:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(201, 169, 110, 0.5);
+      color: white;
+    }
+
+    .empty-recommendation {
+      text-align: center;
+      padding: 60px 20px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .empty-recommendation i {
+      font-size: 4rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .empty-recommendation h5 {
+      color: var(--text-dark);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .empty-recommendation p {
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    /* Price Badge for Room Types and Menu Items */
+    .price-badge-content {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      background: var(--primary-color);
+      color: white;
+      padding: 10px 18px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 15px rgba(201, 169, 110, 0.4);
+      z-index: 2;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      opacity: 0.7;
+      font-size: 0.85rem;
+      margin-right: 6px;
+    }
+
+    @media (max-width: 991px) {
+      .recommendation-section {
+        padding: 40px 0;
+      }
+
+      .recommendation-header h2 {
+        font-size: 2rem;
+      }
+
+      .recommendation-image {
+        height: 240px;
+      }
+
+      .recommendation-content {
+        padding: 25px;
+      }
+
+      .recommendation-title {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .recommendation-header h2 {
+        font-size: 1.75rem;
+      }
+
+      .recommendation-image {
+        height: 200px;
+      }
+
+      .recommendation-content {
+        padding: 20px;
+      }
+
+      .recommendation-actions {
+        flex-direction: column;
+      }
+
+      .btn-recommend-action {
+        width: 100%;
+      }
+
+      .rating-overlay {
+        padding: 8px 14px;
+        font-size: 0.9rem;
+      }
+
+      .rank-badge {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .recommendation-card {
+      animation: fadeInScale 0.6s ease-out backwards;
+    }
+
+    .recommendation-card:nth-child(1) { animation-delay: 0.1s; }
+    .recommendation-card:nth-child(2) { animation-delay: 0.2s; }
+    .recommendation-card:nth-child(3) { animation-delay: 0.3s; }
+
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      transform: scale(0);
+      animation: ripple-animation 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-animation {
+      to {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    ::selection {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    ::-moz-selection {
+      background-color: var(--primary-color);
+      color: white;
+    }
   </style>
 </head>
 
@@ -2733,6 +3153,326 @@
         </div>
       </div>
     </form>
+  </div>
+</section>
+
+<!-- Section 1: Chi nhánh được đánh giá cao nhất -->
+<section class="recommendation-section" th:if="${topRatedBranches != null and !topRatedBranches.isEmpty()}">
+  <div class="container">
+    <div class="recommendation-header">
+            <span class="badge-new">
+                <i class="fas fa-award me-2"></i>Top Đánh Giá
+            </span>
+      <h2 class="heading-font">
+        <i class="fas fa-building text-primary me-3"></i>
+        Chi Nhánh Được Yêu Thích Nhất
+      </h2>
+      <p>Những chi nhánh nhận được nhiều đánh giá tích cực nhất từ khách hàng</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6" th:each="branchRating, iterStat : ${topRatedBranches}">
+        <div class="recommendation-card">
+          <div class="recommendation-image">
+            <img th:src="${branchRating.item.defaultImage}"
+                 th:alt="${branchRating.item.name}">
+
+            <div class="type-badge-overlay" th:text="${branchRating.item.typeDisplayName}">
+              Khách sạn
+            </div>
+
+            <!-- ✅ Hiển thị rating trung bình THỰC TẾ -->
+            <div class="rating-overlay">
+              <i class="fas fa-star"></i>
+              <span th:text="${branchRating.formattedRating}">4.9</span>
+            </div>
+
+            <div class="rank-badge">
+              <i class="fas fa-trophy"></i>
+              <span>Top <span th:text="${iterStat.count}">1</span></span>
+            </div>
+          </div>
+
+          <div class="recommendation-content">
+            <h5 class="recommendation-title" th:text="${branchRating.item.name}">
+              Tên Chi Nhánh
+            </h5>
+
+            <div class="recommendation-subtitle">
+              <i class="fas fa-map-marker-alt"></i>
+              <span th:text="${branchRating.item.district + ', ' + branchRating.item.province}">Địa chỉ</span>
+            </div>
+
+            <p class="recommendation-description" th:text="${branchRating.item.description}">
+              Mô tả chi nhánh
+            </p>
+
+            <!-- ✅ Hiển thị sao đầy, nửa sao, sao rỗng dựa trên rating thực tế -->
+            <div class="rating-stars">
+              <!-- Sao đầy -->
+              <i class="fas fa-star" th:each="i : ${#numbers.sequence(1, branchRating.fullStars)}"></i>
+              <!-- Nửa sao -->
+              <i class="fas fa-star-half-alt" th:if="${branchRating.hasHalfStar()}"></i>
+              <!-- Sao rỗng -->
+              <i class="far fa-star" th:each="i : ${#numbers.sequence(1, branchRating.emptyStars)}"></i>
+              <!-- ✅ Số lượng reviews THỰC TẾ -->
+              <span class="review-count" th:text="'(' + ${branchRating.reviewCount} + ' đánh giá)'">
+                                (248 đánh giá)
+                            </span>
+            </div>
+
+            <div class="recommendation-meta">
+                            <span class="meta-badge">
+                                <i class="fas fa-phone"></i>
+                                <span th:text="${branchRating.item.phoneNumber}">Hotline</span>
+                            </span>
+              <span class="meta-badge">
+                                <i class="fas fa-door-open"></i>
+                                <span th:text="${branchRating.item.statusDisplayName}">Trạng thái</span>
+                            </span>
+            </div>
+
+            <div class="recommendation-actions">
+              <a th:href="@{'/branches/' + ${branchRating.item.id}}"
+                 class="btn-recommend-action btn-view-detail">
+                <i class="fas fa-eye"></i>
+                <span>Chi tiết</span>
+              </a>
+              <a th:href="@{'/branches/' + ${branchRating.item.id}}"
+                 class="btn-recommend-action btn-book-now">
+                <i class="fas fa-calendar-check"></i>
+                <span>Đặt ngay</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 2: Loại phòng được đánh giá cao nhất -->
+<section class="recommendation-section" th:if="${topRatedRoomTypes != null and !topRatedRoomTypes.isEmpty()}">
+  <div class="container">
+    <div class="recommendation-header">
+            <span class="badge-new">
+                <i class="fas fa-medal me-2"></i>Phòng Chất Lượng
+            </span>
+      <h2 class="heading-font">
+        <i class="fas fa-bed text-primary me-3"></i>
+        Loại Phòng Được Đánh Giá Cao Nhất
+      </h2>
+      <p>Những loại phòng được khách hàng đánh giá xuất sắc về chất lượng và dịch vụ</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6" th:each="roomTypeRating, iterStat : ${topRatedRoomTypes}">
+        <div class="recommendation-card">
+          <div class="recommendation-image">
+            <img th:src="${roomTypeRating.item.hasImages() ? roomTypeRating.item.roomImages[0].imageUrl : 'https://images.unsplash.com/photo-1611892440504-42a792e24d32'}"
+                 th:alt="${roomTypeRating.item.name}">
+
+            <div class="type-badge-overlay">
+              <i class="fas fa-hotel me-2"></i>
+              <span th:text="${roomTypeRating.item.branchName}">Chi nhánh</span>
+            </div>
+
+            <!-- ✅ Hiển thị rating trung bình THỰC TẾ -->
+            <div class="rating-overlay">
+              <i class="fas fa-star"></i>
+              <span th:text="${roomTypeRating.formattedRating}">4.8</span>
+            </div>
+
+            <div class="rank-badge">
+              <i class="fas fa-crown"></i>
+              <span>Top <span th:text="${iterStat.count}">1</span></span>
+            </div>
+
+            <div class="price-badge-content">
+                            <span th:if="${roomTypeRating.item.hasPromotion()}" class="old-price">
+                                <span th:text="${roomTypeRating.item.formattedOriginalPrice}">0₫</span>
+                            </span>
+              <span th:text="${roomTypeRating.item.formattedPrice}">0₫</span>
+            </div>
+          </div>
+
+          <div class="recommendation-content">
+            <h5 class="recommendation-title" th:text="${roomTypeRating.item.name}">
+              Tên Loại Phòng
+            </h5>
+
+            <div class="recommendation-subtitle">
+              <i class="fas fa-building"></i>
+              <span th:text="${roomTypeRating.item.branchName}">Tên chi nhánh</span>
+            </div>
+
+            <p class="recommendation-description" th:text="${roomTypeRating.item.description}">
+              Mô tả loại phòng
+            </p>
+
+            <!-- ✅ Hiển thị sao dựa trên rating thực tế -->
+            <div class="rating-stars">
+              <i class="fas fa-star" th:each="i : ${#numbers.sequence(1, roomTypeRating.fullStars)}"></i>
+              <i class="fas fa-star-half-alt" th:if="${roomTypeRating.hasHalfStar()}"></i>
+              <i class="far fa-star" th:each="i : ${#numbers.sequence(1, roomTypeRating.emptyStars)}"></i>
+              <span class="review-count" th:text="'(' + ${roomTypeRating.reviewCount} + ' đánh giá)'">
+                                (156 đánh giá)
+                            </span>
+            </div>
+
+            <div class="recommendation-meta">
+                            <span class="meta-badge">
+                                <i class="fas fa-users"></i>
+                                <span th:text="${roomTypeRating.item.maxOccupancy} + ' khách'">2 khách</span>
+                            </span>
+              <span class="meta-badge">
+                                <i class="fas fa-bed"></i>
+                                <span th:text="${roomTypeRating.item.bedType}">Double</span>
+                            </span>
+              <span class="meta-badge">
+                                <i class="fas fa-expand-arrows-alt"></i>
+                                <span th:text="${roomTypeRating.item.roomSize} + 'm²'">25m²</span>
+                            </span>
+            </div>
+
+            <div class="recommendation-actions">
+              <a th:href="@{'/room-types/' + ${roomTypeRating.item.id}}"
+                 class="btn-recommend-action btn-view-detail">
+                <i class="fas fa-eye"></i>
+                <span>Xem phòng</span>
+              </a>
+              <a th:href="@{'/room-types/' + ${roomTypeRating.item.id} + '/book'}"
+                 class="btn-recommend-action btn-book-now">
+                <i class="fas fa-calendar-plus"></i>
+                <span>Đặt phòng</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: Món ăn được đánh giá cao nhất -->
+<section class="recommendation-section" th:if="${topRatedMenuItems != null and !topRatedMenuItems.isEmpty()}">
+  <div class="container">
+    <div class="recommendation-header">
+            <span class="badge-new">
+                <i class="fas fa-utensils me-2"></i>Món Ngon
+            </span>
+      <h2 class="heading-font">
+        <i class="fas fa-concierge-bell text-primary me-3"></i>
+        Món Ăn Được Yêu Thích Nhất
+      </h2>
+      <p>Những món ăn được khách hàng đánh giá cao về hương vị và chất lượng phục vụ</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6" th:each="menuItemRating, iterStat : ${topRatedMenuItems}">
+        <div class="recommendation-card">
+          <div class="recommendation-image">
+            <img th:src="${menuItemRating.item.imageUrl != null ? menuItemRating.item.imageUrl : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'}"
+                 th:alt="${menuItemRating.item.name}">
+
+            <div class="type-badge-overlay">
+              <i class="fas fa-tag me-2"></i>
+              <span th:text="${menuItemRating.item.categoryName}">Danh mục</span>
+            </div>
+
+            <!-- ✅ Hiển thị rating trung bình THỰC TẾ -->
+            <div class="rating-overlay">
+              <i class="fas fa-star"></i>
+              <span th:text="${menuItemRating.formattedRating}">4.9</span>
+            </div>
+
+            <div class="rank-badge">
+              <i class="fas fa-fire"></i>
+              <span>Top <span th:text="${iterStat.count}">1</span></span>
+            </div>
+
+            <div class="price-badge-content">
+                            <span th:if="${menuItemRating.item.hasPromotion()}" class="old-price">
+                                <span th:text="${#numbers.formatDecimal(menuItemRating.item.originalPrice, 0, 'COMMA', 0, 'POINT')}">0</span>₫
+                            </span>
+              <span th:text="${#numbers.formatDecimal(menuItemRating.item.currentPrice, 0, 'COMMA', 0, 'POINT')}">0</span>₫
+            </div>
+          </div>
+
+          <div class="recommendation-content">
+            <h5 class="recommendation-title" th:text="${menuItemRating.item.name}">
+              Tên Món Ăn
+            </h5>
+
+            <div class="recommendation-subtitle">
+              <i class="fas fa-utensils"></i>
+              <span th:text="${menuItemRating.item.categoryName}">Danh mục món</span>
+            </div>
+
+            <p class="recommendation-description" th:text="${menuItemRating.item.description}">
+              Mô tả món ăn
+            </p>
+
+            <!-- ✅ Hiển thị sao dựa trên rating thực tế -->
+            <div class="rating-stars">
+              <i class="fas fa-star" th:each="i : ${#numbers.sequence(1, menuItemRating.fullStars)}"></i>
+              <i class="fas fa-star-half-alt" th:if="${menuItemRating.hasHalfStar()}"></i>
+              <i class="far fa-star" th:each="i : ${#numbers.sequence(1, menuItemRating.emptyStars)}"></i>
+              <span class="review-count" th:text="'(' + ${menuItemRating.reviewCount} + ' đánh giá)'">
+                                (189 đánh giá)
+                            </span>
+            </div>
+
+            <div class="recommendation-meta">
+                            <span class="meta-badge" th:if="${menuItemRating.item.preparationTime != null}">
+                                <i class="fas fa-clock"></i>
+                                <span th:text="${menuItemRating.item.preparationTime} + ' phút'">15 phút</span>
+                            </span>
+              <span class="meta-badge" th:if="${menuItemRating.item.calories != null}">
+                                <i class="fas fa-fire"></i>
+                                <span th:text="${menuItemRating.item.calories} + ' kcal'">250 kcal</span>
+                            </span>
+              <span class="meta-badge"
+                    th:classappend="${menuItemRating.item.isAvailable} ? 'text-success' : 'text-danger'">
+                                <i th:class="${menuItemRating.item.isAvailable} ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+                                <span th:text="${menuItemRating.item.isAvailable} ? 'Có sẵn' : 'Hết món'">Trạng thái</span>
+                            </span>
+            </div>
+
+            <div class="recommendation-actions">
+              <a th:href="@{'/menu-items/' + ${menuItemRating.item.id}}"
+                 class="btn-recommend-action btn-view-detail">
+                <i class="fas fa-eye"></i>
+                <span>Chi tiết</span>
+              </a>
+              <button class="btn-recommend-action btn-book-now"
+                      th:onclick="'orderFood(' + ${menuItemRating.item.id} + ')'"
+                      th:disabled="${!menuItemRating.item.isAvailable}">
+                <i th:class="${menuItemRating.item.isAvailable} ? 'fas fa-shopping-cart' : 'fas fa-ban'"></i>
+                <span th:text="${menuItemRating.item.isAvailable} ? 'Đặt món' : 'Hết món'">Đặt món</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Empty State nếu không có dữ liệu -->
+<section class="recommendation-section"
+         th:if="${(topRatedBranches == null or topRatedBranches.isEmpty())
+                  and (topRatedRoomTypes == null or topRatedRoomTypes.isEmpty())
+                  and (topRatedMenuItems == null or topRatedMenuItems.isEmpty())}">
+  <div class="container">
+    <div class="empty-recommendation">
+      <i class="fas fa-star"></i>
+      <h5>Chưa có đánh giá</h5>
+      <p>Hệ thống đang thu thập đánh giá từ khách hàng. Vui lòng quay lại sau!</p>
+      <a href="#branches" class="btn btn-luxury">
+        <i class="fas fa-compass me-2"></i>Khám phá chi nhánh
+      </a>
+    </div>
   </div>
 </section>
 
@@ -3199,6 +3939,8 @@
   </div>
 </section>
 
+<!-- Trong footer hoặc layout chính -->
+<div th:replace="fragments/chatbot :: chatbot"></div>
 <!-- Footer -->
 <footer id="contact" class="footer">
   <div class="container">
@@ -3289,7 +4031,7 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+<script th:src="@{/js/chatbot.js}" defer></script>
 <script>
   // Smooth scrolling for navigation links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -3423,45 +4165,63 @@
       }
     });
   }
+
+  function orderFood(menuItemId) {
+    // Hiển thị loading
+    showLoading();
+
+    setTimeout(() => {
+      hideLoading();
+
+      // Có thể mở modal hoặc chuyển trang
+      if (confirm('Bạn muốn đặt món này?')) {
+        // window.location.href = '/cart/add/' + menuItemId;
+        showSuccessMessage('Đã thêm món vào giỏ hàng!');
+      }
+    }, 500);
+  }
+
+  function showLoading() {
+    // Implement loading modal nếu chưa có
+    console.log('Loading...');
+  }
+
+  function hideLoading() {
+    // Implement hide loading
+    console.log('Hide loading...');
+  }
+
+  function showSuccessMessage(message) {
+    alert(message); // Hoặc dùng toast notification đẹp hơn
+  }
+
+  // Smooth scroll animation khi load
+  document.addEventListener('DOMContentLoaded', function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    document.querySelectorAll('.recommendation-card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = 'all 0.6s ease-out';
+      observer.observe(card);
+    });
+  });
 </script>
 
-<style>
-  .ripple {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.6);
-    transform: scale(0);
-    animation: ripple-animation 0.6s linear;
-    pointer-events: none;
-  }
 
-  @keyframes ripple-animation {
-    to {
-      transform: scale(2);
-      opacity: 0;
-    }
-  }
 
-  .animate-on-scroll {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-  }
 
-  .animate-on-scroll.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
 
-  ::selection {
-    background-color: var(--primary-color);
-    color: white;
-  }
 
-  ::-moz-selection {
-    background-color: var(--primary-color);
-    color: white;
-  }
-</style>
 </body>
 </html>

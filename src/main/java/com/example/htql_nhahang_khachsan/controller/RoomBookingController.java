@@ -4,8 +4,10 @@ import com.example.htql_nhahang_khachsan.dto.AvailabilityResponse;
 import com.example.htql_nhahang_khachsan.dto.BookingConfirmationDTO;
 import com.example.htql_nhahang_khachsan.dto.BookingSessionDTO;
 import com.example.htql_nhahang_khachsan.dto.RoomTypeResponse;
+import com.example.htql_nhahang_khachsan.entity.ChatbotBookingDraftEntity;
 import com.example.htql_nhahang_khachsan.entity.RoomBookingEntity;
 import com.example.htql_nhahang_khachsan.enums.PaymentMethod;
+import com.example.htql_nhahang_khachsan.repository.ChatbotBookingDraftRepository;
 import com.example.htql_nhahang_khachsan.service.BookingService;
 import com.example.htql_nhahang_khachsan.service.RoomService;
 import com.example.htql_nhahang_khachsan.service.VnPayService;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Controller
@@ -30,6 +33,7 @@ public class RoomBookingController {
     private final RoomService roomService;
     private final BookingService bookingService;
     private final VnPayService vnPayService;
+    private final ChatbotBookingDraftRepository chatbotBookingDraftRepository;
 
     @GetMapping("/api/check-availability")
     @ResponseBody
@@ -53,53 +57,6 @@ public class RoomBookingController {
             );
         }
     }
-
-//    @PostMapping("/room-type/{id}/select")
-//    public String selectRoomType(
-//            @PathVariable Long id,
-//            @RequestParam String checkInDate,
-//            @RequestParam String checkOutDate,
-//            @RequestParam Integer numberOfRooms,
-//            @RequestParam Integer adults,
-//            @RequestParam Integer children,
-//            HttpSession session) {
-//
-//        try {
-//            LocalDate checkIn = LocalDate.parse(checkInDate);
-//            LocalDate checkOut = LocalDate.parse(checkOutDate);
-//
-//            if (checkIn.isBefore(LocalDate.now())) {
-//                return "redirect:/room-types/" + id + "?error=invalid_checkin";
-//            }
-//
-//            if (checkOut.isBefore(checkIn.plusDays(1))) {
-//                return "redirect:/room-types/" + id + "?error=invalid_checkout";
-//            }
-//
-//            AvailabilityResponse availability = bookingService.checkRoomAvailability(
-//                    id, checkInDate, checkOutDate, numberOfRooms
-//            );
-//
-//            if (!availability.isAvailable()) {
-//                return "redirect:/room-types/" + id + "?error=not_available";
-//            }
-//
-//            BookingSessionDTO bookingSession = bookingService.createBookingSession(
-//                    id, checkInDate, checkOutDate, numberOfRooms, adults, children
-//            );
-//
-//            // ===== FIX: Set RoomType =====
-//            RoomTypeResponse roomType = roomService.getRoomTypeById(id);
-//            bookingSession.setRoomType(roomType);
-//
-//            session.setAttribute("bookingSession", bookingSession);
-//
-//            return "redirect:/bookings/services/" + bookingSession.getSessionId();
-//
-//        } catch (Exception e) {
-//            return "redirect:/room-types/" + id + "?error=booking_failed";
-//        }
-//    }
 
     @PostMapping("/room-type/{id}/select")
     public String selectRoomType(
@@ -315,55 +272,6 @@ public class RoomBookingController {
         return "customer/booking/confirmation";
     }
 
-    // Xử lý hoàn tất đặt phòng
-//    @PostMapping("/complete")
-//    public String completeBooking(@RequestParam String sessionId,
-//                                  @RequestParam Boolean isDepositOnly,
-//                                  @RequestParam PaymentMethod paymentMethod,
-//                                  HttpSession httpSession,
-//                                  RedirectAttributes redirectAttributes,
-//                                  HttpServletRequest request) {
-//        System.out.println(">>> PaymentMethod: " + paymentMethod);
-//        System.out.println(">>> PaymentMethod received: " + paymentMethod);
-//
-//        BookingSessionDTO session = (BookingSessionDTO) httpSession.getAttribute("bookingSession");
-//
-//        if (session == null || !session.getSessionId().equals(sessionId)) {
-//            return "redirect:/";
-//        }
-//
-//        try {
-//            RoomBookingEntity booking = bookingService.createBooking(session, isDepositOnly, paymentMethod);
-//
-//            System.out.println(">>> PaymentMethod: " + paymentMethod);
-//
-//            if (paymentMethod == PaymentMethod.VNPAY) {
-//                long amount = booking.getTotalAmount().longValue() * 100; // VNPay cần *100
-//                String orderInfo = "Thanh toan don hang " + booking.getBookingCode();
-//
-//                String paymentUrl = vnPayService.createPaymentUrl(
-//                        amount,
-//                        orderInfo,
-//                        booking.getBookingCode(),
-//                        request
-//                );
-//
-//                System.out.println(">>> VNPay amount: " + amount);
-//                System.out.println(">>> VNPay URL: " + paymentUrl);
-//
-//                return "redirect:" + paymentUrl;
-//            }
-//
-//            httpSession.removeAttribute("bookingSession");
-//            return "redirect:/bookings/confirmation/" + booking.getBookingCode();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi đặt phòng: " + e.getMessage());
-//            return "redirect:/bookings/payment/" + sessionId;
-//        }
-//    }
-
     @PostMapping("/complete")
     public String completeBooking(@RequestParam String sessionId,
                                   @RequestParam Boolean isDepositOnly,
@@ -438,4 +346,39 @@ public class RoomBookingController {
     }
 
 
+    // ✅ THÊM vào RoomBookingController
+
+    @GetMapping("/from-chatbot/{draftCode}")
+    public String createBookingFromChatbot(
+            @PathVariable String draftCode,
+            HttpSession httpSession,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            // Tìm draft
+            ChatbotBookingDraftEntity draft = chatbotBookingDraftRepository
+                    .findByDraftCode(draftCode)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin đặt phòng"));
+
+            // Check expired
+            if (draft.getExpiresAt().isBefore(LocalDateTime.now())) {
+                redirectAttributes.addFlashAttribute("error",
+                        "Phiên đặt phòng đã hết hạn. Vui lòng thử lại.");
+                return "redirect:/";
+            }
+
+            // Convert draft -> BookingSessionDTO
+            BookingSessionDTO session = bookingService.createBookingSessionFromDraft(draft);
+
+            // Lưu vào session
+            httpSession.setAttribute("bookingSession", session);
+
+            // Redirect đến trang thanh toán
+            return "redirect:/bookings/payment/" + session.getSessionId();
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
+    }
 }

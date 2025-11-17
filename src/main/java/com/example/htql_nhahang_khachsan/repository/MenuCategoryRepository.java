@@ -61,4 +61,12 @@ public interface MenuCategoryRepository extends JpaRepository<MenuCategoryEntity
     List<MenuCategoryEntity> findByBranchIdAndStatus(Long branchId, Status status);
 
 
+    // ✅ EXISTING (giữ nguyên nếu có)
+    List<MenuCategoryEntity> findByBranchId(Long branchId);
+
+
+    // ✅ THÊM: Tìm category theo tên và chi nhánh
+    Optional<MenuCategoryEntity> findByBranchIdAndNameIgnoreCase(Long branchId, String name);
 }
+
+

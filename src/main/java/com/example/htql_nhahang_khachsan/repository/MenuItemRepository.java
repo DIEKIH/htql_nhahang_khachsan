@@ -115,4 +115,29 @@ public interface MenuItemRepository extends JpaRepository<MenuItemEntity, Long> 
     // Lấy món ăn mới nhất
     List<MenuItemEntity> findTop10ByStatusOrderByCreatedAtDesc(Status status);
 
+
+    //của chatbot
+
+    // ✅ THÊM: Tìm món theo tên (fuzzy search)
+    @Query("SELECT m FROM MenuItemEntity m WHERE " +
+            "m.category.branch.id = :branchId AND " +
+            "m.status = :status AND " +
+            "m.isAvailable = true AND " +
+            "LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<MenuItemEntity> searchByNameInBranch(
+            @Param("branchId") Long branchId,
+            @Param("keyword") String keyword,
+            @Param("status") Status status
+    );
+
+    // ✅ THÊM: Lấy menu items theo branch (qua category)
+    @Query("SELECT m FROM MenuItemEntity m " +
+            "WHERE m.category.branch.id = :branchId " +
+            "AND m.status = :status " +
+            "AND m.isAvailable = true")
+    List<MenuItemEntity> findAvailableItemsByBranch(
+            @Param("branchId") Long branchId,
+            @Param("status") Status status
+    );
+
 }

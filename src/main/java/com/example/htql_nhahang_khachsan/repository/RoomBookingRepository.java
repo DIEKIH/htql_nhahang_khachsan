@@ -163,6 +163,21 @@ public interface RoomBookingRepository extends JpaRepository<RoomBookingEntity, 
 
 
 
+    @Query("""
+        SELECT COUNT(b)
+        FROM RoomBookingEntity b
+        WHERE b.roomType.id = :roomTypeId
+          AND b.status NOT IN (com.example.htql_nhahang_khachsan.enums.BookingStatus.CANCELLED,
+                               com.example.htql_nhahang_khachsan.enums.BookingStatus.CHECKED_OUT,
+                               com.example.htql_nhahang_khachsan.enums.BookingStatus.NO_SHOW)
+          AND b.checkInDate < :checkOutDate
+          AND b.checkOutDate > :checkInDate
+    """)
+    long countBookedRoomsByRoomTypeAndDateRange(
+            @Param("roomTypeId") Long roomTypeId,
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate
+    );
 
 }
 

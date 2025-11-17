@@ -280,4 +280,10 @@ public class MenuService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy món ăn"));
         return menuItem.getCategory().getBranch().getId();
     }
+
+    public MenuItemEntity getMenuItemEntityById(Long id) {
+        return menuItemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy món ăn với ID: " + id));
+    }
+
 }

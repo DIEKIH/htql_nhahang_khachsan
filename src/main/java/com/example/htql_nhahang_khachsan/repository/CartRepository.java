@@ -13,10 +13,17 @@ public interface CartRepository extends JpaRepository<CartEntity, Long> {
 
     Optional<CartEntity> findByUserIdAndBranchId(Long userId, Long branchId);
 
-    @Query("SELECT c FROM CartEntity c " +
+//    @Query("SELECT c FROM CartEntity c " +
+//            "LEFT JOIN FETCH c.items ci " +
+//            "LEFT JOIN FETCH ci.menuItem " +
+//            "WHERE c.user.id = :userId")
+//    Optional<CartEntity> findByUserIdWithItems(Long userId);
+
+    @Query("SELECT DISTINCT c FROM CartEntity c " +
             "LEFT JOIN FETCH c.items ci " +
             "LEFT JOIN FETCH ci.menuItem " +
             "WHERE c.user.id = :userId")
     Optional<CartEntity> findByUserIdWithItems(Long userId);
+
 }
 

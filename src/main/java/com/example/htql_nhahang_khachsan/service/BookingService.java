@@ -30,8 +30,10 @@ public class BookingService {
     private final PromotionService promotionService;
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
+    private final ChatbotBookingDraftRepository draftRepository;
 
     private final EmailService emailService;
+
 
 
     private static final BigDecimal BREAKFAST_FEE_PER_PERSON = new BigDecimal("200000");
@@ -76,76 +78,6 @@ public class BookingService {
                 .message(message)
                 .build();
     }
-
-    /**
-     * Tạo booking session
-     */
-//    public BookingSessionDTO createBookingSession(
-//            Long roomTypeId,
-//            String checkInDate,
-//            String checkOutDate,
-//            Integer numberOfRooms,
-//            Integer adults,
-//            Integer children) {
-//
-//        RoomTypeEntity roomType = roomTypeRepository.findById(roomTypeId)
-//                .orElseThrow(() -> new EntityNotFoundException("Room type not found"));
-//
-//        LocalDate checkIn = LocalDate.parse(checkInDate);
-//        LocalDate checkOut = LocalDate.parse(checkOutDate);
-//        int nights = (int) ChronoUnit.DAYS.between(checkIn, checkOut);
-//
-//        // ✅ Lấy giá sau giảm
-//        BigDecimal currentPrice = promotionService.calculateDiscountedPrice(
-//                roomType.getPrice(),
-//                roomType.getBranch().getId(),
-//                PromotionApplicability.ROOM
-//        );
-//
-//        BigDecimal roomPrice = roomType.getPrice();
-////        BigDecimal totalRoomPrice = roomPrice
-////                .multiply(BigDecimal.valueOf(nights))
-////                .multiply(BigDecimal.valueOf(numberOfRooms));
-//
-//        // ✅ DÙNG currentPrice thay vì roomType.getPrice()
-//        BigDecimal totalRoomPrice = currentPrice
-//                .multiply(BigDecimal.valueOf(nights))
-//                .multiply(BigDecimal.valueOf(numberOfRooms));
-//
-//        BigDecimal serviceFee = totalRoomPrice.multiply(SERVICE_FEE_RATE);
-//        BigDecimal subtotal = totalRoomPrice.add(serviceFee);
-//        BigDecimal vat = subtotal.multiply(VAT_RATE);
-//        BigDecimal totalAmount = subtotal.add(vat);
-//        BigDecimal depositAmount = totalAmount.multiply(new BigDecimal("0.5"));
-//        BigDecimal remainingAmount = totalAmount.subtract(depositAmount);
-//
-//        String sessionId = UUID.randomUUID().toString();
-//
-//        return BookingSessionDTO.builder()
-//                .sessionId(sessionId)
-//                .roomTypeId(roomTypeId)
-//                .checkInDate(checkIn)
-//                .checkOutDate(checkOut)
-//                .numberOfNights(nights)
-//                .numberOfRooms(numberOfRooms)
-//                .adults(adults)
-//                .children(children)
-//                .roomPrice(currentPrice)
-//                .totalRoomPrice(totalRoomPrice)
-//                .serviceFee(serviceFee)
-//                .vat(vat)
-//                .totalAmount(totalAmount)
-//                .depositAmount(depositAmount)
-//                .remainingAmount(remainingAmount)
-//                // QUAN TRỌNG: Khởi tạo các boolean service với giá trị false
-//                .includeBreakfast(false)
-//                .breakfastFee(BigDecimal.ZERO)
-//                .includeSpa(false)
-//                .spaFee(BigDecimal.ZERO)
-//                .includeAirportTransfer(false)
-//                .airportTransferFee(BigDecimal.ZERO)
-//                .build();
-//    }
 
     public BookingSessionDTO createBookingSession(
             Long roomTypeId,
@@ -371,98 +303,34 @@ public class BookingService {
         System.out.println(">>> - Remaining amount: " + booking.getRemainingAmount());
         System.out.println(">>> - Payment status: " + booking.getPaymentStatus());
 
+//        // ✅ THÊM: Xóa draft nếu booking từ chatbot
+//        try {
+//            draftRepository.findBySessionId(session.getSessionId())
+//                    .ifPresent(draft -> {
+//                        draftRepository.delete(draft);
+//                        System.out.println("✅ Deleted draft: " + draft.getDraftCode());
+//                    });
+//        } catch (Exception e) {
+//            // Không cần throw lỗi nếu xóa draft fail
+//            System.err.println("⚠️ Could not delete draft: " + e.getMessage());
+//        }
+
+        // ✅ SỬA: Xóa draft nếu sessionId là draft code (bắt đầu bằng DRAFT)
+        if (session.getSessionId() != null &&
+                session.getSessionId().startsWith("DRAFT")) {
+            try {
+                draftRepository.findByDraftCode(session.getSessionId())
+                        .ifPresent(draft -> {
+                            draftRepository.delete(draft);
+                            log.info("✅ Deleted draft: {}", draft.getDraftCode());
+                        });
+            } catch (Exception e) {
+                log.warn("⚠️ Could not delete draft: {}", e.getMessage());
+            }
+        }
+
         return booking;
     }
-
-//    public RoomBookingEntity createBooking(
-//            BookingSessionDTO session,
-//            Boolean isDepositOnly,
-//            PaymentMethod paymentMethod) {
-//
-//        RoomTypeEntity roomType = roomTypeRepository.findById(session.getRoomTypeId())
-//                .orElseThrow(() -> new EntityNotFoundException("Room type not found"));
-//
-//        // 🔹 Tìm danh sách phòng trống
-////        List<RoomEntity> availableRooms = roomRepository.findAvailableRoomsByTypeAndDateRange(
-////                session.getRoomTypeId(),
-////                session.getCheckInDate(),
-////                session.getCheckOutDate()
-////        );
-//
-//        List<RoomEntity> availableRooms = roomRepository.findAvailableRoomsByTypeAndDateRange(
-//                session.getRoomTypeId(),
-//                session.getCheckInDate(),
-//                session.getCheckOutDate(),
-//                RoomStatus.AVAILABLE,
-//                List.of(BookingStatus.CANCELLED, BookingStatus.NO_SHOW)
-//        );
-//
-//
-//        if (availableRooms.size() < session.getNumberOfRooms()) {
-//            throw new RuntimeException("Không đủ phòng trống để đặt.");
-//        }
-//
-//        // 🔹 Chọn phòng đầu tiên (hoặc chọn list nếu đặt nhiều)
-//        RoomEntity assignedRoom = availableRooms.get(0);
-//        assignedRoom.setStatus(RoomStatus.AVAILABLE);
-//        roomRepository.save(assignedRoom);
-//
-//        // 🔹 Tạo booking entity
-//        RoomBookingEntity booking = RoomBookingEntity.builder()
-//                .roomType(roomType)
-//                .room(assignedRoom) // ✅ GÁN PHÒNG THẬT
-//                .branch(roomType.getBranch())
-//                .checkInDate(session.getCheckInDate())
-//                .checkOutDate(session.getCheckOutDate())
-//                .numberOfRooms(session.getNumberOfRooms())
-//                .adults(session.getAdults())
-//                .children(session.getChildren())
-//                .guestName(session.getGuestName())
-//                .guestEmail(session.getGuestEmail())
-//                .guestPhone(session.getGuestPhone())
-//                .guestIdNumber(session.getGuestIdNumber())
-//                .roomPrice(session.getRoomPrice())
-//                .basePrice(session.getRoomPrice())
-//                .numberOfNights(session.getNumberOfNights())
-//                .totalRoomPrice(session.getTotalRoomPrice())
-//                .serviceFee(session.getServiceFee())
-//                .vat(session.getVat())
-//                .totalAmount(session.getTotalAmount())
-//                .depositAmount(session.getDepositAmount())
-//                .remainingAmount(session.getRemainingAmount())
-//                .includeBreakfast(session.getIncludeBreakfast())
-//                .breakfastFee(session.getBreakfastFee())
-//                .includeSpa(session.getIncludeSpa())
-//                .spaFee(session.getSpaFee())
-//                .includeAirportTransfer(session.getIncludeAirportTransfer())
-//                .airportTransferFee(session.getAirportTransferFee())
-//                .specialRequests(session.getSpecialRequests())
-//                .status(BookingStatus.PENDING)
-//                .paymentMethod(paymentMethod)
-//                .build();
-//
-//        booking.setPaymentStatus(isDepositOnly
-//                ? PaymentStatus.PARTIALLY_PAID
-//                : PaymentStatus.PAID);
-//
-//        booking = bookingRepository.save(booking);
-//
-//        // 🔹 Tạo payment record
-//        createPaymentRecord(booking, isDepositOnly);
-//
-//        // 🔹 Gửi email xác nhận
-//        try {
-//            emailService.sendBookingConfirmation(booking);
-//        } catch (Exception e) {
-//            System.err.println("Failed to send confirmation email: " + e.getMessage());
-//        }
-//
-//        return booking;
-//    }
-
-    /**
-     * Tạo payment record
-     */
 
     /**
      * Tạo payment record
@@ -489,24 +357,6 @@ public class BookingService {
         System.out.println(">>> - Payment amount: " + paymentAmount);
         System.out.println(">>> - Status: " + payment.getStatus());
     }
-
-//    private void createPaymentRecord(RoomBookingEntity booking, Boolean isDepositOnly) {
-//        BigDecimal paymentAmount = isDepositOnly
-//                ? booking.getDepositAmount()
-//                : booking.getTotalAmount();
-//
-//        PaymentEntity payment = PaymentEntity.builder()
-//                .roomBooking(booking)
-//                .amount(paymentAmount)
-//                .method(booking.getPaymentMethod())
-////                .status(PaymentStatus.PAID)
-//                .status(isDepositOnly ? PaymentStatus.PARTIALLY_PAID : PaymentStatus.PAID)
-//
-//                .processedAt(LocalDateTime.now())
-//                .build();
-//
-//        paymentRepository.save(payment);
-//    }
 
     public RoomBookingEntity getBookingByCode(String bookingCode) {
         return bookingRepository.findByBookingCode(bookingCode)
@@ -542,19 +392,6 @@ public class BookingService {
                 .build();
     }
 
-//    @Transactional
-//    public void updatePaymentStatus(String bookingCode, boolean success) {
-//        RoomBookingEntity booking = bookingRepository.findByBookingCode(bookingCode)
-//                .orElseThrow(() -> new RuntimeException("Không tìm thấy booking với mã: " + bookingCode));
-//
-//        if (success) {
-//            booking.setPaymentStatus(PaymentStatus.PAID);
-//        } else {
-//            booking.setPaymentStatus(PaymentStatus.FAILED);
-//        }
-//
-//        bookingRepository.save(booking);
-//    }
 
     @Transactional
     public void updatePaymentStatus(String bookingCode, boolean success) {
@@ -583,9 +420,149 @@ public class BookingService {
     }
 
 
+//    này là của con chatbot booking draft thôi không phải booking service
+    // ✅ THÊM vào BookingService
+
+    public BookingSessionDTO createBookingSessionFromDraft(ChatbotBookingDraftEntity draft) {
+        RoomTypeEntity roomType = draft.getRoomType();
+        int nights = (int) ChronoUnit.DAYS.between(
+                draft.getCheckInDate(),
+                draft.getCheckOutDate()
+        );
+
+        BigDecimal currentPrice = promotionService.calculateDiscountedPrice(
+                roomType.getPrice(),
+                roomType.getBranch().getId(),
+                PromotionApplicability.ROOM
+        );
+
+        BigDecimal totalRoomPrice = currentPrice
+                .multiply(BigDecimal.valueOf(nights))
+                .multiply(BigDecimal.valueOf(draft.getNumberOfRooms()));
+
+        BigDecimal serviceFee = totalRoomPrice.multiply(SERVICE_FEE_RATE);
+        BigDecimal subtotal = totalRoomPrice.add(serviceFee);
+        BigDecimal vat = subtotal.multiply(VAT_RATE);
+        BigDecimal totalAmount = subtotal.add(vat);
+        BigDecimal depositAmount = totalAmount.multiply(new BigDecimal("0.5"));
+
+        return BookingSessionDTO.builder()
+                .sessionId(draft.getDraftCode())
+                .sessionId(UUID.randomUUID().toString())
+                .roomTypeId(roomType.getId())
+                .checkInDate(draft.getCheckInDate())
+                .checkOutDate(draft.getCheckOutDate())
+                .numberOfNights(nights)
+                .numberOfRooms(draft.getNumberOfRooms())
+                .adults(draft.getAdults())
+                .children(draft.getChildren())
+                .guestName(draft.getGuestName())
+                .guestEmail(draft.getGuestEmail())
+                .guestPhone(draft.getGuestPhone())
+                .guestIdNumber(draft.getGuestIdNumber())
+                .specialRequests(draft.getSpecialRequests())
+                .roomPrice(currentPrice)
+                .totalRoomPrice(totalRoomPrice)
+                .serviceFee(serviceFee)
+                .vat(vat)
+                .totalAmount(totalAmount)
+                .depositAmount(depositAmount)
+                .remainingAmount(totalAmount.subtract(depositAmount))
+                .includeBreakfast(draft.getIncludeBreakfast())
+                .includeSpa(draft.getIncludeSpa())
+                .includeAirportTransfer(draft.getIncludeAirportTransfer())
+
+                // ✅ THÊM: Các thông tin khách từ draft
+                .guestName(draft.getGuestName())
+                .guestEmail(draft.getGuestEmail())
+                .guestPhone(draft.getGuestPhone())
+                .guestIdNumber(draft.getGuestIdNumber())
+                .specialRequests(draft.getSpecialRequests())
+
+                .build();
+    }
 
 
+    /**
+     * ✅ SỬA: Tạo booking từ draft code
+     * Sử dụng createBookingSessionFromDraft() existing
+     * Sau đó gọi createBooking() để tạo booking
+     */
+    @Transactional
+    public RoomBookingEntity createBookingFromDraft(
+            String draftCode,
+            Boolean isDepositOnly,
+            PaymentMethod paymentMethod) {
 
+        log.info("=== CREATE BOOKING FROM DRAFT ===");
+        log.info("Draft code: {}", draftCode);
 
+        // 1. Tìm draft
+        ChatbotBookingDraftEntity draft = draftRepository.findByDraftCode(draftCode)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy draft: " + draftCode));
 
+        // 2. Check expired
+        if (draft.getExpiresAt().isBefore(LocalDateTime.now())) {
+            draftRepository.delete(draft);
+            throw new RuntimeException("Draft đã hết hạn. Vui lòng đặt phòng lại.");
+        }
+
+        // 3. Check draft có đủ thông tin không
+        if (draft.getGuestName() == null ||
+                draft.getGuestEmail() == null ||
+                draft.getGuestPhone() == null) {
+            throw new RuntimeException("Thông tin đặt phòng chưa đầy đủ");
+        }
+
+        // 4. Tạo BookingSessionDTO từ draft (SỬ DỤNG METHOD EXISTING)
+        BookingSessionDTO session = createBookingSessionFromDraft(draft);
+
+        // ✅ QUAN TRỌNG: Set sessionId = draft code để tracking
+        session.setSessionId(draft.getDraftCode());
+
+        log.info("Created session from draft. Total: {}", session.getTotalAmount());
+
+        // 5. Tạo booking từ session (SỬ DỤNG METHOD EXISTING)
+        RoomBookingEntity booking = createBooking(session, isDepositOnly, paymentMethod);
+
+        log.info("✅ Created booking {} from draft {}", booking.getBookingCode(), draftCode);
+
+        // 6. ✅ XÓA DRAFT SAU KHI TẠO BOOKING THÀNH CÔNG
+        try {
+            draftRepository.delete(draft);
+            log.info("✅ Deleted draft {} after creating booking {}", draftCode, booking.getId());
+        } catch (Exception e) {
+            log.warn("⚠️ Failed to delete draft {}: {}", draftCode, e.getMessage());
+            // Không throw lỗi vì booking đã tạo thành công
+        }
+
+        return booking;
+    }
+
+    /**
+     * ✅ THÊM: Cleanup tất cả draft đã expired
+     * Gọi method này trong scheduled task hoặc khi cần
+     */
+    @Transactional
+    public void cleanupExpiredDrafts() {
+        LocalDateTime now = LocalDateTime.now();
+        List<ChatbotBookingDraftEntity> expiredDrafts =
+                draftRepository.findByExpiresAtBefore(now);
+
+        if (!expiredDrafts.isEmpty()) {
+            draftRepository.deleteAll(expiredDrafts);
+            log.info("🗑️ Cleaned up {} expired drafts", expiredDrafts.size());
+        }
+    }
+
+    /**
+     * ✅ THÊM: Xóa draft theo code (khi user cancel)
+     */
+    @Transactional
+    public void cancelDraft(String draftCode) {
+        draftRepository.findByDraftCode(draftCode).ifPresent(draft -> {
+            draftRepository.delete(draft);
+            log.info("🗑️ Cancelled draft {}", draftCode);
+        });
+    }
 }

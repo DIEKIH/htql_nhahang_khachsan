@@ -4040,7 +4040,7 @@
                                                     th:onclick="'orderFood(' + ${item.id} + ')'"
                                                     th:disabled="${!item.isAvailable}">
                                                 <i th:class="${item.isAvailable} ? 'fas fa-cart-plus' : 'fas fa-ban'"></i>
-                                                <span th:text="${item.isAvailable} ? 'Đặt ngay' : 'Hết món'">Order</span>
+                                                <span th:text="${item.isAvailable} ? 'Đặt ngay' : 'Hết món'">Đặt Ngay</span>
                                             </button>
                                         </div>
                                     </div>
@@ -5238,6 +5238,489 @@
     });
 
     console.log('Branch Detail Page Initialized Successfully');
+
+
+
+//     // ===== THAY THẾ/THÊM VÀO PHẦN JAVASCRIPT TRONG detail.html =====
+//
+//     /**
+//      * Đặt món ngay - Tạo quick order và chuyển đến trang checkout
+//      * Không thêm vào giỏ hàng, đặt món trực tiếp
+//      */
+//     function orderFood(itemId) {
+//         // Kiểm tra đăng nhập
+//         const userId = /*[[${session.userId}]]*/ null;
+//
+//         if (!userId) {
+//             if (confirm('Vui lòng đăng nhập để đặt món. Chuyển đến trang đăng nhập?')) {
+//                 const currentUrl = window.location.pathname;
+//                 sessionStorage.setItem('redirectAfterLogin', currentUrl);
+//                 window.location.href = '/login?redirect=' + encodeURIComponent(currentUrl);
+//             }
+//             return;
+//         }
+//
+//         // Hiển thị modal chọn số lượng
+//         showQuantityModal(itemId);
+//     }
+//
+//     /**
+//      * Hiển thị modal chọn số lượng món ăn
+//      */
+//     function showQuantityModal(itemId) {
+//         // Tìm thông tin món ăn từ DOM
+//         const itemCard = document.querySelector(`[onclick="orderFood(${itemId})"]`)?.closest('.menu-card-inner');
+//         const itemName = itemCard?.querySelector('.menu-item-title')?.textContent || 'Món ăn';
+//         const itemPrice = itemCard?.querySelector('.current-price-overlay')?.textContent || '0';
+//
+//         // Tạo modal HTML
+//         const modalHtml = `
+//         <div class="modal fade" id="quantityModal" tabindex="-1" data-bs-backdrop="static">
+//             <div class="modal-dialog modal-dialog-centered">
+//                 <div class="modal-content">
+//                     <div class="modal-header">
+//                         <h5 class="modal-title">
+//                             <i class="fas fa-shopping-cart me-2"></i>Chọn số lượng
+//                         </h5>
+//                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+//                     </div>
+//                     <div class="modal-body">
+//                         <div class="text-center mb-3">
+//                             <h6>${itemName}</h6>
+//                             <p class="text-muted mb-0">Giá: <strong class="text-danger">${itemPrice}₫</strong></p>
+//                         </div>
+//
+//                         <div class="d-flex justify-content-center align-items-center gap-3 my-4">
+//                             <button class="btn btn-outline-primary btn-lg" onclick="changeModalQuantity(-1)">
+//                                 <i class="fas fa-minus"></i>
+//                             </button>
+//                             <input type="number"
+//                                    id="modalQuantityInput"
+//                                    class="form-control form-control-lg text-center"
+//                                    value="1"
+//                                    min="1"
+//                                    max="50"
+//                                    style="width: 100px; font-size: 24px; font-weight: bold;"
+//                                    readonly>
+//                             <button class="btn btn-outline-primary btn-lg" onclick="changeModalQuantity(1)">
+//                                 <i class="fas fa-plus"></i>
+//                             </button>
+//                         </div>
+//
+//                         <div class="alert alert-info mb-0">
+//                             <i class="fas fa-info-circle me-2"></i>
+//                             Bạn sẽ được chuyển đến trang nhập thông tin giao hàng
+//                         </div>
+//                     </div>
+//                     <div class="modal-footer">
+//                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+//                             <i class="fas fa-times me-2"></i>Hủy
+//                         </button>
+//                         <button type="button" class="btn btn-luxury" onclick="confirmQuickOrder(${itemId})">
+//                             <i class="fas fa-bolt me-2"></i>Đặt món ngay
+//                         </button>
+//                     </div>
+//                 </div>
+//             </div>
+//         </div>
+//     `;
+//
+//         // Xóa modal cũ nếu có
+//         const oldModal = document.getElementById('quantityModal');
+//         if (oldModal) oldModal.remove();
+//
+//         // Thêm modal mới
+//         document.body.insertAdjacentHTML('beforeend', modalHtml);
+//
+//         // Hiển thị modal
+//         const modal = new bootstrap.Modal(document.getElementById('quantityModal'));
+//         modal.show();
+//     }
+//
+//     /**
+//      * Thay đổi số lượng trong modal
+//      */
+//     function changeModalQuantity(delta) {
+//         const input = document.getElementById('modalQuantityInput');
+//         let value = parseInt(input.value) || 1;
+//         value = Math.max(1, Math.min(50, value + delta));
+//         input.value = value;
+//     }
+//
+//     /**
+//      * Xác nhận đặt món nhanh - Tạo quick order và chuyển đến checkout
+//      */
+//     function confirmQuickOrder(itemId) {
+//         const quantity = parseInt(document.getElementById('modalQuantityInput').value) || 1;
+//         const branchId = /*[[${branch.id}]]*/ 0;
+//
+//         showLoading();
+//
+//         // Gọi API tạo quick order
+//         fetch('/quick-order/create', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({
+//                 menuItemId: itemId,
+//                 branchId: branchId,
+//                 quantity: quantity
+//             })
+//         })
+//             .then(response => {
+//                 if (!response.ok) {
+//                     throw new Error('Có lỗi xảy ra');
+//                 }
+//                 return response.json();
+//             })
+//             .then(data => {
+//                 hideLoading();
+//
+//                 // Đóng modal
+//                 const modal = bootstrap.Modal.getInstance(document.getElementById('quantityModal'));
+//                 if (modal) modal.hide();
+//
+//                 // Chuyển đến trang checkout với quick order ID
+//                 window.location.href = '/checkout/quick-order/' + data.quickOrderId;
+//             })
+//             .catch(error => {
+//                 hideLoading();
+//                 console.error('Error:', error);
+//                 alert('Có lỗi xảy ra khi đặt món. Vui lòng thử lại!');
+//             });
+//     }
+//
+//     // ===== THÊM CSS CHO MODAL =====
+//     const quickOrderStyles = `
+//     <style>
+//         #quantityModal .modal-content {
+//             border-radius: 15px;
+//             border: none;
+//             box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+//         }
+//
+//         #quantityModal .modal-header {
+//             background: linear-gradient(135deg, var(--primary-color), #b8956b);
+//             color: white;
+//             border-radius: 15px 15px 0 0;
+//             border: none;
+//         }
+//
+//         #quantityModal .btn-close {
+//             filter: brightness(0) invert(1);
+//         }
+//
+//         #quantityModal .modal-body {
+//             padding: 30px;
+//         }
+//
+//         #quantityModal .btn-outline-primary {
+//             width: 50px;
+//             height: 50px;
+//             border-radius: 50%;
+//             border: 2px solid var(--primary-color);
+//             color: var(--primary-color);
+//         }
+//
+//         #quantityModal .btn-outline-primary:hover {
+//             background: var(--primary-color);
+//             color: white;
+//         }
+//
+//         #modalQuantityInput {
+//             border: 2px solid #dee2e6;
+//             border-radius: 10px;
+//         }
+//
+//         #modalQuantityInput:focus {
+//             border-color: var(--primary-color);
+//             box-shadow: 0 0 0 0.2rem rgba(201, 169, 110, 0.25);
+//         }
+//     </style>
+// `;
+//
+//     // Thêm styles vào head (chỉ thêm 1 lần)
+//     if (!document.getElementById('quickOrderStyles')) {
+//         const styleElement = document.createElement('div');
+//         styleElement.id = 'quickOrderStyles';
+//         styleElement.innerHTML = quickOrderStyles;
+//         document.head.appendChild(styleElement);
+//     }
+
+    // ===== GIỮ NGUYÊN CÁC HÀM KHÁC: bookRoom(), selectTable(), showLoading(), hideLoading() ... =====
+
+
+    // ✅ THÊM VÀO detail.html - PHẦN JAVASCRIPT
+
+
+     function orderFood(itemId) {
+     const userId = /*[[${session.userId}]]*/ null;
+
+    if (!userId) {
+        if (confirm('Vui lòng đăng nhập để đặt món. Chuyển đến trang đăng nhập?')) {
+            const currentUrl = window.location.pathname;
+            sessionStorage.setItem('redirectAfterLogin', currentUrl);
+            window.location.href = '/customer/login?redirect=' + encodeURIComponent(currentUrl);
+        }
+        return;
+    }
+
+    // ✅ MỚI: Hiển thị modal chọn hành động
+    showOrderOptionsModal(itemId);
+    }
+
+    /**
+     * ✅ MỚI: Hiển thị modal chọn: Thêm giỏ hoặc Đặt ngay
+     */
+    function showOrderOptionsModal(itemId) {
+        const itemCard = document.querySelector(`[onclick="orderFood(${itemId})"]`)?.closest('.menu-card-inner');
+        const itemName = itemCard?.querySelector('.menu-item-title')?.textContent || 'Món ăn';
+        const itemPrice = itemCard?.querySelector('.current-price-overlay')?.textContent || '0';
+
+        const modalHtml = `
+        <div class="modal fade" id="orderOptionsModal" tabindex="-1" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-utensils me-2"></i>Chọn hành động
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="mb-4">
+                            <h6>${itemName}</h6>
+                            <p class="text-muted mb-0">Giá: <strong class="text-danger">${itemPrice}₫</strong></p>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <button class="btn btn-luxury btn-lg" onclick="addToCartAction(${itemId})">
+                                <i class="fas fa-shopping-cart me-2"></i>
+                                Thêm vào giỏ hàng
+                            </button>
+                            <button class="btn btn-outline-primary btn-lg" onclick="quickOrderAction(${itemId})">
+                                <i class="fas fa-bolt me-2"></i>
+                                Đặt món ngay
+                            </button>
+                        </div>
+
+                        <div class="alert alert-info mt-3 mb-0">
+                            <small>
+                                <i class="fas fa-info-circle me-1"></i>
+                                <strong>Thêm giỏ:</strong> Mua thêm món khác<br>
+                                <strong>Đặt ngay:</strong> Bỏ qua giỏ hàng, thanh toán luôn
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+        // Xóa modal cũ
+        const oldModal = document.getElementById('orderOptionsModal');
+        if (oldModal) oldModal.remove();
+
+        // Thêm modal mới
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        const modal = new bootstrap.Modal(document.getElementById('orderOptionsModal'));
+        modal.show();
+    }
+
+    /**
+     * ✅ Action: Thêm vào giỏ hàng
+     */
+    function addToCartAction(itemId) {
+        showLoading();
+
+        fetch('/api/cart/quick-add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ menuItemId: itemId, quantity: 1 })
+        })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+
+                // Đóng modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('orderOptionsModal'));
+                if (modal) modal.hide();
+
+                if (data.success) {
+                    // Cập nhật cart counter
+                    if (data.cartCount) {
+                        updateCartCount(data.cartCount);
+                    }
+
+                    // Hiển thị thông báo
+                    showSuccessToast('Đã thêm vào giỏ hàng!');
+
+                    // ✅ Optional: Mở chatbot với message xác nhận
+                    if (typeof openChatbotWithMessage === 'function') {
+                        openChatbotWithMessage('Đã thêm món vào giỏ. Bạn muốn xem giỏ hàng hay tiếp tục mua sắm?');
+                    }
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                alert('❌ Có lỗi xảy ra: ' + error.message);
+            });
+    }
+
+    /**
+     * ✅ Action: Đặt món ngay (Quick Order)
+     */
+    function quickOrderAction(itemId) {
+        showQuantityModal(itemId);
+    }
+
+    /**
+     * ✅ GIỮ NGUYÊN: Modal chọn số lượng cho Quick Order
+     */
+    function showQuantityModal(itemId) {
+        const itemCard = document.querySelector(`[onclick="orderFood(${itemId})"]`)?.closest('.menu-card-inner');
+        const itemName = itemCard?.querySelector('.menu-item-title')?.textContent || 'Món ăn';
+        const itemPrice = itemCard?.querySelector('.current-price-overlay')?.textContent || '0';
+
+        const modalHtml = `
+        <div class="modal fade" id="quantityModal" tabindex="-1" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-shopping-cart me-2"></i>Chọn số lượng
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center mb-3">
+                            <h6>${itemName}</h6>
+                            <p class="text-muted mb-0">Giá: <strong class="text-danger">${itemPrice}₫</strong></p>
+                        </div>
+
+                        <div class="d-flex justify-content-center align-items-center gap-3 my-4">
+                            <button class="btn btn-outline-primary btn-lg" onclick="changeModalQuantity(-1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" id="modalQuantityInput"
+                                   class="form-control form-control-lg text-center"
+                                   value="1" min="1" max="50"
+                                   style="width: 100px; font-size: 24px; font-weight: bold;" readonly>
+                            <button class="btn btn-outline-primary btn-lg" onclick="changeModalQuantity(1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Bạn sẽ được chuyển đến trang nhập thông tin giao hàng
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Hủy
+                        </button>
+                        <button type="button" class="btn btn-luxury" onclick="confirmQuickOrder(${itemId})">
+                            <i class="fas fa-bolt me-2"></i>Đặt món ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+        const oldModal = document.getElementById('quantityModal');
+        if (oldModal) oldModal.remove();
+
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        const modal = new bootstrap.Modal(document.getElementById('quantityModal'));
+        modal.show();
+    }
+
+    function changeModalQuantity(delta) {
+        const input = document.getElementById('modalQuantityInput');
+        let value = parseInt(input.value) || 1;
+        value = Math.max(1, Math.min(50, value + delta));
+        input.value = value;
+    }
+
+    function confirmQuickOrder(itemId) {
+        const quantity = parseInt(document.getElementById('modalQuantityInput').value) || 1;
+        const branchId = /*[[${branch.id}]]*/ 0;
+
+        showLoading();
+
+        fetch('/quick-order/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                menuItemId: itemId,
+                branchId: branchId,
+                quantity: quantity
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+
+                const modal = bootstrap.Modal.getInstance(document.getElementById('quantityModal'));
+                if (modal) modal.hide();
+
+                if (data.success) {
+                    window.location.href = '/checkout/quick-order/' + data.quickOrderId;
+                } else {
+                    alert('❌ ' + data.error);
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                alert('❌ Có lỗi xảy ra: ' + error.message);
+            });
+    }
+
+    /**
+     * ✅ Helper: Update cart count badge
+     */
+    function updateCartCount(count) {
+        const cartBadge = document.querySelector('.cart-count');
+        if (cartBadge) {
+            cartBadge.textContent = count;
+            if (count > 0) {
+                cartBadge.style.display = 'inline-block';
+            }
+        }
+    }
+
+    /**
+     * ✅ Helper: Show success toast
+     */
+    function showSuccessToast(message) {
+        // Sử dụng Bootstrap toast hoặc custom notification
+        const toastHtml = `
+        <div class="toast align-items-center text-white bg-success border-0"
+             role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i>${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    `;
+
+        document.body.insertAdjacentHTML('beforeend', toastHtml);
+        const toastElement = document.querySelector('.toast:last-child');
+        const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+        toast.show();
+
+        setTimeout(() => toastElement.remove(), 3500);
+    }
+
+    // ✅ GIỮ NGUYÊN CÁC HÀM KHÁC: showLoading(), hideLoading(), bookRoom(), selectTable() ...
 </script>
 </body>
 </html>

@@ -941,7 +941,14 @@
                 <hr>
 
                 <!-- ✅ CRITICAL: Add th:action and ensure CSRF token -->
-                <form th:action="@{/checkout/payment}" method="post" id="paymentForm">
+<!--                <form th:action="@{/checkout/payment}" method="post" id="paymentForm">-->
+                <form th:action="${orderId != null ?
+                 '/checkout/quick-order/payment/' + orderId :
+                 (isQuickOrder != null and isQuickOrder ?
+                  '/checkout/quick-order/payment' :
+                  '/checkout/payment')}"
+                      method="post"
+                      id="paymentForm">
 
                     <!-- Cash on Delivery -->
                     <div class="payment-method selected" data-method="CASH_ON_DELIVERY">
@@ -1039,7 +1046,13 @@
                     </div>
 
                     <div class="d-flex gap-2">
-                        <a href="/checkout/customer-info" class="btn btn-outline-secondary" style="width: auto; padding: 9px 22.5px;">
+<!--                        <a href="/checkout/customer-info" class="btn btn-outline-secondary" style="width: auto; padding: 9px 22.5px;">-->
+                        <a th:href="${orderId != null ?
+                    '/' :
+                    (isQuickOrder != null and isQuickOrder ?
+                     '/' :
+                     '/checkout/customer-info')}"
+                           class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left me-2"></i>Quay lại
                         </a>
                         <button type="submit" class="btn btn-luxury" id="submitBtn">

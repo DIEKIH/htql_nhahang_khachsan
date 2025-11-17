@@ -13,4 +13,7 @@ public class ChatbotRequest {
     @NotBlank(message = "Tin nhắn không được để trống")
     @Size(max = 500, message = "Tin nhắn không được quá 500 ký tự")
     private String message;
+
+    @Size(max = 5000, message = "Lịch sử chat không được quá 5000 ký tự")
+    private String history;
 }

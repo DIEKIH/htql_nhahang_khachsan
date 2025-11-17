@@ -1179,77 +1179,6 @@
 
           <!-- Chọn thanh toán full hay đặt cọc -->
           <h6 class="mb-3">Chọn hình thức thanh toán</h6>
-
-<!--          <div class="payment-option" onclick="selectPaymentType('full')">-->
-<!--            <div class="form-check">-->
-<!--              <input class="form-check-input" type="radio" name="isDepositOnly"-->
-<!--                     id="fullPayment" value="false" checked>-->
-<!--              <label class="form-check-label" for="fullPayment">-->
-<!--                <strong>Thanh toán toàn bộ</strong>-->
-<!--                <div class="text-muted mt-1">-->
-<!--                  Thanh toán <span th:text="${#numbers.formatDecimal(bookingSession.totalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">7,900,000đ</span>-->
-<!--                </div>-->
-<!--                <div class="text-success mt-1">-->
-<!--                  <i class="fas fa-gift me-1"></i>Giảm thêm 2% khi thanh toán full-->
-<!--                </div>-->
-<!--              </label>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          <div class="payment-option" onclick="selectPaymentType('deposit')">-->
-<!--            <div class="form-check">-->
-<!--              <input class="form-check-input" type="radio" name="isDepositOnly"-->
-<!--                     id="depositPayment" value="true">-->
-<!--              <label class="form-check-label" for="depositPayment">-->
-<!--                <strong>Đặt cọc 50%</strong>-->
-<!--                <div class="text-muted mt-1">-->
-<!--                  Thanh toán <span th:text="${#numbers.formatDecimal(bookingSession.depositAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">3,950,000đ</span>-->
-<!--                  ngay, phần còn lại thanh toán khi check-in-->
-<!--                </div>-->
-<!--                <div class="text-info mt-1">-->
-<!--                  <i class="fas fa-info-circle me-1"></i>Số tiền còn lại:-->
-<!--                  <span th:text="${#numbers.formatDecimal(bookingSession.remainingAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">3,950,000đ</span>-->
-<!--                </div>-->
-<!--              </label>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          <div class="payment-option" onclick="selectPaymentType('full', event)">-->
-<!--            <div class="form-check">-->
-<!--              <input class="form-check-input" type="radio" name="isDepositOnly"-->
-<!--                     id="fullPayment" value="false" checked>-->
-<!--              <label class="form-check-label" for="fullPayment">-->
-<!--                <strong>Thanh toán toàn bộ</strong>-->
-<!--                <div class="text-muted mt-1">-->
-<!--                  Thanh toán-->
-<!--                  <span th:text="${#numbers.formatDecimal(bookingSession.totalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">7,900,000đ</span>-->
-<!--                </div>-->
-<!--                <div class="text-success mt-1">-->
-<!--                  <i class="fas fa-gift me-1"></i>Giảm thêm 2% khi thanh toán full-->
-<!--                </div>-->
-<!--              </label>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          <div class="payment-option" onclick="selectPaymentType('deposit', event)">-->
-<!--            <div class="form-check">-->
-<!--              <input class="form-check-input" type="radio" name="isDepositOnly"-->
-<!--                     id="depositPayment" value="true">-->
-<!--              <label class="form-check-label" for="depositPayment">-->
-<!--                <strong>Đặt cọc 50%</strong>-->
-<!--                <div class="text-muted mt-1">-->
-<!--                  Thanh toán-->
-<!--                  <span th:text="${#numbers.formatDecimal(bookingSession.depositAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">3,950,000đ</span>-->
-<!--                  ngay, phần còn lại thanh toán khi check-in-->
-<!--                </div>-->
-<!--                <div class="text-info mt-1">-->
-<!--                  <i class="fas fa-info-circle me-1"></i>Số tiền còn lại:-->
-<!--                  <span th:text="${#numbers.formatDecimal(bookingSession.remainingAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}">3,950,000đ</span>-->
-<!--                </div>-->
-<!--              </label>-->
-<!--            </div>-->
-<!--          </div>-->
-
           <div class="payment-option">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="isDepositOnly"
@@ -1514,6 +1443,45 @@
     const checkedPaymentType = document.querySelector('input[name="isDepositOnly"]:checked');
     if (checkedPaymentType) {
       checkedPaymentType.closest('.payment-option').classList.add('selected');
+    }
+  });
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Lấy draft code từ URL hoặc booking data
+    const urlParams = new URLSearchParams(window.location.search);
+    const draftCode = urlParams.get('draft') || /*[[${booking.draftCode}]]*/ null;
+
+    if (draftCode) {
+      console.log('🗑️ Cleaning up draft:', draftCode);
+
+      // 1. Gọi backend để xóa draft
+      fetch(`/api/chatbot/draft/${draftCode}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+              .then(response => response.json())
+              .then(data => {
+                console.log('✅ Backend cleanup:', data);
+              })
+              .catch(error => {
+                console.error('❌ Backend cleanup error:', error);
+              });
+
+      // 2. Xóa draft khỏi localStorage (chatbot history)
+      if (window.clearChatbotDraft) {
+        window.clearChatbotDraft(draftCode);
+        console.log('✅ LocalStorage cleanup done');
+      }
+
+      // 3. Xóa parameter khỏi URL để tránh cleanup lại khi refresh
+      if (urlParams.has('draft')) {
+        const cleanUrl = window.location.pathname + window.location.search
+                .replace(new RegExp('[?&]draft=' + draftCode), '');
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
     }
   });
 </script>

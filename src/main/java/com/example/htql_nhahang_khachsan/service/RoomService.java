@@ -2,6 +2,7 @@ package com.example.htql_nhahang_khachsan.service;
 
 import com.example.htql_nhahang_khachsan.dto.*;
 import com.example.htql_nhahang_khachsan.enums.RoomStatus;
+import com.example.htql_nhahang_khachsan.repository.RoomBookingRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,6 +21,7 @@ import com.example.htql_nhahang_khachsan.repository.RoomTypeRepository;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class RoomService {
     private final RoomTypeRepository roomTypeRepository;
     private final RoomImageRepository roomImageRepository;
     private final PromotionService promotionService;
+    private final RoomBookingRepository bookingRepository;
 
     public RoomDetailResponse getRoomDetailById(Long roomId) {
         RoomEntity room = roomRepository.findById(roomId)
@@ -199,26 +202,6 @@ public class RoomService {
                 .collect(Collectors.toList());
     }
 
-//    /**
-//     * Kiểm tra phòng trống theo loại và khoảng thời gian
-//     */
-//    public List<RoomResponse> getAvailableRoomsByTypeAndDate(Long roomTypeId, String checkInDate, String checkOutDate) {
-//        try {
-//            LocalDate checkIn = LocalDate.parse(checkInDate);
-//            LocalDate checkOut = LocalDate.parse(checkOutDate);
-//
-//            // Tìm các phòng không có booking trong khoảng thời gian này
-//            List<RoomEntity> availableRooms = roomRepository
-//                    .findAvailableRoomsByTypeAndDateRange(roomTypeId, checkIn, checkOut);
-//
-//            return availableRooms.stream()
-//                    .map(this::mapToRoomResponse)
-//                    .collect(Collectors.toList());
-//
-//        } catch (DateTimeParseException e) {
-//            throw new IllegalArgumentException("Invalid date format");
-//        }
-//    }
 
     /**
      * Tính toán giá phòng theo khoảng thời gian
@@ -265,47 +248,6 @@ public class RoomService {
         }
     }
 
-    // Helper methods
-//    private RoomTypeResponse mapToRoomTypeResponse(RoomTypeEntity entity) {
-//        // Lấy thông tin khuyến mãi
-//        BigDecimal currentPrice = getCurrentPriceWithPromotion(entity);
-//        BigDecimal originalPrice = null;
-//        String promotionName = null;
-//
-//        if (currentPrice.compareTo(entity.getPrice()) < 0) {
-//            originalPrice = entity.getPrice();
-//            // Lấy thông tin promotion (implement logic tùy theo business)
-//        }
-//
-//
-//
-//        // Lấy số lượng phòng available
-//        Integer availableRooms = roomRepository.countByRoomTypeIdAndStatus(entity.getId(), RoomStatus.AVAILABLE);
-//
-//        // Lấy danh sách hình ảnh
-//        List<RoomImageResponse> roomImages = getRoomImagesByRoomType(entity.getId());
-//
-//        return RoomTypeResponse.builder()
-//                .id(entity.getId())
-//                .branchId(entity.getBranch().getId())
-//                .branchName(entity.getBranch().getName())
-//                .name(entity.getName())
-//                .description(entity.getDescription())
-//                .price(entity.getPrice())
-//                .currentPrice(currentPrice)
-//                .originalPrice(originalPrice)
-//                .bedType(entity.getBedType())
-//                .maxOccupancy(entity.getMaxOccupancy())
-//                .roomSize(entity.getRoomSize())
-////                .viewType(entity.getViewType())
-//                .amenities(entity.getAmenities())
-////                .isAvailable(entity.getIsAvailable())
-//                .createdAt(entity.getCreatedAt())
-//                .roomImageResponses(roomImages)
-//                .availableRooms(availableRooms)
-//                .promotionName(promotionName)
-//                .build();
-//    }
 
     private RoomTypeResponse mapToRoomTypeResponse(RoomTypeEntity entity) {
         Long branchId = entity.getBranch().getId();
@@ -373,9 +315,60 @@ public class RoomService {
                 .build();
     }
 
-    private BigDecimal getCurrentPriceWithPromotion(RoomTypeEntity roomType) {
-        // Logic để tính giá sau khuyến mãi
-        // Tạm thời return base price, có thể implement logic promotion sau
-        return roomType.getPrice();
-    }
+        private BigDecimal getCurrentPriceWithPromotion(RoomTypeEntity roomType) {
+
+            // Logic để tính giá sau khuyến mãi
+
+            // Tạm thời return base price, có thể implement logic promotion sau
+
+            return roomType.getPrice();
+
+        }
+
+    
+
+        /**
+
+         * Kiểm tra xem một loại phòng có còn trống trong khoảng thời gian nhất định hay không.
+
+         *
+
+         * @param roomTypeId  ID của loại phòng cần kiểm tra.
+
+         * @param checkInDate Ngày nhận phòng.
+
+         * @param checkOutDate Ngày trả phòng.
+
+         * @return true nếu còn phòng, false nếu đã hết.
+
+         */
+
+        public boolean isRoomTypeAvailable(Long roomTypeId, LocalDate checkInDate, LocalDate checkOutDate) {
+            // Lấy tổng số lượng phòng vật lý cho loại phòng này
+            long totalRooms = roomRepository.countByRoomTypeId(roomTypeId);
+            if (totalRooms == 0) {
+                return false; // Không có phòng nào thuộc loại này
+            }
+
+            // Các trạng thái booking không tính vào số lượng phòng đã bị chiếm
+            List<com.example.htql_nhahang_khachsan.enums.BookingStatus> excludedStatuses = List.of(
+                    com.example.htql_nhahang_khachsan.enums.BookingStatus.CANCELLED,
+                    com.example.htql_nhahang_khachsan.enums.BookingStatus.CONFIRMED
+            );
+
+            // Đếm số lượng booking đang hoạt động và chồng chéo với khoảng thời gian yêu cầu
+            long bookedRooms = bookingRepository.countOverlappingBookings(
+                    roomTypeId,
+                    checkInDate,
+                    checkOutDate,
+                    excludedStatuses
+            );
+
+            // Nếu tổng số phòng lớn hơn số phòng đã đặt, nghĩa là vẫn còn phòng trống
+            return totalRooms > bookedRooms;
+        }
+
+
 }
+
+    

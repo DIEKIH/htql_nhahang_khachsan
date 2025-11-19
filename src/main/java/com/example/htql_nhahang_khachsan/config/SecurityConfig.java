@@ -59,8 +59,8 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form.disable())
                 .logout(logout -> logout
-                        .logoutUrl("/admin/logout")
-                        .logoutSuccessUrl("/admin/login?logout")
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )

@@ -326,25 +326,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đơn hàng của tôi - Luxury Resort</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- ⚠️ NAVBAR CSS - IMPORT TRƯỚC internal styles -->
     <link rel="stylesheet" th:href="@{/css/user_navbar.css}">
+
     <style>
         :root {
             --primary-color: #c9a96e;
+            --secondary-color: #2c3e50;
+            --accent-color: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --bg-overlay: rgba(44, 62, 80, 0.7);
+            --scale: 0.75;
         }
 
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            background: #f8f9fa;
-            padding-top: 60px;
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            line-height: 1.4;
+        html {
+            font-size: calc(16px * var(--scale));
         }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            padding-top: calc(80px * var(--scale));
+        }
+
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            height: calc(80px * var(--scale));
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: calc(2rem * var(--scale));
+            font-weight: 600;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            margin: 0 calc(10px * var(--scale));
+            color: var(--text-dark) !important;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+
+        .btn-luxury {
+            background: var(--primary-color);
+            color: white;
+            padding: calc(12px * var(--scale)) calc(30px * var(--scale));
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border-radius: calc(50px * var(--scale));
+        }
+
+        .btn-luxury:hover {
+            background: #b8956b;
+            transform: translateY(calc(-3px * var(--scale)));
+            box-shadow: 0 10px 25px rgba(201, 169, 110, 0.4);
+            color: white;
+        }
+
 
         .orders-container {
             max-width: 990px;
@@ -587,10 +658,6 @@
             gap: 7.5px !important;
         }
 
-        /* Icons */
-        .fa, .fas, .far {
-            font-size: 10px;
-        }
 
         .me-1 {
             margin-right: 3px !important;
@@ -646,10 +713,17 @@
         }
 
         @media (max-width: 768px) {
+
+            :root {
+                --scale: 0.65;
+            }
+
+
             body {
                 padding-top: 52.5px;
                 font-size: 10px;
             }
+
 
             .orders-container {
                 max-width: 405px;
@@ -710,6 +784,52 @@
 <body>
 <div th:replace="fragments/user_navbar :: user_navbar"></div>
 
+<nav th:fragment="user_navbar" class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}"><i class="fas fa-crown me-2"></i>DIEK</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/#branches}">Chi nhánh</a></li>
+                <li class="nav-item"><a class="nav-link" href="#facilities">Tiện ích</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>
+
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link btn btn-outline-primary ms-2" th:href="@{/customer/login}">
+                        <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle me-1"></i>
+                        <span sec:authentication="name">Username</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/cart}">
+                                <i class="fas fa-shopping-cart fa-fw me-2"></i>Giỏ hàng
+                                <span class="badge bg-danger rounded-pill" th:if="${session.cartItemCount > 0}" th:text="${session.cartItemCount}">0</span>
+                            </a>
+                        </li>
+                        <li><a class="dropdown-item" th:href="@{/orders}"><i class="fas fa-receipt fa-fw me-2"></i>Xem đơn hàng</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt fa-fw me-2"></i>Đăng xuất
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <div class="orders-container">
     <!-- Page Header -->
     <div class="page-header">

@@ -447,6 +447,647 @@
 <!--</body>-->
 <!--</html>-->
 
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Chi tiết Booking</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">-->
+<!--    <style>-->
+<!--        body { background: #f8f9fa; }-->
+
+<!--        /* Navbar Styles */-->
+<!--        .top-navbar {-->
+<!--            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
+<!--            box-shadow: 0 2px 10px rgba(0,0,0,0.1);-->
+<!--        }-->
+
+<!--        .top-navbar .navbar-brand {-->
+<!--            color: white;-->
+<!--            font-weight: 600;-->
+<!--        }-->
+
+<!--        .top-navbar .nav-link {-->
+<!--            color: rgba(255,255,255,0.9);-->
+<!--            padding: 8px 15px;-->
+<!--            border-radius: 8px;-->
+<!--            transition: all 0.3s;-->
+<!--        }-->
+
+<!--        .top-navbar .nav-link:hover,-->
+<!--        .top-navbar .nav-link.active {-->
+<!--            background: rgba(255,255,255,0.2);-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .header-card {-->
+<!--            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
+<!--            color: white;-->
+<!--            border-radius: 12px;-->
+<!--            padding: 20px;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .info-card {-->
+<!--            background: white;-->
+<!--            border-radius: 12px;-->
+<!--            padding: 25px;-->
+<!--            box-shadow: 0 2px 10px rgba(0,0,0,0.08);-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .info-label {-->
+<!--            font-weight: 600;-->
+<!--            color: #6c757d;-->
+<!--            font-size: 0.9rem;-->
+<!--            margin-bottom: 5px;-->
+<!--        }-->
+<!--        .info-value {-->
+<!--            font-size: 1.1rem;-->
+<!--            color: #212529;-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+<!--        .section-title {-->
+<!--            font-weight: 600;-->
+<!--            color: #495057;-->
+<!--            margin-bottom: 20px;-->
+<!--            padding-bottom: 10px;-->
+<!--            border-bottom: 2px solid #e9ecef;-->
+<!--        }-->
+<!--        .action-card {-->
+<!--            background: #f8f9fa;-->
+<!--            border-radius: 10px;-->
+<!--            padding: 20px;-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+<!--        .btn-action {-->
+<!--            padding: 10px 20px;-->
+<!--            border-radius: 8px;-->
+<!--            font-weight: 500;-->
+<!--        }-->
+<!--        .payment-summary {-->
+<!--            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);-->
+<!--            color: white;-->
+<!--            border-radius: 10px;-->
+<!--            padding: 15px;-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+<!--        .layout-container { display: flex; min-height: 100vh; }-->
+
+<!--        .sidebar {-->
+<!--            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/-->
+<!--            background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);-->
+
+<!--            width: 280px;-->
+<!--            min-width: 280px;-->
+<!--            color: white;-->
+<!--            padding: 20px;-->
+<!--        }-->
+
+<!--        .sidebar .nav-link {-->
+<!--            color: rgba(255,255,255,0.9);-->
+<!--            padding: 10px 15px;-->
+<!--            border-radius: 8px;-->
+<!--            margin: 3px 0;-->
+<!--            transition: all 0.3s;-->
+<!--        }-->
+
+<!--        .sidebar .nav-link:hover,-->
+<!--        .sidebar .nav-link.active {-->
+<!--            background: rgba(255,255,255,0.2);-->
+<!--            color: white;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="layout-container">-->
+
+
+<!--&lt;!&ndash; Top Navbar &ndash;&gt;-->
+<!--&lt;!&ndash;<nav class="navbar navbar-expand-lg top-navbar mb-3">&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="container-fluid">&ndash;&gt;-->
+<!--&lt;!&ndash;        <a class="navbar-brand" href="/cashier-hotel/dashboard">&ndash;&gt;-->
+<!--&lt;!&ndash;            <i class="bi bi-building me-2"></i>Lễ Tân&ndash;&gt;-->
+<!--&lt;!&ndash;        </a>&ndash;&gt;-->
+<!--&lt;!&ndash;        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">&ndash;&gt;-->
+<!--&lt;!&ndash;            <span class="navbar-toggler-icon"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;        </button>&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="collapse navbar-collapse" id="navbarNav">&ndash;&gt;-->
+<!--&lt;!&ndash;            <ul class="navbar-nav me-auto">&ndash;&gt;-->
+<!--&lt;!&ndash;                <li class="nav-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a class="nav-link" href="/cashier-hotel/dashboard">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="bi bi-speedometer2 me-1"></i>Dashboard&ndash;&gt;-->
+<!--&lt;!&ndash;                    </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                <li class="nav-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a class="nav-link active" href="/cashier-hotel/booking-management">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="bi bi-calendar-check me-1"></i>Quản lý Booking&ndash;&gt;-->
+<!--&lt;!&ndash;                    </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                <li class="nav-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a class="nav-link" href="/cashier-hotel/walkin-booking">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="bi bi-person-plus me-1"></i>Đặt phòng tại quầy&ndash;&gt;-->
+<!--&lt;!&ndash;                    </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                <li class="nav-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a class="nav-link" href="/cashier-hotel/room-status">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="bi bi-house-gear me-1"></i>Trạng thái phòng&ndash;&gt;-->
+<!--&lt;!&ndash;                    </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                </li>&ndash;&gt;-->
+<!--&lt;!&ndash;            </ul>&ndash;&gt;-->
+<!--&lt;!&ndash;            <ul class="navbar-nav">&ndash;&gt;-->
+<!--&lt;!&ndash;                <li class="nav-item dropdown">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="bi bi-person-circle me-1"></i>Nhân viên&ndash;&gt;-->
+<!--&lt;!&ndash;                    </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <ul class="dropdown-menu dropdown-menu-end">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <li><a class="dropdown-item" href="/cashier-hotel/logout">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất&ndash;&gt;-->
+<!--&lt;!&ndash;                        </a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </ul>&ndash;&gt;-->
+<!--&lt;!&ndash;                </li>&ndash;&gt;-->
+<!--&lt;!&ndash;            </ul>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;</nav>&ndash;&gt;-->
+<!--    <div class="sidebar">-->
+<!--        <div class="text-center mb-4">-->
+<!--            <i class="bi bi-building fs-1"></i>-->
+<!--            <h5 class="mt-2 mb-0">Lễ Tân</h5>-->
+<!--            <small class="opacity-75">Hệ thống quản lý</small>-->
+<!--        </div>-->
+
+<!--        <nav class="nav flex-column">-->
+<!--            <a class="nav-link" href="/cashier-hotel/dashboard">-->
+<!--                <i class="bi bi-speedometer2 me-2"></i>Dashboard-->
+<!--            </a>-->
+<!--            <a class="nav-link active" href="/cashier-hotel/booking-management">-->
+<!--                <i class="bi bi-calendar-check me-2"></i>Quản lý Booking-->
+<!--            </a>-->
+<!--            <a class="nav-link" href="/cashier-hotel/walkin-booking">-->
+<!--                <i class="bi bi-person-plus me-2"></i>Đặt phòng tại quầy-->
+<!--            </a>-->
+<!--            <a class="nav-link" href="/cashier-hotel/room-status">-->
+<!--                <i class="bi bi-house-gear me-2"></i>Trạng thái phòng-->
+<!--            </a>-->
+<!--        </nav>-->
+
+<!--        <div class="mt-auto pt-4 border-top border-light border-opacity-25">-->
+<!--            <div class="d-flex align-items-center mb-3">-->
+<!--                <i class="bi bi-person-circle fs-4 me-2"></i>-->
+<!--                <div>-->
+<!--                    <div class="fw-bold small">Nhân viên</div>-->
+<!--                    <small class="opacity-75">Đang trực</small>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <a href="/cashier-hotel/logout" class="btn btn-outline-light btn-sm w-100">-->
+<!--                <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="container-fluid py-4">-->
+<!--        &lt;!&ndash; Header &ndash;&gt;-->
+<!--        <div class="header-card">-->
+<!--            <div class="d-flex justify-content-between align-items-center">-->
+<!--                <div>-->
+<!--                    <h3 class="mb-1"><i class="bi bi-info-circle me-2"></i>Chi tiết Booking</h3>-->
+<!--                    <p class="mb-0 opacity-75">Quản lý và xử lý booking</p>-->
+<!--                </div>-->
+<!--                <a href="/cashier-hotel/booking-management" class="btn btn-light">-->
+<!--                    <i class="bi bi-arrow-left me-2"></i>Quay lại-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Alerts &ndash;&gt;-->
+<!--        <div th:if="${success}" class="alert alert-success alert-dismissible fade show">-->
+<!--            <i class="bi bi-check-circle me-2"></i><span th:text="${success}"></span>-->
+<!--            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
+<!--        </div>-->
+<!--        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">-->
+<!--            <i class="bi bi-exclamation-circle me-2"></i><span th:text="${error}"></span>-->
+<!--            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
+<!--        </div>-->
+
+<!--        <div class="row">-->
+<!--            &lt;!&ndash; Left Column &ndash;&gt;-->
+<!--            <div class="col-md-8">-->
+<!--                &lt;!&ndash; Booking Info &ndash;&gt;-->
+<!--                <div class="info-card">-->
+<!--                    <h5 class="section-title"><i class="bi bi-calendar-check me-2"></i>Thông tin đặt phòng</h5>-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">Mã Booking</div>-->
+<!--                            <div class="info-value fw-bold" th:text="${booking.bookingCode}"></div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">Ngày đặt</div>-->
+<!--                            <div class="info-value" th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy HH:mm')}"></div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">Trạng thái</div>-->
+<!--                            <div class="info-value">-->
+<!--                                <span th:if="${booking.status != null && booking.status.name() == 'CONFIRMED'}"-->
+<!--                                      class="badge bg-info">Đã xác nhận</span>-->
+<!--                                <span th:if="${booking.status != null && booking.status.name() == 'CHECKED_IN'}"-->
+<!--                                      class="badge bg-success">Đã check-in</span>-->
+<!--                                <span th:if="${booking.status != null && booking.status.name() == 'CHECKED_OUT'}"-->
+<!--                                      class="badge bg-secondary">Đã trả phòng</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">Thanh toán</div>-->
+<!--                            <div class="info-value">-->
+<!--                                <span th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PAID'}"-->
+<!--                                      class="badge bg-success">Đã thanh toán</span>-->
+<!--                                <span th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PARTIALLY_PAID'}"-->
+<!--                                      class="badge bg-warning">Đã cọc</span>-->
+<!--                                <span th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PENDING'}"-->
+<!--                                      class="badge bg-secondary">Chưa thanh toán</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Guest Info &ndash;&gt;-->
+<!--                <div class="info-card">-->
+<!--                    <h5 class="section-title"><i class="bi bi-person-vcard me-2"></i>Thông tin khách hàng</h5>-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">Họ tên</div>-->
+<!--                            <div class="info-value" th:text="${booking.guestName}"></div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">CMND/CCCD</div>-->
+<!--                            <div class="info-value" th:text="${booking.guestIdNumber ?: 'Chưa có'}"></div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">Email</div>-->
+<!--                            <div class="info-value" th:text="${booking.guestEmail}"></div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">Số điện thoại</div>-->
+<!--                            <div class="info-value" th:text="${booking.guestPhone}"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Room Info &ndash;&gt;-->
+<!--                <div class="info-card">-->
+<!--                    <h5 class="section-title"><i class="bi bi-door-open me-2"></i>Thông tin phòng</h5>-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">Loại phòng</div>-->
+<!--                            <div class="info-value" th:text="${booking.roomTypeName}"></div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">Số phòng</div>-->
+<!--                            <div class="info-value">-->
+<!--                                <span th:if="${booking.roomNumber != null}"-->
+<!--                                      class="badge bg-info fs-6"-->
+<!--                                      th:text="${booking.roomNumber}"></span>-->
+<!--                                <span th:if="${booking.roomNumber == null}"-->
+<!--                                      class="badge bg-secondary">Chưa gán</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <div class="info-label">Check-in</div>-->
+<!--                            <div class="info-value" th:text="${#temporals.format(booking.checkInDate, 'dd/MM/yyyy')}"></div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <div class="info-label">Check-out</div>-->
+<!--                            <div class="info-value" th:text="${#temporals.format(booking.checkOutDate, 'dd/MM/yyyy')}"></div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <div class="info-label">Số đêm</div>-->
+<!--                            <div class="info-value" th:text="${booking.numberOfNights} + ' đêm'"></div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <div class="info-label">Số người</div>-->
+<!--                            <div class="info-value">-->
+<!--                                <i class="bi bi-people me-2"></i>-->
+<!--                                <span th:text="${booking.adults} + ' người lớn'"></span>-->
+<!--                                <span th:if="${booking.children > 0}" th:text="', ' + ${booking.children} + ' trẻ em'"></span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div th:if="${booking.specialRequests}" class="mt-3">-->
+<!--                        <div class="info-label">Yêu cầu đặc biệt</div>-->
+<!--                        <div class="alert alert-info mb-0" th:text="${booking.specialRequests}"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Quick Actions &ndash;&gt;-->
+<!--                <div class="info-card">-->
+<!--                    <h5 class="section-title"><i class="bi bi-lightning me-2"></i>Thao tác nhanh</h5>-->
+
+<!--                    &lt;!&ndash; Check-in &ndash;&gt;-->
+<!--                    <div th:if="${booking.status != null && booking.status.name() == 'CONFIRMED'}"-->
+<!--                         class="action-card" id="check-in">-->
+<!--                        <h6 class="mb-3"><i class="bi bi-door-open me-2 text-success"></i>Check-in khách hàng</h6>-->
+<!--                        <form method="post" th:action="@{/cashier-hotel/check-in/{id}(id=${booking.id})}">-->
+<!--                            <div class="mb-3">-->
+<!--                                <label class="form-label">CMND/CCCD (tùy chọn)</label>-->
+<!--                                <input type="text" class="form-control" name="idNumber"-->
+<!--                                       th:value="${booking.guestIdNumber}"-->
+<!--                                       placeholder="Nhập số CMND/CCCD">-->
+<!--                            </div>-->
+<!--                            <button type="submit" class="btn btn-success btn-action">-->
+<!--                                <i class="bi bi-check-circle me-2"></i>Xác nhận Check-in-->
+<!--                            </button>-->
+<!--                        </form>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Check-out &ndash;&gt;-->
+<!--                    <div th:if="${booking.status != null && booking.status.name() == 'CHECKED_IN'}"-->
+<!--                         class="action-card" id="check-out">-->
+<!--                        <h6 class="mb-3"><i class="bi bi-door-closed me-2 text-warning"></i>Check-out khách hàng</h6>-->
+<!--                        <p class="text-muted mb-3">Xác nhận check-out sẽ tạo hóa đơn và cập nhật trạng thái phòng</p>-->
+<!--                        <form method="post" th:action="@{/cashier-hotel/check-out/{id}(id=${booking.id})}">-->
+<!--                            <button type="submit" class="btn btn-warning btn-action">-->
+<!--                                <i class="bi bi-check-circle me-2"></i>Xác nhận Check-out-->
+<!--                            </button>-->
+<!--                        </form>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Deposit &ndash;&gt;-->
+<!--                    <div th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PENDING'}"-->
+<!--                         class="action-card" id="deposit">-->
+<!--                        <h6 class="mb-3"><i class="bi bi-piggy-bank me-2 text-info"></i>Thu tiền cọc</h6>-->
+<!--                        <form method="post" th:action="@{/cashier-hotel/collect-deposit/{id}(id=${booking.id})}">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-md-6 mb-3">-->
+<!--                                    <label class="form-label">Số tiền <span class="text-danger">*</span></label>-->
+<!--                                    <input type="number" class="form-control" name="amount"-->
+<!--                                           th:value="${booking.depositAmount}"-->
+<!--                                           placeholder="Nhập số tiền" required>-->
+<!--                                    <small class="text-muted">Khuyến nghị: <span th:text="${booking.getFormattedAmount(booking.depositAmount)}"></span></small>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-6 mb-3">-->
+<!--                                    <label class="form-label">Phương thức <span class="text-danger">*</span></label>-->
+<!--                                    <select class="form-select" name="method" required>-->
+<!--                                        <option value="CASH">Tiền mặt</option>-->
+<!--                                        <option value="BANK_TRANSFER">Chuyển khoản</option>-->
+<!--                                        <option value="CREDIT_CARD">Thẻ tín dụng</option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <button type="submit" class="btn btn-info btn-action">-->
+<!--                                <i class="bi bi-check-circle me-2"></i>Xác nhận thu cọc-->
+<!--                            </button>-->
+<!--                        </form>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Change Room &ndash;&gt;-->
+<!--                    <div th:if="${booking.roomNumber != null && availableRooms != null && !availableRooms.isEmpty()}"-->
+<!--                         class="action-card" id="change-room">-->
+<!--                        <h6 class="mb-3"><i class="bi bi-arrow-left-right me-2 text-primary"></i>Đổi phòng</h6>-->
+<!--                        <form method="post" th:action="@{/cashier-hotel/change-room/{id}(id=${booking.id})}">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-md-8 mb-3">-->
+<!--                                    <label class="form-label">Chọn phòng mới <span class="text-danger">*</span></label>-->
+<!--                                    <select class="form-select" name="newRoomId" required>-->
+<!--                                        <option value="">&#45;&#45; Chọn phòng &#45;&#45;</option>-->
+<!--                                        <option th:each="room : ${availableRooms}"-->
+<!--                                                th:value="${room.id}"-->
+<!--                                                th:text="'Phòng ' + ${room.roomNumber} + ' - Tầng ' + ${room.floor}">-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-12 mb-3">-->
+<!--                                    <label class="form-label">Lý do đổi phòng</label>-->
+<!--                                    <textarea class="form-control" name="reason" rows="2"-->
+<!--                                              placeholder="Nhập lý do (tùy chọn)"></textarea>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <button type="submit" class="btn btn-primary btn-action">-->
+<!--                                <i class="bi bi-check-circle me-2"></i>Xác nhận đổi phòng-->
+<!--                            </button>-->
+<!--                        </form>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Extend Stay &ndash;&gt;-->
+<!--                    <div th:if="${booking.status != null && booking.status.name() == 'CHECKED_IN'}"-->
+<!--                         class="action-card" id="extend-stay">-->
+<!--                        <h6 class="mb-3"><i class="bi bi-calendar-plus me-2 text-success"></i>Gia hạn lưu trú</h6>-->
+<!--                        <form method="post" th:action="@{/cashier-hotel/extend-stay/{id}(id=${booking.id})}"-->
+<!--                              onsubmit="return validateExtendStay()">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-md-6 mb-3">-->
+<!--                                    <label class="form-label">Ngày check-out hiện tại</label>-->
+<!--                                    <input type="date" class="form-control"-->
+<!--                                           th:value="${booking.checkOutDate}" readonly>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-6 mb-3">-->
+<!--                                    <label class="form-label">Ngày check-out mới <span class="text-danger">*</span></label>-->
+<!--                                    <input type="date" class="form-control" id="newCheckOut"-->
+<!--                                           name="newCheckOut" required>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="alert alert-info" id="extendInfo" style="display: none;">-->
+<!--                                <strong>Thông tin gia hạn:</strong>-->
+<!--                                <div id="extendDetails"></div>-->
+<!--                            </div>-->
+<!--                            <button type="submit" class="btn btn-success btn-action">-->
+<!--                                <i class="bi bi-check-circle me-2"></i>Xác nhận gia hạn-->
+<!--                            </button>-->
+<!--                        </form>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Right Column - Price Details &ndash;&gt;-->
+<!--            <div class="col-md-4">-->
+<!--                <div class="info-card">-->
+<!--                    <h5 class="section-title"><i class="bi bi-currency-dollar me-2"></i>Chi tiết thanh toán</h5>-->
+
+<!--                    <div class="d-flex justify-content-between mb-2">-->
+<!--                        <span>Giá phòng/đêm:</span>-->
+<!--                        <strong th:text="${booking.getFormattedAmount(booking.roomPrice)}"></strong>-->
+<!--                    </div>-->
+<!--                    <div class="d-flex justify-content-between mb-2">-->
+<!--                        <span>Tổng tiền phòng:</span>-->
+<!--                        <strong th:text="${booking.getFormattedAmount(booking.totalRoomPrice)}"></strong>-->
+<!--                    </div>-->
+<!--                    <div class="d-flex justify-content-between mb-2">-->
+<!--                        <span>Phí dịch vụ:</span>-->
+<!--                        <span th:text="${booking.getFormattedAmount(booking.serviceFee)}"></span>-->
+<!--                    </div>-->
+<!--                    <div class="d-flex justify-content-between mb-3">-->
+<!--                        <span>VAT:</span>-->
+<!--                        <span th:text="${booking.getFormattedAmount(booking.vat)}"></span>-->
+<!--                    </div>-->
+
+<!--                    <hr>-->
+
+<!--                    <div class="d-flex justify-content-between mb-3">-->
+<!--                        <strong class="text-success">TỔNG CỘNG:</strong>-->
+<!--                        <strong class="text-success fs-5" th:text="${booking.getFormattedAmount(booking.totalAmount)}"></strong>-->
+<!--                    </div>-->
+
+<!--                    <div class="d-flex justify-content-between mb-2">-->
+<!--                        <span>Đã thanh toán:</span>-->
+<!--                        <span class="text-success fw-bold" th:text="${booking.getFormattedAmount(booking.totalAmount.subtract(booking.remainingAmount))}"></span>-->
+<!--                    </div>-->
+<!--                    <div class="d-flex justify-content-between mb-3">-->
+<!--                        <span>Còn lại:</span>-->
+<!--                        <span th:classappend="${booking.remainingAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0 ? 'text-danger' : 'text-success'}"-->
+<!--                              class="fw-bold"-->
+<!--                              th:text="${booking.getFormattedAmount(booking.remainingAmount)}"></span>-->
+<!--                    </div>-->
+
+<!--                    <hr>-->
+
+<!--                    <div class="d-flex justify-content-between mb-3">-->
+<!--                        <span>Phương thức:</span>-->
+<!--                        <span class="badge bg-primary" th:text="${booking.paymentMethod}"></span>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Nút xác nhận thanh toán phần còn lại &ndash;&gt;-->
+<!--                    <div th:if="${booking.paymentStatus != null && booking.paymentStatus.name() != 'PAID' && booking.remainingAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">-->
+<!--                        <button type="button" class="btn btn-success w-100 mb-2"-->
+<!--                                data-bs-toggle="modal"-->
+<!--                                data-bs-target="#confirmRemainingModal">-->
+<!--                            <i class="bi bi-cash-coin me-2"></i>Xác nhận thanh toán phần còn lại-->
+<!--                        </button>-->
+<!--                    </div>-->
+
+<!--                    <div th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PAID'}">-->
+<!--                        <div class="payment-summary text-center">-->
+<!--                            <i class="bi bi-check-circle fs-3"></i>-->
+<!--                            <h6 class="mt-2 mb-0">Đã thanh toán đủ</h6>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Timeline &ndash;&gt;-->
+<!--                <div class="info-card">-->
+<!--                    <h5 class="section-title"><i class="bi bi-clock-history me-2"></i>Lịch sử</h5>-->
+
+<!--                    <div class="timeline">-->
+<!--                        <div class="mb-3">-->
+<!--                            <small class="text-muted">Ngày đặt</small>-->
+<!--                            <div th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy HH:mm')}"></div>-->
+<!--                        </div>-->
+
+<!--                        <div th:if="${booking.checkedInAt}" class="mb-3">-->
+<!--                            <small class="text-muted">Check-in</small>-->
+<!--                            <div th:text="${#temporals.format(booking.checkedInAt, 'dd/MM/yyyy HH:mm')}"></div>-->
+<!--                        </div>-->
+
+<!--                        <div th:if="${booking.checkedOutAt}" class="mb-3">-->
+<!--                            <small class="text-muted">Check-out</small>-->
+<!--                            <div th:text="${#temporals.format(booking.checkedOutAt, 'dd/MM/yyyy HH:mm')}"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Actions &ndash;&gt;-->
+<!--                <div class="d-grid gap-2">-->
+<!--                    <a href="/cashier-hotel/booking-management" class="btn btn-outline-secondary">-->
+<!--                        <i class="bi bi-arrow-left me-2"></i>Quay lại danh sách-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Modal xác nhận thanh toán phần còn lại &ndash;&gt;-->
+<!--    <div class="modal fade" id="confirmRemainingModal" tabindex="-1">-->
+<!--        <div class="modal-dialog modal-dialog-centered">-->
+<!--            <div class="modal-content">-->
+<!--                <div class="modal-header bg-success text-white">-->
+<!--                    <h5 class="modal-title">Xác nhận thanh toán phần còn lại</h5>-->
+<!--                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>-->
+<!--                </div>-->
+<!--                <div class="modal-body">-->
+<!--                    <div class="alert alert-warning">-->
+<!--                        <i class="bi bi-exclamation-triangle me-2"></i>Bạn chắc chắn muốn xác nhận đã nhận thanh toán phần còn lại?-->
+<!--                    </div>-->
+<!--                    <ul class="list-unstyled mb-0">-->
+<!--                        <li><strong>Mã Booking:</strong> <code th:text="${booking.bookingCode}"></code></li>-->
+<!--                        <li><strong>Khách hàng:</strong> <span th:text="${booking.guestName}"></span></li>-->
+<!--                        <li><strong>Tổng tiền:</strong> <span class="text-success" th:text="${booking.getFormattedAmount(booking.totalAmount)}"></span></li>-->
+<!--                        <li><strong>Đã thanh toán:</strong> <span class="text-info" th:text="${booking.getFormattedAmount(booking.totalAmount.subtract(booking.remainingAmount))}"></span></li>-->
+<!--                        <li><strong>Còn phải thu:</strong> <span class="text-danger fw-bold" th:text="${booking.getFormattedAmount(booking.remainingAmount)}"></span></li>-->
+<!--                        <li class="mt-2 text-success">-->
+<!--                            <i class="bi bi-arrow-right me-2"></i><strong>Sau khi xác nhận: Số tiền còn lại sẽ về 0đ</strong>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--                <div class="modal-footer">-->
+<!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>-->
+<!--                    <form method="post" class="d-inline" th:action="@{/cashier-hotel/confirm-remaining-payment/{id}(id=${booking.id})}">-->
+<!--                        <button type="submit" class="btn btn-success">-->
+<!--                            <i class="bi bi-check-circle me-2"></i>Xác nhận đã nhận tiền-->
+<!--                        </button>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script>-->
+<!--    // Set minimum date for extend stay-->
+<!--    const checkOutDate = new Date([[${booking.checkOutDate}]]);-->
+<!--    const tomorrow = new Date(checkOutDate);-->
+<!--    tomorrow.setDate(tomorrow.getDate() + 1);-->
+
+<!--    const newCheckOutInput = document.getElementById('newCheckOut');-->
+<!--    if (newCheckOutInput) {-->
+<!--        newCheckOutInput.min = tomorrow.toISOString().split('T')[0];-->
+
+<!--        newCheckOutInput.addEventListener('change', function() {-->
+<!--            const oldCheckOut = checkOutDate;-->
+<!--            const newCheckOut = new Date(this.value);-->
+
+<!--            if (newCheckOut <= oldCheckOut) {-->
+<!--                alert('Ngày check-out mới phải sau ngày hiện tại');-->
+<!--                this.value = '';-->
+<!--                return;-->
+<!--            }-->
+
+<!--            const additionalNights = Math.ceil((newCheckOut - oldCheckOut) / (1000 * 60 * 60 * 24));-->
+<!--            const roomPrice = [[${booking.roomPrice}]];-->
+<!--            const additionalAmount = roomPrice * additionalNights;-->
+
+<!--            document.getElementById('extendInfo').style.display = 'block';-->
+<!--            document.getElementById('extendDetails').innerHTML = `-->
+<!--            <div>Số đêm thêm: <strong>${additionalNights} đêm</strong></div>-->
+<!--            <div>Phụ thu: <strong>${additionalAmount.toLocaleString('vi-VN')} đ</strong></div>-->
+<!--        `;-->
+<!--        });-->
+<!--    }-->
+
+<!--    function validateExtendStay() {-->
+<!--        const newCheckOut = document.getElementById('newCheckOut').value;-->
+<!--        if (!newCheckOut) {-->
+<!--            alert('Vui lòng chọn ngày check-out mới');-->
+<!--            return false;-->
+<!--        }-->
+<!--        return confirm('Xác nhận gia hạn lưu trú?');-->
+<!--    }-->
+
+<!--    // Scroll to section if hash exists-->
+<!--    if (window.location.hash) {-->
+<!--        setTimeout(() => {-->
+<!--            const element = document.querySelector(window.location.hash);-->
+<!--            if (element) {-->
+<!--                element.scrollIntoView({ behavior: 'smooth', block: 'center' });-->
+<!--                element.style.border = '2px solid #667eea';-->
+<!--                setTimeout(() => {-->
+<!--                    element.style.border = '';-->
+<!--                }, 2000);-->
+<!--            }-->
+<!--        }, 500);-->
+<!--    }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -455,580 +1096,400 @@
     <title>Chi tiết Booking</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        body { background: #f8f9fa; }
-
-        /* Navbar Styles */
-        .top-navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .top-navbar .navbar-brand {
-            color: white;
-            font-weight: 600;
-        }
-
-        .top-navbar .nav-link {
-            color: rgba(255,255,255,0.9);
-            padding: 8px 15px;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .top-navbar .nav-link:hover,
-        .top-navbar .nav-link.active {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
-
-        .header-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .info-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
-        }
-        .info-label {
-            font-weight: 600;
-            color: #6c757d;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-        .info-value {
-            font-size: 1.1rem;
-            color: #212529;
-            margin-bottom: 15px;
-        }
-        .section-title {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e9ecef;
-        }
-        .action-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
-        .btn-action {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-        .payment-summary {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .layout-container { display: flex; min-height: 100vh; }
-
-        .sidebar {
-            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
-            background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
-
-            width: 280px;
-            min-width: 280px;
-            color: white;
-            padding: 20px;
-        }
-
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.9);
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin: 3px 0;
-            transition: all 0.3s;
-        }
-
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/cashier_sidebar.css}">
 </head>
 <body>
-<div class="layout-container">
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div th:replace="fragments/cashier_sidebar :: cashier_sidebar"></div>
 
-
-<!-- Top Navbar -->
-<!--<nav class="navbar navbar-expand-lg top-navbar mb-3">-->
-<!--    <div class="container-fluid">-->
-<!--        <a class="navbar-brand" href="/cashier-hotel/dashboard">-->
-<!--            <i class="bi bi-building me-2"></i>Lễ Tân-->
-<!--        </a>-->
-<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">-->
-<!--            <span class="navbar-toggler-icon"></span>-->
-<!--        </button>-->
-<!--        <div class="collapse navbar-collapse" id="navbarNav">-->
-<!--            <ul class="navbar-nav me-auto">-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="/cashier-hotel/dashboard">-->
-<!--                        <i class="bi bi-speedometer2 me-1"></i>Dashboard-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link active" href="/cashier-hotel/booking-management">-->
-<!--                        <i class="bi bi-calendar-check me-1"></i>Quản lý Booking-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="/cashier-hotel/walkin-booking">-->
-<!--                        <i class="bi bi-person-plus me-1"></i>Đặt phòng tại quầy-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="/cashier-hotel/room-status">-->
-<!--                        <i class="bi bi-house-gear me-1"></i>Trạng thái phòng-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--            <ul class="navbar-nav">-->
-<!--                <li class="nav-item dropdown">-->
-<!--                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">-->
-<!--                        <i class="bi bi-person-circle me-1"></i>Nhân viên-->
-<!--                    </a>-->
-<!--                    <ul class="dropdown-menu dropdown-menu-end">-->
-<!--                        <li><a class="dropdown-item" href="/cashier-hotel/logout">-->
-<!--                            <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất-->
-<!--                        </a></li>-->
-<!--                    </ul>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</nav>-->
-    <div class="sidebar">
-        <div class="text-center mb-4">
-            <i class="bi bi-building fs-1"></i>
-            <h5 class="mt-2 mb-0">Lễ Tân</h5>
-            <small class="opacity-75">Hệ thống quản lý</small>
-        </div>
-
-        <nav class="nav flex-column">
-            <a class="nav-link" href="/cashier-hotel/dashboard">
-                <i class="bi bi-speedometer2 me-2"></i>Dashboard
-            </a>
-            <a class="nav-link active" href="/cashier-hotel/booking-management">
-                <i class="bi bi-calendar-check me-2"></i>Quản lý Booking
-            </a>
-            <a class="nav-link" href="/cashier-hotel/walkin-booking">
-                <i class="bi bi-person-plus me-2"></i>Đặt phòng tại quầy
-            </a>
-            <a class="nav-link" href="/cashier-hotel/room-status">
-                <i class="bi bi-house-gear me-2"></i>Trạng thái phòng
-            </a>
-        </nav>
-
-        <div class="mt-auto pt-4 border-top border-light border-opacity-25">
-            <div class="d-flex align-items-center mb-3">
-                <i class="bi bi-person-circle fs-4 me-2"></i>
-                <div>
-                    <div class="fw-bold small">Nhân viên</div>
-                    <small class="opacity-75">Đang trực</small>
-                </div>
-            </div>
-            <a href="/cashier-hotel/logout" class="btn btn-outline-light btn-sm w-100">
-                <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
-            </a>
-        </div>
-    </div>
-
-    <div class="container-fluid py-4">
-        <!-- Header -->
-        <div class="header-card">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h3 class="mb-1"><i class="bi bi-info-circle me-2"></i>Chi tiết Booking</h3>
-                    <p class="mb-0 opacity-75">Quản lý và xử lý booking</p>
-                </div>
-                <a href="/cashier-hotel/booking-management" class="btn btn-light">
-                    <i class="bi bi-arrow-left me-2"></i>Quay lại
-                </a>
-            </div>
-        </div>
-
-        <!-- Alerts -->
-        <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
-            <i class="bi bi-check-circle me-2"></i><span th:text="${success}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
-            <i class="bi bi-exclamation-circle me-2"></i><span th:text="${error}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-
-        <div class="row">
-            <!-- Left Column -->
-            <div class="col-md-8">
-                <!-- Booking Info -->
-                <div class="info-card">
-                    <h5 class="section-title"><i class="bi bi-calendar-check me-2"></i>Thông tin đặt phòng</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="info-label">Mã Booking</div>
-                            <div class="info-value fw-bold" th:text="${booking.bookingCode}"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-label">Ngày đặt</div>
-                            <div class="info-value" th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy HH:mm')}"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-label">Trạng thái</div>
-                            <div class="info-value">
-                                <span th:if="${booking.status != null && booking.status.name() == 'CONFIRMED'}"
-                                      class="badge bg-info">Đã xác nhận</span>
-                                <span th:if="${booking.status != null && booking.status.name() == 'CHECKED_IN'}"
-                                      class="badge bg-success">Đã check-in</span>
-                                <span th:if="${booking.status != null && booking.status.name() == 'CHECKED_OUT'}"
-                                      class="badge bg-secondary">Đã trả phòng</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-label">Thanh toán</div>
-                            <div class="info-value">
-                                <span th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PAID'}"
-                                      class="badge bg-success">Đã thanh toán</span>
-                                <span th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PARTIALLY_PAID'}"
-                                      class="badge bg-warning">Đã cọc</span>
-                                <span th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PENDING'}"
-                                      class="badge bg-secondary">Chưa thanh toán</span>
-                            </div>
-                        </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-1"><i class="bi bi-info-circle me-2"></i>Chi tiết Booking</h3>
+                        <p class="mb-0 opacity-75">Quản lý và xử lý booking</p>
                     </div>
-                </div>
-
-                <!-- Guest Info -->
-                <div class="info-card">
-                    <h5 class="section-title"><i class="bi bi-person-vcard me-2"></i>Thông tin khách hàng</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="info-label">Họ tên</div>
-                            <div class="info-value" th:text="${booking.guestName}"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-label">CMND/CCCD</div>
-                            <div class="info-value" th:text="${booking.guestIdNumber ?: 'Chưa có'}"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-label">Email</div>
-                            <div class="info-value" th:text="${booking.guestEmail}"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-label">Số điện thoại</div>
-                            <div class="info-value" th:text="${booking.guestPhone}"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room Info -->
-                <div class="info-card">
-                    <h5 class="section-title"><i class="bi bi-door-open me-2"></i>Thông tin phòng</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="info-label">Loại phòng</div>
-                            <div class="info-value" th:text="${booking.roomTypeName}"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-label">Số phòng</div>
-                            <div class="info-value">
-                                <span th:if="${booking.roomNumber != null}"
-                                      class="badge bg-info fs-6"
-                                      th:text="${booking.roomNumber}"></span>
-                                <span th:if="${booking.roomNumber == null}"
-                                      class="badge bg-secondary">Chưa gán</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="info-label">Check-in</div>
-                            <div class="info-value" th:text="${#temporals.format(booking.checkInDate, 'dd/MM/yyyy')}"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="info-label">Check-out</div>
-                            <div class="info-value" th:text="${#temporals.format(booking.checkOutDate, 'dd/MM/yyyy')}"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="info-label">Số đêm</div>
-                            <div class="info-value" th:text="${booking.numberOfNights} + ' đêm'"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-label">Số người</div>
-                            <div class="info-value">
-                                <i class="bi bi-people me-2"></i>
-                                <span th:text="${booking.adults} + ' người lớn'"></span>
-                                <span th:if="${booking.children > 0}" th:text="', ' + ${booking.children} + ' trẻ em'"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div th:if="${booking.specialRequests}" class="mt-3">
-                        <div class="info-label">Yêu cầu đặc biệt</div>
-                        <div class="alert alert-info mb-0" th:text="${booking.specialRequests}"></div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="info-card">
-                    <h5 class="section-title"><i class="bi bi-lightning me-2"></i>Thao tác nhanh</h5>
-
-                    <!-- Check-in -->
-                    <div th:if="${booking.status != null && booking.status.name() == 'CONFIRMED'}"
-                         class="action-card" id="check-in">
-                        <h6 class="mb-3"><i class="bi bi-door-open me-2 text-success"></i>Check-in khách hàng</h6>
-                        <form method="post" th:action="@{/cashier-hotel/check-in/{id}(id=${booking.id})}">
-                            <div class="mb-3">
-                                <label class="form-label">CMND/CCCD (tùy chọn)</label>
-                                <input type="text" class="form-control" name="idNumber"
-                                       th:value="${booking.guestIdNumber}"
-                                       placeholder="Nhập số CMND/CCCD">
-                            </div>
-                            <button type="submit" class="btn btn-success btn-action">
-                                <i class="bi bi-check-circle me-2"></i>Xác nhận Check-in
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Check-out -->
-                    <div th:if="${booking.status != null && booking.status.name() == 'CHECKED_IN'}"
-                         class="action-card" id="check-out">
-                        <h6 class="mb-3"><i class="bi bi-door-closed me-2 text-warning"></i>Check-out khách hàng</h6>
-                        <p class="text-muted mb-3">Xác nhận check-out sẽ tạo hóa đơn và cập nhật trạng thái phòng</p>
-                        <form method="post" th:action="@{/cashier-hotel/check-out/{id}(id=${booking.id})}">
-                            <button type="submit" class="btn btn-warning btn-action">
-                                <i class="bi bi-check-circle me-2"></i>Xác nhận Check-out
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Deposit -->
-                    <div th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PENDING'}"
-                         class="action-card" id="deposit">
-                        <h6 class="mb-3"><i class="bi bi-piggy-bank me-2 text-info"></i>Thu tiền cọc</h6>
-                        <form method="post" th:action="@{/cashier-hotel/collect-deposit/{id}(id=${booking.id})}">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Số tiền <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="amount"
-                                           th:value="${booking.depositAmount}"
-                                           placeholder="Nhập số tiền" required>
-                                    <small class="text-muted">Khuyến nghị: <span th:text="${booking.getFormattedAmount(booking.depositAmount)}"></span></small>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Phương thức <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="method" required>
-                                        <option value="CASH">Tiền mặt</option>
-                                        <option value="BANK_TRANSFER">Chuyển khoản</option>
-                                        <option value="CREDIT_CARD">Thẻ tín dụng</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-info btn-action">
-                                <i class="bi bi-check-circle me-2"></i>Xác nhận thu cọc
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Change Room -->
-                    <div th:if="${booking.roomNumber != null && availableRooms != null && !availableRooms.isEmpty()}"
-                         class="action-card" id="change-room">
-                        <h6 class="mb-3"><i class="bi bi-arrow-left-right me-2 text-primary"></i>Đổi phòng</h6>
-                        <form method="post" th:action="@{/cashier-hotel/change-room/{id}(id=${booking.id})}">
-                            <div class="row">
-                                <div class="col-md-8 mb-3">
-                                    <label class="form-label">Chọn phòng mới <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="newRoomId" required>
-                                        <option value="">-- Chọn phòng --</option>
-                                        <option th:each="room : ${availableRooms}"
-                                                th:value="${room.id}"
-                                                th:text="'Phòng ' + ${room.roomNumber} + ' - Tầng ' + ${room.floor}">
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                    <label class="form-label">Lý do đổi phòng</label>
-                                    <textarea class="form-control" name="reason" rows="2"
-                                              placeholder="Nhập lý do (tùy chọn)"></textarea>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-action">
-                                <i class="bi bi-check-circle me-2"></i>Xác nhận đổi phòng
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Extend Stay -->
-                    <div th:if="${booking.status != null && booking.status.name() == 'CHECKED_IN'}"
-                         class="action-card" id="extend-stay">
-                        <h6 class="mb-3"><i class="bi bi-calendar-plus me-2 text-success"></i>Gia hạn lưu trú</h6>
-                        <form method="post" th:action="@{/cashier-hotel/extend-stay/{id}(id=${booking.id})}"
-                              onsubmit="return validateExtendStay()">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Ngày check-out hiện tại</label>
-                                    <input type="date" class="form-control"
-                                           th:value="${booking.checkOutDate}" readonly>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Ngày check-out mới <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" id="newCheckOut"
-                                           name="newCheckOut" required>
-                                </div>
-                            </div>
-                            <div class="alert alert-info" id="extendInfo" style="display: none;">
-                                <strong>Thông tin gia hạn:</strong>
-                                <div id="extendDetails"></div>
-                            </div>
-                            <button type="submit" class="btn btn-success btn-action">
-                                <i class="bi bi-check-circle me-2"></i>Xác nhận gia hạn
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Column - Price Details -->
-            <div class="col-md-4">
-                <div class="info-card">
-                    <h5 class="section-title"><i class="bi bi-currency-dollar me-2"></i>Chi tiết thanh toán</h5>
-
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Giá phòng/đêm:</span>
-                        <strong th:text="${booking.getFormattedAmount(booking.roomPrice)}"></strong>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Tổng tiền phòng:</span>
-                        <strong th:text="${booking.getFormattedAmount(booking.totalRoomPrice)}"></strong>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Phí dịch vụ:</span>
-                        <span th:text="${booking.getFormattedAmount(booking.serviceFee)}"></span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span>VAT:</span>
-                        <span th:text="${booking.getFormattedAmount(booking.vat)}"></span>
-                    </div>
-
-                    <hr>
-
-                    <div class="d-flex justify-content-between mb-3">
-                        <strong class="text-success">TỔNG CỘNG:</strong>
-                        <strong class="text-success fs-5" th:text="${booking.getFormattedAmount(booking.totalAmount)}"></strong>
-                    </div>
-
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Đã thanh toán:</span>
-                        <span class="text-success fw-bold" th:text="${booking.getFormattedAmount(booking.totalAmount.subtract(booking.remainingAmount))}"></span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span>Còn lại:</span>
-                        <span th:classappend="${booking.remainingAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0 ? 'text-danger' : 'text-success'}"
-                              class="fw-bold"
-                              th:text="${booking.getFormattedAmount(booking.remainingAmount)}"></span>
-                    </div>
-
-                    <hr>
-
-                    <div class="d-flex justify-content-between mb-3">
-                        <span>Phương thức:</span>
-                        <span class="badge bg-primary" th:text="${booking.paymentMethod}"></span>
-                    </div>
-
-                    <!-- Nút xác nhận thanh toán phần còn lại -->
-                    <div th:if="${booking.paymentStatus != null && booking.paymentStatus.name() != 'PAID' && booking.remainingAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
-                        <button type="button" class="btn btn-success w-100 mb-2"
-                                data-bs-toggle="modal"
-                                data-bs-target="#confirmRemainingModal">
-                            <i class="bi bi-cash-coin me-2"></i>Xác nhận thanh toán phần còn lại
-                        </button>
-                    </div>
-
-                    <div th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PAID'}">
-                        <div class="payment-summary text-center">
-                            <i class="bi bi-check-circle fs-3"></i>
-                            <h6 class="mt-2 mb-0">Đã thanh toán đủ</h6>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Timeline -->
-                <div class="info-card">
-                    <h5 class="section-title"><i class="bi bi-clock-history me-2"></i>Lịch sử</h5>
-
-                    <div class="timeline">
-                        <div class="mb-3">
-                            <small class="text-muted">Ngày đặt</small>
-                            <div th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy HH:mm')}"></div>
-                        </div>
-
-                        <div th:if="${booking.checkedInAt}" class="mb-3">
-                            <small class="text-muted">Check-in</small>
-                            <div th:text="${#temporals.format(booking.checkedInAt, 'dd/MM/yyyy HH:mm')}"></div>
-                        </div>
-
-                        <div th:if="${booking.checkedOutAt}" class="mb-3">
-                            <small class="text-muted">Check-out</small>
-                            <div th:text="${#temporals.format(booking.checkedOutAt, 'dd/MM/yyyy HH:mm')}"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                <div class="d-grid gap-2">
-                    <a href="/cashier-hotel/booking-management" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left me-2"></i>Quay lại danh sách
+                    <a href="/cashier-hotel/booking-management" class="btn btn-light btn-sm">
+                        <i class="bi bi-arrow-left me-2"></i>Quay lại
                     </a>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Modal xác nhận thanh toán phần còn lại -->
-    <div class="modal fade" id="confirmRemainingModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Xác nhận thanh toán phần còn lại</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-warning">
-                        <i class="bi bi-exclamation-triangle me-2"></i>Bạn chắc chắn muốn xác nhận đã nhận thanh toán phần còn lại?
+            <!-- Alerts -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+                <i class="bi bi-check-circle me-2"></i><span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                <i class="bi bi-exclamation-circle me-2"></i><span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-md-8">
+                    <!-- Booking Info -->
+                    <div class="info-card">
+                        <h5 class="section-title"><i class="bi bi-calendar-check me-2"></i>Thông tin đặt phòng</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-label">Mã Booking</div>
+                                <div class="info-value fw-bold" th:text="${booking.bookingCode}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-label">Ngày đặt</div>
+                                <div class="info-value" th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy HH:mm')}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-label">Trạng thái</div>
+                                <div class="info-value">
+                                    <span th:if="${booking.status != null && booking.status.name() == 'CONFIRMED'}"
+                                          class="badge bg-info">Đã xác nhận</span>
+                                    <span th:if="${booking.status != null && booking.status.name() == 'CHECKED_IN'}"
+                                          class="badge bg-success">Đã check-in</span>
+                                    <span th:if="${booking.status != null && booking.status.name() == 'CHECKED_OUT'}"
+                                          class="badge bg-secondary">Đã trả phòng</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-label">Thanh toán</div>
+                                <div class="info-value">
+                                    <span th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PAID'}"
+                                          class="badge bg-success">Đã thanh toán</span>
+                                    <span th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PARTIALLY_PAID'}"
+                                          class="badge bg-warning">Đã cọc</span>
+                                    <span th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PENDING'}"
+                                          class="badge bg-secondary">Chưa thanh toán</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <ul class="list-unstyled mb-0">
-                        <li><strong>Mã Booking:</strong> <code th:text="${booking.bookingCode}"></code></li>
-                        <li><strong>Khách hàng:</strong> <span th:text="${booking.guestName}"></span></li>
-                        <li><strong>Tổng tiền:</strong> <span class="text-success" th:text="${booking.getFormattedAmount(booking.totalAmount)}"></span></li>
-                        <li><strong>Đã thanh toán:</strong> <span class="text-info" th:text="${booking.getFormattedAmount(booking.totalAmount.subtract(booking.remainingAmount))}"></span></li>
-                        <li><strong>Còn phải thu:</strong> <span class="text-danger fw-bold" th:text="${booking.getFormattedAmount(booking.remainingAmount)}"></span></li>
-                        <li class="mt-2 text-success">
-                            <i class="bi bi-arrow-right me-2"></i><strong>Sau khi xác nhận: Số tiền còn lại sẽ về 0đ</strong>
-                        </li>
-                    </ul>
+
+                    <!-- Guest Info -->
+                    <div class="info-card">
+                        <h5 class="section-title"><i class="bi bi-person-vcard me-2"></i>Thông tin khách hàng</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-label">Họ tên</div>
+                                <div class="info-value" th:text="${booking.guestName}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-label">CMND/CCCD</div>
+                                <div class="info-value" th:text="${booking.guestIdNumber ?: 'Chưa có'}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-label">Email</div>
+                                <div class="info-value" th:text="${booking.guestEmail}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-label">Số điện thoại</div>
+                                <div class="info-value" th:text="${booking.guestPhone}"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Room Info -->
+                    <div class="info-card">
+                        <h5 class="section-title"><i class="bi bi-door-open me-2"></i>Thông tin phòng</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-label">Loại phòng</div>
+                                <div class="info-value" th:text="${booking.roomTypeName}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-label">Số phòng</div>
+                                <div class="info-value">
+                                    <span th:if="${booking.roomNumber != null}"
+                                          class="badge bg-info"
+                                          th:text="${booking.roomNumber}"></span>
+                                    <span th:if="${booking.roomNumber == null}"
+                                          class="badge bg-secondary">Chưa gán</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-label">Check-in</div>
+                                <div class="info-value" th:text="${#temporals.format(booking.checkInDate, 'dd/MM/yyyy')}"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-label">Check-out</div>
+                                <div class="info-value" th:text="${#temporals.format(booking.checkOutDate, 'dd/MM/yyyy')}"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-label">Số đêm</div>
+                                <div class="info-value" th:text="${booking.numberOfNights} + ' đêm'"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-label">Số người</div>
+                                <div class="info-value">
+                                    <i class="bi bi-people me-2"></i>
+                                    <span th:text="${booking.adults} + ' người lớn'"></span>
+                                    <span th:if="${booking.children > 0}" th:text="', ' + ${booking.children} + ' trẻ em'"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${booking.specialRequests}" class="mt-3">
+                            <div class="info-label">Yêu cầu đặc biệt</div>
+                            <div class="alert alert-info mb-0" th:text="${booking.specialRequests}"></div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="info-card">
+                        <h5 class="section-title"><i class="bi bi-lightning me-2"></i>Thao tác nhanh</h5>
+
+                        <!-- Check-in -->
+                        <div th:if="${booking.status != null && booking.status.name() == 'CONFIRMED'}"
+                             class="action-card" id="check-in">
+                            <h6 class="mb-3"><i class="bi bi-door-open me-2 text-success"></i>Check-in khách hàng</h6>
+                            <form method="post" th:action="@{/cashier-hotel/check-in/{id}(id=${booking.id})}">
+                                <div class="mb-3">
+                                    <label class="form-label">CMND/CCCD (tùy chọn)</label>
+                                    <input type="text" class="form-control" name="idNumber"
+                                           th:value="${booking.guestIdNumber}"
+                                           placeholder="Nhập số CMND/CCCD">
+                                </div>
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="bi bi-check-circle me-2"></i>Xác nhận Check-in
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Check-out -->
+                        <div th:if="${booking.status != null && booking.status.name() == 'CHECKED_IN'}"
+                             class="action-card" id="check-out">
+                            <h6 class="mb-3"><i class="bi bi-door-closed me-2 text-warning"></i>Check-out khách hàng</h6>
+                            <p class="text-muted mb-3">Xác nhận check-out sẽ tạo hóa đơn và cập nhật trạng thái phòng</p>
+                            <form method="post" th:action="@{/cashier-hotel/check-out/{id}(id=${booking.id})}">
+                                <button type="submit" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-check-circle me-2"></i>Xác nhận Check-out
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Deposit -->
+                        <div th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PENDING'}"
+                             class="action-card" id="deposit">
+                            <h6 class="mb-3"><i class="bi bi-piggy-bank me-2 text-info"></i>Thu tiền cọc</h6>
+                            <form method="post" th:action="@{/cashier-hotel/collect-deposit/{id}(id=${booking.id})}">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Số tiền <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" name="amount"
+                                               th:value="${booking.depositAmount}"
+                                               placeholder="Nhập số tiền" required>
+                                        <small class="text-muted">Khuyến nghị: <span th:text="${booking.getFormattedAmount(booking.depositAmount)}"></span></small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Phương thức <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="method" required>
+                                            <option value="CASH">Tiền mặt</option>
+                                            <option value="BANK_TRANSFER">Chuyển khoản</option>
+                                            <option value="CREDIT_CARD">Thẻ tín dụng</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info btn-sm">
+                                    <i class="bi bi-check-circle me-2"></i>Xác nhận thu cọc
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Change Room -->
+                        <div th:if="${booking.roomNumber != null && availableRooms != null && !availableRooms.isEmpty()}"
+                             class="action-card" id="change-room">
+                            <h6 class="mb-3"><i class="bi bi-arrow-left-right me-2 text-primary"></i>Đổi phòng</h6>
+                            <form method="post" th:action="@{/cashier-hotel/change-room/{id}(id=${booking.id})}">
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <label class="form-label">Chọn phòng mới <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="newRoomId" required>
+                                            <option value="">-- Chọn phòng --</option>
+                                            <option th:each="room : ${availableRooms}"
+                                                    th:value="${room.id}"
+                                                    th:text="'Phòng ' + ${room.roomNumber} + ' - Tầng ' + ${room.floor}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label">Lý do đổi phòng</label>
+                                        <textarea class="form-control" name="reason" rows="2"
+                                                  placeholder="Nhập lý do (tùy chọn)"></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-check-circle me-2"></i>Xác nhận đổi phòng
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Extend Stay -->
+                        <div th:if="${booking.status != null && booking.status.name() == 'CHECKED_IN'}"
+                             class="action-card" id="extend-stay">
+                            <h6 class="mb-3"><i class="bi bi-calendar-plus me-2 text-success"></i>Gia hạn lưu trú</h6>
+                            <form method="post" th:action="@{/cashier-hotel/extend-stay/{id}(id=${booking.id})}"
+                                  onsubmit="return validateExtendStay()">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Ngày check-out hiện tại</label>
+                                        <input type="date" class="form-control"
+                                               th:value="${booking.checkOutDate}" readonly>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Ngày check-out mới <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="newCheckOut"
+                                               name="newCheckOut" required>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info" id="extendInfo" style="display: none;">
+                                    <strong>Thông tin gia hạn:</strong>
+                                    <div id="extendDetails"></div>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="bi bi-check-circle me-2"></i>Xác nhận gia hạn
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <form method="post" class="d-inline" th:action="@{/cashier-hotel/confirm-remaining-payment/{id}(id=${booking.id})}">
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-check-circle me-2"></i>Xác nhận đã nhận tiền
-                        </button>
-                    </form>
+
+                <!-- Right Column - Price Details -->
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <h5 class="section-title"><i class="bi bi-currency-dollar me-2"></i>Chi tiết thanh toán</h5>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Giá phòng/đêm:</span>
+                            <strong th:text="${booking.getFormattedAmount(booking.roomPrice)}"></strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tổng tiền phòng:</span>
+                            <strong th:text="${booking.getFormattedAmount(booking.totalRoomPrice)}"></strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Phí dịch vụ:</span>
+                            <span th:text="${booking.getFormattedAmount(booking.serviceFee)}"></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>VAT:</span>
+                            <span th:text="${booking.getFormattedAmount(booking.vat)}"></span>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong class="text-success">TỔNG CỘNG:</strong>
+                            <strong class="text-success fs-6" th:text="${booking.getFormattedAmount(booking.totalAmount)}"></strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Đã thanh toán:</span>
+                            <span class="text-success fw-bold" th:text="${booking.getFormattedAmount(booking.totalAmount.subtract(booking.remainingAmount))}"></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Còn lại:</span>
+                            <span th:classappend="${booking.remainingAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0 ? 'text-danger' : 'text-success'}"
+                                  class="fw-bold"
+                                  th:text="${booking.getFormattedAmount(booking.remainingAmount)}"></span>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Phương thức:</span>
+                            <span class="badge bg-primary" th:text="${booking.paymentMethod}"></span>
+                        </div>
+
+                        <!-- Nút xác nhận thanh toán phần còn lại -->
+                        <div th:if="${booking.paymentStatus != null && booking.paymentStatus.name() != 'PAID' && booking.remainingAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
+                            <button type="button" class="btn btn-success btn-sm w-100 mb-2"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmRemainingModal">
+                                <i class="bi bi-cash-coin me-2"></i>Xác nhận thanh toán phần còn lại
+                            </button>
+                        </div>
+
+                        <div th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PAID'}">
+                            <div class="payment-summary text-center">
+                                <i class="bi bi-check-circle fs-3"></i>
+                                <h6 class="mt-2 mb-0">Đã thanh toán đủ</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline -->
+                    <div class="info-card">
+                        <h5 class="section-title"><i class="bi bi-clock-history me-2"></i>Lịch sử</h5>
+
+                        <div class="timeline">
+                            <div class="mb-3">
+                                <small class="text-muted">Ngày đặt</small>
+                                <div th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy HH:mm')}"></div>
+                            </div>
+
+                            <div th:if="${booking.checkedInAt}" class="mb-3">
+                                <small class="text-muted">Check-in</small>
+                                <div th:text="${#temporals.format(booking.checkedInAt, 'dd/MM/yyyy HH:mm')}"></div>
+                            </div>
+
+                            <div th:if="${booking.checkedOutAt}" class="mb-3">
+                                <small class="text-muted">Check-out</small>
+                                <div th:text="${#temporals.format(booking.checkedOutAt, 'dd/MM/yyyy HH:mm')}"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-grid gap-2">
+                        <a href="/cashier-hotel/booking-management" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-left me-2"></i>Quay lại danh sách
+                        </a>
+                    </div>
                 </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Modal xác nhận thanh toán phần còn lại -->
+<div class="modal fade" id="confirmRemainingModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Xác nhận thanh toán phần còn lại</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Bạn chắc chắn muốn xác nhận đã nhận thanh toán phần còn lại?
+                </div>
+                <ul class="list-unstyled mb-0">
+                    <li><strong>Mã Booking:</strong> <code th:text="${booking.bookingCode}"></code></li>
+                    <li><strong>Khách hàng:</strong> <span th:text="${booking.guestName}"></span></li>
+                    <li><strong>Tổng tiền:</strong> <span class="text-success" th:text="${booking.getFormattedAmount(booking.totalAmount)}"></span></li>
+                    <li><strong>Đã thanh toán:</strong> <span class="text-info" th:text="${booking.getFormattedAmount(booking.totalAmount.subtract(booking.remainingAmount))}"></span></li>
+                    <li><strong>Còn phải thu:</strong> <span class="text-danger fw-bold" th:text="${booking.getFormattedAmount(booking.remainingAmount)}"></span></li>
+                    <li class="mt-2 text-success">
+                        <i class="bi bi-arrow-right me-2"></i><strong>Sau khi xác nhận: Số tiền còn lại sẽ về 0đ</strong>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Hủy</button>
+                <form method="post" class="d-inline" th:action="@{/cashier-hotel/confirm-remaining-payment/{id}(id=${booking.id})}">
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <i class="bi bi-check-circle me-2"></i>Xác nhận đã nhận tiền
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // Set minimum date for extend stay

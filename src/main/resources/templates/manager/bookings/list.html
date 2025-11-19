@@ -352,20 +352,36 @@
                                             <span th:if="${booking.paymentStatus == T(com.example.htql_nhahang_khachsan.enums.PaymentStatus).PENDING}"
                                                   class="badge bg-secondary">Chưa thanh toán</span>
                                         </td>
+<!--                                        <td>-->
+<!--                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).PENDING}"-->
+<!--                                                  class="badge bg-warning">Chờ xác nhận</span>-->
+<!--                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CONFIRMED}"-->
+<!--                                                  class="badge bg-info">Đã xác nhận</span>-->
+<!--                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CHECKED_IN}"-->
+<!--                                                  class="badge bg-primary">Đang ở</span>-->
+<!--                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CHECKED_OUT}"-->
+<!--                                                  class="badge bg-success">Đã trả phòng</span>-->
+<!--                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CANCELLED}"-->
+<!--                                                  class="badge bg-danger">Đã hủy</span>-->
+<!--                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).NO_SHOW}"-->
+<!--                                                  class="badge bg-dark">Không đến</span>-->
+<!--                                        </td>-->
                                         <td>
-                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).PENDING}"
-                                                  class="badge bg-warning">Chờ xác nhận</span>
-                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CONFIRMED}"
+    <span th:if="${booking.status != null and booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).PENDING}"
+          class="badge bg-warning">Chờ xác nhận</span>
+                                            <span th:if="${booking.status != null and booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CONFIRMED}"
                                                   class="badge bg-info">Đã xác nhận</span>
-                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CHECKED_IN}"
+                                            <span th:if="${booking.status != null and booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CHECKED_IN}"
                                                   class="badge bg-primary">Đang ở</span>
-                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CHECKED_OUT}"
+                                            <span th:if="${booking.status != null and booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CHECKED_OUT}"
                                                   class="badge bg-success">Đã trả phòng</span>
-                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CANCELLED}"
+                                            <span th:if="${booking.status != null and booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).CANCELLED}"
                                                   class="badge bg-danger">Đã hủy</span>
-                                            <span th:if="${booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).NO_SHOW}"
+                                            <span th:if="${booking.status != null and booking.status == T(com.example.htql_nhahang_khachsan.enums.BookingStatus).NO_SHOW}"
                                                   class="badge bg-dark">Không đến</span>
                                         </td>
+
+
                                         <td>
                                             <a th:href="@{/manager/bookings/{id}(id=${booking.id})}"
                                                class="btn btn-sm btn-outline-primary">

@@ -1,0 +1,43 @@
+
+<!-- Sidebar Fragment -->
+<div th:fragment="cashier_sidebar" class="sidebar">
+    <div class="sidebar-header text-white">
+        <i class="bi bi-building"></i>
+        <h5 class="mt-2 mb-0">Lễ Tân</h5>
+        <h6 class="opacity-75">Hệ thống quản lý</h6>
+    </div>
+
+    <nav class="nav flex-column">
+        <h6 class="text-uppercase">Menu chính</h6>
+        <a class="nav-link" th:href="@{/cashier-hotel/dashboard}"
+         >
+            <i class="bi bi-speedometer2"></i>Dashboard
+        </a>
+
+        <a class="nav-link" th:href="@{/cashier-hotel/booking-management}">
+            <i class="bi bi-calendar-check"></i>Quản lý Booking
+        </a>
+
+        <a class="nav-link" th:href="@{/cashier-hotel/walkin-booking}">
+            <i class="bi bi-person-plus"></i>Đặt phòng tại quầy
+        </a>
+
+        <a class="nav-link" th:href="@{/cashier-hotel/room-status}">
+            <i class="bi bi-house-gear"></i>Trạng thái phòng
+        </a>
+
+    </nav>
+
+    <div class="mt-auto pt-4 border-top border-light border-opacity-25">
+        <div class="d-flex align-items-center mb-3 text-white">
+            <i class="bi bi-person-circle fs-4 me-2"></i>
+            <div>
+                <div class="fw-bold small">Nhân viên</div>
+                <small class="opacity-75">Đang trực</small>
+            </div>
+        </div>
+        <a th:href="@{/cashier-hotel/logout}" class="btn btn-outline-light btn-sm w-100">
+            <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+        </a>
+    </div>
+</div>

@@ -1163,7 +1163,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/user_navbar.css}">
     <style>
         :root {
             --primary-color: #c9a96e;
@@ -1175,6 +1174,7 @@
             --success-color: #28a745;
             --warning-color: #ffc107;
             --danger-color: #dc3545;
+            --scale: 0.75;
         }
 
         * {
@@ -1183,74 +1183,72 @@
             box-sizing: border-box;
         }
 
+        html {
+            font-size: calc(16px * var(--scale));
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            line-height: 1.5;
+            line-height: 1.6;
             color: var(--text-dark);
-            padding-top: 60px;
-            font-size: 12px;
+            padding-top: calc(80px * var(--scale));
         }
 
         .heading-font {
             font-family: 'Playfair Display', serif;
         }
 
-        /* Navigation - Scaled */
+        /* Navigation */
         .navbar {
             background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-            padding: 8px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            height: calc(80px * var(--scale));
         }
 
         .navbar-brand {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+            font-size: calc(2rem * var(--scale));
             font-weight: 600;
             color: var(--primary-color) !important;
         }
 
         .navbar-nav .nav-link {
             font-weight: 500;
-            margin: 0 8px;
-            font-size: 0.9rem;
+            margin: 0 calc(10px * var(--scale));
             color: var(--text-dark) !important;
             transition: all 0.3s ease;
-            padding: 6px 10px;
         }
 
-        .navbar-nav .nav-link:hover {
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
             color: var(--primary-color) !important;
         }
 
         .btn-luxury {
             background: var(--primary-color);
             color: white;
-            padding: 8px 20px;
+            padding: calc(12px * var(--scale)) calc(30px * var(--scale));
             border: none;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 1px;
             transition: all 0.3s ease;
-            border-radius: 40px;
-            font-size: 0.75rem;
+            border-radius: calc(50px * var(--scale));
         }
 
         .btn-luxury:hover {
             background: #b8956b;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(201, 169, 110, 0.4);
+            transform: translateY(calc(-3px * var(--scale)));
+            box-shadow: 0 10px 25px rgba(201, 169, 110, 0.4);
+            color: white;
         }
+
 
         /* Container adjustments */
-        .container {
-            max-width: 1140px;
-        }
 
-        .my-5 {
-            margin-top: 2rem !important;
-            margin-bottom: 2rem !important;
-        }
+
+
 
         /* Breadcrumb - Scaled */
         .breadcrumb {
@@ -1834,7 +1832,6 @@
 
         /* Button adjustments */
         .btn-outline-primary {
-            font-size: 0.8rem;
             padding: 8px 16px;
         }
 
@@ -1864,532 +1861,580 @@
     </style>
 </head>
 <body>
-<!-- Navigation -->
 <div th:replace="fragments/user_navbar :: user_navbar"></div>
 
+<!--<nav th:fragment="user_navbar" class="navbar navbar-expand-lg fixed-top">-->
+<!--    <div class="container">-->
+<!--        <a class="navbar-brand" th:href="@{/}"><i class="fas fa-crown me-2"></i>DIEK</a>-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+<!--        <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--            <ul class="navbar-nav ms-auto" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">-->
+<!--                <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang chủ</a></li>-->
+<!--                <li class="nav-item"><a class="nav-link" th:href="@{/#branches}">Chi nhánh</a></li>-->
+<!--                <li class="nav-item"><a class="nav-link" href="#facilities">Tiện ích</a></li>-->
+<!--                <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>-->
+
+<!--                <li class="nav-item" sec:authorize="isAnonymous()">-->
+<!--                    <a class="nav-link btn btn-outline-primary ms-2" th:href="@{/customer/login}">-->
+<!--                        <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập-->
+<!--                    </a>-->
+<!--                </li>-->
+
+<!--                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">-->
+<!--                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">-->
+<!--                        <i class="fas fa-user-circle me-1"></i>-->
+<!--                        <span sec:authentication="name">Username</span>-->
+<!--                    </a>-->
+<!--                    <ul class="dropdown-menu dropdown-menu-end">-->
+<!--                        <li>-->
+<!--                            <a class="dropdown-item" th:href="@{/cart}">-->
+<!--                                <i class="fas fa-shopping-cart fa-fw me-2"></i>Giỏ hàng-->
+<!--                                <span class="badge bg-danger rounded-pill" th:if="${session.cartItemCount > 0}" th:text="${session.cartItemCount}">0</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        <li><a class="dropdown-item" th:href="@{/orders}"><i class="fas fa-receipt fa-fw me-2"></i>Xem đơn hàng</a></li>-->
+<!--                        <li><hr class="dropdown-divider"></li>-->
+<!--                        <li>-->
+<!--                            <form th:action="@{/logout}" method="post" class="d-inline">-->
+<!--                                <button type="submit" class="dropdown-item">-->
+<!--                                    <i class="fas fa-sign-out-alt fa-fw me-2"></i>Đăng xuất-->
+<!--                                </button>-->
+<!--                            </form>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
+
 <!-- Main Content -->
-<div class="container my-5">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a th:href="@{/}">Trang chủ</a></li>
-            <li class="breadcrumb-item"><a href="#menu">Thực đơn</a></li>
-            <li class="breadcrumb-item"><a th:href="@{'/menu-categories/' + ${menuItem.categoryId}}" th:text="${menuItem.categoryName}">Danh mục</a></li>
-            <li class="breadcrumb-item active" th:text="${menuItem.name}">Tên món</li>
-        </ol>
-    </nav>
+<section class="py-0">
+<!-- Main Content -->
+    <div class="container my-5">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/}">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="#menu">Thực đơn</a></li>
+                <li class="breadcrumb-item"><a th:href="@{'/menu-categories/' + ${menuItem.categoryId}}" th:text="${menuItem.categoryName}">Danh mục</a></li>
+                <li class="breadcrumb-item active" th:text="${menuItem.name}">Tên món</li>
+            </ol>
+        </nav>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <!-- Food Gallery -->
-            <div class="food-gallery fade-in">
-                <div class="main-image">
-                    <img id="mainImage"
-                         th:src="${mainImage != null ? mainImage : '/images/default-food.jpg'}"
-                         th:alt="${menuItem.name}">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Food Gallery -->
+                <div class="food-gallery fade-in">
+                    <div class="main-image">
+                        <img id="mainImage"
+                             th:src="${mainImage != null ? mainImage : '/images/default-food.jpg'}"
+                             th:alt="${menuItem.name}">
 
-                    <div th:class="${menuItem.isAvailable ? 'availability-badge available' : 'availability-badge unavailable'}">
-                        <i th:class="${menuItem.isAvailable ? 'fas fa-check-circle me-1' : 'fas fa-times-circle me-1'}"></i>
-                        <span th:text="${menuItem.isAvailable ? 'Còn món' : 'Hết món'}">Còn món</span>
-                    </div>
-
-                    <div class="category-badge" th:text="${menuItem.categoryName}">Danh mục</div>
-
-                    <div th:if="${hasDiscount}" class="discount-badge">
-                        <i class="fas fa-tag me-1"></i>Giảm giá
-                    </div>
-
-                    <div class="gallery-thumbnails" th:if="${thumbnails != null and thumbnails.size() > 1}">
-                        <div class="thumbnail"
-                             th:each="image, stat : ${thumbnails}"
-                             th:classappend="${stat.index == 0} ? 'active' : ''"
-                             th:data-url="${image.imageUrl}"
-                             onclick="changeImage(this.dataset.url, this)">
-                            <img th:src="${image.imageUrl}" th:alt="${image.imageTitle}">
+                        <div th:class="${menuItem.isAvailable ? 'availability-badge available' : 'availability-badge unavailable'}">
+                            <i th:class="${menuItem.isAvailable ? 'fas fa-check-circle me-1' : 'fas fa-times-circle me-1'}"></i>
+                            <span th:text="${menuItem.isAvailable ? 'Còn món' : 'Hết món'}">Còn món</span>
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Food Header -->
-            <div class="food-header fade-in">
-                <div class="row align-items-end">
-                    <div class="col-md-8">
-                        <h1 class="food-title heading-font" th:text="${menuItem.name}">Tên món ăn</h1>
-                        <div class="food-rating">
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                        <div class="category-badge" th:text="${menuItem.categoryName}">Danh mục</div>
+
+                        <div th:if="${hasDiscount}" class="discount-badge">
+                            <i class="fas fa-tag me-1"></i>Giảm giá
+                        </div>
+
+                        <div class="gallery-thumbnails" th:if="${thumbnails != null and thumbnails.size() > 1}">
+                            <div class="thumbnail"
+                                 th:each="image, stat : ${thumbnails}"
+                                 th:classappend="${stat.index == 0} ? 'active' : ''"
+                                 th:data-url="${image.imageUrl}"
+                                 onclick="changeImage(this.dataset.url, this)">
+                                <img th:src="${image.imageUrl}" th:alt="${image.imageTitle}">
                             </div>
-                            <span class="fw-semibold">4.8/5</span>
-                            <span class="text-muted">(124 đánh giá)</span>
-                        </div>
-                        <p class="lead text-muted" th:text="${menuItem.description}">Mô tả món ăn</p>
-
-                        <div th:if="${menuItem.allergens != null and !menuItem.allergens.isEmpty()}" class="mt-3">
-                            <span class="fw-semibold me-2">Cảnh báo dị ứng:</span>
-                            <th:block th:each="allergen : ${#strings.listSplit(menuItem.allergens, ',')}">
-                                <span class="allergen-badge" th:text="${#strings.trim(allergen)}">Allergen</span>
-                            </th:block>
                         </div>
                     </div>
-                    <div class="col-md-4 price-display">
-                        <div>
-                            <span th:if="${hasDiscount}"
-                                  class="original-price"
-                                  th:text="${formattedOriginalPrice}">Giá gốc</span>
-                            <div class="current-price" th:text="${formattedDiscountedPrice}">Giá hiện tại</div>
-                        </div>
-                        <div class="price-note">/ phần (chưa bao gồm VAT)</div>
-                    </div>
                 </div>
-            </div>
 
-            <!-- Info Grid -->
-            <div class="info-grid fade-in">
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-fire"></i>
-                    </div>
-                    <h6>Calories</h6>
-                    <p class="mb-0 text-muted" th:text="${menuItem.calories != null ? menuItem.calories + ' kcal' : 'Không có thông tin'}">580 kcal</p>
-                </div>
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <h6>Đầu bếp</h6>
-                    <p class="mb-0 text-muted">Master Chef</p>
-                </div>
-            </div>
-
-            <!-- Tabs Content -->
-            <div class="fade-in">
-                <ul class="nav nav-tabs" id="foodTabs">
-                    <li class="nav-item">
-                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#ingredients">
-                            <i class="fas fa-leaf me-2"></i>Nguyên liệu
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#nutrition">
-                            <i class="fas fa-heart me-2"></i>Dinh dưỡng
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews">
-                            <i class="fas fa-star me-2"></i>Đánh giá
-                        </button>
-                    </li>
-                </ul>
-
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="ingredients">
-                        <div class="details-section">
-                            <div class="detail-item" th:if="${menuItem.ingredients != null and !menuItem.ingredients.isEmpty()}">
-                                <i class="fas fa-seedling detail-icon"></i>
-                                <div class="detail-content">
-                                    <h6>Nguyên liệu chính</h6>
-                                    <p th:text="${menuItem.ingredients}">Danh sách nguyên liệu</p>
+                <!-- Food Header -->
+                <div class="food-header fade-in">
+                    <div class="row align-items-end">
+                        <div class="col-md-8">
+                            <h1 class="food-title heading-font" th:text="${menuItem.name}">Tên món ăn</h1>
+                            <div class="food-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
                                 </div>
+                                <span class="fw-semibold">4.8/5</span>
+                                <span class="text-muted">(124 đánh giá)</span>
                             </div>
-                            <div class="detail-item" th:unless="${menuItem.ingredients != null and !menuItem.ingredients.isEmpty()}">
-                                <i class="fas fa-info-circle detail-icon"></i>
-                                <div class="detail-content">
-                                    <h6>Thông tin nguyên liệu</h6>
-                                    <p>Thông tin chi tiết về nguyên liệu sẽ được cập nhật sớm.</p>
-                                </div>
+                            <p class="lead text-muted" th:text="${menuItem.description}">Mô tả món ăn</p>
+
+                            <div th:if="${menuItem.allergens != null and !menuItem.allergens.isEmpty()}" class="mt-3">
+                                <span class="fw-semibold me-2">Cảnh báo dị ứng:</span>
+                                <th:block th:each="allergen : ${#strings.listSplit(menuItem.allergens, ',')}">
+                                    <span class="allergen-badge" th:text="${#strings.trim(allergen)}">Allergen</span>
+                                </th:block>
                             </div>
                         </div>
+                        <div class="col-md-4 price-display">
+                            <div>
+                                <span th:if="${hasDiscount}"
+                                      class="original-price"
+                                      th:text="${formattedOriginalPrice}">Giá gốc</span>
+                                <div class="current-price" th:text="${formattedDiscountedPrice}">Giá hiện tại</div>
+                            </div>
+                            <div class="price-note">/ phần (chưa bao gồm VAT)</div>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="tab-pane fade" id="nutrition">
-                        <div class="details-section">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-chart-pie me-2 text-primary"></i>Thông tin dinh dưỡng</h6>
-                                    <div class="nutrition-info">
-                                        <div class="nutrition-item">
-                                            <div class="nutrition-value" th:text="${menuItem.calories != null ? menuItem.calories : '0'}">0</div>
-                                            <div class="nutrition-label">Calories</div>
-                                        </div>
-                                        <div class="nutrition-item">
-                                            <div class="nutrition-value">45g</div>
-                                            <div class="nutrition-label">Protein</div>
-                                        </div>
-                                        <div class="nutrition-item">
-                                            <div class="nutrition-value">28g</div>
-                                            <div class="nutrition-label">Chất béo</div>
-                                        </div>
-                                        <div class="nutrition-item">
-                                            <div class="nutrition-value">15g</div>
-                                            <div class="nutrition-label">Carbs</div>
-                                        </div>
+                <!-- Info Grid -->
+                <div class="info-grid fade-in">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h6>Calories</h6>
+                        <p class="mb-0 text-muted" th:text="${menuItem.calories != null ? menuItem.calories + ' kcal' : 'Không có thông tin'}">580 kcal</p>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h6>Đầu bếp</h6>
+                        <p class="mb-0 text-muted">Master Chef</p>
+                    </div>
+                </div>
+
+                <!-- Tabs Content -->
+                <div class="fade-in">
+                    <ul class="nav nav-tabs" id="foodTabs">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#ingredients">
+                                <i class="fas fa-leaf me-2"></i>Nguyên liệu
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#nutrition">
+                                <i class="fas fa-heart me-2"></i>Dinh dưỡng
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews">
+                                <i class="fas fa-star me-2"></i>Đánh giá
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="ingredients">
+                            <div class="details-section">
+                                <div class="detail-item" th:if="${menuItem.ingredients != null and !menuItem.ingredients.isEmpty()}">
+                                    <i class="fas fa-seedling detail-icon"></i>
+                                    <div class="detail-content">
+                                        <h6>Nguyên liệu chính</h6>
+                                        <p th:text="${menuItem.ingredients}">Danh sách nguyên liệu</p>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <h6 class="mt-4 mt-md-0"><i class="fas fa-heartbeat me-2 text-danger"></i>Lợi ích sức khỏe</h6>
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Giàu protein chất lượng cao</li>
-                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Cung cấp năng lượng</li>
-                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Chế biến từ nguyên liệu tươi</li>
-                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Đảm bảo vệ sinh an toàn thực phẩm</li>
-                                    </ul>
-
-                                    <h6 class="mt-4"><i class="fas fa-utensils me-2 text-warning"></i>Gợi ý kết hợp</h6>
-                                    <p class="text-muted">Phù hợp với nước uống thanh mát hoặc đồ uống có ga. Có thể kết hợp với các món khai vị hoặc salad.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="reviews">
-                        <div class="review-card">
-                            <div class="reviewer-info">
-                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b605?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="reviewer-avatar">
-                                <div>
-                                    <div class="reviewer-name">Trần Minh Thu</div>
-                                    <div class="review-date">20 tháng 8, 2024</div>
-                                </div>
-                            </div>
-                            <div class="review-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <p>"Món ăn rất ngon! Chất lượng tuyệt vời, cách trình bày đẹp mắt. Dịch vụ chu đáo, nhân viên thân thiện."</p>
-                        </div>
-
-                        <div class="review-card">
-                            <div class="reviewer-info">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="reviewer-avatar">
-                                <div>
-                                    <div class="reviewer-name">Nguyễn Hoàng Nam</div>
-                                    <div class="review-date">15 tháng 8, 2024</div>
-                                </div>
-                            </div>
-                            <div class="review-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <p>"Lần đầu ăn món này và cảm thấy rất hài lòng! Hương vị đậm đà, không quá nhiều gia vị. Sẽ order lại!"</p>
-                        </div>
-
-                        <div class="review-card">
-                            <div class="reviewer-info">
-                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="reviewer-avatar">
-                                <div>
-                                    <div class="reviewer-name">Phạm Thị Lan</div>
-                                    <div class="review-date">10 tháng 8, 2024</div>
-                                </div>
-                            </div>
-                            <div class="review-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                            </div>
-                            <p>"Món ăn ngon, tuy nhiên thời gian chờ hơi lâu. Giá cả hợp lý cho chất lượng. Nhân viên thân thiện."</p>
-                        </div>
-
-                        <button class="btn btn-outline-primary">Xem thêm đánh giá</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Order Widget -->
-        <div class="col-lg-4">
-            <div class="order-widget fade-in">
-                <h5><i class="fas fa-shopping-cart me-2"></i>Đặt món ngay</h5>
-
-                <form class="order-form" th:action="@{/cart/add}" method="post">
-                    <input type="hidden" name="menuItemId" th:value="${menuItem.id}">
-
-                    <div class="quantity-selector">
-                        <button type="button" class="quantity-btn" onclick="decreaseQuantity()">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <span class="quantity-display" id="quantity">1</span>
-                        <button type="button" class="quantity-btn" onclick="increaseQuantity()">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    <input type="hidden" name="quantity" id="quantityInput" value="1">
-
-                    <div class="special-requests">
-                        <label class="form-label fw-semibold">Yêu cầu đặc biệt</label>
-                        <textarea class="form-control" name="notes" rows="3"
-                                  placeholder="VD: Không cay, ít dầu mỡ, thêm rau..."></textarea>
-                    </div>
-
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="takeaway" name="isTakeaway" value="true">
-                        <label class="form-check-label" for="takeaway">
-                            <i class="fas fa-box me-2"></i>Đóng gói mang về
-                        </label>
-                    </div>
-
-                    <div class="order-total">
-                        <div class="total-row">
-                            <span>Giá x <span id="totalQuantity">1</span></span>
-                            <span id="subtotal"></span>
-                        </div>
-                        <div class="total-row">
-                            <span>Phí phục vụ (10%)</span>
-                            <span id="serviceCharge"></span>
-                        </div>
-                        <div class="total-row">
-                            <span>VAT (8%)</span>
-                            <span id="vat"></span>
-                        </div>
-                        <div class="total-row final">
-                            <span>Tổng cộng</span>
-                            <span id="finalTotal"></span>
-                        </div>
-                    </div>
-
-                    <button type="submit"
-                            class="btn btn-luxury w-100 mb-3"
-                            th:disabled="${!menuItem.isAvailable}">
-                        <i class="fas fa-cart-plus me-2"></i>
-                        <span th:if="${menuItem.isAvailable}">Thêm vào giỏ</span>
-                        <span th:unless="${menuItem.isAvailable}">Hết món</span>
-                    </button>
-
-                    <a href="/cart" class="btn btn-outline-primary w-100 mb-3">
-                        <i class="fas fa-shopping-bag me-2"></i>Xem giỏ hàng
-                    </a>
-
-                    <div class="text-center">
-                        <small class="text-muted">
-                            <i class="fas fa-clock me-1"></i>
-                            <span th:text="'Thời gian chuẩn bị: ' + (${menuItem.preparationTime != null ? menuItem.preparationTime + ' phút' : 'Liên hệ'})">
-                                Thời gian chuẩn bị: 25-30 phút
-                            </span>
-                        </small>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Restaurant Info Widget -->
-            <div class="order-widget" style="background: linear-gradient(135deg, var(--primary-color), #d4b079); color: white;">
-                <h5 style="color: white;"><i class="fas fa-info-circle me-2"></i>Thông tin nhà hàng</h5>
-
-                <div class="mb-3">
-                    <div class="d-flex align-items-center mb-2">
-                        <i class="fas fa-map-marker-alt me-3" style="width: 20px;"></i>
-                        <span th:text="${branch != null ? branch.name + ' - ' + branch.address : 'Ocean Restaurant - Tầng 2'}">Ocean Restaurant - Tầng 2</span>
-                    </div>
-                    <div class="d-flex align-items-center mb-2">
-                        <i class="fas fa-clock me-3" style="width: 20px;"></i>
-                        <span>Mở cửa: 11:00 - 23:00</span>
-                    </div>
-                    <div class="d-flex align-items-center mb-2">
-                        <i class="fas fa-phone me-3" style="width: 20px;"></i>
-                        <span th:text="${branch != null ? branch.phoneNumber : '+84 297 123 4567'}">+84 297 123 4567</span>
-                    </div>
-                </div>
-
-                <div class="d-grid gap-2">
-                    <a th:href="'tel:' + (${branch != null ? branch.phoneNumber : '+84297123456'})" class="btn btn-light">
-                        <i class="fas fa-phone me-2"></i>Gọi đặt bàn
-                    </a>
-                    <a href="#menu" class="btn btn-outline-light">
-                        <i class="fas fa-book-open me-2"></i>Xem thực đơn
-                    </a>
-                </div>
-            </div>
-
-            <!-- Similar Items Recommendation -->
-            <div class="order-widget" style="background: var(--accent-color);" th:if="${similarItems != null and !similarItems.isEmpty()}">
-                <h5><i class="fas fa-utensils me-2 text-primary"></i>Món tương tự</h5>
-                <div class="row g-2">
-                    <div class="col-12" th:each="item : ${similarItems}">
-                        <div class="card border-0 shadow-sm">
-                            <div class="row g-0">
-                                <div class="col-4">
-                                    <img th:src="${item.imageUrl != null ? item.imageUrl : '/images/default-food.jpg'}"
-                                         class="img-fluid rounded-start"
-                                         style="height: 60px; object-fit: cover;"
-                                         th:alt="${item.name}">
-                                </div>
-                                <div class="col-8">
-                                    <div class="card-body p-2">
-                                        <h6 class="card-title small mb-1" th:text="${item.name}">Tên món</h6>
-                                        <p class="card-text small text-muted mb-1" th:text="${item.formattedPrice}">Giá</p>
-                                        <a th:href="@{'/menu-items/' + ${item.id}}" class="btn btn-outline-primary btn-sm small">Xem chi tiết</a>
+                                <div class="detail-item" th:unless="${menuItem.ingredients != null and !menuItem.ingredients.isEmpty()}">
+                                    <i class="fas fa-info-circle detail-icon"></i>
+                                    <div class="detail-content">
+                                        <h6>Thông tin nguyên liệu</h6>
+                                        <p>Thông tin chi tiết về nguyên liệu sẽ được cập nhật sớm.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="tab-pane fade" id="nutrition">
+                            <div class="details-section">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6><i class="fas fa-chart-pie me-2 text-primary"></i>Thông tin dinh dưỡng</h6>
+                                        <div class="nutrition-info">
+                                            <div class="nutrition-item">
+                                                <div class="nutrition-value" th:text="${menuItem.calories != null ? menuItem.calories : '0'}">0</div>
+                                                <div class="nutrition-label">Calories</div>
+                                            </div>
+                                            <div class="nutrition-item">
+                                                <div class="nutrition-value">45g</div>
+                                                <div class="nutrition-label">Protein</div>
+                                            </div>
+                                            <div class="nutrition-item">
+                                                <div class="nutrition-value">28g</div>
+                                                <div class="nutrition-label">Chất béo</div>
+                                            </div>
+                                            <div class="nutrition-item">
+                                                <div class="nutrition-value">15g</div>
+                                                <div class="nutrition-label">Carbs</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="mt-4 mt-md-0"><i class="fas fa-heartbeat me-2 text-danger"></i>Lợi ích sức khỏe</h6>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Giàu protein chất lượng cao</li>
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Cung cấp năng lượng</li>
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Chế biến từ nguyên liệu tươi</li>
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Đảm bảo vệ sinh an toàn thực phẩm</li>
+                                        </ul>
+
+                                        <h6 class="mt-4"><i class="fas fa-utensils me-2 text-warning"></i>Gợi ý kết hợp</h6>
+                                        <p class="text-muted">Phù hợp với nước uống thanh mát hoặc đồ uống có ga. Có thể kết hợp với các món khai vị hoặc salad.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="reviews">
+                            <div class="review-card">
+                                <div class="reviewer-info">
+                                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b605?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="reviewer-avatar">
+                                    <div>
+                                        <div class="reviewer-name">Trần Minh Thu</div>
+                                        <div class="review-date">20 tháng 8, 2024</div>
+                                    </div>
+                                </div>
+                                <div class="review-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p>"Món ăn rất ngon! Chất lượng tuyệt vời, cách trình bày đẹp mắt. Dịch vụ chu đáo, nhân viên thân thiện."</p>
+                            </div>
+
+                            <div class="review-card">
+                                <div class="reviewer-info">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="reviewer-avatar">
+                                    <div>
+                                        <div class="reviewer-name">Nguyễn Hoàng Nam</div>
+                                        <div class="review-date">15 tháng 8, 2024</div>
+                                    </div>
+                                </div>
+                                <div class="review-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p>"Lần đầu ăn món này và cảm thấy rất hài lòng! Hương vị đậm đà, không quá nhiều gia vị. Sẽ order lại!"</p>
+                            </div>
+
+                            <div class="review-card">
+                                <div class="reviewer-info">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="reviewer-avatar">
+                                    <div>
+                                        <div class="reviewer-name">Phạm Thị Lan</div>
+                                        <div class="review-date">10 tháng 8, 2024</div>
+                                    </div>
+                                </div>
+                                <div class="review-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <p>"Món ăn ngon, tuy nhiên thời gian chờ hơi lâu. Giá cả hợp lý cho chất lượng. Nhân viên thân thiện."</p>
+                            </div>
+
+                            <button class="btn btn-outline-primary">Xem thêm đánh giá</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
+            <!-- Order Widget -->
+            <div class="col-lg-4">
+                <div class="order-widget fade-in">
+                    <h5><i class="fas fa-shopping-cart me-2"></i>Đặt món ngay</h5>
 
+                    <form class="order-form" th:action="@{/cart/add}" method="post">
+                        <input type="hidden" name="menuItemId" th:value="${menuItem.id}">
 
-    <!-- Promotions Section -->
-    <section class="mt-5" th:if="${promotions != null and !promotions.isEmpty()}">
-        <h3 class="heading-font mb-4">Khuyến mãi đang áp dụng</h3>
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-4" th:each="promotion : ${promotions}">
-                <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid var(--primary-color) !important;">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h6 class="card-title text-primary" th:text="${promotion.name}">Tên khuyến mãi</h6>
-                            <span class="badge bg-success" th:if="${promotion.active}">Đang áp dụng</span>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn" onclick="decreaseQuantity()">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="quantity-display" id="quantity">1</span>
+                            <button type="button" class="quantity-btn" onclick="increaseQuantity()">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
-                        <p class="card-text text-muted small" th:text="${promotion.description}">Mô tả khuyến mãi</p>
-                        <div class="small">
-                            <div><strong>Giảm:</strong>
-                                <span th:if="${promotion.type.name() == 'PERCENTAGE'}"
-                                      th:text="${promotion.discountValue} + '%'"></span>
-                                <span th:if="${promotion.type.name() == 'FIXED_AMOUNT'}"
-                                      th:text="${#numbers.formatDecimal(promotion.discountValue, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                        <input type="hidden" name="quantity" id="quantityInput" value="1">
+
+                        <div class="special-requests">
+                            <label class="form-label fw-semibold">Yêu cầu đặc biệt</label>
+                            <textarea class="form-control" name="notes" rows="3"
+                                      placeholder="VD: Không cay, ít dầu mỡ, thêm rau..."></textarea>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="takeaway" name="isTakeaway" value="true">
+                            <label class="form-check-label" for="takeaway">
+                                <i class="fas fa-box me-2"></i>Đóng gói mang về
+                            </label>
+                        </div>
+
+                        <div class="order-total">
+                            <div class="total-row">
+                                <span>Giá x <span id="totalQuantity">1</span></span>
+                                <span id="subtotal"></span>
                             </div>
-                            <div><strong>Áp dụng đến:</strong>
-                                <span th:text="${#temporals.format(promotion.endDate, 'dd/MM/yyyy HH:mm')}"></span>
+                            <div class="total-row">
+                                <span>Phí phục vụ (10%)</span>
+                                <span id="serviceCharge"></span>
+                            </div>
+                            <div class="total-row">
+                                <span>VAT (8%)</span>
+                                <span id="vat"></span>
+                            </div>
+                            <div class="total-row final">
+                                <span>Tổng cộng</span>
+                                <span id="finalTotal"></span>
                             </div>
                         </div>
-                    </div>
+
+                        <button type="submit"
+                                class="btn btn-luxury w-100 mb-3"
+                                th:disabled="${!menuItem.isAvailable}">
+                            <i class="fas fa-cart-plus me-2"></i>
+                            <span th:if="${menuItem.isAvailable}">Thêm vào giỏ</span>
+                            <span th:unless="${menuItem.isAvailable}">Hết món</span>
+                        </button>
+
+                        <a href="/cart" class="btn btn-outline-primary w-100 mb-3">
+                            <i class="fas fa-shopping-bag me-2"></i>Xem giỏ hàng
+                        </a>
+
+                        <div class="text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                <span th:text="'Thời gian chuẩn bị: ' + (${menuItem.preparationTime != null ? menuItem.preparationTime + ' phút' : 'Liên hệ'})">
+                                    Thời gian chuẩn bị: 25-30 phút
+                                </span>
+                            </small>
+                        </div>
+                    </form>
                 </div>
-            </div>
-        </div>
-    </section>
-</div>
 
-<!-- Review Modal -->
-<div class="modal fade" id="reviewModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-star text-warning me-2"></i>
-                    <span id="modalTitle">Viết đánh giá</span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="reviewForm">
-                    <input type="hidden" id="reviewId" name="reviewId">
-
-                    <div class="mb-4">
-                        <label class="form-label text-center w-100 fw-bold">Đánh giá của bạn</label>
-                        <div class="star-rating text-center" id="starRating" style="font-size: 2rem; cursor: pointer;">
-                            <i class="far fa-star text-warning" data-rating="1"></i>
-                            <i class="far fa-star text-warning" data-rating="2"></i>
-                            <i class="far fa-star text-warning" data-rating="3"></i>
-                            <i class="far fa-star text-warning" data-rating="4"></i>
-                            <i class="far fa-star text-warning" data-rating="5"></i>
-                        </div>
-                        <input type="hidden" id="rating" name="rating" required>
-                        <div class="invalid-feedback text-center">Vui lòng chọn số sao đánh giá</div>
-                    </div>
+                <!-- Restaurant Info Widget -->
+                <div class="order-widget" style="background: linear-gradient(135deg, var(--primary-color), #d4b079); color: white;">
+                    <h5 style="color: white;"><i class="fas fa-info-circle me-2"></i>Thông tin nhà hàng</h5>
 
                     <div class="mb-3">
-                        <label for="comment" class="form-label fw-bold">Chia sẻ trải nghiệm của bạn</label>
-                        <textarea class="form-control"
-                                  id="comment"
-                                  name="comment"
-                                  rows="5"
-                                  placeholder="Hãy chia sẻ chi tiết về trải nghiệm của bạn tại đây..."
-                                  required
-                                  minlength="10"
-                                  maxlength="1000"></textarea>
-                        <small class="text-muted">Tối thiểu 10 ký tự, tối đa 1000 ký tự</small>
-                        <div class="invalid-feedback">Vui lòng nhập ít nhất 10 ký tự</div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-map-marker-alt me-3" style="width: 20px;"></i>
+                            <span th:text="${branch != null ? branch.name + ' - ' + branch.address : 'Ocean Restaurant - Tầng 2'}">Ocean Restaurant - Tầng 2</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-clock me-3" style="width: 20px;"></i>
+                            <span>Mở cửa: 11:00 - 23:00</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-phone me-3" style="width: 20px;"></i>
+                            <span th:text="${branch != null ? branch.phoneNumber : '+84 297 123 4567'}">+84 297 123 4567</span>
+                        </div>
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-warning btn-lg">
-                            <i class="fas fa-paper-plane me-2"></i>Gửi đánh giá
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            Hủy
-                        </button>
+                        <a th:href="'tel:' + (${branch != null ? branch.phoneNumber : '+84297123456'})" class="btn btn-light">
+                            <i class="fas fa-phone me-2"></i>Gọi đặt bàn
+                        </a>
+                        <a href="#menu" class="btn btn-outline-light">
+                            <i class="fas fa-book-open me-2"></i>Xem thực đơn
+                        </a>
                     </div>
-                </form>
+                </div>
+
+                <!-- Similar Items Recommendation -->
+                <div class="order-widget" style="background: var(--accent-color);" th:if="${similarItems != null and !similarItems.isEmpty()}">
+                    <h5><i class="fas fa-utensils me-2 text-primary"></i>Món tương tự</h5>
+                    <div class="row g-2">
+                        <div class="col-12" th:each="item : ${similarItems}">
+                            <div class="card border-0 shadow-sm">
+                                <div class="row g-0">
+                                    <div class="col-4">
+                                        <img th:src="${item.imageUrl != null ? item.imageUrl : '/images/default-food.jpg'}"
+                                             class="img-fluid rounded-start"
+                                             style="height: 60px; object-fit: cover;"
+                                             th:alt="${item.name}">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body p-2">
+                                            <h6 class="card-title small mb-1" th:text="${item.name}">Tên món</h6>
+                                            <p class="card-text small text-muted mb-1" th:text="${item.formattedPrice}">Giá</p>
+                                            <a th:href="@{'/menu-items/' + ${item.id}}" class="btn btn-outline-primary btn-sm small">Xem chi tiết</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Promotions Section -->
+        <section class="mt-5" th:if="${promotions != null and !promotions.isEmpty()}">
+            <h3 class="heading-font mb-4">Khuyến mãi đang áp dụng</h3>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" th:each="promotion : ${promotions}">
+                    <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid var(--primary-color) !important;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="card-title text-primary" th:text="${promotion.name}">Tên khuyến mãi</h6>
+                                <span class="badge bg-success" th:if="${promotion.active}">Đang áp dụng</span>
+                            </div>
+                            <p class="card-text text-muted small" th:text="${promotion.description}">Mô tả khuyến mãi</p>
+                            <div class="small">
+                                <div><strong>Giảm:</strong>
+                                    <span th:if="${promotion.type.name() == 'PERCENTAGE'}"
+                                          th:text="${promotion.discountValue} + '%'"></span>
+                                    <span th:if="${promotion.type.name() == 'FIXED_AMOUNT'}"
+                                          th:text="${#numbers.formatDecimal(promotion.discountValue, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                                </div>
+                                <div><strong>Áp dụng đến:</strong>
+                                    <span th:text="${#temporals.format(promotion.endDate, 'dd/MM/yyyy HH:mm')}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal fade" id="reviewModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-star text-warning me-2"></i>
+                        <span id="modalTitle">Viết đánh giá</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="reviewForm">
+                        <input type="hidden" id="reviewId" name="reviewId">
+
+                        <div class="mb-4">
+                            <label class="form-label text-center w-100 fw-bold">Đánh giá của bạn</label>
+                            <div class="star-rating text-center" id="starRating" style="font-size: 2rem; cursor: pointer;">
+                                <i class="far fa-star text-warning" data-rating="1"></i>
+                                <i class="far fa-star text-warning" data-rating="2"></i>
+                                <i class="far fa-star text-warning" data-rating="3"></i>
+                                <i class="far fa-star text-warning" data-rating="4"></i>
+                                <i class="far fa-star text-warning" data-rating="5"></i>
+                            </div>
+                            <input type="hidden" id="rating" name="rating" required>
+                            <div class="invalid-feedback text-center">Vui lòng chọn số sao đánh giá</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="comment" class="form-label fw-bold">Chia sẻ trải nghiệm của bạn</label>
+                            <textarea class="form-control"
+                                      id="comment"
+                                      name="comment"
+                                      rows="5"
+                                      placeholder="Hãy chia sẻ chi tiết về trải nghiệm của bạn tại đây..."
+                                      required
+                                      minlength="10"
+                                      maxlength="1000"></textarea>
+                            <small class="text-muted">Tối thiểu 10 ký tự, tối đa 1000 ký tự</small>
+                            <div class="invalid-feedback">Vui lòng nhập ít nhất 10 ký tự</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Gửi đánh giá
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Hủy
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Footer -->
-<footer class="bg-dark text-white py-5 mt-5">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <h3 class="heading-font mb-4">
-                    <i class="fas fa-crown me-2" style="color: var(--primary-color);"></i>
-                    Luxury Resort
-                </h3>
-                <p class="text-light mb-4">Trải nghiệm ẩm thực đẳng cấp quốc tế với các món ăn được chế biến từ nguyên liệu tươi ngon nhất.</p>
-                <div class="d-flex gap-3">
-                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <h5 style="color: var(--primary-color);">Nhà hàng</h5>
-                <div class="footer-links">
-                    <div><a href="#" class="text-light text-decoration-none">Thực đơn</a></div>
-                    <div><a href="#" class="text-light text-decoration-none">Đặt bàn</a></div>
-                    <div><a href="#" class="text-light text-decoration-none">Ẩm thực</a></div>
-                    <div><a href="#" class="text-light text-decoration-none">Đầu bếp</a></div>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <h5 style="color: var(--primary-color);">Dịch vụ</h5>
-                <div class="footer-links">
-                    <div><a href="#" class="text-light text-decoration-none">Giao hàng</a></div>
-                    <div><a href="#" class="text-light text-decoration-none">Tiệc riêng</a></div>
-                    <div><a href="#" class="text-light text-decoration-none">Hội nghị</a></div>
-                    <div><a href="#" class="text-light text-decoration-none">Catering</a></div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <h5 style="color: var(--primary-color);">Liên hệ</h5>
-                <div class="contact-info">
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-map-marker-alt me-3" style="color: var(--primary-color); width: 20px;"></i>
-                        <span>Ocean Restaurant - Tầng 2, Luxury Resort</span>
-                    </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-phone me-3" style="color: var(--primary-color); width: 20px;"></i>
-                        <span>+84 297 123 4567</span>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-envelope me-3" style="color: var(--primary-color); width: 20px;"></i>
-                        <span>restaurant@luxuryresort.vn</span>
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h3 class="heading-font mb-4">
+                        <i class="fas fa-crown me-2" style="color: var(--primary-color);"></i>
+                        Luxury Resort
+                    </h3>
+                    <p class="text-light mb-4">Trải nghiệm ẩm thực đẳng cấp quốc tế với các món ăn được chế biến từ nguyên liệu tươi ngon nhất.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                            <i class="fab fa-youtube"></i>
+                        </a>
                     </div>
                 </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 style="color: var(--primary-color);">Nhà hàng</h5>
+                    <div class="footer-links">
+                        <div><a href="#" class="text-light text-decoration-none">Thực đơn</a></div>
+                        <div><a href="#" class="text-light text-decoration-none">Đặt bàn</a></div>
+                        <div><a href="#" class="text-light text-decoration-none">Ẩm thực</a></div>
+                        <div><a href="#" class="text-light text-decoration-none">Đầu bếp</a></div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 style="color: var(--primary-color);">Dịch vụ</h5>
+                    <div class="footer-links">
+                        <div><a href="#" class="text-light text-decoration-none">Giao hàng</a></div>
+                        <div><a href="#" class="text-light text-decoration-none">Tiệc riêng</a></div>
+                        <div><a href="#" class="text-light text-decoration-none">Hội nghị</a></div>
+                        <div><a href="#" class="text-light text-decoration-none">Catering</a></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h5 style="color: var(--primary-color);">Liên hệ</h5>
+                    <div class="contact-info">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-map-marker-alt me-3" style="color: var(--primary-color); width: 20px;"></i>
+                            <span>Ocean Restaurant - Tầng 2, Luxury Resort</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-phone me-3" style="color: var(--primary-color); width: 20px;"></i>
+                            <span>+84 297 123 4567</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-envelope me-3" style="color: var(--primary-color); width: 20px;"></i>
+                            <span>restaurant@luxuryresort.vn</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: #555;">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2024 Luxury Resort Restaurant. All rights reserved.</p>
             </div>
         </div>
-        <hr class="my-4" style="border-color: #555;">
-        <div class="text-center">
-            <p class="mb-0">&copy; 2024 Luxury Resort Restaurant. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
-
+    </footer>
+</section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script th:inline="javascript">
@@ -2634,3 +2679,4 @@
 </script>
 </body>
 </html>
+

@@ -23,7 +23,7 @@ public class VnPayService {
     @Value("${vnpay.tmnCode:OS32CZUC}")
     private String vnp_TmnCode;
 
-    @Value("${vnpay.hashSecret:PDPW28OZCOHDW10WKQNJ7BBVQT63Z8CM}")
+    @Value("${vnpay.hashSecret:79BQEPJLW53P5DSHBRGWWE71CH626PEM}")
     private String vnp_HashSecret;
 
     @Value("${vnpay.payUrl:https://sandbox.vnpayment.vn/paymentv2/vpcpay.html}")

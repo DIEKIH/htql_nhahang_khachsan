@@ -1,503 +1,305 @@
+
+
 <!--<!DOCTYPE html>-->
 <!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
 <!--<head>-->
 <!--    <meta charset="UTF-8">-->
 <!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
 <!--    <title th:text="${userId != null ? 'Chỉnh sửa Nhân viên' : 'Thêm Nhân viên'}">Thêm Nhân viên</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
 <!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" th:href="@{/css/admin_sidebar.css}">-->
 <!--    <style>-->
-<!--        * {-->
-<!--            margin: 0;-->
-<!--            padding: 0;-->
-<!--            box-sizing: border-box;-->
-<!--        }-->
-
 <!--        body {-->
+<!--            background-color: #f8f9fa;-->
 <!--            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;-->
-<!--            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
-<!--            min-height: 100vh;-->
 <!--        }-->
 
 <!--        .navbar {-->
-<!--            background: rgba(255, 255, 255, 0.95);-->
-<!--            backdrop-filter: blur(10px);-->
-<!--            padding: 1rem 2rem;-->
-<!--            box-shadow: 0 2px 20px rgba(0,0,0,0.1);-->
-<!--            position: sticky;-->
-<!--            top: 0;-->
-<!--            z-index: 100;-->
+<!--            background-color: #fff;-->
+<!--            box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
+<!--            padding: 1rem 0;-->
 <!--        }-->
 
-<!--        .navbar-content {-->
-<!--            display: flex;-->
-<!--            justify-content: space-between;-->
-<!--            align-items: center;-->
+<!--        .container {-->
 <!--            max-width: 1200px;-->
 <!--            margin: 0 auto;-->
 <!--        }-->
 
-<!--        .logo {-->
-<!--            font-size: 1.5rem;-->
-<!--            font-weight: bold;-->
-<!--            color: #667eea;-->
-<!--        }-->
-
-<!--        .nav-links {-->
-<!--            display: flex;-->
-<!--            gap: 2rem;-->
-<!--            align-items: center;-->
-<!--        }-->
-
-<!--        .nav-links a {-->
-<!--            text-decoration: none;-->
-<!--            color: #333;-->
-<!--            font-weight: 500;-->
-<!--            padding: 0.5rem 1rem;-->
-<!--            border-radius: 8px;-->
-<!--            transition: all 0.3s ease;-->
-<!--        }-->
-
-<!--        .nav-links a:hover, .nav-links a.active {-->
-<!--            background: #667eea;-->
-<!--            color: white;-->
-<!--        }-->
-
-<!--        .logout-btn {-->
-<!--            background: #ff4757;-->
-<!--            color: white;-->
-<!--            border: none;-->
-<!--            padding: 0.5rem 1rem;-->
-<!--            border-radius: 8px;-->
-<!--            cursor: pointer;-->
-<!--            font-weight: 500;-->
-<!--            transition: all 0.3s ease;-->
-<!--        }-->
-
-<!--        .logout-btn:hover {-->
-<!--            background: #ff3838;-->
-<!--        }-->
-
-<!--        .container {-->
-<!--            max-width: 900px;-->
-<!--            margin: 2rem auto;-->
-<!--            padding: 0 2rem;-->
-<!--        }-->
-
 <!--        .page-header {-->
-<!--            background: rgba(255, 255, 255, 0.95);-->
-<!--            backdrop-filter: blur(10px);-->
-<!--            padding: 2rem;-->
-<!--            border-radius: 16px;-->
-<!--            margin-bottom: 2rem;-->
-<!--            box-shadow: 0 8px 32px rgba(0,0,0,0.1);-->
-<!--            text-align: center;-->
+<!--            background-color: #fff;-->
+<!--            border-radius: 8px;-->
+<!--            padding: 1.5rem;-->
+<!--            margin-bottom: 1.5rem;-->
+<!--            box-shadow: 0 2px 4px rgba(0,0,0,0.05);-->
 <!--        }-->
 
-<!--        .page-title {-->
-<!--            color: #333;-->
-<!--            font-size: 2rem;-->
-<!--            font-weight: bold;-->
-<!--            margin-bottom: 0.5rem;-->
-<!--        }-->
-
-<!--        .back-link {-->
-<!--            color: #667eea;-->
-<!--            text-decoration: none;-->
-<!--            font-weight: 500;-->
-<!--            display: inline-flex;-->
-<!--            align-items: center;-->
-<!--            gap: 0.5rem;-->
-<!--            transition: all 0.3s ease;-->
-<!--        }-->
-
-<!--        .back-link:hover {-->
-<!--            color: #5a6fd8;-->
-<!--        }-->
-
-<!--        .form-container {-->
-<!--            background: rgba(255, 255, 255, 0.95);-->
-<!--            backdrop-filter: blur(10px);-->
-<!--            padding: 2rem;-->
-<!--            border-radius: 16px;-->
-<!--            box-shadow: 0 8px 32px rgba(0,0,0,0.1);-->
-<!--        }-->
-
-<!--        .form-section {-->
-<!--            margin-bottom: 2rem;-->
-<!--        }-->
+<!--        /*.form-container {*/-->
+<!--        /*    background-color: #fff;*/-->
+<!--        /*    border-radius: 8px;*/-->
+<!--        /*    padding: 2rem;*/-->
+<!--        /*    box-shadow: 0 2px 4px rgba(0,0,0,0.05);*/-->
+<!--        /*    margin-bottom: 2rem;*/-->
+<!--        /*}*/-->
 
 <!--        .section-title {-->
 <!--            font-size: 1.25rem;-->
 <!--            font-weight: 600;-->
 <!--            color: #333;-->
-<!--            margin-bottom: 1rem;-->
-<!--            padding-bottom: 0.5rem;-->
-<!--            border-bottom: 2px solid #e0e6ed;-->
-<!--            display: flex;-->
-<!--            align-items: center;-->
-<!--            gap: 0.5rem;-->
+<!--            margin-bottom: 1.5rem;-->
+<!--            padding-bottom: 0.75rem;-->
+<!--            border-bottom: 1px solid #e9ecef;-->
 <!--        }-->
 
-<!--        .form-grid {-->
-<!--            display: grid;-->
-<!--            grid-template-columns: 1fr;-->
-<!--            gap: 1.5rem;-->
+<!--        .form-container {-->
+<!--            background-color: white;-->
+<!--            border-radius: 0.5rem;-->
+<!--            padding: 2rem;-->
+<!--            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);-->
 <!--        }-->
+<!--        /*.form-label {*/-->
+<!--        /*    font-weight: 500;*/-->
+<!--        /*    margin-bottom: 0.5rem;*/-->
+<!--        /*}*/-->
 
-<!--        .form-row {-->
-<!--            display: grid;-->
-<!--            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));-->
-<!--            gap: 1.5rem;-->
-<!--        }-->
-
-<!--        .form-group {-->
-<!--            display: flex;-->
-<!--            flex-direction: column;-->
-<!--        }-->
-
-<!--        .form-group label {-->
+<!--        .form-label {-->
+<!--            font-weight: 500;-->
 <!--            margin-bottom: 0.5rem;-->
-<!--            font-weight: 600;-->
-<!--            color: #333;-->
 <!--        }-->
 
 <!--        .required {-->
-<!--            color: #e74c3c;-->
+<!--            color: #dc3545;-->
 <!--        }-->
 
 <!--        .form-control {-->
-<!--            padding: 1rem;-->
-<!--            border: 2px solid #e0e6ed;-->
-<!--            border-radius: 10px;-->
-<!--            font-size: 1rem;-->
-<!--            transition: all 0.3s ease;-->
-<!--            background: white;-->
+<!--            border-radius: 6px;-->
+<!--            padding: 0.75rem 1rem;-->
+<!--            border: 1px solid #ced4da;-->
 <!--        }-->
 
 <!--        .form-control:focus {-->
-<!--            outline: none;-->
-<!--            border-color: #667eea;-->
-<!--            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);-->
+<!--            border-color: #86b7fe;-->
+<!--            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);-->
+<!--        }-->
+
+<!--        .error-message {-->
+<!--            color: #dc3545;-->
+<!--            font-size: 0.875rem;-->
+<!--            margin-top: 0.5rem;-->
 <!--        }-->
 
 <!--        .password-note {-->
 <!--            font-size: 0.875rem;-->
-<!--            color: #666;-->
+<!--            color: #6c757d;-->
 <!--            margin-top: 0.25rem;-->
-<!--            font-style: italic;-->
-<!--        }-->
-
-<!--        .error-message {-->
-<!--            color: #e74c3c;-->
-<!--            font-size: 0.875rem;-->
-<!--            margin-top: 0.5rem;-->
-<!--        }-->
-
-<!--        .form-actions {-->
-<!--            display: flex;-->
-<!--            gap: 1rem;-->
-<!--            justify-content: center;-->
-<!--            margin-top: 2rem;-->
-<!--            padding-top: 2rem;-->
-<!--            border-top: 1px solid #e0e6ed;-->
-<!--        }-->
-
-<!--        .btn {-->
-<!--            padding: 1rem 2rem;-->
-<!--            border: none;-->
-<!--            border-radius: 10px;-->
-<!--            cursor: pointer;-->
-<!--            font-size: 1rem;-->
-<!--            font-weight: 600;-->
-<!--            text-decoration: none;-->
-<!--            display: inline-flex;-->
-<!--            align-items: center;-->
-<!--            gap: 0.5rem;-->
-<!--            transition: all 0.3s ease;-->
-<!--            min-width: 150px;-->
-<!--            justify-content: center;-->
-<!--        }-->
-
-<!--        .btn-primary {-->
-<!--            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
-<!--            color: white;-->
-<!--        }-->
-
-<!--        .btn-primary:hover {-->
-<!--            transform: translateY(-2px);-->
-<!--            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);-->
-<!--        }-->
-
-<!--        .btn-secondary {-->
-<!--            background: #6c757d;-->
-<!--            color: white;-->
-<!--        }-->
-
-<!--        .btn-secondary:hover {-->
-<!--            background: #5a6268;-->
-<!--            transform: translateY(-2px);-->
 <!--        }-->
 
 <!--        .role-info {-->
-<!--            background: #f8f9fa;-->
-<!--            border-left: 4px solid #667eea;-->
+<!--            background-color: #f8f9fa;-->
+<!--            border-left: 4px solid #0d6efd;-->
 <!--            padding: 1rem;-->
-<!--            margin-top: 0.5rem;-->
-<!--            border-radius: 0 8px 8px 0;-->
+<!--            margin-top: 1rem;-->
+<!--            border-radius: 0 4px 4px 0;-->
 <!--        }-->
 
-<!--        .role-info h4 {-->
-<!--            color: #667eea;-->
-<!--            margin-bottom: 0.5rem;-->
-<!--            font-size: 1rem;-->
-<!--        }-->
-
-<!--        .role-info ul {-->
-<!--            margin: 0;-->
-<!--            padding-left: 1.5rem;-->
-<!--            color: #666;-->
-<!--        }-->
-
-<!--        .role-info ul li {-->
-<!--            margin-bottom: 0.25rem;-->
-<!--        }-->
-
-<!--        @media (max-width: 768px) {-->
-<!--            .navbar {-->
-<!--                padding: 1rem;-->
-<!--            }-->
-
-<!--            .navbar-content {-->
-<!--                flex-direction: column;-->
-<!--                gap: 1rem;-->
-<!--            }-->
-
-<!--            .nav-links {-->
-<!--                gap: 1rem;-->
-<!--            }-->
-
-<!--            .container {-->
-<!--                padding: 0 1rem;-->
-<!--            }-->
-
-<!--            .form-row {-->
-<!--                grid-template-columns: 1fr;-->
-<!--            }-->
-
-<!--            .form-actions {-->
-<!--                flex-direction: column;-->
-<!--            }-->
-
-<!--            .btn {-->
-<!--                width: 100%;-->
-<!--            }-->
+<!--        .btn {-->
+<!--            border-radius: 6px;-->
+<!--            padding: 0.75rem 1.5rem;-->
+<!--            font-weight: 500;-->
 <!--        }-->
 <!--    </style>-->
 <!--</head>-->
 <!--<body>-->
-<!--<nav class="navbar">-->
-<!--    <div class="navbar-content">-->
-<!--        <div class="logo">-->
-<!--            <i class="fas fa-crown"></i> Admin Panel-->
-<!--        </div>-->
-<!--        <div class="nav-links">-->
-<!--            <a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>-->
-<!--            <a href="/admin/branches"><i class="fas fa-building"></i> Chi nhánh</a>-->
-<!--            <a href="/admin/staff" class="active"><i class="fas fa-users"></i> Nhân viên</a>-->
-<!--            <form action="/admin/logout" method="post" style="display: inline;">-->
-<!--                <button type="submit" class="logout-btn">-->
-<!--                    <i class="fas fa-sign-out-alt"></i> Đăng xuất-->
-<!--                </button>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</nav>-->
 
-<!--<div class="container">-->
-<!--    <div class="page-header">-->
-<!--        <h1 class="page-title" th:text="${userId != null ? 'Chỉnh sửa Nhân viên' : 'Thêm Nhân viên mới'}">-->
-<!--            <i class="fas fa-user-plus"></i> Thêm Nhân viên mới-->
-<!--        </h1>-->
-<!--        <a href="/admin/staff" class="back-link">-->
-<!--            <i class="fas fa-arrow-left"></i> Quay lại danh sách-->
-<!--        </a>-->
-<!--    </div>-->
+<!--<div class="container-fluid">-->
+<!--    <div class="row">-->
+<!--        <div th:replace="fragments/admin_sidebar :: admin_sidebar"></div>-->
 
-<!--    <div class="form-container">-->
-<!--        <form th:action="${userId != null ? '/admin/staff/' + userId + '/edit' : '/admin/staff/add'}"-->
-<!--              method="post" th:object="${userRequest}">-->
 
-<!--            &lt;!&ndash; Thông tin đăng nhập &ndash;&gt;-->
-<!--            <div class="form-section">-->
-<!--                <h2 class="section-title">-->
-<!--                    <i class="fas fa-key"></i> Thông tin đăng nhập-->
-<!--                </h2>-->
+<!--        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">-->
 
-<!--                <div class="form-grid">-->
-<!--                    <div class="form-row">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="username">Tên đăng nhập <span class="required">*</span></label>-->
-<!--                            <input type="text" id="username" th:field="*{username}" class="form-control"-->
-<!--                                   placeholder="Nhập tên đăng nhập...">-->
-<!--                            <div th:if="${#fields.hasErrors('username')}" class="error-message">-->
-<!--                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{username}"></span>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
-<!--                        <div class="form-group">-->
-<!--                            <label for="email">Email <span class="required">*</span></label>-->
-<!--                            <input type="email" id="email" th:field="*{email}" class="form-control"-->
-<!--                                   placeholder="Nhập email...">-->
-<!--                            <div th:if="${#fields.hasErrors('email')}" class="error-message">-->
-<!--                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{email}"></span>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="form-group">-->
-<!--                        <label for="password">-->
-<!--                            <span th:text="${userId != null ? 'Mật khẩu mới (để trống nếu không đổi)' : 'Mật khẩu'}">Mật khẩu</span>-->
-<!--                            <span th:if="${userId == null}" class="required">*</span>-->
-<!--                        </label>-->
-<!--                        <input type="password" id="password" th:field="*{password}" class="form-control"-->
-<!--                               placeholder="Nhập mật khẩu...">-->
-<!--                        <div th:if="${userId != null}" class="password-note">-->
-<!--                            Để trống nếu không muốn thay đổi mật khẩu hiện tại-->
-<!--                        </div>-->
-<!--                        <div th:if="${#fields.hasErrors('password')}" class="error-message">-->
-<!--                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{password}"></span>-->
-<!--                        </div>-->
+<!--            <div class="container mt-4">-->
+<!--                <div class="page-header">-->
+<!--                    <div class="d-flex justify-content-between align-items-center">-->
+<!--                        <h1 class="h3 mb-0" th:text="${userId != null ? 'Chỉnh sửa Nhân viên' : 'Thêm Nhân viên mới'}">-->
+<!--                            <i class="fas fa-user-plus me-2"></i> Thêm Nhân viên mới-->
+<!--                        </h1>-->
+<!--                        <a href="/admin/staff" class="btn btn-outline-secondary">-->
+<!--                            <i class="fas fa-arrow-left me-2"></i> Quay lại danh sách-->
+<!--                        </a>-->
 <!--                    </div>-->
 <!--                </div>-->
-<!--            </div>-->
 
-<!--            &lt;!&ndash; Thông tin cá nhân &ndash;&gt;-->
-<!--            <div class="form-section">-->
-<!--                <h2 class="section-title">-->
-<!--                    <i class="fas fa-user"></i> Thông tin cá nhân-->
-<!--                </h2>-->
+<!--                <div class="form-container">-->
+<!--                    <form th:action="${userId != null ? '/admin/staff/' + userId + '/edit' : '/admin/staff/add'}"-->
+<!--                          method="post" th:object="${userRequest}">-->
 
-<!--                <div class="form-grid">-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="fullName">Họ và tên <span class="required">*</span></label>-->
-<!--                        <input type="text" id="fullName" th:field="*{fullName}" class="form-control"-->
-<!--                               placeholder="Nhập họ và tên...">-->
-<!--                        <div th:if="${#fields.hasErrors('fullName')}" class="error-message">-->
-<!--                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{fullName}"></span>-->
-<!--                        </div>-->
-<!--                    </div>-->
+<!--                        &lt;!&ndash; Thông tin đăng nhập &ndash;&gt;-->
+<!--                        <h5 class="section-title">-->
+<!--                            <i class="fas fa-key me-2"></i> Thông tin đăng nhập-->
+<!--                        </h5>-->
 
-<!--                    <div class="form-row">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="phoneNumber">Số điện thoại</label>-->
-<!--                            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"-->
-<!--                                   placeholder="Nhập số điện thoại...">-->
-<!--                            <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message">-->
-<!--                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{phoneNumber}"></span>-->
+<!--                        <div class="row mb-4">-->
+<!--                            <div class="col-md-6 mb-3">-->
+<!--                                <label for="username" class="form-label">Tên đăng nhập <span class="required">*</span></label>-->
+<!--                                <input type="text" id="username" th:field="*{username}" class="form-control"-->
+<!--                                       placeholder="Nhập tên đăng nhập...">-->
+<!--                                <div th:if="${#fields.hasErrors('username')}" class="error-message">-->
+<!--                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{username}"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="col-md-6 mb-3">-->
+<!--                                <label for="email" class="form-label">Email <span class="required">*</span></label>-->
+<!--                                <input type="email" id="email" th:field="*{email}" class="form-control"-->
+<!--                                       placeholder="Nhập email...">-->
+<!--                                <div th:if="${#fields.hasErrors('email')}" class="error-message">-->
+<!--                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{email}"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="col-12 mb-3">-->
+<!--                                <label for="password" class="form-label">-->
+<!--                                    <span th:text="${userId != null ? 'Mật khẩu mới (để trống nếu không đổi)' : 'Mật khẩu'}">Mật khẩu</span>-->
+<!--                                    <span th:if="${userId == null}" class="required">*</span>-->
+<!--                                </label>-->
+<!--                                <input type="password" id="password" th:field="*{password}" class="form-control"-->
+<!--                                       placeholder="Nhập mật khẩu...">-->
+<!--                                <div th:if="${userId != null}" class="password-note">-->
+<!--                                    Để trống nếu không muốn thay đổi mật khẩu hiện tại-->
+<!--                                </div>-->
+<!--                                <div th:if="${#fields.hasErrors('password')}" class="error-message">-->
+<!--                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{password}"></span>-->
+<!--                                </div>-->
 <!--                            </div>-->
 <!--                        </div>-->
 
-<!--                        <div class="form-group">-->
-<!--                            <label for="avatarUrl">Avatar URL</label>-->
-<!--                            <input type="url" id="avatarUrl" th:field="*{avatarUrl}" class="form-control"-->
-<!--                                   placeholder="Nhập URL avatar...">-->
-<!--                            <div th:if="${#fields.hasErrors('avatarUrl')}" class="error-message">-->
-<!--                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{avatarUrl}"></span>-->
+<!--                        &lt;!&ndash; Thông tin cá nhân &ndash;&gt;-->
+<!--                        <h5 class="section-title">-->
+<!--                            <i class="fas fa-user me-2"></i> Thông tin cá nhân-->
+<!--                        </h5>-->
+
+<!--                        <div class="row mb-4">-->
+<!--                            <div class="col-12 mb-3">-->
+<!--                                <label for="fullName" class="form-label">Họ và tên <span class="required">*</span></label>-->
+<!--                                <input type="text" id="fullName" th:field="*{fullName}" class="form-control"-->
+<!--                                       placeholder="Nhập họ và tên...">-->
+<!--                                <div th:if="${#fields.hasErrors('fullName')}" class="error-message">-->
+<!--                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{fullName}"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="col-md-6 mb-3">-->
+<!--                                <label for="phoneNumber" class="form-label">Số điện thoại</label>-->
+<!--                                <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"-->
+<!--                                       placeholder="Nhập số điện thoại...">-->
+<!--                                <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message">-->
+<!--                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{phoneNumber}"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="col-md-6 mb-3">-->
+<!--                                <label for="avatarUrl" class="form-label">Avatar URL</label>-->
+<!--                                <input type="url" id="avatarUrl" th:field="*{avatarUrl}" class="form-control"-->
+<!--                                       placeholder="Nhập URL avatar...">-->
+<!--                                <div th:if="${#fields.hasErrors('avatarUrl')}" class="error-message">-->
+<!--                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{avatarUrl}"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="col-12 mb-3">-->
+<!--                                <label for="address" class="form-label">Địa chỉ</label>-->
+<!--                                <input type="text" id="address" th:field="*{address}" class="form-control"-->
+<!--                                       placeholder="Nhập địa chỉ...">-->
+<!--                                <div th:if="${#fields.hasErrors('address')}" class="error-message">-->
+<!--                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{address}"></span>-->
+<!--                                </div>-->
 <!--                            </div>-->
 <!--                        </div>-->
-<!--                    </div>-->
 
-<!--                    <div class="form-group">-->
-<!--                        <label for="address">Địa chỉ</label>-->
-<!--                        <input type="text" id="address" th:field="*{address}" class="form-control"-->
-<!--                               placeholder="Nhập địa chỉ...">-->
-<!--                        <div th:if="${#fields.hasErrors('address')}" class="error-message">-->
-<!--                            <i class="fas fa-exclamation-circle"></i> <span th:errors="*{address}"></span>-->
+<!--                        &lt;!&ndash; Phân quyền và phân công &ndash;&gt;-->
+<!--                        <h5 class="section-title">-->
+<!--                            <i class="fas fa-users-cog me-2"></i> Phân quyền & Phân công-->
+<!--                        </h5>-->
+
+<!--                        <div class="row mb-4">-->
+<!--                            <div class="col-md-6 mb-3">-->
+<!--                                <label for="role" class="form-label">Vai trò <span class="required">*</span></label>-->
+<!--                                <select id="role" th:field="*{role}" class="form-control" onchange="showRoleInfo(this.value)">-->
+<!--                                    <option value="">Chọn vai trò</option>-->
+<!--                                    <option th:each="r : ${staffRoles}"-->
+<!--                                            th:value="${r}"-->
+<!--                                            th:text="${roleLabels[r.name()]}">-->
+<!--                                    </option>-->
+<!--                                </select>-->
+<!--                                <div th:if="${#fields.hasErrors('role')}" class="error-message">-->
+<!--                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{role}"></span>-->
+<!--                                </div>-->
+
+<!--                                &lt;!&ndash; Role Info &ndash;&gt;-->
+<!--                                <div id="manager-info" class="role-info" style="display: none;">-->
+<!--                                    <h6 class="mb-2"><i class="fas fa-user-tie me-1"></i> Quyền hạn Quản lý:</h6>-->
+<!--                                    <ul class="mb-0 ps-3">-->
+<!--                                        <li>Quản lý nhân viên trong chi nhánh</li>-->
+<!--                                        <li>Xem báo cáo doanh thu chi nhánh</li>-->
+<!--                                        <li>Quản lý đặt phòng/bàn</li>-->
+<!--                                        <li>Xử lý khiếu nại khách hàng</li>-->
+<!--                                    </ul>-->
+<!--                                </div>-->
+
+<!--                                <div id="staff-info" class="role-info" style="display: none;">-->
+<!--                                    <h6 class="mb-2"><i class="fas fa-user me-1"></i> Quyền hạn Nhân viên:</h6>-->
+<!--                                    <ul class="mb-0 ps-3">-->
+<!--                                        <li>Xử lý đặt phòng/bàn</li>-->
+<!--                                        <li>Cập nhật trạng thái phòng/bàn</li>-->
+<!--                                        <li>Hỗ trợ khách hàng</li>-->
+<!--                                        <li>Báo cáo cho quản lý</li>-->
+<!--                                    </ul>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="col-md-6 mb-3">-->
+<!--                                <label for="branchId" class="form-label">Chi nhánh</label>-->
+<!--                                <select id="branchId" th:field="*{branchId}" class="form-control">-->
+<!--                                    <option value="">Chưa phân công</option>-->
+<!--                                    <option th:each="branch : ${branches}"-->
+<!--                                            th:value="${branch.id}"-->
+<!--                                            th:text="${branch.name + ' (' + branch.type.displayName + ')'}">-->
+<!--                                    </option>-->
+<!--                                </select>-->
+<!--                                <div th:if="${#fields.hasErrors('branchId')}" class="error-message">-->
+<!--                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{branchId}"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
 <!--                        </div>-->
-<!--                    </div>-->
+
+<!--&lt;!&ndash;                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <a href="/admin/staff" class="btn btn-secondary">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <i class="fas fa-times me-2"></i> Hủy bỏ&ndash;&gt;-->
+<!--&lt;!&ndash;                            </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <button type="submit" class="btn btn-primary">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <i th:class="${userId != null ? 'fas fa-save' : 'fas fa-user-plus'} me-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <span th:text="${userId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+<!--                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">-->
+<!--                            <button type="submit" class="btn btn-primary">-->
+<!--                                <i th:class="${userId != null ? 'fas fa-save' : 'fas fa-user-plus'}"></i>-->
+<!--                                <span th:text="${userId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>-->
+<!--                            </button>-->
+<!--                            <a href="/admin/staff" class="btn btn-secondary">-->
+<!--                                <i class="fas fa-times"></i> Hủy bỏ-->
+<!--                            </a>-->
+<!--                        </div>-->
+<!--                    </form>-->
 <!--                </div>-->
 <!--            </div>-->
-
-<!--            &lt;!&ndash; Phân quyền và phân công &ndash;&gt;-->
-<!--            <div class="form-section">-->
-<!--                <h2 class="section-title">-->
-<!--                    <i class="fas fa-users-cog"></i> Phân quyền & Phân công-->
-<!--                </h2>-->
-
-<!--                <div class="form-grid">-->
-<!--                    <div class="form-row">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="role">Vai trò <span class="required">*</span></label>-->
-<!--                            <select id="role" th:field="*{role}" class="form-control" onchange="showRoleInfo(this.value)">-->
-<!--&lt;!&ndash;                                <option value="">Chọn vai trò</option>&ndash;&gt;-->
-<!--&lt;!&ndash;                                <option th:each="role : ${staffRoles}"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        th:value="${role}"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        th:text="${roleLabels[role.name()]}">&ndash;&gt;-->
-<!--&lt;!&ndash;                                </option>&ndash;&gt;-->
-<!--                                <option value="">Chọn vai trò</option>-->
-<!--                                <option th:each="r : ${staffRoles}"-->
-<!--                                        th:value="${r}"-->
-<!--                                        th:text="${roleLabels[r.name()]}">-->
-<!--                                </option>-->
-
-<!--                            </select>-->
-
-<!--                            <div th:if="${#fields.hasErrors('role')}" class="error-message">-->
-<!--                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{role}"></span>-->
-<!--                            </div>-->
-
-<!--                            &lt;!&ndash; Role Info &ndash;&gt;-->
-<!--                            <div id="manager-info" class="role-info" style="display: none;">-->
-<!--                                <h4><i class="fas fa-user-tie"></i> Quyền hạn Quản lý:</h4>-->
-<!--                                <ul>-->
-<!--                                    <li>Quản lý nhân viên trong chi nhánh</li>-->
-<!--                                    <li>Xem báo cáo doanh thu chi nhánh</li>-->
-<!--                                    <li>Quản lý đặt phòng/bàn</li>-->
-<!--                                    <li>Xử lý khiếu nại khách hàng</li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-
-<!--                            <div id="staff-info" class="role-info" style="display: none;">-->
-<!--                                <h4><i class="fas fa-user"></i> Quyền hạn Nhân viên:</h4>-->
-<!--                                <ul>-->
-<!--                                    <li>Xử lý đặt phòng/bàn</li>-->
-<!--                                    <li>Cập nhật trạng thái phòng/bàn</li>-->
-<!--                                    <li>Hỗ trợ khách hàng</li>-->
-<!--                                    <li>Báo cáo cho quản lý</li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
-<!--                        <div class="form-group">-->
-<!--                            <label for="branchId">Chi nhánh</label>-->
-<!--                            <select id="branchId" th:field="*{branchId}" class="form-control">-->
-<!--                                <option value="">Chưa phân công</option>-->
-<!--                                <option th:each="branch : ${branches}"-->
-<!--                                        th:value="${branch.id}"-->
-<!--                                        th:text="${branch.name + ' (' + branch.type.displayName + ')'}">-->
-<!--                                </option>-->
-<!--                            </select>-->
-<!--                            <div th:if="${#fields.hasErrors('branchId')}" class="error-message">-->
-<!--                                <i class="fas fa-exclamation-circle"></i> <span th:errors="*{branchId}"></span>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <div class="form-actions">-->
-<!--                <button type="submit" class="btn btn-primary">-->
-<!--                    <i th:class="${userId != null ? 'fas fa-save' : 'fas fa-user-plus'}"></i>-->
-<!--                    <span th:text="${userId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>-->
-<!--                </button>-->
-<!--                <a href="/admin/staff" class="btn btn-secondary">-->
-<!--                    <i class="fas fa-times"></i> Hủy bỏ-->
-<!--                </a>-->
-<!--            </div>-->
-<!--        </form>-->
+<!--        </main>-->
 <!--    </div>-->
 <!--</div>-->
 
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
 <!--<script>-->
 <!--    function showRoleInfo(role) {-->
 <!--        // Hide all role info-->
@@ -532,304 +334,304 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/admin_sidebar.css}">
+<!--    <link rel="stylesheet" th:href="@{/css/manager_sidebar.css}">-->
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .navbar {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1rem 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        body { background: #f5f6fa; font-family: 'Segoe UI', sans-serif; font-size: 13px; }
+        .layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 240px; }
+        .main-content { margin-left: 240px; padding: 20px; flex: 1; }
 
         .page-header {
             background-color: #fff;
             border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        /*.form-container {*/
-        /*    background-color: #fff;*/
-        /*    border-radius: 8px;*/
-        /*    padding: 2rem;*/
-        /*    box-shadow: 0 2px 4px rgba(0,0,0,0.05);*/
-        /*    margin-bottom: 2rem;*/
-        /*}*/
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid #e9ecef;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .form-container {
-            background-color: white;
-            border-radius: 0.5rem;
-            padding: 2rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
         }
-        /*.form-label {*/
-        /*    font-weight: 500;*/
-        /*    margin-bottom: 0.5rem;*/
-        /*}*/
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
 
         .form-label {
-            font-weight: 500;
-            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 5px;
         }
 
         .required {
             color: #dc3545;
         }
 
-        .form-control {
+        .form-control, .form-select {
             border-radius: 6px;
-            padding: 0.75rem 1rem;
+            padding: 8px 12px;
             border: 1px solid #ced4da;
+            font-size: 13px;
         }
 
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             border-color: #86b7fe;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
         }
 
         .error-message {
             color: #dc3545;
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
+            font-size: 12px;
+            margin-top: 3px;
         }
 
         .password-note {
-            font-size: 0.875rem;
+            font-size: 12px;
             color: #6c757d;
-            margin-top: 0.25rem;
+            margin-top: 3px;
         }
 
         .role-info {
             background-color: #f8f9fa;
             border-left: 4px solid #0d6efd;
-            padding: 1rem;
-            margin-top: 1rem;
-            border-radius: 0 4px 4px 0;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 0 6px 6px 0;
+            font-size: 13px;
+        }
+
+        .role-info h6 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .role-info ul {
+            margin-bottom: 0;
+            padding-left: 18px;
+            font-size: 12px;
+        }
+
+        .role-info li {
+            margin-bottom: 4px;
         }
 
         .btn {
             border-radius: 6px;
-            padding: 0.75rem 1.5rem;
+            padding: 6px 12px;
             font-weight: 500;
+            font-size: 13px;
+        }
+
+        h1.h3 {
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .mb-3 {
+            margin-bottom: 12px !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 15px !important;
+        }
+
+        .border-top {
+            border-top: 1px solid #dee2e6 !important;
+        }
+
+        .pt-3 {
+            padding-top: 12px !important;
         }
     </style>
 </head>
 <body>
+<div class="layout">
+    <div th:replace="fragments/admin_sidebar :: admin_sidebar"></div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div th:replace="fragments/admin_sidebar :: admin_sidebar"></div>
+    <div class="main-content">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0" th:text="${userId != null ? 'Chỉnh sửa Nhân viên' : 'Thêm Nhân viên mới'}">
+                    <i class="fas fa-user-plus me-2"></i> Thêm Nhân viên mới
+                </h1>
+                <a href="/admin/staff" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Quay lại
+                </a>
+            </div>
+        </div>
 
+        <div class="form-container">
+            <form th:action="${userId != null ? '/admin/staff/' + userId + '/edit' : '/admin/staff/add'}"
+                  method="post" th:object="${userRequest}">
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
+                <!-- Thông tin đăng nhập -->
+                <h5 class="section-title">
+                    <i class="fas fa-key me-2"></i> Thông tin đăng nhập
+                </h5>
 
-            <div class="container mt-4">
-                <div class="page-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h1 class="h3 mb-0" th:text="${userId != null ? 'Chỉnh sửa Nhân viên' : 'Thêm Nhân viên mới'}">
-                            <i class="fas fa-user-plus me-2"></i> Thêm Nhân viên mới
-                        </h1>
-                        <a href="/admin/staff" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i> Quay lại danh sách
-                        </a>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label for="username" class="form-label">Tên đăng nhập <span class="required">*</span></label>
+                        <input type="text" id="username" th:field="*{username}" class="form-control"
+                               placeholder="Nhập tên đăng nhập...">
+                        <div th:if="${#fields.hasErrors('username')}" class="error-message">
+                            <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{username}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email <span class="required">*</span></label>
+                        <input type="email" id="email" th:field="*{email}" class="form-control"
+                               placeholder="Nhập email...">
+                        <div th:if="${#fields.hasErrors('email')}" class="error-message">
+                            <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{email}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label for="password" class="form-label">
+                            <span th:text="${userId != null ? 'Mật khẩu mới (để trống nếu không đổi)' : 'Mật khẩu'}">Mật khẩu</span>
+                            <span th:if="${userId == null}" class="required">*</span>
+                        </label>
+                        <input type="password" id="password" th:field="*{password}" class="form-control"
+                               placeholder="Nhập mật khẩu...">
+                        <div th:if="${userId != null}" class="password-note">
+                            Để trống nếu không muốn thay đổi mật khẩu hiện tại
+                        </div>
+                        <div th:if="${#fields.hasErrors('password')}" class="error-message">
+                            <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{password}"></span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-container">
-                    <form th:action="${userId != null ? '/admin/staff/' + userId + '/edit' : '/admin/staff/add'}"
-                          method="post" th:object="${userRequest}">
+                <!-- Thông tin cá nhân -->
+                <h5 class="section-title">
+                    <i class="fas fa-user me-2"></i> Thông tin cá nhân
+                </h5>
 
-                        <!-- Thông tin đăng nhập -->
-                        <h5 class="section-title">
-                            <i class="fas fa-key me-2"></i> Thông tin đăng nhập
-                        </h5>
-
-                        <div class="row mb-4">
-                            <div class="col-md-6 mb-3">
-                                <label for="username" class="form-label">Tên đăng nhập <span class="required">*</span></label>
-                                <input type="text" id="username" th:field="*{username}" class="form-control"
-                                       placeholder="Nhập tên đăng nhập...">
-                                <div th:if="${#fields.hasErrors('username')}" class="error-message">
-                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{username}"></span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">Email <span class="required">*</span></label>
-                                <input type="email" id="email" th:field="*{email}" class="form-control"
-                                       placeholder="Nhập email...">
-                                <div th:if="${#fields.hasErrors('email')}" class="error-message">
-                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{email}"></span>
-                                </div>
-                            </div>
-
-                            <div class="col-12 mb-3">
-                                <label for="password" class="form-label">
-                                    <span th:text="${userId != null ? 'Mật khẩu mới (để trống nếu không đổi)' : 'Mật khẩu'}">Mật khẩu</span>
-                                    <span th:if="${userId == null}" class="required">*</span>
-                                </label>
-                                <input type="password" id="password" th:field="*{password}" class="form-control"
-                                       placeholder="Nhập mật khẩu...">
-                                <div th:if="${userId != null}" class="password-note">
-                                    Để trống nếu không muốn thay đổi mật khẩu hiện tại
-                                </div>
-                                <div th:if="${#fields.hasErrors('password')}" class="error-message">
-                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{password}"></span>
-                                </div>
-                            </div>
+                <div class="row mb-4">
+                    <div class="col-12 mb-3">
+                        <label for="fullName" class="form-label">Họ và tên <span class="required">*</span></label>
+                        <input type="text" id="fullName" th:field="*{fullName}" class="form-control"
+                               placeholder="Nhập họ và tên...">
+                        <div th:if="${#fields.hasErrors('fullName')}" class="error-message">
+                            <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{fullName}"></span>
                         </div>
+                    </div>
 
-                        <!-- Thông tin cá nhân -->
-                        <h5 class="section-title">
-                            <i class="fas fa-user me-2"></i> Thông tin cá nhân
-                        </h5>
-
-                        <div class="row mb-4">
-                            <div class="col-12 mb-3">
-                                <label for="fullName" class="form-label">Họ và tên <span class="required">*</span></label>
-                                <input type="text" id="fullName" th:field="*{fullName}" class="form-control"
-                                       placeholder="Nhập họ và tên...">
-                                <div th:if="${#fields.hasErrors('fullName')}" class="error-message">
-                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{fullName}"></span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="phoneNumber" class="form-label">Số điện thoại</label>
-                                <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"
-                                       placeholder="Nhập số điện thoại...">
-                                <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message">
-                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{phoneNumber}"></span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="avatarUrl" class="form-label">Avatar URL</label>
-                                <input type="url" id="avatarUrl" th:field="*{avatarUrl}" class="form-control"
-                                       placeholder="Nhập URL avatar...">
-                                <div th:if="${#fields.hasErrors('avatarUrl')}" class="error-message">
-                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{avatarUrl}"></span>
-                                </div>
-                            </div>
-
-                            <div class="col-12 mb-3">
-                                <label for="address" class="form-label">Địa chỉ</label>
-                                <input type="text" id="address" th:field="*{address}" class="form-control"
-                                       placeholder="Nhập địa chỉ...">
-                                <div th:if="${#fields.hasErrors('address')}" class="error-message">
-                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{address}"></span>
-                                </div>
-                            </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                        <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"
+                               placeholder="Nhập số điện thoại...">
+                        <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message">
+                            <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{phoneNumber}"></span>
                         </div>
+                    </div>
 
-                        <!-- Phân quyền và phân công -->
-                        <h5 class="section-title">
-                            <i class="fas fa-users-cog me-2"></i> Phân quyền & Phân công
-                        </h5>
-
-                        <div class="row mb-4">
-                            <div class="col-md-6 mb-3">
-                                <label for="role" class="form-label">Vai trò <span class="required">*</span></label>
-                                <select id="role" th:field="*{role}" class="form-control" onchange="showRoleInfo(this.value)">
-                                    <option value="">Chọn vai trò</option>
-                                    <option th:each="r : ${staffRoles}"
-                                            th:value="${r}"
-                                            th:text="${roleLabels[r.name()]}">
-                                    </option>
-                                </select>
-                                <div th:if="${#fields.hasErrors('role')}" class="error-message">
-                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{role}"></span>
-                                </div>
-
-                                <!-- Role Info -->
-                                <div id="manager-info" class="role-info" style="display: none;">
-                                    <h6 class="mb-2"><i class="fas fa-user-tie me-1"></i> Quyền hạn Quản lý:</h6>
-                                    <ul class="mb-0 ps-3">
-                                        <li>Quản lý nhân viên trong chi nhánh</li>
-                                        <li>Xem báo cáo doanh thu chi nhánh</li>
-                                        <li>Quản lý đặt phòng/bàn</li>
-                                        <li>Xử lý khiếu nại khách hàng</li>
-                                    </ul>
-                                </div>
-
-                                <div id="staff-info" class="role-info" style="display: none;">
-                                    <h6 class="mb-2"><i class="fas fa-user me-1"></i> Quyền hạn Nhân viên:</h6>
-                                    <ul class="mb-0 ps-3">
-                                        <li>Xử lý đặt phòng/bàn</li>
-                                        <li>Cập nhật trạng thái phòng/bàn</li>
-                                        <li>Hỗ trợ khách hàng</li>
-                                        <li>Báo cáo cho quản lý</li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="branchId" class="form-label">Chi nhánh</label>
-                                <select id="branchId" th:field="*{branchId}" class="form-control">
-                                    <option value="">Chưa phân công</option>
-                                    <option th:each="branch : ${branches}"
-                                            th:value="${branch.id}"
-                                            th:text="${branch.name + ' (' + branch.type.displayName + ')'}">
-                                    </option>
-                                </select>
-                                <div th:if="${#fields.hasErrors('branchId')}" class="error-message">
-                                    <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{branchId}"></span>
-                                </div>
-                            </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="avatarUrl" class="form-label">Avatar URL</label>
+                        <input type="url" id="avatarUrl" th:field="*{avatarUrl}" class="form-control"
+                               placeholder="Nhập URL avatar...">
+                        <div th:if="${#fields.hasErrors('avatarUrl')}" class="error-message">
+                            <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{avatarUrl}"></span>
                         </div>
+                    </div>
 
-<!--                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">-->
-<!--                            <a href="/admin/staff" class="btn btn-secondary">-->
-<!--                                <i class="fas fa-times me-2"></i> Hủy bỏ-->
-<!--                            </a>-->
-<!--                            <button type="submit" class="btn btn-primary">-->
-<!--                                <i th:class="${userId != null ? 'fas fa-save' : 'fas fa-user-plus'} me-2"></i>-->
-<!--                                <span th:text="${userId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>-->
-<!--                            </button>-->
-<!--                        </div>-->
-
-                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-                            <button type="submit" class="btn btn-primary">
-                                <i th:class="${userId != null ? 'fas fa-save' : 'fas fa-user-plus'}"></i>
-                                <span th:text="${userId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>
-                            </button>
-                            <a href="/admin/staff" class="btn btn-secondary">
-                                <i class="fas fa-times"></i> Hủy bỏ
-                            </a>
+                    <div class="col-12 mb-3">
+                        <label for="address" class="form-label">Địa chỉ</label>
+                        <input type="text" id="address" th:field="*{address}" class="form-control"
+                               placeholder="Nhập địa chỉ...">
+                        <div th:if="${#fields.hasErrors('address')}" class="error-message">
+                            <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{address}"></span>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        </main>
+
+                <!-- Phân quyền và phân công -->
+                <h5 class="section-title">
+                    <i class="fas fa-users-cog me-2"></i> Phân quyền & Phân công
+                </h5>
+
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label for="role" class="form-label">Vai trò <span class="required">*</span></label>
+                        <select id="role" th:field="*{role}" class="form-select" onchange="showRoleInfo(this.value)">
+                            <option value="">Chọn vai trò</option>
+                            <option th:each="r : ${staffRoles}"
+                                    th:value="${r}"
+                                    th:text="${roleLabels[r.name()]}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('role')}" class="error-message">
+                            <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{role}"></span>
+                        </div>
+
+                        <!-- Role Info -->
+                        <div id="manager-info" class="role-info" style="display: none;">
+                            <h6 class="mb-2"><i class="fas fa-user-tie me-1"></i> Quyền hạn Quản lý:</h6>
+                            <ul class="mb-0">
+                                <li>Quản lý nhân viên trong chi nhánh</li>
+                                <li>Xem báo cáo doanh thu chi nhánh</li>
+                                <li>Quản lý đặt phòng/bàn</li>
+                                <li>Xử lý khiếu nại khách hàng</li>
+                            </ul>
+                        </div>
+
+                        <div id="staff-info" class="role-info" style="display: none;">
+                            <h6 class="mb-2"><i class="fas fa-user me-1"></i> Quyền hạn Nhân viên:</h6>
+                            <ul class="mb-0">
+                                <li>Xử lý đặt phòng/bàn</li>
+                                <li>Cập nhật trạng thái phòng/bàn</li>
+                                <li>Hỗ trợ khách hàng</li>
+                                <li>Báo cáo cho quản lý</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="branchId" class="form-label">Chi nhánh</label>
+                        <select id="branchId" th:field="*{branchId}" class="form-select">
+                            <option value="">Chưa phân công</option>
+                            <option th:each="branch : ${branches}"
+                                    th:value="${branch.id}"
+                                    th:text="${branch.name + ' (' + branch.type.displayName + ')'}">
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('branchId')}" class="error-message">
+                            <i class="fas fa-exclamation-circle me-1"></i> <span th:errors="*{branchId}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i th:class="${userId != null ? 'fas fa-save' : 'fas fa-user-plus'}"></i>
+                                                <span th:text="${userId != null ? 'Cập nhật' : 'Thêm mới'}">Thêm mới</span>
+                                            </button>
+                                            <a href="/admin/staff" class="btn btn-secondary">
+                                                <i class="fas fa-times"></i> Hủy bỏ
+                                            </a>
+                                        </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function showRoleInfo(role) {
-        // Hide all role info
         document.getElementById('manager-info').style.display = 'none';
         document.getElementById('staff-info').style.display = 'none';
 
-        // Show selected role info
         if (role === 'MANAGER') {
             document.getElementById('manager-info').style.display = 'block';
         } else if (role === 'STAFF') {
@@ -837,7 +639,6 @@
         }
     }
 
-    // Show role info on page load if role is selected
     document.addEventListener('DOMContentLoaded', function() {
         const roleSelect = document.getElementById('role');
         if (roleSelect.value) {

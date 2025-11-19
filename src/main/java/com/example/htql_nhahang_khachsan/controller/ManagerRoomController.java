@@ -204,5 +204,11 @@ public class ManagerRoomController {
         return "redirect:/manager/rooms";
     }
 
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        authService.logout(session);
+        return "redirect:/manager/login";
+    }
+
 
 }

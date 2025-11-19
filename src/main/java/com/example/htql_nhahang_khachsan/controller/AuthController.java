@@ -8,6 +8,11 @@ import com.example.htql_nhahang_khachsan.service.AuthService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +20,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -253,9 +261,24 @@ public class AuthController {
         try {
             UserResponse user = authService.login(request, session);
             if (user.getRole() != UserRole.CUSTOMER) {
-                redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập trang Customer");
+                redirectAttributes.addFlashAttribute("error", "Tài khoản này không phải là tài khoản khách hàng.");
                 return "redirect:/customer/login";
             }
+
+            // Manually set Spring Security context
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    user.getUsername(),
+                    null,
+                    authorities
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
+
             return "redirect:/";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -290,12 +313,7 @@ public class AuthController {
         }
     }
 
-    // === LOGOUT ===
-    @PostMapping("/logout")
-    public String logout(HttpSession session) {
-        authService.logout(session);
-        return "redirect:/";
-    }
+
 
     // === DASHBOARDS ===
     @GetMapping("/admin/dashboard")

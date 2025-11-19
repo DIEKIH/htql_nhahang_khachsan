@@ -17,8 +17,8 @@ import java.util.*;
 public class Hotel_VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_Returnurl = "/checkout/payment/vnpay-return"; // chỉnh theo controller mới của bạn
-    public static String vnp_TmnCode = "OS32CZUC";
-    public static String vnp_HashSecret = "PDPW28OZCOHDW10WKQNJ7BBVQT63Z8CM";
+    public static String vnp_TmnCode = "30KDJMHI";
+    public static String vnp_HashSecret = "79BQEPJLW53P5DSHBRGWWE71CH626PEM";
     public static String vnp_apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {

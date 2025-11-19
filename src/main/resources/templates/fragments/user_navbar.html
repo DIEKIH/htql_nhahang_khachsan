@@ -1,17 +1,47 @@
 <nav th:fragment="user_navbar" class="navbar navbar-expand-lg fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#"><i class="fas fa-crown me-2"></i>DIEK</a>
+        <a class="navbar-brand" th:href="@{/}"><i class="fas fa-crown me-2"></i>DIEK</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                 <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang chủ</a></li>
-                <li class="nav-item"><a class="nav-link" href="#rooms">Chi nhánh</a></li>
-<!--                <li class="nav-item"><a class="nav-link" href="#restaurant">Nhà hàng</a></li>-->
+                <li class="nav-item"><a class="nav-link" th:href="@{/#branches}">Chi nhánh</a></li>
                 <li class="nav-item"><a class="nav-link" href="#facilities">Tiện ích</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>
-                <li class="nav-item"><a class="nav-link btn btn-luxury ms-2 text-white" href="#book">Đặt phòng</a></li>
+
+                <!-- Login button for anonymous users -->
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link btn btn-outline-primary ms-2" th:href="@{/customer/login}">
+                        <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                    </a>
+                </li>
+
+                <!-- User dropdown for authenticated users -->
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i>
+                        <span sec:authentication="name">Username</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/cart}">
+                                <i class="fas fa-shopping-cart fa-fw me-2"></i>Giỏ hàng
+                                <span class="badge bg-danger rounded-pill" th:if="${session.cartItemCount > 0}" th:text="${session.cartItemCount}">0</span>
+                            </a>
+                        </li>
+                        <li><a class="dropdown-item" th:href="@{/orders}"><i class="fas fa-receipt fa-fw me-2"></i>Xem đơn hàng</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt fa-fw me-2"></i>Đăng xuất
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

@@ -17,6 +17,7 @@
             --text-dark: #2c3e50;
             --text-light: #6c757d;
             --bg-overlay: rgba(44, 62, 80, 0.7);
+            --scale: 0.75;
         }
 
         * {
@@ -25,11 +26,15 @@
             box-sizing: border-box;
         }
 
+        html {
+            font-size: calc(16px * var(--scale));
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
             color: var(--text-dark);
-            padding-top: 80px;
+            padding-top: calc(80px * var(--scale));
         }
 
         .heading-font {
@@ -41,18 +46,19 @@
             background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            height: calc(80px * var(--scale));
         }
 
         .navbar-brand {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: calc(2rem * var(--scale));
             font-weight: 600;
             color: var(--primary-color) !important;
         }
 
         .navbar-nav .nav-link {
             font-weight: 500;
-            margin: 0 10px;
+            margin: 0 calc(10px * var(--scale));
             color: var(--text-dark) !important;
             transition: all 0.3s ease;
         }
@@ -64,13 +70,13 @@
         .btn-luxury {
             background: var(--primary-color);
             color: white;
-            padding: 12px 30px;
+            padding: calc(12px * var(--scale)) calc(30px * var(--scale));
             border: none;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
-            border-radius: 50px;
+            border-radius: calc(50px * var(--scale));
         }
 
         .btn-luxury:hover {
@@ -405,24 +411,7 @@
 
 <body>
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="index.html"><i class="fas fa-crown me-2"></i>Luxury Resort</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="index.html">Trang chủ</a></li>
-                <li class="nav-item"><a class="nav-link active" href="rooms.html">Phòng</a></li>
-                <li class="nav-item"><a class="nav-link" href="restaurant.html">Nhà hàng</a></li>
-                <li class="nav-item"><a class="nav-link" href="facilities.html">Tiện ích</a></li>
-                <li class="nav-item"><a class="nav-link" href="contact.html">Liên hệ</a></li>
-                <li class="nav-item"><a class="nav-link btn btn-luxury ms-2 text-white" href="booking.html">Đặt phòng</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<div th:replace="fragments/user_navbar :: user_navbar"></div>
 
 <!-- Main Content -->
 <div class="container my-5">
@@ -784,9 +773,11 @@
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Similar Rooms -->
-    <section class="mt-5">
+<!-- Similar Rooms -->
+<section class="mt-5">
+    <div class="container">
         <h3 class="heading-font mb-4">Phòng tương tự</h3>
         <div class="row g-4">
             <div class="col-md-4">
@@ -829,8 +820,8 @@
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>

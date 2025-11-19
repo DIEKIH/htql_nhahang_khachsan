@@ -1,255 +1,118 @@
+
 <!--<!DOCTYPE html>-->
 <!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
 <!--<head>-->
 <!--  <meta charset="UTF-8">-->
 <!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
 <!--  <title>Quản lý Nhân viên</title>-->
+<!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
 <!--  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
 <!--  <style>-->
-<!--    * {-->
-<!--      margin: 0;-->
-<!--      padding: 0;-->
-<!--      box-sizing: border-box;-->
-<!--    }-->
 
-<!--    body {-->
-<!--      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;-->
-<!--      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
+<!--    .sidebar {-->
 <!--      min-height: 100vh;-->
+<!--      background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);-->
+<!--      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);-->
 <!--    }-->
-
-<!--    .navbar {-->
-<!--      background: rgba(255, 255, 255, 0.95);-->
-<!--      backdrop-filter: blur(10px);-->
-<!--      padding: 1rem 2rem;-->
-<!--      box-shadow: 0 2px 20px rgba(0,0,0,0.1);-->
-<!--      position: sticky;-->
-<!--      top: 0;-->
-<!--      z-index: 100;-->
-<!--    }-->
-
-<!--    .navbar-content {-->
-<!--      display: flex;-->
-<!--      justify-content: space-between;-->
-<!--      align-items: center;-->
-<!--      max-width: 1200px;-->
-<!--      margin: 0 auto;-->
-<!--    }-->
-
-<!--    .logo {-->
-<!--      font-size: 1.5rem;-->
-<!--      font-weight: bold;-->
-<!--      color: #667eea;-->
-<!--    }-->
-
-<!--    .nav-links {-->
-<!--      display: flex;-->
-<!--      gap: 2rem;-->
-<!--      align-items: center;-->
-<!--    }-->
-
-<!--    .nav-links a {-->
-<!--      text-decoration: none;-->
-<!--      color: #333;-->
-<!--      font-weight: 500;-->
-<!--      padding: 0.5rem 1rem;-->
-<!--      border-radius: 8px;-->
+<!--    .sidebar .nav-link {-->
+<!--      color: #adb5bd;-->
+<!--      border-radius: 0.375rem;-->
+<!--      margin: 0.125rem 0.5rem;-->
+<!--      padding: 0.7rem 1rem;-->
 <!--      transition: all 0.3s ease;-->
-<!--    }-->
-
-<!--    .nav-links a:hover, .nav-links a.active {-->
-<!--      background: #667eea;-->
-<!--      color: white;-->
-<!--    }-->
-
-<!--    .logout-btn {-->
-<!--      background: #ff4757;-->
-<!--      color: white;-->
-<!--      border: none;-->
-<!--      padding: 0.5rem 1rem;-->
-<!--      border-radius: 8px;-->
-<!--      cursor: pointer;-->
-<!--      font-weight: 500;-->
-<!--      transition: all 0.3s ease;-->
-<!--    }-->
-
-<!--    .logout-btn:hover {-->
-<!--      background: #ff3838;-->
-<!--    }-->
-
-<!--    .container {-->
-<!--      max-width: 1400px;-->
-<!--      margin: 2rem auto;-->
-<!--      padding: 0 2rem;-->
-<!--    }-->
-
-<!--    .page-header {-->
-<!--      background: rgba(255, 255, 255, 0.95);-->
-<!--      backdrop-filter: blur(10px);-->
-<!--      padding: 2rem;-->
-<!--      border-radius: 16px;-->
-<!--      margin-bottom: 2rem;-->
-<!--      box-shadow: 0 8px 32px rgba(0,0,0,0.1);-->
-<!--      display: flex;-->
-<!--      justify-content: space-between;-->
-<!--      align-items: center;-->
-<!--    }-->
-
-<!--    .page-title {-->
-<!--      color: #333;-->
-<!--      font-size: 2rem;-->
-<!--      font-weight: bold;-->
-<!--    }-->
-
-<!--    .add-btn {-->
-<!--      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
-<!--      color: white;-->
-<!--      text-decoration: none;-->
-<!--      padding: 1rem 2rem;-->
-<!--      border-radius: 10px;-->
-<!--      font-weight: 600;-->
-<!--      display: inline-flex;-->
-<!--      align-items: center;-->
-<!--      gap: 0.5rem;-->
-<!--      transition: all 0.3s ease;-->
-<!--    }-->
-
-<!--    .add-btn:hover {-->
-<!--      transform: translateY(-2px);-->
-<!--      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);-->
-<!--    }-->
-
-<!--    .filters-section {-->
-<!--      background: rgba(255, 255, 255, 0.95);-->
-<!--      backdrop-filter: blur(10px);-->
-<!--      padding: 2rem;-->
-<!--      border-radius: 16px;-->
-<!--      margin-bottom: 2rem;-->
-<!--      box-shadow: 0 8px 32px rgba(0,0,0,0.1);-->
-<!--    }-->
-
-<!--    .filters-form {-->
-<!--      display: grid;-->
-<!--      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));-->
-<!--      gap: 1rem;-->
-<!--      align-items: end;-->
-<!--    }-->
-
-<!--    .form-group {-->
-<!--      display: flex;-->
-<!--      flex-direction: column;-->
-<!--    }-->
-
-<!--    .form-group label {-->
-<!--      margin-bottom: 0.5rem;-->
-<!--      font-weight: 500;-->
-<!--      color: #333;-->
-<!--    }-->
-
-<!--    .form-control {-->
-<!--      padding: 0.75rem;-->
-<!--      border: 2px solid #e0e6ed;-->
-<!--      border-radius: 8px;-->
-<!--      font-size: 1rem;-->
-<!--      transition: border-color 0.3s ease;-->
-<!--    }-->
-
-<!--    .form-control:focus {-->
-<!--      outline: none;-->
-<!--      border-color: #667eea;-->
-<!--    }-->
-
-<!--    .search-btn {-->
-<!--      background: #667eea;-->
-<!--      color: white;-->
-<!--      border: none;-->
-<!--      padding: 0.75rem 1.5rem;-->
-<!--      border-radius: 8px;-->
-<!--      cursor: pointer;-->
-<!--      font-weight: 500;-->
-<!--      transition: all 0.3s ease;-->
-<!--    }-->
-
-<!--    .search-btn:hover {-->
-<!--      background: #5a6fd8;-->
-<!--    }-->
-
-<!--    .alert {-->
-<!--      padding: 1rem 1.5rem;-->
-<!--      border-radius: 8px;-->
-<!--      margin-bottom: 1rem;-->
-<!--      font-weight: 500;-->
-<!--    }-->
-
-<!--    .alert-success {-->
-<!--      background: #d4edda;-->
-<!--      color: #155724;-->
-<!--      border: 1px solid #c3e6cb;-->
-<!--    }-->
-
-<!--    .alert-error {-->
-<!--      background: #f8d7da;-->
-<!--      color: #721c24;-->
-<!--      border: 1px solid #f5c6cb;-->
-<!--    }-->
-
-<!--    .staff-table {-->
-<!--      background: rgba(255, 255, 255, 0.95);-->
-<!--      backdrop-filter: blur(10px);-->
-<!--      border-radius: 16px;-->
+<!--      font-size: 0.95rem;-->
+<!--      position: relative;-->
 <!--      overflow: hidden;-->
-<!--      box-shadow: 0 8px 32px rgba(0,0,0,0.1);-->
+<!--    }-->
+<!--    .sidebar .nav-link:before {-->
+<!--      content: '';-->
+<!--      position: absolute;-->
+<!--      left: 0;-->
+<!--      top: 0;-->
+<!--      height: 100%;-->
+<!--      width: 4px;-->
+<!--      background-color: #0d6efd;-->
+<!--      opacity: 0;-->
+<!--      transition: opacity 0.3s ease;-->
+<!--    }-->
+<!--    .sidebar .nav-link:hover {-->
+<!--      background-color: #2c3034;-->
+<!--      color: #fff;-->
+<!--      transform: translateX(5px);-->
+<!--    }-->
+<!--    .sidebar .nav-link:hover:before {-->
+<!--      opacity: 1;-->
+<!--    }-->
+<!--    .sidebar .nav-link.active {-->
+<!--      background-color: #0d6efd;-->
+<!--      color: #fff;-->
+<!--      font-weight: 500;-->
+<!--      box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);-->
+<!--    }-->
+<!--    .sidebar .nav-link.active:before {-->
+<!--      opacity: 1;-->
+<!--    }-->
+<!--    .sidebar-header {-->
+<!--      padding: 1.5rem 1rem;-->
+<!--      border-bottom: 1px solid #343a40;-->
+<!--      margin-bottom: 1rem;-->
+<!--    }-->
+<!--    .nav-item {-->
+<!--      margin-bottom: 0.4rem;-->
+<!--    }-->
+<!--    .nav-category {-->
+<!--      padding: 0.8rem 1rem 0.3rem;-->
+<!--      margin-top: 1.2rem;-->
+<!--      font-size: 0.75rem;-->
+<!--      color: #6c757d !important;-->
+<!--      text-transform: uppercase;-->
+<!--      letter-spacing: 1px;-->
+<!--      border-top: 1px solid #343a40;-->
+<!--    }-->
+<!--    .nav-category:first-child {-->
+<!--      border-top: none;-->
+<!--      margin-top: 0;-->
+<!--    }-->
+<!--    .logo-container {-->
+<!--      padding: 1.5rem 0;-->
+<!--      text-align: center;-->
+<!--    }-->
+<!--    .logo-icon {-->
+<!--      font-size: 2rem;-->
+<!--      color: #0d6efd;-->
+<!--      margin-bottom: 0.5rem;-->
 <!--    }-->
 
-<!--    .table {-->
-<!--      width: 100%;-->
-<!--      border-collapse: collapse;-->
-<!--    }-->
 
-<!--    .table th {-->
-<!--      background: #f8f9fa;-->
-<!--      padding: 1rem;-->
-<!--      text-align: left;-->
-<!--      font-weight: 600;-->
-<!--      color: #333;-->
-<!--      border-bottom: 2px solid #dee2e6;-->
-<!--    }-->
 
-<!--    .table td {-->
-<!--      padding: 1rem;-->
-<!--      border-bottom: 1px solid #dee2e6;-->
-<!--      vertical-align: middle;-->
-<!--    }-->
 
-<!--    .table tbody tr:hover {-->
-<!--      background: rgba(102, 126, 234, 0.05);-->
+<!--    .nav-category {-->
+<!--      padding: 0.8rem 1rem 0.3rem;-->
+<!--      margin-top: 1.2rem;-->
+<!--      font-size: 0.75rem;-->
+<!--      color: #6c757d !important;-->
+<!--      text-transform: uppercase;-->
+<!--      letter-spacing: 1px;-->
 <!--    }-->
 
 <!--    .avatar {-->
-<!--      width: 50px;-->
-<!--      height: 50px;-->
+<!--      width: 40px;-->
+<!--      height: 40px;-->
 <!--      border-radius: 50%;-->
-<!--      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
+<!--      background: #0d6efd;-->
 <!--      display: flex;-->
 <!--      align-items: center;-->
 <!--      justify-content: center;-->
 <!--      color: white;-->
 <!--      font-weight: bold;-->
-<!--      font-size: 1.2rem;-->
 <!--    }-->
 
 <!--    .role-badge {-->
-<!--      pointer-events: none;-->
 <!--      display: inline-block;-->
 <!--      padding: 0.25rem 0.75rem;-->
 <!--      border-radius: 20px;-->
 <!--      font-size: 0.85rem;-->
 <!--      font-weight: 500;-->
-<!--    }-->
-
-<!--    .actions .btn-edit {-->
-<!--      position: relative;-->
-<!--      z-index: 10; /* Đè lên mọi thứ khác */-->
 <!--    }-->
 
 <!--    .role-manager {-->
@@ -284,296 +147,245 @@
 <!--      background: #e2e3e5;-->
 <!--      color: #383d41;-->
 <!--    }-->
-
-<!--    .branch-info {-->
-<!--      font-size: 0.9rem;-->
-<!--      color: #666;-->
-<!--    }-->
-
-<!--    .actions {-->
-<!--      display: flex;-->
-<!--      gap: 0.5rem;-->
-<!--    }-->
-
-<!--    .btn {-->
-<!--      padding: 0.5rem 1rem;-->
-<!--      border: none;-->
-<!--      border-radius: 6px;-->
-<!--      cursor: pointer;-->
-<!--      font-size: 0.9rem;-->
-<!--      font-weight: 500;-->
-<!--      text-decoration: none;-->
-<!--      display: inline-flex;-->
-<!--      align-items: center;-->
-<!--      gap: 0.25rem;-->
-<!--      transition: all 0.3s ease;-->
-<!--    }-->
-
-<!--    .btn-edit {-->
-<!--      background: #ffc107;-->
-<!--      color: #212529;-->
-<!--    }-->
-
-<!--    .btn-edit:hover {-->
-<!--      background: #ffb300;-->
-<!--    }-->
-
-<!--    .btn-toggle {-->
-<!--      background: #6c757d;-->
-<!--      color: white;-->
-<!--    }-->
-
-<!--    .btn-toggle:hover {-->
-<!--      background: #5a6268;-->
-<!--    }-->
-
-<!--    .btn-toggle.unlock {-->
-<!--      background: #28a745;-->
-<!--    }-->
-
-<!--    .btn-toggle.unlock:hover {-->
-<!--      background: #218838;-->
-<!--    }-->
-
-<!--    .no-results {-->
-<!--      text-align: center;-->
-<!--      padding: 3rem;-->
-<!--      color: #666;-->
-<!--      background: rgba(255, 255, 255, 0.95);-->
-<!--      backdrop-filter: blur(10px);-->
-<!--      border-radius: 16px;-->
-<!--      box-shadow: 0 8px 32px rgba(0,0,0,0.1);-->
-<!--    }-->
-
-<!--    @media (max-width: 1200px) {-->
-<!--      .table {-->
-<!--        font-size: 0.9rem;-->
-<!--      }-->
-
-<!--      .table th, .table td {-->
-<!--        padding: 0.75rem 0.5rem;-->
-<!--      }-->
-<!--    }-->
-
-<!--    @media (max-width: 768px) {-->
-<!--      .navbar {-->
-<!--        padding: 1rem;-->
-<!--      }-->
-
-<!--      .navbar-content {-->
-<!--        flex-direction: column;-->
-<!--        gap: 1rem;-->
-<!--      }-->
-
-<!--      .nav-links {-->
-<!--        gap: 1rem;-->
-<!--      }-->
-
-<!--      .container {-->
-<!--        padding: 0 1rem;-->
-<!--      }-->
-
-<!--      .page-header {-->
-<!--        flex-direction: column;-->
-<!--        gap: 1rem;-->
-<!--        text-align: center;-->
-<!--      }-->
-
-<!--      .filters-form {-->
-<!--        grid-template-columns: 1fr;-->
-<!--      }-->
-
-<!--      .staff-table {-->
-<!--        overflow-x: auto;-->
-<!--      }-->
-
-<!--      .table {-->
-<!--        min-width: 800px;-->
-<!--      }-->
-
-<!--      .actions {-->
-<!--        flex-direction: column;-->
-<!--      }-->
-<!--    }-->
 <!--  </style>-->
 <!--</head>-->
 <!--<body>-->
-<!--<nav class="navbar">-->
-<!--  <div class="navbar-content">-->
-<!--    <div class="logo">-->
-<!--      <i class="fas fa-crown"></i> Admin Panel-->
-<!--    </div>-->
-<!--    <div class="nav-links">-->
-<!--      <a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>-->
-<!--      <a href="/admin/branches"><i class="fas fa-building"></i> Chi nhánh</a>-->
-<!--      <a href="/admin/staff" class="active"><i class="fas fa-users"></i> Nhân viên</a>-->
-<!--      <form action="/admin/logout" method="post" style="display: inline;">-->
-<!--        <button type="submit" class="logout-btn">-->
-<!--          <i class="fas fa-sign-out-alt"></i> Đăng xuất-->
-<!--        </button>-->
-<!--      </form>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</nav>-->
+<!--<div class="container-fluid">-->
+<!--  <div class="row">-->
+<!--    &lt;!&ndash; Sidebar &ndash;&gt;-->
+<!--    <div th:replace="fragments/admin_sidebar :: admin_sidebar"></div>-->
 
-<!--<div class="container">-->
-<!--  <div class="page-header">-->
-<!--    <h1 class="page-title"><i class="fas fa-users"></i> Quản lý Nhân viên</h1>-->
-<!--    <a href="/admin/staff/add" class="add-btn">-->
-<!--      <i class="fas fa-user-plus"></i> Thêm Nhân viên-->
-<!--    </a>-->
-<!--  </div>-->
+<!--    &lt;!&ndash; Main content &ndash;&gt;-->
+<!--    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">-->
+<!--      &lt;!&ndash; Top navbar &ndash;&gt;-->
+<!--&lt;!&ndash;      <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="container-fluid">&ndash;&gt;-->
+<!--&lt;!&ndash;          <h4 class="navbar-brand mb-0">&ndash;&gt;-->
+<!--&lt;!&ndash;            <i class="fas fa-users me-2"></i>Quản lý Nhân viên&ndash;&gt;-->
+<!--&lt;!&ndash;          </h4>&ndash;&gt;-->
 
-<!--  &lt;!&ndash; Filters Section &ndash;&gt;-->
-<!--  <div class="filters-section">-->
-<!--    <form action="/admin/staff" method="get" class="filters-form">-->
-<!--      <div class="form-group">-->
-<!--        <label for="search">Tìm kiếm</label>-->
-<!--        <input type="text" id="search" name="search" class="form-control"-->
-<!--               th:value="${searchQuery}" placeholder="Tên, username, email...">-->
-<!--      </div>-->
+<!--&lt;!&ndash;          <div class="navbar-nav ms-auto">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="nav-item dropdown">&ndash;&gt;-->
+<!--&lt;!&ndash;              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">&ndash;&gt;-->
+<!--&lt;!&ndash;                <i class="fas fa-user me-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                <span>Admin User</span>&ndash;&gt;-->
+<!--&lt;!&ndash;              </a>&ndash;&gt;-->
+<!--&lt;!&ndash;              <ul class="dropdown-menu dropdown-menu-end">&ndash;&gt;-->
+<!--&lt;!&ndash;                <li><h6 class="dropdown-header" th:text="${user.username}">Username</h6></li>&ndash;&gt;-->
+<!--&lt;!&ndash;                <li><hr class="dropdown-divider"></li>&ndash;&gt;-->
+<!--&lt;!&ndash;                <li><a class="dropdown-item" href="#profile"><i class="fas fa-user me-2"></i>Thông tin cá nhân</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;                <li><a class="dropdown-item" href="#settings"><i class="fas fa-cog me-2"></i>Cài đặt</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;                <li><hr class="dropdown-divider"></li>&ndash;&gt;-->
+<!--&lt;!&ndash;                <li>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <form th:action="@{/logout}" method="post" class="d-inline">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <button type="submit" class="dropdown-item text-danger">&ndash;&gt;-->
+<!--&lt;!&ndash;                      <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất&ndash;&gt;-->
+<!--&lt;!&ndash;                    </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </form>&ndash;&gt;-->
+<!--&lt;!&ndash;                </li>&ndash;&gt;-->
+<!--&lt;!&ndash;              </ul>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;      </nav>&ndash;&gt;-->
 
-<!--      <div class="form-group">-->
-<!--        <label for="role">Vai trò</label>-->
-<!--        <select id="role" name="role" class="form-control">-->
-<!--          <option value="">Tất cả</option>-->
-<!--          <option value="MANAGER" th:selected="${searchRole == 'MANAGER'}">Quản lý</option>-->
-<!--          <option value="STAFF" th:selected="${searchRole == 'STAFF'}">Nhân viên</option>-->
-<!--        </select>-->
-<!--      </div>-->
+<!--      &lt;!&ndash; Page content &ndash;&gt;-->
+<!--      <div class="py-4">-->
+<!--        &lt;!&ndash; Alerts &ndash;&gt;-->
+<!--        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">-->
+<!--          <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>-->
+<!--          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--        </div>-->
 
-<!--      <div class="form-group">-->
-<!--        <label for="branchId">Chi nhánh</label>-->
-<!--        <select id="branchId" name="branchId" class="form-control">-->
-<!--          <option value="">Tất cả</option>-->
-<!--          <option th:each="branch : ${branches}"-->
-<!--                  th:value="${branch.id}"-->
-<!--                  th:text="${branch.name}"-->
-<!--                  th:selected="${branch.id == searchBranchId}">-->
-<!--          </option>-->
-<!--        </select>-->
-<!--      </div>-->
+<!--        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">-->
+<!--          <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${error}"></span>-->
+<!--          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--        </div>-->
 
-<!--      <div class="form-group">-->
-<!--        <label for="status">Trạng thái</label>-->
-<!--        <select id="status" name="status" class="form-control">-->
-<!--          <option value="">Tất cả</option>-->
-<!--          <option th:each="status : ${userStatuses}"-->
-<!--                  th:value="${status}"-->
-<!--                  th:text="${statusLabels[status]}"-->
-<!--                  th:selected="${status == searchStatus}">-->
-<!--          </option>-->
-<!--        </select>-->
-<!--      </div>-->
+<!--        &lt;!&ndash; Header and Add button &ndash;&gt;-->
+<!--        <div class="d-flex justify-content-between align-items-center mb-4">-->
+<!--          <h5>Danh sách nhân viên</h5>-->
+<!--          <a href="/admin/staff/add" class="btn btn-primary">-->
+<!--            <i class="fas fa-user-plus me-2"></i> Thêm Nhân viên-->
+<!--          </a>-->
+<!--        </div>-->
 
-<!--      <div class="form-group">-->
-<!--        <button type="submit" class="search-btn">-->
-<!--          <i class="fas fa-search"></i> Tìm kiếm-->
-<!--        </button>-->
-<!--      </div>-->
-<!--    </form>-->
-<!--  </div>-->
-
-<!--  &lt;!&ndash; Alerts &ndash;&gt;-->
-<!--  <div th:if="${success}" class="alert alert-success">-->
-<!--    <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>-->
-<!--  </div>-->
-
-<!--  <div th:if="${error}" class="alert alert-error">-->
-<!--    <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>-->
-<!--  </div>-->
-
-<!--  &lt;!&ndash; Staff Table &ndash;&gt;-->
-<!--  <div th:if="${!staffList.isEmpty()}" class="staff-table">-->
-<!--    <table class="table">-->
-<!--      <thead>-->
-<!--      <tr>-->
-<!--        <th>Nhân viên</th>-->
-<!--        <th>Liên hệ</th>-->
-<!--        <th>Vai trò</th>-->
-<!--        <th>Chi nhánh</th>-->
-<!--        <th>Trạng thái</th>-->
-<!--        <th>Ngày tạo</th>-->
-<!--        <th>Thao tác</th>-->
-<!--      </tr>-->
-<!--      </thead>-->
-<!--      <tbody>-->
-<!--      <tr th:each="staff : ${staffList}">-->
-<!--        <td>-->
-<!--          <div style="display: flex; align-items: center; gap: 1rem;">-->
-<!--            <div class="avatar" th:text="${#strings.substring(staff.fullName, 0, 1)}">A</div>-->
-<!--            <div>-->
-<!--              <div style="font-weight: 600; color: #333;" th:text="${staff.fullName}">Nguyễn Văn A</div>-->
-<!--              <div style="font-size: 0.9rem; color: #666;" th:text="'@' + ${staff.username}">@admin</div>-->
-<!--            </div>-->
+<!--        &lt;!&ndash; Filters Section &ndash;&gt;-->
+<!--        <div class="card mb-4">-->
+<!--          <div class="card-header">-->
+<!--            <h6 class="card-title mb-0">-->
+<!--              <i class="fas fa-filter me-2"></i>Bộ lọc tìm kiếm-->
+<!--            </h6>-->
 <!--          </div>-->
-<!--        </td>-->
-<!--        <td>-->
-<!--          <div th:text="${staff.email}">email@example.com</div>-->
-<!--          <div th:if="${staff.phoneNumber}" class="branch-info" th:text="${staff.phoneNumber}">0123456789</div>-->
-<!--        </td>-->
-<!--        <td>-->
-<!--                            <span class="role-badge"-->
-<!--                                  th:class="'role-badge role-' + ${#strings.toLowerCase(staff.role)}"-->
-<!--                                  th:text="${roleLabels[staff.role]}">-->
-<!--                              Quản lý-->
-<!--                            </span>-->
-<!--        </td>-->
-<!--        <td>-->
-<!--          <div class="branch-info">-->
-<!--            <span th:if="${staff.branch != null}" th:text="${staff.branch.name}"></span>-->
-<!--            <span th:if="${staff.branch != null}" th:text="${staff.branch.type.displayName}" class="branch-type"></span>-->
-<!--            <span th:if="${staff.branch == null}">Chưa phân công</span>-->
-<!--          </div>-->
-<!--        </td>-->
+<!--          <div class="card-body">-->
+<!--            <form action="/admin/staff" method="get" class="row g-3">-->
+<!--              <div class="col-md-3">-->
+<!--                <label for="search" class="form-label">Tìm kiếm</label>-->
+<!--                <input type="text" id="search" name="search" class="form-control"-->
+<!--                       th:value="${searchQuery}" placeholder="Tên, username, email...">-->
+<!--              </div>-->
 
-<!--        <td>-->
-<!--                            <span class="status-badge"-->
-<!--                                  th:class="'status-badge status-' + ${#strings.toLowerCase(staff.status)}"-->
-<!--                                  th:text="${statusLabels[staff.status]}">-->
-<!--                                Hoạt động-->
-<!--                            </span>-->
-<!--        </td>-->
-<!--        <td>-->
-<!--          <div th:text="${#temporals.format(staff.createdAt, 'dd/MM/yyyy')}">01/01/2024</div>-->
-<!--          <div class="branch-info" th:text="${#temporals.format(staff.createdAt, 'HH:mm')}">10:30</div>-->
-<!--        </td>-->
-<!--        <td>-->
-<!--          <div class="actions">-->
-<!--            <a th:href="@{'/admin/staff/' + ${staff.id} + '/edit'}" class="btn btn-edit">-->
-<!--              <i class="fas fa-edit"></i> Sửa-->
-<!--            </a>-->
+<!--              <div class="col-md-2">-->
+<!--                <label for="role" class="form-label">Vai trò</label>-->
+<!--                <select id="role" name="role" class="form-select">-->
+<!--                  <option value="">Tất cả</option>-->
+<!--                  <option value="MANAGER" th:selected="${searchRole == 'MANAGER'}">Quản lý</option>-->
+<!--                  <option value="STAFF" th:selected="${searchRole == 'STAFF'}">Nhân viên</option>-->
+<!--                </select>-->
+<!--              </div>-->
 
-<!--            <form th:action="@{'/admin/staff/' + ${staff.id} + '/toggle-status'}"-->
-<!--                  method="post" style="display: inline;">-->
-<!--              <button type="submit"-->
-<!--                      th:with="isActive=${staff.status == 'ACTIVE'}"-->
-<!--                      th:class="'btn btn-toggle' + (isActive ? '' : ' unlock')"-->
-<!--                      th:onclick="'return confirm(\'Bạn có chắc chắn muốn ' + (isActive ? 'khóa' : 'mở khóa') + ' tài khoản này?\')'"-->
-<!--                      th:title="${isActive ? 'Khóa tài khoản' : 'Mở khóa'}">-->
+<!--              <div class="col-md-2">-->
+<!--                <label for="branchId" class="form-label">Chi nhánh</label>-->
+<!--                <select id="branchId" name="branchId" class="form-select">-->
+<!--                  <option value="">Tất cả</option>-->
+<!--                  <option th:each="branch : ${branches}"-->
+<!--                          th:value="${branch.id}"-->
+<!--                          th:text="${branch.name}"-->
+<!--                          th:selected="${branch.id == searchBranchId}">-->
+<!--                  </option>-->
+<!--                </select>-->
+<!--              </div>-->
 
-<!--                <i th:class="${isActive ? 'fas fa-lock' : 'fas fa-unlock'}"></i>-->
-<!--                <span th:text="${isActive ? 'Khóa' : 'Mở'}"></span>-->
-<!--              </button>-->
+<!--              <div class="col-md-2">-->
+<!--                <label for="status" class="form-label">Trạng thái</label>-->
+<!--                <select id="status" name="status" class="form-select">-->
+<!--                  <option value="">Tất cả</option>-->
+<!--                  <option th:each="status : ${userStatuses}"-->
+<!--                          th:value="${status}"-->
+<!--                          th:text="${statusLabels[status]}"-->
+<!--                          th:selected="${status == searchStatus}">-->
+<!--                  </option>-->
+<!--                </select>-->
+<!--              </div>-->
 
+<!--              <div class="col-md-3 d-flex align-items-end">-->
+<!--                <button type="submit" class="btn btn-primary me-2">-->
+<!--                  <i class="fas fa-search me-2"></i> Tìm kiếm-->
+<!--                </button>-->
+<!--                <a href="/admin/staff" class="btn btn-outline-secondary">-->
+<!--                  <i class="fas fa-sync me-2"></i> Reset-->
+<!--                </a>-->
+<!--              </div>-->
 <!--            </form>-->
 <!--          </div>-->
-<!--        </td>-->
-<!--      </tr>-->
-<!--      </tbody>-->
-<!--    </table>-->
-<!--  </div>-->
+<!--        </div>-->
 
-<!--  &lt;!&ndash; No Results &ndash;&gt;-->
-<!--  <div th:if="${staffList.isEmpty()}" class="no-results">-->
-<!--    <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>-->
-<!--    <h3>Không tìm thấy nhân viên nào</h3>-->
-<!--    <p>Thử thay đổi bộ lọc tìm kiếm hoặc thêm nhân viên mới</p>-->
-<!--    <a href="/admin/staff/add" class="add-btn" style="margin-top: 1rem;">-->
-<!--      <i class="fas fa-user-plus"></i> Thêm Nhân viên đầu tiên-->
-<!--    </a>-->
+<!--        &lt;!&ndash; Staff Table &ndash;&gt;-->
+<!--        <div th:if="${!staffList.isEmpty()}" class="card">-->
+<!--          <div class="card-body">-->
+<!--            <div class="table-responsive">-->
+<!--              <table class="table table-hover">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                  <th>Nhân viên</th>-->
+<!--                  <th>Liên hệ</th>-->
+<!--                  <th>Vai trò</th>-->
+<!--                  <th>Chi nhánh</th>-->
+<!--                  <th>Trạng thái</th>-->
+<!--                  <th>Ngày tạo</th>-->
+<!--                  <th>Thao tác</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr th:each="staff : ${staffList}">-->
+<!--                  <td>-->
+<!--                    <div class="d-flex align-items-center">-->
+<!--                      <div class="avatar me-3" th:text="${#strings.substring(staff.fullName, 0, 1)}">A</div>-->
+<!--                      <div>-->
+<!--                        <div class="fw-bold" th:text="${staff.fullName}">Nguyễn Văn A</div>-->
+<!--                        <div class="text-muted small" th:text="'@' + ${staff.username}">@admin</div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                    <div th:text="${staff.email}">email@example.com</div>-->
+<!--                    <div th:if="${staff.phoneNumber}" class="text-muted small" th:text="${staff.phoneNumber}">0123456789</div>-->
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                    <span class="role-badge"-->
+<!--                          th:class="'role-badge role-' + ${#strings.toLowerCase(staff.role)}"-->
+<!--                          th:text="${roleLabels[staff.role]}">-->
+<!--                      Quản lý-->
+<!--                    </span>-->
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                    <div th:if="${staff.branch != null}">-->
+<!--                      <div th:text="${staff.branch.name}"></div>-->
+<!--                      <div class="text-muted small" th:text="${staff.branch.type.displayName}"></div>-->
+<!--                    </div>-->
+<!--                    <div th:if="${staff.branch == null}" class="text-muted">Chưa phân công</div>-->
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                    <span class="status-badge"-->
+<!--                          th:class="'status-badge status-' + ${#strings.toLowerCase(staff.status)}"-->
+<!--                          th:text="${statusLabels[staff.status]}">-->
+<!--                      Hoạt động-->
+<!--                    </span>-->
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                    <div th:text="${#temporals.format(staff.createdAt, 'dd/MM/yyyy')}">01/01/2024</div>-->
+<!--                    <div class="text-muted small" th:text="${#temporals.format(staff.createdAt, 'HH:mm')}">10:30</div>-->
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                    <div class="btn-group">-->
+<!--                      <a th:href="@{'/admin/staff/' + ${staff.id} + '/edit'}" class="btn btn-sm btn-outline-primary">-->
+<!--                        <i class="fas fa-edit"></i>-->
+<!--                      </a>-->
+<!--                      <form th:action="@{'/admin/staff/' + ${staff.id} + '/toggle-status'}"-->
+<!--                            method="post" class="d-inline">-->
+<!--                        <button type="submit"-->
+<!--                                th:with="isActive=${staff.status == 'ACTIVE'}"-->
+<!--                                th:class="'btn btn-sm ' + (isActive ? 'btn-outline-warning' : 'btn-outline-success')"-->
+<!--                                th:onclick="'return confirm(\'Bạn có chắc chắn muốn ' + (isActive ? 'khóa' : 'mở khóa') + ' tài khoản này?\')'"-->
+<!--                                th:title="${isActive ? 'Khóa tài khoản' : 'Mở khóa'}">-->
+<!--                          <i th:class="${isActive ? 'fas fa-lock' : 'fas fa-unlock'}"></i>-->
+<!--                        </button>-->
+<!--                      </form>-->
+<!--                    </div>-->
+<!--                  </td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--              </table>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; No Results &ndash;&gt;-->
+<!--        <div th:if="${staffList.isEmpty()}" class="text-center py-5">-->
+<!--          <i class="fas fa-users fa-3x text-muted mb-3"></i>-->
+<!--          <h5>Không tìm thấy nhân viên nào</h5>-->
+<!--          <p class="text-muted">Thử thay đổi bộ lọc tìm kiếm hoặc thêm nhân viên mới</p>-->
+<!--          <a href="/admin/staff/add" class="btn btn-primary mt-2">-->
+<!--            <i class="fas fa-user-plus me-2"></i> Thêm Nhân viên đầu tiên-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </main>-->
 <!--  </div>-->
 <!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--<script>-->
+<!--  // Sidebar navigation active state-->
+<!--  document.addEventListener('DOMContentLoaded', function() {-->
+<!--    const currentPage = window.location.pathname;-->
+<!--    const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');-->
+
+<!--    sidebarLinks.forEach(link => {-->
+<!--      const linkPath = link.getAttribute('href');-->
+<!--      if (currentPage.includes(linkPath.substring(1))) {-->
+<!--        link.classList.add('active');-->
+<!--      }-->
+
+<!--      link.addEventListener('click', function(e) {-->
+<!--        e.preventDefault();-->
+<!--        sidebarLinks.forEach(l => l.classList.remove('active'));-->
+<!--        this.classList.add('active');-->
+<!--        window.location.href = this.getAttribute('href');-->
+<!--      });-->
+<!--    });-->
+<!--  });-->
+<!--</script>-->
 <!--</body>-->
 <!--</html>-->
 
@@ -585,97 +397,17 @@
   <title>Quản lý Nhân viên</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/admin_sidebar.css}">
+<!--  <link rel="stylesheet" th:href="@{/css/manager_sidebar.css}">-->
   <style>
-
-    .sidebar {
-      min-height: 100vh;
-      background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    }
-    .sidebar .nav-link {
-      color: #adb5bd;
-      border-radius: 0.375rem;
-      margin: 0.125rem 0.5rem;
-      padding: 0.7rem 1rem;
-      transition: all 0.3s ease;
-      font-size: 0.95rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .sidebar .nav-link:before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 4px;
-      background-color: #0d6efd;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .sidebar .nav-link:hover {
-      background-color: #2c3034;
-      color: #fff;
-      transform: translateX(5px);
-    }
-    .sidebar .nav-link:hover:before {
-      opacity: 1;
-    }
-    .sidebar .nav-link.active {
-      background-color: #0d6efd;
-      color: #fff;
-      font-weight: 500;
-      box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
-    }
-    .sidebar .nav-link.active:before {
-      opacity: 1;
-    }
-    .sidebar-header {
-      padding: 1.5rem 1rem;
-      border-bottom: 1px solid #343a40;
-      margin-bottom: 1rem;
-    }
-    .nav-item {
-      margin-bottom: 0.4rem;
-    }
-    .nav-category {
-      padding: 0.8rem 1rem 0.3rem;
-      margin-top: 1.2rem;
-      font-size: 0.75rem;
-      color: #6c757d !important;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border-top: 1px solid #343a40;
-    }
-    .nav-category:first-child {
-      border-top: none;
-      margin-top: 0;
-    }
-    .logo-container {
-      padding: 1.5rem 0;
-      text-align: center;
-    }
-    .logo-icon {
-      font-size: 2rem;
-      color: #0d6efd;
-      margin-bottom: 0.5rem;
-    }
-
-
-
-
-    .nav-category {
-      padding: 0.8rem 1rem 0.3rem;
-      margin-top: 1.2rem;
-      font-size: 0.75rem;
-      color: #6c757d !important;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+    body { background: #f5f6fa; font-family: 'Segoe UI', sans-serif; font-size: 13px; }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; }
+    .main-content { margin-left: 240px; padding: 20px; flex: 1; }
 
     .avatar {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: #0d6efd;
       display: flex;
@@ -683,13 +415,14 @@
       justify-content: center;
       color: white;
       font-weight: bold;
+      font-size: 13px;
     }
 
     .role-badge {
       display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
       font-weight: 500;
     }
 
@@ -705,9 +438,9 @@
 
     .status-badge {
       display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
       font-weight: 500;
     }
 
@@ -725,226 +458,268 @@
       background: #e2e3e5;
       color: #383d41;
     }
+
+    .card {
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+
+    .card-header {
+      background: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+      padding: 12px 15px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .card-body {
+      padding: 15px;
+    }
+
+
+    h6 {
+      font-size: 0.95rem;
+    }
+
+    .alert {
+      font-size: 13px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      font-size: 13px;
+      padding: 6px 12px;
+    }
+
+    .btn-sm {
+      font-size: 12px;
+      padding: 4px 10px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .form-control, .form-select {
+      font-size: 13px;
+      padding: 8px 12px;
+    }
+
+    table {
+      font-size: 13px;
+    }
+
+    table th {
+      background: #f8f9fa;
+      font-weight: 600;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    table td {
+      padding: 12px;
+      vertical-align: middle;
+    }
+
+    table tbody tr:hover {
+      background: #f8f9fa;
+    }
+
+    .fw-bold {
+      font-size: 13px;
+    }
+
+    .text-muted.small {
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
-<div class="container-fluid">
-  <div class="row">
-    <!-- Sidebar -->
-    <div th:replace="fragments/admin_sidebar :: admin_sidebar"></div>
+<div class="layout">
+  <div th:replace="fragments/admin_sidebar :: admin_sidebar"></div>
 
-    <!-- Main content -->
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
-      <!-- Top navbar -->
-<!--      <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">-->
-<!--        <div class="container-fluid">-->
-<!--          <h4 class="navbar-brand mb-0">-->
-<!--            <i class="fas fa-users me-2"></i>Quản lý Nhân viên-->
-<!--          </h4>-->
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Alerts -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
-<!--          <div class="navbar-nav ms-auto">-->
-<!--            <div class="nav-item dropdown">-->
-<!--              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">-->
-<!--                <i class="fas fa-user me-2"></i>-->
-<!--                <span>Admin User</span>-->
-<!--              </a>-->
-<!--              <ul class="dropdown-menu dropdown-menu-end">-->
-<!--                <li><h6 class="dropdown-header" th:text="${user.username}">Username</h6></li>-->
-<!--                <li><hr class="dropdown-divider"></li>-->
-<!--                <li><a class="dropdown-item" href="#profile"><i class="fas fa-user me-2"></i>Thông tin cá nhân</a></li>-->
-<!--                <li><a class="dropdown-item" href="#settings"><i class="fas fa-cog me-2"></i>Cài đặt</a></li>-->
-<!--                <li><hr class="dropdown-divider"></li>-->
-<!--                <li>-->
-<!--                  <form th:action="@{/logout}" method="post" class="d-inline">-->
-<!--                    <button type="submit" class="dropdown-item text-danger">-->
-<!--                      <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất-->
-<!--                    </button>-->
-<!--                  </form>-->
-<!--                </li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </nav>-->
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${error}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
-      <!-- Page content -->
-      <div class="py-4">
-        <!-- Alerts -->
-        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-          <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+    <!-- Header and Add button -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5>Danh sách nhân viên</h5>
+      <a href="/admin/staff/add" class="btn btn-primary">
+        <i class="fas fa-user-plus me-2"></i> Thêm Nhân viên
+      </a>
+    </div>
 
-        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-          <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${error}"></span>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-        <!-- Header and Add button -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h5>Danh sách nhân viên</h5>
-          <a href="/admin/staff/add" class="btn btn-primary">
-            <i class="fas fa-user-plus me-2"></i> Thêm Nhân viên
-          </a>
-        </div>
-
-        <!-- Filters Section -->
-        <div class="card mb-4">
-          <div class="card-header">
-            <h6 class="card-title mb-0">
-              <i class="fas fa-filter me-2"></i>Bộ lọc tìm kiếm
-            </h6>
+    <!-- Filters Section -->
+    <div class="card">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          <i class="fas fa-filter me-2"></i>Bộ lọc tìm kiếm
+        </h6>
+      </div>
+      <div class="card-body">
+        <form action="/admin/staff" method="get" class="row g-3">
+          <div class="col-md-3">
+            <label for="search" class="form-label">Tìm kiếm</label>
+            <input type="text" id="search" name="search" class="form-control"
+                   th:value="${searchQuery}" placeholder="Tên, username, email...">
           </div>
-          <div class="card-body">
-            <form action="/admin/staff" method="get" class="row g-3">
-              <div class="col-md-3">
-                <label for="search" class="form-label">Tìm kiếm</label>
-                <input type="text" id="search" name="search" class="form-control"
-                       th:value="${searchQuery}" placeholder="Tên, username, email...">
-              </div>
 
-              <div class="col-md-2">
-                <label for="role" class="form-label">Vai trò</label>
-                <select id="role" name="role" class="form-select">
-                  <option value="">Tất cả</option>
-                  <option value="MANAGER" th:selected="${searchRole == 'MANAGER'}">Quản lý</option>
-                  <option value="STAFF" th:selected="${searchRole == 'STAFF'}">Nhân viên</option>
-                </select>
-              </div>
-
-              <div class="col-md-2">
-                <label for="branchId" class="form-label">Chi nhánh</label>
-                <select id="branchId" name="branchId" class="form-select">
-                  <option value="">Tất cả</option>
-                  <option th:each="branch : ${branches}"
-                          th:value="${branch.id}"
-                          th:text="${branch.name}"
-                          th:selected="${branch.id == searchBranchId}">
-                  </option>
-                </select>
-              </div>
-
-              <div class="col-md-2">
-                <label for="status" class="form-label">Trạng thái</label>
-                <select id="status" name="status" class="form-select">
-                  <option value="">Tất cả</option>
-                  <option th:each="status : ${userStatuses}"
-                          th:value="${status}"
-                          th:text="${statusLabels[status]}"
-                          th:selected="${status == searchStatus}">
-                  </option>
-                </select>
-              </div>
-
-              <div class="col-md-3 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary me-2">
-                  <i class="fas fa-search me-2"></i> Tìm kiếm
-                </button>
-                <a href="/admin/staff" class="btn btn-outline-secondary">
-                  <i class="fas fa-sync me-2"></i> Reset
-                </a>
-              </div>
-            </form>
+          <div class="col-md-2">
+            <label for="role" class="form-label">Vai trò</label>
+            <select id="role" name="role" class="form-select">
+              <option value="">Tất cả</option>
+              <option value="MANAGER" th:selected="${searchRole == 'MANAGER'}">Quản lý</option>
+              <option value="STAFF" th:selected="${searchRole == 'STAFF'}">Nhân viên</option>
+            </select>
           </div>
-        </div>
 
-        <!-- Staff Table -->
-        <div th:if="${!staffList.isEmpty()}" class="card">
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead>
-                <tr>
-                  <th>Nhân viên</th>
-                  <th>Liên hệ</th>
-                  <th>Vai trò</th>
-                  <th>Chi nhánh</th>
-                  <th>Trạng thái</th>
-                  <th>Ngày tạo</th>
-                  <th>Thao tác</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="staff : ${staffList}">
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <div class="avatar me-3" th:text="${#strings.substring(staff.fullName, 0, 1)}">A</div>
-                      <div>
-                        <div class="fw-bold" th:text="${staff.fullName}">Nguyễn Văn A</div>
-                        <div class="text-muted small" th:text="'@' + ${staff.username}">@admin</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div th:text="${staff.email}">email@example.com</div>
-                    <div th:if="${staff.phoneNumber}" class="text-muted small" th:text="${staff.phoneNumber}">0123456789</div>
-                  </td>
-                  <td>
-                    <span class="role-badge"
-                          th:class="'role-badge role-' + ${#strings.toLowerCase(staff.role)}"
-                          th:text="${roleLabels[staff.role]}">
-                      Quản lý
-                    </span>
-                  </td>
-                  <td>
-                    <div th:if="${staff.branch != null}">
-                      <div th:text="${staff.branch.name}"></div>
-                      <div class="text-muted small" th:text="${staff.branch.type.displayName}"></div>
-                    </div>
-                    <div th:if="${staff.branch == null}" class="text-muted">Chưa phân công</div>
-                  </td>
-                  <td>
-                    <span class="status-badge"
-                          th:class="'status-badge status-' + ${#strings.toLowerCase(staff.status)}"
-                          th:text="${statusLabels[staff.status]}">
-                      Hoạt động
-                    </span>
-                  </td>
-                  <td>
-                    <div th:text="${#temporals.format(staff.createdAt, 'dd/MM/yyyy')}">01/01/2024</div>
-                    <div class="text-muted small" th:text="${#temporals.format(staff.createdAt, 'HH:mm')}">10:30</div>
-                  </td>
-                  <td>
-                    <div class="btn-group">
-                      <a th:href="@{'/admin/staff/' + ${staff.id} + '/edit'}" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-edit"></i>
-                      </a>
-                      <form th:action="@{'/admin/staff/' + ${staff.id} + '/toggle-status'}"
-                            method="post" class="d-inline">
-                        <button type="submit"
-                                th:with="isActive=${staff.status == 'ACTIVE'}"
-                                th:class="'btn btn-sm ' + (isActive ? 'btn-outline-warning' : 'btn-outline-success')"
-                                th:onclick="'return confirm(\'Bạn có chắc chắn muốn ' + (isActive ? 'khóa' : 'mở khóa') + ' tài khoản này?\')'"
-                                th:title="${isActive ? 'Khóa tài khoản' : 'Mở khóa'}">
-                          <i th:class="${isActive ? 'fas fa-lock' : 'fas fa-unlock'}"></i>
-                        </button>
-                      </form>
-                    </div>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="col-md-2">
+            <label for="branchId" class="form-label">Chi nhánh</label>
+            <select id="branchId" name="branchId" class="form-select">
+              <option value="">Tất cả</option>
+              <option th:each="branch : ${branches}"
+                      th:value="${branch.id}"
+                      th:text="${branch.name}"
+                      th:selected="${branch.id == searchBranchId}">
+              </option>
+            </select>
           </div>
-        </div>
 
-        <!-- No Results -->
-        <div th:if="${staffList.isEmpty()}" class="text-center py-5">
-          <i class="fas fa-users fa-3x text-muted mb-3"></i>
-          <h5>Không tìm thấy nhân viên nào</h5>
-          <p class="text-muted">Thử thay đổi bộ lọc tìm kiếm hoặc thêm nhân viên mới</p>
-          <a href="/admin/staff/add" class="btn btn-primary mt-2">
-            <i class="fas fa-user-plus me-2"></i> Thêm Nhân viên đầu tiên
-          </a>
+          <div class="col-md-2">
+            <label for="status" class="form-label">Trạng thái</label>
+            <select id="status" name="status" class="form-select">
+              <option value="">Tất cả</option>
+              <option th:each="status : ${userStatuses}"
+                      th:value="${status}"
+                      th:text="${statusLabels[status]}"
+                      th:selected="${status == searchStatus}">
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary me-2">
+              <i class="fas fa-search me-2"></i> Tìm kiếm
+            </button>
+            <a href="/admin/staff" class="btn btn-outline-secondary">
+              <i class="fas fa-sync me-2"></i> Reset
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Staff Table -->
+    <div th:if="${!staffList.isEmpty()}" class="card">
+      <div class="card-body p-0">
+        <div style="overflow-x: auto;">
+          <table class="table table-hover mb-0">
+            <thead>
+            <tr>
+              <th>Nhân viên</th>
+              <th>Liên hệ</th>
+              <th>Vai trò</th>
+              <th>Chi nhánh</th>
+              <th>Trạng thái</th>
+              <th>Ngày tạo</th>
+              <th>Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="staff : ${staffList}">
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar me-2" th:text="${#strings.substring(staff.fullName, 0, 1)}">A</div>
+                  <div>
+                    <div class="fw-bold" th:text="${staff.fullName}">Nguyễn Văn A</div>
+                    <div class="text-muted small" th:text="'@' + ${staff.username}">@admin</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div th:text="${staff.email}">email@example.com</div>
+                <div th:if="${staff.phoneNumber}" class="text-muted small" th:text="${staff.phoneNumber}">0123456789</div>
+              </td>
+              <td>
+                <span class="role-badge"
+                      th:class="'role-badge role-' + ${#strings.toLowerCase(staff.role)}"
+                      th:text="${roleLabels[staff.role]}">
+                  Quản lý
+                </span>
+              </td>
+              <td>
+                <div th:if="${staff.branch != null}">
+                  <div th:text="${staff.branch.name}"></div>
+                  <div class="text-muted small" th:text="${staff.branch.type.displayName}"></div>
+                </div>
+                <div th:if="${staff.branch == null}" class="text-muted">Chưa phân công</div>
+              </td>
+              <td>
+                <span class="status-badge"
+                      th:class="'status-badge status-' + ${#strings.toLowerCase(staff.status)}"
+                      th:text="${statusLabels[staff.status]}">
+                  Hoạt động
+                </span>
+              </td>
+              <td>
+                <div th:text="${#temporals.format(staff.createdAt, 'dd/MM/yyyy')}">01/01/2024</div>
+                <div class="text-muted small" th:text="${#temporals.format(staff.createdAt, 'HH:mm')}">10:30</div>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <a th:href="@{'/admin/staff/' + ${staff.id} + '/edit'}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <form th:action="@{'/admin/staff/' + ${staff.id} + '/toggle-status'}"
+                        method="post" class="d-inline">
+                    <button type="submit"
+                            th:with="isActive=${staff.status == 'ACTIVE'}"
+                            th:class="'btn btn-sm ' + (isActive ? 'btn-outline-warning' : 'btn-outline-success')"
+                            th:onclick="'return confirm(\'Bạn có chắc chắn muốn ' + (isActive ? 'khóa' : 'mở khóa') + ' tài khoản này?\')'"
+                            th:title="${isActive ? 'Khóa tài khoản' : 'Mở khóa'}">
+                      <i th:class="${isActive ? 'fas fa-lock' : 'fas fa-unlock'}"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-    </main>
+    </div>
+
+    <!-- No Results -->
+    <div th:if="${staffList.isEmpty()}" class="text-center py-5">
+      <i class="fas fa-users fa-3x text-muted mb-3" style="opacity: 0.3;"></i>
+      <h5>Không tìm thấy nhân viên nào</h5>
+      <p class="text-muted">Thử thay đổi bộ lọc tìm kiếm hoặc thêm nhân viên mới</p>
+      <a href="/admin/staff/add" class="btn btn-primary mt-2">
+        <i class="fas fa-user-plus me-2"></i> Thêm Nhân viên đầu tiên
+      </a>
+    </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Sidebar navigation active state
   document.addEventListener('DOMContentLoaded', function() {
     const currentPage = window.location.pathname;
     const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
